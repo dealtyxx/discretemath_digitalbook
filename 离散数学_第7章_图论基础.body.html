@@ -1,0 +1,1429 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<base target="_top"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300..600&amp;family=DM+Mono:wght@400..500&amp;family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
+<title>离散数学 第7章 · 图论基础</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700;900&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#16202c; --ink-rgb:22,32,44;
+  --paper:#f1f4f7; --paper-rgb:241,244,247;
+  --accent:#2f6ba6; --accent-rgb:47,107,166;
+  --muted:#5e6b78;
+  --serif-zh:"Noto Serif SC","Source Serif 4",serif;
+  --sans-zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"IBM Plex Mono",monospace;
+  --w-quote:min(100%,48rem); --w-statement:min(100%,58rem);
+  --w-note:min(100%,66rem); --w-default:min(100%,80rem); --w-wide:min(100%,94rem);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-wrap:pretty}
+h1,h2,h3,p,li{text-wrap:pretty}
+#deck{position:fixed;inset:0;width:100vw;height:100vh;z-index:10}
+.slide{position:absolute;inset:0;width:100vw;height:100vh;padding:clamp(2rem,4.5vw,5rem) clamp(2rem,6vw,6.5rem) clamp(1.4rem,3vw,2.6rem);display:flex;flex-direction:column;overflow:hidden;visibility:hidden;opacity:0;pointer-events:none;z-index:1;transition:opacity .56s cubic-bezier(.22,1,.36,1),transform .56s cubic-bezier(.22,1,.36,1)}
+.slide.active{visibility:visible;opacity:1;pointer-events:auto;z-index:3}
+.slide.leaving{visibility:visible;opacity:0;pointer-events:none;z-index:2}
+@media (prefers-reduced-motion:reduce){.slide{transition-duration:.15s}}
+.slide.dark{background:var(--ink);color:var(--paper)}
+.slide.light{background:var(--paper);color:var(--ink)}
+.slide.bare .chrome{display:none}
+.slide.bare .foot{opacity:.32}
+.display-zh{font-family:var(--serif-zh);font-weight:900;font-size:clamp(3rem,6.5vw,6.4rem);line-height:1.1}
+.h1-zh{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.85rem,3.9vw,3.5rem);line-height:1.2}
+.h2-zh{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.5rem,2.7vw,2.4rem);line-height:1.3}
+.lead-zh{font-family:var(--serif-zh);font-weight:400;font-size:clamp(1.3rem,1.8vw,1.88rem);line-height:1.5}
+.body-zh{font-family:var(--sans-zh);font-weight:400;font-size:clamp(1.12rem,1.32vw,1.52rem);line-height:1.6}
+.kicker{font-family:var(--mono);font-size:clamp(.74rem,.86vw,1rem);text-transform:uppercase;letter-spacing:.14em;opacity:.55;margin-bottom:.6vh}
+.meta{font-family:var(--mono);font-size:clamp(.74rem,.82vw,.92rem);letter-spacing:.1em;opacity:.6}
+.slide-body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.w-quote{width:var(--w-quote);margin:0 auto}
+.w-statement{width:var(--w-statement);margin:0 auto}
+.w-note{width:var(--w-note);margin:0 auto}
+.w-default{width:var(--w-default);margin:0 auto}
+.w-wide{width:var(--w-wide);margin:0 auto}
+.chrome{display:flex;justify-content:space-between;font-family:var(--mono);font-size:clamp(.74rem,.8vw,.9rem);letter-spacing:.1em;text-transform:uppercase;opacity:.45;margin-bottom:1.6vh}
+.foot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:clamp(.72rem,.78vw,.88rem);letter-spacing:.1em;text-transform:uppercase;opacity:.4;margin-top:auto;padding-top:1.6vh}
+.grid-2-7-5{display:grid;grid-template-columns:7fr 5fr;gap:clamp(1.4rem,3.5vw,4rem);flex:1;min-height:0}
+.vis-center{display:flex;justify-content:center;align-items:center}
+.vis-left{display:flex;justify-content:flex-start}
+.formula{font-family:var(--serif-zh);font-size:clamp(1.32rem,2.1vw,2rem);line-height:1.5;color:var(--accent);text-align:center;letter-spacing:.01em}
+.formula-sm{font-size:clamp(1.12rem,1.75vw,1.6rem)}
+.frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .18em}
+.frac .num{padding:0 .45em .08em}
+.frac .den{padding:.08em .45em 0;border-top:2px solid currentColor}
+sup{font-size:.66em;vertical-align:super;line-height:0}
+sub{font-size:.66em;vertical-align:sub;line-height:0}
+/* 矩阵 */
+.matrix{display:inline-flex;align-items:stretch;gap:.4em;font-family:var(--mono);font-size:clamp(.95rem,1.4vw,1.45rem);vertical-align:middle}
+.matrix .br{width:.5em;border:2px solid currentColor}
+.matrix .br.l{border-right:none;border-radius:4px 0 0 4px}
+.matrix .br.r{border-left:none;border-radius:0 4px 4px 0}
+.matrix .grid{display:grid;gap:.18em .5em;padding:.4em .15em}
+.matrix .grid span{text-align:center;min-width:1ch}
+.matrix .one{color:var(--accent);font-weight:600}
+.matrix .zero{opacity:.32}
+.matgroup{display:flex;gap:clamp(1rem,2.5vw,2.4rem);align-items:center;flex-wrap:wrap;justify-content:center}
+.matcell{display:flex;flex-direction:column;align-items:center;gap:.5em}
+.matlabel{font-family:var(--mono);font-size:clamp(.8rem,.95vw,1.05rem);color:var(--accent)}
+/* 图 */
+.digraph{width:100%;max-width:18rem;height:auto;color:var(--ink)}
+.slide.dark .digraph{color:var(--paper)}
+.digraph .gl{font-family:var(--sans-zh);font-size:15px;font-weight:600;fill:currentColor;text-anchor:middle}
+.digraph .gw{font-family:var(--mono);font-size:12px;fill:var(--accent);text-anchor:middle;font-weight:600}
+/* 例题块 */
+.example{border-left:3px solid var(--accent);padding-left:clamp(1rem,1.6vw,1.4rem)}
+.example .body-zh{opacity:.92}
+/* 代码 */
+.code-pane{min-width:0}
+pre.code{font-family:var(--mono);background:rgba(var(--ink-rgb),.93);color:#e7eef4;border-radius:8px;padding:clamp(1rem,1.8vw,1.6rem) clamp(1.1rem,2vw,1.7rem);overflow:auto;text-align:left;line-height:1.55;box-shadow:0 1.2rem 3rem rgba(0,0,0,.22);border:1px solid rgba(var(--paper-rgb),.08);max-height:80vh}
+.slide.dark pre.code{background:rgba(0,0,0,.32);border-color:rgba(var(--paper-rgb),.1)}
+pre.code code{white-space:pre;display:block}
+pre.code-normal{font-size:clamp(.92rem,1.05vw,1.28rem)}
+pre.code-small{font-size:clamp(.8rem,.9vw,1.06rem)}
+pre.code-tiny{font-size:clamp(.7rem,.8vw,.94rem);line-height:1.45}
+/* 列表 */
+.listrow{display:grid;grid-template-columns:auto 1fr;gap:clamp(.9rem,1.6vw,1.4rem);align-items:start}
+.ldot{width:.6rem;height:.6rem;border-radius:50%;background:var(--accent);opacity:.7;margin-top:.85em}
+ol.biglist{list-style:none;counter-reset:bl;display:flex;flex-direction:column;gap:clamp(.8rem,1.8vh,1.3rem)}
+ol.biglist.twocol{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.72rem,1.5vh,1.15rem) clamp(2rem,4vw,4rem)}
+ol.biglist li{counter-increment:bl;position:relative;padding-left:2.6em;font-family:var(--sans-zh);font-size:clamp(1rem,1.2vw,1.4rem);line-height:1.5}
+ol.biglist li::before{content:counter(bl,decimal-leading-zero);position:absolute;left:0;top:0;font-family:var(--mono);font-size:.92em;color:var(--accent);opacity:.85}
+ol.steps{list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:.7vh}
+ol.steps li{counter-increment:st;position:relative;padding-left:2.1em;font-family:var(--sans-zh);font-size:clamp(1rem,1.18vw,1.36rem);line-height:1.45}
+ol.steps li::before{content:counter(st);position:absolute;left:0;top:0;font-family:var(--mono);color:var(--accent);font-weight:600}
+.timeline-row{position:relative}
+.timeline-row::before{content:"";position:absolute;top:clamp(.8rem,1.5vh,1.3rem);left:5%;right:5%;height:1px;background:rgba(var(--ink-rgb),.12);z-index:0}
+.slide.dark .timeline-row::before{background:rgba(var(--paper-rgb),.14)}
+.timeline-node{position:relative;z-index:1}
+.timeline-node .meta{display:inline-block;padding-right:.6em}
+.slide.light .timeline-node .meta{background:var(--paper)}
+.slide.dark .timeline-node .meta{background:var(--ink)}
+.summary-num{font-family:var(--serif-zh);font-size:clamp(2.6rem,5.5vw,5rem);font-weight:600;color:var(--accent);opacity:.85;line-height:.95}
+.guest-mark{display:flex;flex-direction:column;align-items:center}
+.guest-mark::before{content:"";display:block;width:clamp(2.4rem,4em,4.8rem);height:1px;background:currentColor;opacity:.35;margin-bottom:clamp(1.4rem,3vh,2.4rem)}
+.table-wrap{width:var(--w-wide);margin:0 auto;display:flex;flex-direction:column;gap:clamp(1.4rem,3.5vh,2.6rem)}
+.data-table{width:100%;border-collapse:separate;border-spacing:0 clamp(.45rem,1vh,.8rem);font-family:var(--sans-zh);font-size:clamp(1rem,1.18vw,1.38rem);line-height:1.45}
+.data-table th,.data-table td{padding:clamp(.75rem,1.25vw,1.15rem) clamp(.9rem,1.5vw,1.4rem);text-align:left;vertical-align:middle}
+.data-table th{font-family:var(--mono);font-size:clamp(.74rem,.8vw,.92rem);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+.data-table td{background:rgba(var(--ink-rgb),.05)}
+.slide.dark .data-table td{background:rgba(var(--paper-rgb),.08)}
+.data-table.keyed td:first-child{font-weight:600}
+.data-table tr>*:first-child{border-radius:6px 0 0 6px}
+.data-table tr>*:last-child{border-radius:0 6px 6px 0}
+#nav{position:fixed;left:50%;bottom:1.4vh;transform:translateX(-50%);z-index:30;display:flex;gap:4px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);max-width:94vw;overflow-x:auto}
+#nav .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);border:none;padding:0;cursor:pointer;transition:all .3s ease;flex:0 0 auto}
+#nav .dot.active{background:rgba(255,255,255,.95);width:15px;border-radius:999px}
+.anim-item{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.slide.active .anim-item{opacity:1;transform:translateY(0)}
+.slide.active .anim-item:nth-child(1){transition-delay:.05s}
+.slide.active .anim-item:nth-child(2){transition-delay:.13s}
+.slide.active .anim-item:nth-child(3){transition-delay:.21s}
+.slide.active .anim-item:nth-child(4){transition-delay:.29s}
+.slide.active .anim-item:nth-child(5){transition-delay:.37s}
+.slide.active .anim-item:nth-child(n+6){transition-delay:.45s}
+</style>
+<style id="tb-style">
+/*TB-CSS-START*/
+/* ===== 离散数学数字教材 · 增强层 ===== */
+#tb-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:9100;transition:width .45s cubic-bezier(.16,1,.3,1);box-shadow:0 0 10px rgba(var(--accent-rgb),.7);pointer-events:none}
+#tb-dock{position:fixed;right:clamp(.6rem,1.2vw,1.25rem);top:50%;transform:translateY(-50%);z-index:9000;display:flex;flex-direction:column;gap:.5rem}
+.tb-ctl{position:relative;width:2.7rem;height:2.7rem;border-radius:50%;border:1px solid rgba(var(--accent-rgb),.28);cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(var(--paper-rgb),.62);color:var(--accent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s,background .2s,color .2s;padding:0;font-family:var(--serif-zh);font-weight:700;font-size:.95rem}
+body[data-tb-theme="dark"] .tb-ctl{background:rgba(var(--ink-rgb),.5);border-color:rgba(var(--paper-rgb),.2);color:#9db4e0}
+.tb-ctl:hover{transform:scale(1.1);background:var(--accent);color:#fff;border-color:transparent}
+.tb-ctl.tb-on{background:var(--accent);color:#fff;border-color:transparent}
+.tb-ctl svg{width:1.24rem;height:1.24rem;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tb-ctl[data-tip]::after{content:attr(data-tip);position:absolute;right:122%;top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--mono);font-size:.7rem;padding:.34em .62em;border-radius:6px;background:rgba(15,20,30,.9);color:#fff;opacity:0;pointer-events:none;transition:opacity .2s;letter-spacing:.04em}
+.tb-ctl:hover::after{opacity:1}
+/* 浮层通用 */
+.tb-overlay{position:fixed;inset:0;z-index:9200;display:none;background:rgba(10,14,22,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tb-overlay.tb-show{display:block;animation:tbfade .22s ease}
+@keyframes tbfade{from{opacity:0}to{opacity:1}}
+.tb-panel{position:absolute;background:var(--paper);color:var(--ink);box-shadow:0 1.6rem 4.4rem rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--sans-zh)}
+.tb-phead{padding:clamp(1.2rem,3vh,1.9rem) clamp(1.3rem,3vw,2rem) .9rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(var(--ink-rgb),.1);gap:1rem}
+.tb-ptitle{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.15rem,2vw,1.5rem);display:flex;align-items:baseline;gap:.6rem}
+.tb-ptitle small{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--accent);font-weight:400}
+.tb-pbody{flex:1;overflow-y:auto;padding:.5rem 0 2.4rem}
+.tb-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.5rem;line-height:1;padding:.1em .3em;border-radius:6px;transition:background .15s}
+.tb-close:hover{background:rgba(var(--ink-rgb),.08)}
+/* 目录 */
+#tb-toc .tb-panel{top:0;left:0;height:100%;width:min(93vw,31rem);animation:tbslideL .32s cubic-bezier(.16,1,.3,1)}
+@keyframes tbslideL{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.tb-grp{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:1.15rem 1.6rem .35rem;font-weight:600}
+.tb-item{display:flex;gap:.7rem;align-items:center;padding:.5rem 1.6rem;cursor:pointer;font-size:.95rem;line-height:1.4;border-left:3px solid transparent;transition:background .15s}
+.tb-item:hover{background:rgba(var(--accent-rgb),.09)}
+.tb-item.tb-cur{border-left-color:var(--accent);background:rgba(var(--accent-rgb),.12);font-weight:600}
+.tb-idx{font-family:var(--mono);font-size:.74rem;color:var(--muted);min-width:2.3em;flex:0 0 auto}
+.tb-item .tb-rdot{width:.5rem;height:.5rem;border-radius:50%;background:rgba(var(--ink-rgb),.16);flex:0 0 auto}
+.tb-item.tb-isread .tb-rdot{background:var(--accent)}
+.tb-it-txt{flex:1;min-width:0}
+.tb-star{color:#e0a93a;flex:0 0 auto;opacity:0;font-size:.85rem}
+.tb-item.tb-mark .tb-star{opacity:1}
+/* 总览网格 */
+#tb-grid .tb-panel{inset:clamp(1rem,3vh,2.4rem);border-radius:14px}
+.tb-gwrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:.9rem;padding:1.3rem clamp(1.2rem,2.5vw,2rem) 2rem}
+.tb-card{position:relative;border:1px solid rgba(var(--ink-rgb),.12);border-radius:10px;padding:.85rem .95rem;cursor:pointer;background:rgba(var(--ink-rgb),.03);transition:transform .18s,box-shadow .18s,border-color .18s;min-height:5.4rem;display:flex;flex-direction:column;gap:.35rem;overflow:hidden}
+.tb-card:hover{transform:translateY(-3px);box-shadow:0 .7rem 1.6rem rgba(0,0,0,.16);border-color:var(--accent)}
+.tb-card.tb-cur{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.35)}
+.tb-card .tb-cnum{font-family:var(--mono);font-size:.7rem;color:var(--accent);letter-spacing:.06em}
+.tb-card .tb-clab{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);background:rgba(var(--accent-rgb),.1);padding:.1em .5em;border-radius:99px;align-self:flex-start}
+.tb-card .tb-ctxt{font-size:.9rem;line-height:1.35;font-weight:600;color:var(--ink)}
+.tb-card .tb-crd{position:absolute;top:.6rem;right:.7rem;width:.55rem;height:.55rem;border-radius:50%;background:rgba(var(--ink-rgb),.15)}
+.tb-card.tb-isread .tb-crd{background:var(--accent)}
+/* 搜索 */
+#tb-search .tb-panel{top:clamp(2.5rem,8vh,6rem);left:50%;transform:translateX(-50%);width:min(94vw,46rem);max-height:80vh;border-radius:14px}
+.tb-sinput{width:100%;border:none;outline:none;background:transparent;font-family:var(--serif-zh);font-size:clamp(1.1rem,2.4vw,1.6rem);color:var(--ink);padding:.2em 0}
+.tb-sinput::placeholder{color:var(--muted);opacity:.6}
+.tb-sres{flex:1;overflow-y:auto;padding:.4rem 0 1.4rem}
+.tb-sr{padding:.7rem 1.6rem;cursor:pointer;border-left:3px solid transparent;transition:background .15s}
+.tb-sr:hover{background:rgba(var(--accent-rgb),.09);border-left-color:var(--accent)}
+.tb-sr .tb-sr-t{font-weight:600;font-size:.95rem;display:flex;gap:.6rem;align-items:baseline}
+.tb-sr .tb-sr-t .tb-idx{min-width:auto}
+.tb-sr .tb-sr-s{font-size:.82rem;color:var(--muted);line-height:1.4;margin-top:.2rem}
+.tb-sr mark{background:rgba(var(--accent-rgb),.28);color:inherit;border-radius:3px;padding:0 .12em}
+.tb-snone{padding:1.4rem 1.6rem;color:var(--muted);font-size:.9rem}
+/* 帮助 */
+#tb-help .tb-panel{top:50%;left:50%;transform:translate(-50%,-50%);width:min(94vw,34rem);border-radius:14px}
+.tb-help-body{padding:1.2rem clamp(1.3rem,3vw,2rem) 1.8rem;display:flex;flex-direction:column;gap:.55rem}
+.tb-krow{display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:.92rem;padding:.3rem 0;border-bottom:1px dashed rgba(var(--ink-rgb),.1)}
+.tb-krow:last-child{border-bottom:none}
+.tb-keys{display:flex;gap:.35rem;flex:0 0 auto}
+.tb-key{font-family:var(--mono);font-size:.78rem;background:rgba(var(--ink-rgb),.08);border:1px solid rgba(var(--ink-rgb),.14);border-radius:5px;padding:.16em .5em;min-width:1.6em;text-align:center}
+.tb-help-foot{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+.tb-fbtn{font-family:var(--sans-zh);font-size:.86rem;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;padding:.5em 1em;cursor:pointer;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:.4em}
+.tb-fbtn:hover{background:var(--accent);color:#fff}
+.tb-fbtn[disabled]{opacity:.35;pointer-events:none}
+/* 习题自测：隐藏答案 */
+.tb-ans-x{filter:blur(5.5px);cursor:pointer;transition:filter .25s,background .25s;background:rgba(var(--accent-rgb),.14);border-radius:4px;padding:0 .22em;-webkit-user-select:none;user-select:none}
+.tb-ans.tb-revealed .tb-ans-x{filter:none;background:rgba(var(--accent-rgb),.16)}
+/* 提示气泡 */
+#tb-toast{position:fixed;left:50%;bottom:4.2vh;transform:translateX(-50%) translateY(1.4rem);z-index:9300;background:rgba(15,20,30,.92);color:#fff;font-family:var(--sans-zh);font-size:.86rem;line-height:1.5;padding:.7em 1.2em;border-radius:10px;box-shadow:0 .8rem 2rem rgba(0,0,0,.35);max-width:min(90vw,30rem);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;text-align:center}
+#tb-toast.tb-show{opacity:1;transform:translateX(-50%) translateY(0)}
+#tb-toast b{color:#9db4e0}
+/* 专注模式 */
+body.tb-focus .chrome,body.tb-focus .foot{opacity:0 !important;transition:opacity .3s}
+body.tb-focus #nav{opacity:.25;transition:opacity .3s}
+body.tb-focus #nav:hover{opacity:1}
+@media print{#tb-dock,#tb-bar,.tb-overlay,#tb-toast,.tb-copy{display:none !important}}
+/* 代码一键复制 */
+.tb-codewrap{position:relative}
+.tb-copy{position:absolute;top:.55rem;right:.55rem;z-index:6;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:#d4ddee;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:7px;padding:.36em .7em;cursor:pointer;opacity:0;transition:opacity .2s,background .2s,color .2s,border-color .2s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:inline-flex;align-items:center;gap:.34em}
+.tb-codewrap:hover .tb-copy,.tb-copy:focus-visible{opacity:1}
+.tb-copy:hover{background:var(--accent);color:#fff;border-color:transparent}
+.tb-copy.tb-copied{background:#2f8a5c;color:#fff;border-color:transparent;opacity:1}
+.tb-copy svg{width:.86rem;height:.86rem;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:none){.tb-copy{opacity:.5}}
+/* ===== 视觉增强：门面页纹理 + 大数光晕 ===== */
+.slide.bare.dark{position:absolute}
+.slide.bare.dark::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(125% 85% at 50% -12%, rgba(var(--accent-rgb),.20), transparent 60%),
+    radial-gradient(85% 62% at 102% 112%, rgba(var(--accent-rgb),.12), transparent 55%),
+    repeating-linear-gradient(0deg, rgba(var(--paper-rgb),.030) 0 1px, transparent 1px 66px),
+    repeating-linear-gradient(90deg, rgba(var(--paper-rgb),.030) 0 1px, transparent 1px 66px);
+  -webkit-mask-image:radial-gradient(120% 100% at 50% 30%, #000 55%, transparent 100%);
+  mask-image:radial-gradient(120% 100% at 50% 30%, #000 55%, transparent 100%);
+}
+.slide.bare.dark > *{position:relative;z-index:1}
+.slide[data-screen-label="Section"] .w-statement > .kicker{position:relative}
+.slide[data-screen-label="Section"] .w-statement > .kicker::before{
+  content:"";position:absolute;left:-.85em;top:.05em;width:.26em;height:1.45em;border-radius:2px;
+  background:var(--accent);box-shadow:0 0 18px rgba(var(--accent-rgb),.7);
+}
+.stat-num{text-shadow:0 .02em .9em rgba(var(--accent-rgb),.38)}
+.slide.light .stat-num{text-shadow:0 .02em .7em rgba(var(--accent-rgb),.28)}
+.formula{padding:.1em 0}
+/* ===== 美学精修层 ===== */
+::selection{background:rgba(var(--accent-rgb),.26);color:inherit}
+.display-zh,.h1-zh,.h2-zh{letter-spacing:-.012em}
+.stat-num{letter-spacing:-.02em}
+.data-table tbody tr td{transition:background .18s ease}
+.data-table tbody tr:hover td{background:rgba(var(--accent-rgb),.15)}
+.slide.dark .data-table tbody tr:hover td{background:rgba(var(--accent-rgb),.24)}
+.example{transition:border-color .2s ease}
+.law-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.law-card:hover{transform:translateY(-3px);box-shadow:0 .6rem 1.5rem rgba(0,0,0,.16)}
+.tb-card:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+pre.code{scrollbar-width:thin;scrollbar-color:rgba(var(--paper-rgb),.25) transparent}
+pre.code::-webkit-scrollbar{height:8px;width:8px}
+pre.code::-webkit-scrollbar-thumb{background:rgba(var(--paper-rgb),.22);border-radius:99px}
+pre.code::-webkit-scrollbar-track{background:transparent}
+/*TB-CSS-END*/
+</style>
+<style id="cartesian-override">
+
+/* ===========================================
+   CARTESIAN / 笛卡尔 · DISCRETE MATHEMATICS EDITION
+   Museum-catalog editorial system adapted from the official template.
+   =========================================== */
+:root {
+  --ink:#1A1A1A !important;
+  --ink-rgb:26,26,26 !important;
+  --paper:#EDE8E0 !important;
+  --paper-rgb:237,232,224 !important;
+  --accent:#8A8178 !important;
+  --accent-rgb:138,129,120 !important;
+  --accent-2:#5A5A5A !important;
+  --muted:#5A5A5A !important;
+  --stone:#E2DBD1 !important;
+  --line:#B8B0A4 !important;
+  --serif-zh:"Playfair Display","Noto Serif SC",serif !important;
+  --sans-zh:"Inter","Noto Serif SC",sans-serif !important;
+  --mono:"Inter","Noto Serif SC",sans-serif !important;
+}
+
+/* === STONE CANVAS === */
+html,body{background:var(--paper)!important;color:var(--ink)!important}
+.slide,.slide.dark,.slide.light{
+  background:var(--paper)!important;color:var(--ink)!important;isolation:isolate;
+  padding:72px 84px 60px!important;
+}
+.slide::before,.slide::after{content:"";position:absolute;pointer-events:none;border-radius:50%;z-index:0}
+.slide::before{width:640px;height:640px;right:24px;top:24px;transform:none;border:1px solid var(--line);opacity:.42}
+.slide::after{width:500px;height:500px;right:94px;top:94px;transform:none;border:1px dashed var(--line);opacity:.30}
+.slide:nth-child(even)::before{right:auto;left:24px;top:auto;bottom:24px;transform:none;width:640px;height:640px}
+.slide:nth-child(even)::after{right:auto;left:94px;top:auto;bottom:94px;transform:none;width:500px;height:500px}
+.slide>*{position:relative;z-index:2}
+
+/* === EDITORIAL TYPOGRAPHY === */
+.display-zh,.h1-zh,.h2-zh,.lead-zh,.summary-num,.stat-num,.sec-h,.ch-name,.htitle,
+.formula,.formula-sm{
+  font-family:"Playfair Display","Noto Serif SC",serif!important;
+  color:var(--ink)!important;font-weight:400!important;letter-spacing:0!important;
+}
+.display-zh,.h1-zh,.h2-zh{line-height:1.18!important}
+.body-zh,p,li,.tb-panel,.data-table,button,input{
+  font-family:"Inter","Noto Serif SC",sans-serif!important;color:var(--muted)!important;
+  line-height:1.72!important;
+}
+.kicker,.meta,.chrome,.foot,.ch-no,.ch-pages,.ch-prog-txt{
+  font-family:"Inter","Noto Serif SC",sans-serif!important;color:var(--accent)!important;
+  font-weight:500!important;letter-spacing:.08em!important;text-transform:none!important;
+}
+.chrome{opacity:.88!important;border:0!important;padding:0!important;margin-bottom:26px!important}
+.foot{opacity:.78!important;border:0!important;padding-top:12px!important;margin-top:auto!important}
+strong{color:var(--ink)!important;font-weight:600!important}
+
+/* === ONE-PIXEL STRUCTURAL LANGUAGE === */
+.example,.code-pane,.stat-card,.card,.panel,.callout,.note,.definition,.theorem{
+  background:rgba(255,255,255,.30)!important;border:1px solid var(--line)!important;
+  border-radius:0!important;box-shadow:none!important;
+}
+.example{border-left:1px solid var(--line)!important;padding:18px 22px!important}
+.ldot{width:10px!important;height:10px!important;border:1px solid var(--line)!important;border-radius:50%!important;background:transparent!important}
+pre.code,.slide.dark pre.code{
+  background:rgba(255,255,255,.30)!important;color:var(--ink)!important;
+  border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;
+}
+pre.code code{color:var(--ink)!important;font-family:"DM Mono",monospace!important}
+.data-table{border-collapse:collapse!important;border-spacing:0!important}
+.data-table th,.data-table td,.slide.dark .data-table td{
+  color:var(--muted)!important;background:transparent!important;
+  border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;
+}
+.data-table th{color:var(--ink)!important;font-family:"Playfair Display","Noto Serif SC",serif!important;font-weight:400!important;background:rgba(255,255,255,.24)!important}
+.timeline-row::before{height:1px!important;background:var(--line)!important}
+.slide.light .timeline-node .meta,.slide.dark .timeline-node .meta{background:var(--paper)!important}
+.summary-num,.stat-num{color:var(--accent)!important;font-weight:400!important}
+
+/* === COVER / SECTION GEOMETRY === */
+.slide.bare::before{width:820px;height:820px;right:40px;top:130px;left:auto;bottom:auto;transform:none;opacity:.55}
+.slide.bare::after{width:620px;height:620px;right:20px;top:230px;left:auto;bottom:auto;transform:none;opacity:.38}
+.slide.bare .slide-body::after{content:none!important}
+.slide.bare .w-statement{align-items:flex-start!important;margin-left:84px!important;margin-right:auto!important;text-align:left!important;max-width:1120px}
+
+/* === STUDY TOOLS AND NAVIGATION === */
+#nav{background:rgba(237,232,224,.95)!important;border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}
+#nav .dot{width:8px!important;height:8px!important;background:var(--line)!important;border-radius:50%!important}
+#nav .dot.active{background:var(--ink)!important;transform:scale(1.3)}
+#tb-bar{background:var(--ink)!important;box-shadow:none!important}
+.tb-ctl,.tb-ctl.tb-on{
+  border:1px solid var(--line)!important;border-radius:0!important;background:var(--paper)!important;color:var(--accent)!important;box-shadow:none!important;backdrop-filter:none!important;
+}
+.tb-ctl:hover{background:var(--ink)!important;color:var(--paper)!important}
+.tb-panel{background:var(--paper)!important;color:var(--muted)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:0!important}
+.tb-overlay{background:rgba(26,26,26,.14)!important;backdrop-filter:none!important}
+.tb-phead,.tb-item,.tb-card,.tb-krow{border-color:var(--line)!important}
+.tb-item:hover,.tb-item.tb-cur,.tb-card:hover,.tb-card.tb-cur{background:rgba(255,255,255,.35)!important}
+.tb-copy,.tb-copy.tb-copied{border:1px solid var(--line)!important;border-radius:0!important;background:transparent!important;color:var(--ink)!important}
+#tb-toast{background:var(--ink)!important;color:var(--paper)!important;border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important}
+#tb-toast b{color:var(--paper)!important}
+mark{background:var(--stone)!important;color:var(--ink)!important}
+
+/* === QUIET EDITORIAL MOTION === */
+.anim-item{transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
+@media (prefers-reduced-motion:reduce){.anim-item{transform:none!important}}
+
+</style>
+<style id="mathjax-review">
+
+/* === MATHJAX / NUMERIC TYPOGRAPHY REVIEW === */
+html,body{font-variant-numeric:lining-nums tabular-nums;font-kerning:normal}
+.formula,.formula-sm,.math-inline-source,sup,sub{
+  font-family:"MathJax_Newcm","Cambria Math","STIX Two Math","Noto Serif SC",serif;
+  font-synthesis:none;font-variant-numeric:lining-nums tabular-nums;
+}
+.formula,.formula-sm{min-width:0;max-width:100%;overflow:visible;line-height:1.25!important;letter-spacing:0!important}
+.formula mjx-container[display="true"],.formula-sm mjx-container[display="true"]{
+  margin:.12em 0!important;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.12em .16em;
+}
+.math-inline-source{white-space:nowrap;display:inline-block;max-width:100%;vertical-align:-.08em}
+.math-inline-source mjx-container{margin:0 .04em!important}
+mjx-container{color:inherit!important;outline-offset:3px}
+sup,sub{font-size:.7em;line-height:0;position:relative;vertical-align:baseline;font-feature-settings:"lnum" 1,"tnum" 1}
+sup{top:-.58em}sub{bottom:-.18em}
+.frac{white-space:nowrap}
+@media (prefers-reduced-motion:reduce){mjx-container{transition:none!important}}
+
+
+
+
+/* Dedicated full-page application video stage — forced 16:9, never collapse */
+.app-video-stage-page .slide-body{
+  display:flex!important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(0.55rem,1.2vh,1.1rem);
+  padding:clamp(0.3rem,1vh,0.9rem) clamp(2vw,3.5vw,4.5vw);
+  box-sizing:border-box;
+  min-height:0;
+}
+.app-video-stage-page .app-video-kicker{
+  font:500 14px/1.2 "Inter","Noto Serif SC",sans-serif;
+  letter-spacing:.08em;
+  color:var(--accent);
+  opacity:.95;
+  flex:0 0 auto;
+}
+.app-video-stage-page .app-video-title{
+  margin:0;
+  text-align:center;
+  max-width:22em;
+  font-size:clamp(1.25rem,2.2vw,1.75rem);
+  line-height:1.35;
+  flex:0 0 auto;
+}
+.app-video-stage-page .app-video-stage{
+  width:min(92%, 1280px);
+  aspect-ratio:16 / 9;
+  max-height:min(62vh, 640px);
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:0 16px 40px rgba(0,0,0,.16);
+  background:#111;
+  position:relative;
+  flex:0 1 auto;
+}
+.slide.dark .app-video-stage-page .app-video-stage{
+  border-color:rgba(255,255,255,.14);
+  box-shadow:0 16px 40px rgba(0,0,0,.4);
+}
+.app-video-stage-page .app-video-stage video{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain;
+  background:#111;
+  border:0;
+  outline:none;
+}
+.app-video-stage-page .app-video-foot-hint{
+  margin:0;
+  font:400 13px/1.4 "Noto Serif SC",serif;
+  color:var(--ink);
+  opacity:.5;
+  text-align:center;
+  flex:0 0 auto;
+}
+.slide.dark .app-video-stage-page .app-video-foot-hint{
+  color:rgba(255,255,255,.55);
+}
+
+
+/* Keep legacy card styles harmless if residual */
+.app-video-card{display:flex;flex-direction:column;gap:.7rem;min-width:0;width:100%;max-width:100%}
+.app-video-label{font:500 14px/1.2 "Inter","Noto Serif SC",sans-serif;letter-spacing:.06em;color:var(--accent);opacity:.95}
+.app-video-card video{width:100%;max-height:min(52vh,560px);border-radius:14px;background:#1a1a1a;border:1px solid var(--line)}
+.app-video-hint{font:400 13px/1.4 "Noto Serif SC",serif;color:var(--ink);opacity:.55}
+.app-video-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(1.2rem,2.5vw,2.4rem);align-items:center;width:100%;height:100%;min-height:0}
+
+</style>
+<script id="mathjax-config">
+window.MathJax={
+  loader:{paths:{fonts:'assets/@mathjax'}},
+  tex:{
+    inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],
+    processEscapes:true,packages:{'[+]':['ams']}
+  },
+  output:{
+    displayOverflow:'linebreak',
+    linebreaks:{inline:true,width:'100%',lineleading:.18}
+  },
+  options:{enableMenu:true,enableExplorer:true},
+  startup:{
+    ready:function(){
+      MathJax.startup.defaultReady();
+      MathJax.startup.promise.then(function(){
+        document.documentElement.classList.add('mathjax-ready');
+      });
+    }
+  }
+};
+</script>
+<script defer="" src="assets/mathjax/tex-chtml.js"></script>
+</head>
+<body>
+<div id="deck">
+<section class="slide dark active bare" data-screen-label="Cover" data-source="第7章 标题页" data-theme="dark">
+<div class="slide-body" style="align-items:center">
+<div class="w-statement" style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.4rem,3vh,2.4rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">离散数学 · 第 7 章</div>
+<h1 class="display-zh anim-item" style="max-width:10em">图论基础</h1>
+<p class="lead-zh anim-item" style="max-width:26em;opacity:.62">从哥尼斯堡七桥到顶点与边、连通性、矩阵表示与最短路径，图论如何把复杂系统的关系抽象成可计算的网络，并用 Python 逐一实现</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>1 / 61</div></div></section>
+<section class="slide light" data-screen-label="Map" data-source="本章思维导图" data-theme="light"><div class="chrome"><div>本章地图</div><div>2 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">Chapter Map</div><h2 class="h1-zh anim-item" style="max-width:18em">三条主线，从图的概念走到最短路径</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">7.1 图概述：基本概念、顶点的度、图同构、典型图、图的运算</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">7.2 图的连通：连通性、图的矩阵表示、Dijkstra 与 Floyd-Warshall 最短通路</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">7.3 应用案例：救援调度、城市交通、智能制造、智慧城市四个图论案例</p></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>2 / 61</div></div></section>
+<section class="slide dark" data-screen-label="History" data-source="章首 · 图论起源" data-theme="dark"><div class="chrome"><div>图论的起源 · 哥尼斯堡七桥</div><div>3 / 61</div></div>
+<div class="slide-body">
+<div class="w-wide">
+<h2 class="h1-zh anim-item" style="text-align:center;max-width:17em;margin:0 auto clamp(2rem,5vh,3.6rem)">欧拉与哥尼斯堡七桥问题</h2>
+<div class="timeline-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.9rem,2vw,2rem)">
+<div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">1736 年</div><p class="body-zh" style="margin-top:1.2vh">欧拉用数学方法分析哥尼斯堡七桥问题，标志图论诞生</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">抽象</div><p class="body-zh" style="margin-top:1.2vh">把每个地区抽象为点、每座桥抽象为线，创造了图这一结构</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">欧拉原理</div><p class="body-zh" style="margin-top:1.2vh">存在恰好走过每条边一次并回到起点的路径，除起终点外各顶点度数须为偶</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">七桥无解</div><p class="body-zh" style="margin-top:1.2vh">七桥问题中每个顶点都连接奇数条边，故不存在满足条件的路径</p></div>
+</div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>3 / 61</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="7.1 图概述" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">7.1</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">图概述</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">图的基本概念、顶点的度、图同构、几种典型图，以及图的运算</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>4 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 7.1.1 至 7.1.3 · 图与有向无向边" data-theme="light"><div class="chrome"><div>7.1.1 图的基本概念</div><div>5 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.1.1 至 7.1.3</div><h2 class="h1-zh anim-item" style="max-width:16em">图由顶点集与边集构成</h2><div aria-label="G = &lt;V, E, φ&gt;" class="formula anim-item mathjax-display-source" data-tex="G = \langle V, E, φ\rangle">\[\displaystyle G = \langle V, E, φ\rangle\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">V 是顶点集，E 是边集，φ 把边映射到顶点的有序对或无序对。边对应无序对 <span aria-label="(vᵢ,vⱼ)" class="math-inline-source" data-tex="(v_{i},v_{j})">\((v_{i},v_{j})\)</span> 是无向边，全无向边的图是无向图；对应有序对 <span aria-label="&lt;vᵢ,vⱼ&gt;" class="math-inline-source" data-tex="\langle v_{i},v_{j}\rangle">\(\langle v_{i},v_{j}\rangle\)</span> 是有向边，全有向边的图是有向图。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>5 / 61</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 7.1.1 · 无向图与有向图" data-theme="light"><div class="chrome"><div>例 7.1.1</div><div>6 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">无向图与有向图</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">一个无向图与一个有向图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">左为无向图，边是无序对，没有方向；右为有向图，边是有序对，箭头表示从起点指向终点。混合图同时含有向边与无向边。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><svg class="digraph" viewbox="0 0 320 280"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="70" x2="250" y1="70" y2="70"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="70" x2="250" y1="70" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="70" x2="70" y1="70" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="250" y1="70" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="70" y1="210" y2="210"></line><circle cx="70" cy="70" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="70" y="76">a</text><circle cx="250" cy="70" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="76">b</text><circle cx="250" cy="210" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="216">c</text><circle cx="70" cy="210" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="70" y="216">d</text></svg></div></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 320 280"><defs><marker id="ah" markerheight="9" markerunits="strokeWidth" markerwidth="9" orient="auto" refx="7.5" refy="3"><path d="M0,0 L7.5,3 L0,6 Z" fill="currentColor"></path></marker><marker id="ahs" markerheight="9" markerunits="strokeWidth" markerwidth="9" orient="auto-start-reverse" refx="7.5" refy="3"><path d="M0,0 L7.5,3 L0,6 Z" fill="currentColor"></path></marker></defs><line marker-end="url(#ah)" stroke="currentColor" stroke-width="2" x1="92.0" x2="228.0" y1="70.0" y2="70.0"></line><line marker-end="url(#ah)" stroke="currentColor" stroke-width="2" x1="87.4" x2="232.6" y1="83.5" y2="196.5"></line><line marker-end="url(#ah)" stroke="currentColor" stroke-width="2" x1="250.0" x2="250.0" y1="92.0" y2="188.0"></line><line marker-end="url(#ah)" stroke="currentColor" stroke-width="2" x1="228.0" x2="92.0" y1="210.0" y2="210.0"></line><line marker-end="url(#ah)" stroke="currentColor" stroke-width="2" x1="70.0" x2="70.0" y1="188.0" y2="92.0"></line><circle cx="70" cy="70" fill="var(--paper)" r="22" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="70" y="76">A</text><circle cx="250" cy="70" fill="var(--paper)" r="22" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="76">B</text><circle cx="250" cy="210" fill="var(--paper)" r="22" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="216">C</text><circle cx="70" cy="210" fill="var(--paper)" r="22" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="70" y="216">D</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>6 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 7.1.4 至 7.1.10 · 特殊图与边" data-theme="dark"><div class="chrome"><div>7.1.1 加权图与特殊边</div><div>7 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.1.4 至 7.1.10</div><h2 class="h1-zh anim-item" style="max-width:16em">混合图、加权图、零图与特殊边</h2><p class="lead-zh anim-item" style="max-width:26em">混合图同时含有向边与无向边。加权图 <span aria-label="G=&lt;V,E,w&gt; 每条边赋权重" class="math-inline-source" data-tex="G=\langle V,E,w\rangle \text{每条边赋权重}">\(G=\langle V,E,w\rangle \text{每条边赋权重}\)</span>，如管道流量、车流密度、城市距离。零图无边 <span aria-label="E=⌀" class="math-inline-source" data-tex="E=\varnothing">\(E=\varnothing\)</span>，平凡图是只有一个顶点的零图。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">孤立点不与任何边相连；自环是起点终点为同一顶点的边；平行边连接同一对顶点；含平行边的图是多重图；无平行边且无自环的无向图是简单图。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>7 / 61</div></div></section>
+<section class="slide light" data-screen-label="Example+Code" data-source="例 7.1.5 · 自环、孤立点、平行边" data-theme="light"><div class="chrome"><div>例 7.1.5</div><div>8 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 7.1.5 · networkx 检测</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">检测自环、孤立点与平行边</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">检查顶点是否有自环、找出孤立点、识别平行边，可用 networkx 直接判断。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+# 自环检测
+G = nx.Graph()
+G.add_edges_from([('A','A'),('A','B'),('B','C'),('C','D'),('D','A')])
+print("有自环" if any(u == v for u, v in G.edges()) else "无自环")
+# 孤立点
+G2 = nx.Graph(); G2.add_nodes_from([1,2,3,4,5,6])
+G2.add_edges_from([(1,2),(2,3),(3,4),(4,5)])
+print("孤立点:", [n for n in G2.nodes if G2.degree(n) == 0])   # [6]</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>8 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 7.1.11 至 7.1.14 · 邻域" data-theme="light"><div class="chrome"><div>7.1.1 相邻邻接关联与邻域</div><div>9 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.1.11 至 7.1.14</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">相邻、关联、连通与邻域</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">顶点与顶点直接相连为相邻（邻接）；边与它所连接的顶点为关联（顶点-边关系）；两顶点间存在通路为连通（可达）。顶点 v 的邻域 N(v) 是与 v 相邻的所有顶点，闭邻域 <span aria-label="N[v]=N(v)∪{v}" class="math-inline-source" data-tex="N[v]=N(v)\cup \{v\}">\(N[v]=N(v)\cup \{v\}\)</span>。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">例</div><p class="body-zh" style="margin-top:.6vh">例 7.1.7：<span aria-label="E={(1,2),(2,3),(3,4)}" class="math-inline-source" data-tex="E=\{(1,2),(2,3),(3,4)\}">\(E=\{(1,2),(2,3),(3,4)\}\)</span>，顶点 2 的邻域是 {1,3}，闭邻域是 {1,2,3}。</p></div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.Graph()
+G.add_edges_from([(1, 2), (2, 3), (3, 4)])
+print("顶点2的邻域:", list(G.neighbors(2)))          # [1, 3]
+print("顶点2的闭邻域:", list(G.neighbors(2)) + [2])   # [1, 3, 2]</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>9 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 7.1.15 / 7.1.16 · 顶点的度" data-theme="light"><div class="chrome"><div>7.1.2 顶点的度</div><div>10 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.1.15 与 7.1.16</div><h2 class="h1-zh anim-item" style="max-width:16em">度、入度与出度</h2><p class="lead-zh anim-item" style="max-width:26em">无向图中顶点 v 的度 <span aria-label="deg(v)" class="math-inline-source" data-tex="\operatorname{deg}(v)">\(\operatorname{deg}(v)\)</span> 是与它相连的边数。最大度 Δ(G)、最小度 δ(G)。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">有向图中入度 <span aria-label="deg⁻(v)" class="math-inline-source" data-tex="\operatorname{deg}^{-}(v)">\(\operatorname{deg}^{-}(v)\)</span> 是指向 v 的边数，出度 <span aria-label="deg⁺(v)" class="math-inline-source" data-tex="\operatorname{deg}^{+}(v)">\(\operatorname{deg}^{+}(v)\)</span> 是从 v 出发的边数。例 7.1.8：顶点 3 连接 1,2,4 度为 3。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>10 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 7.1.1 · 握手定理" data-theme="dark"><div class="chrome"><div>7.1.2 握手定理</div><div>11 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定理 7.1.1 · 握手定理</div><h2 class="h1-zh anim-item" style="max-width:16em">所有顶点度数之和等于边数的两倍</h2><div aria-label="∑ deg(v) = 2|E|　　∑ deg⁺(v) = ∑ deg⁻(v) = |E|" class="formula anim-item mathjax-display-source" data-tex="\sum \operatorname{deg}(v) = 2|E| \sum \operatorname{deg}^{+}(v) = \sum \operatorname{deg}^{-}(v) = |E|">\[\displaystyle \sum \operatorname{deg}(v) = 2|E| \sum \operatorname{deg}^{+}(v) = \sum \operatorname{deg}^{-}(v) = |E|\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">每条无向边对总度数贡献 2，故度数和为 2|E|。例 7.1.9：无向图 <span aria-label="deg(A)=2, deg(B)=3, deg(C)=2, deg(D)=3" class="math-inline-source" data-tex="\operatorname{deg}(A)=2, \operatorname{deg}(B)=3, \operatorname{deg}(C)=2, \operatorname{deg}(D)=3">\(\operatorname{deg}(A)=2, \operatorname{deg}(B)=3, \operatorname{deg}(C)=2, \operatorname{deg}(D)=3\)</span>，度数和 <span aria-label="10 = 2×5" class="math-inline-source" data-tex="10 = 2\times 5">\(10 = 2\times 5\)</span>，边数 <span aria-label="|E|=5" class="math-inline-source" data-tex="|E|=5">\(|E|=5\)</span>，验证成立。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>11 / 61</div></div></section>
+<section class="slide light" data-screen-label="Theorem+Code" data-source="定理 7.1.2 / 7.1.3 · 度的性质" data-theme="light"><div class="chrome"><div>7.1.2 度的性质与可图化</div><div>12 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定理 7.1.2 与 7.1.3</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">奇数度顶点个数必为偶数</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">任何图中度数为奇数的顶点个数必为偶数。度数序列之和必为偶数（必要条件），但和为偶数不足以保证可图化，如 (3,3,3,2) 和为偶数却不可图化。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code># 握手定理：边数 = 度数之和 // 2（度数和须为偶）
+print(sum([2, 3, 2, 3]) // 2)               # 例7.1.9: 5 条边
+# 度数为奇数的顶点个数必为偶数
+print(len([d for d in [2, 4, 5, 1, 3] if d % 2]))   # 3 个奇度顶点
+
+def degree_sum_even(seq):       # 可图化的必要条件
+    return sum(seq) % 2 == 0
+print(degree_sum_even([3, 3, 2, 2, 2]))     # True（和为偶）</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 7.1.17 · 图同构" data-theme="light"><div class="chrome"><div>7.1.3 图同构</div><div>13 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.1.17 · 图同构</div><h2 class="h1-zh anim-item" style="max-width:16em">存在保持边连接的双射即同构</h2><p class="lead-zh anim-item" style="max-width:26em">若存在双射 <span aria-label="f:V₁→V₂" class="math-inline-source" data-tex="f:V_{1}\to V_{2}">\(f:V_{1}\to V_{2}\)</span>，使 (u,v) 是 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 的边当且仅当 (f(u),f(v)) 是 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span> 的边，则 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 与 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span> 同构。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">必要条件：顶点数相等、边数相等、度数序列相同、有相同的子结构（如圈、路径）。这些条件不总是充分，复杂图的同构通常需用算法求解。例 7.1.13：<span aria-label="a→1,b→2,c→3" class="math-inline-source" data-tex="a\to 1,b\to 2,c\to 3">\(a\to 1,b\to 2,c\to 3\)</span> 使 <span aria-label="K₃" class="math-inline-source" data-tex="K_{3}">\(K_{3}\)</span> 同构。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 图与同构" data-theme="dark"><div class="chrome"><div>应用示例 · 图与图同构</div><div>14 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">图与图同构的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">网络路由把计算机与路由器表示为顶点、连接为边，用图算法求最短路径</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">社交网络用图分析关键节点、社区结构与影响力</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">图同构在化学中识别相同分子结构、在模式识别中匹配图形、在社交网络中识别相似群体</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 61</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 图与图同构" data-theme="dark"><div class="chrome"><div>应用动画 · 图与图同构</div><div>15 / 61</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">图与图同构</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch7/ch7_01_app_bf70e1e4.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_01_app_bf70e1e4.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 7.1.18 / 7.1.19 / 定理 7.1.4 · 正则图" data-theme="light"><div class="chrome"><div>7.1.4 几种典型图</div><div>16 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.1.18、7.1.19 与 定理 7.1.4</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">n 阶图与 K-正则图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">n 阶图有 n 个顶点。K-正则图每个顶点都恰好与 K 个其他顶点相连。定理 7.1.4：K-正则图有 n 个顶点时边数为 nK/2。例 7.1.15：4-正则 10 顶点有 20 条边；3-正则 8 顶点有 12 条边。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>def edges_k_regular(n, K):       # K-正则图边数 = nK/2
+    return n * K // 2
+print(edges_k_regular(10, 4))   # 20
+print(edges_k_regular(8, 3))    # 12</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 7.1.20 至 7.1.22 / 定理 7.1.5 · 完全图" data-theme="light"><div class="chrome"><div>7.1.4 完全图与彼得森图</div><div>17 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.1.20 至 7.1.22 与 定理 7.1.5</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">完全图、竞赛图、彼得森图与立方体图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">完全图 <span aria-label="Kₙ" class="math-inline-source" data-tex="K_{n}">\(K_{n}\)</span> 每对顶点恰有一条边。定理 7.1.5：<span aria-label="Kₙ" class="math-inline-source" data-tex="K_{n}">\(K_{n}\)</span> 是 (n−1)-正则图，有 n(n−1)/2 条边。有向完全图每对顶点有两条相反有向边；竞赛图每对顶点只有一条有向边。彼得森图有 10 顶点 15 边、每点度 3；K-立方体图 <span aria-label="Qₙ" class="math-inline-source" data-tex="Q_{n}">\(Q_{n}\)</span> 顶点为 n 位二进制串、仅一位不同则相连。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><svg class="digraph" viewbox="0 0 340 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="295" y1="45" y2="140"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="247" y1="45" y2="265"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="93" y1="45" y2="265"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="45" y1="45" y2="140"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="295" x2="247" y1="140" y2="265"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="295" x2="93" y1="140" y2="265"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="295" x2="45" y1="140" y2="140"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="247" x2="93" y1="265" y2="265"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="247" x2="45" y1="265" y2="140"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="93" x2="45" y1="265" y2="140"></line><circle cx="170" cy="45" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170" y="51">1</text><circle cx="295" cy="140" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="146">2</text><circle cx="247" cy="265" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="247" y="271">3</text><circle cx="93" cy="265" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="93" y="271">4</text><circle cx="45" cy="140" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="45" y="146">5</text></svg></div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def edges_complete(n):  return n * (n - 1) // 2
+def degree_complete(n): return n - 1
+print(edges_complete(7))    # K7: 21 条边
+print(degree_complete(6))   # K6: 每个顶点度为 5</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 7.1.23 至 7.1.27 · 子图与操作" data-theme="light"><div class="chrome"><div>7.1.5 图的运算</div><div>18 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.1.23 至 7.1.27</div><h2 class="h1-zh anim-item" style="max-width:16em">子图、生成子图、导出子图、补图与图操作</h2><p class="lead-zh anim-item" style="max-width:26em">子图 H 满足 <span aria-label="V_H⊆V_G" class="math-inline-source" data-tex="V_{H}\subseteq V_{G}">\(V_{H}\subseteq V_{G}\)</span> 且 <span aria-label="E_H⊆E_G" class="math-inline-source" data-tex="E_{H}\subseteq E_{G}">\(E_{H}\subseteq E_{G}\)</span>；真子图不同于母图。生成子图保留全部顶点而取部分边（<span aria-label="V_H=V_G" class="math-inline-source" data-tex="V_{H}=V_{G}">\(V_{H}=V_{G}\)</span>）；导出子图取部分顶点及其在母图中两端点都在该顶点子集内的所有边（记 <span aria-label="G[V_H]" class="math-inline-source" data-tex="G[V_{H}]">\(G[V_{H}]\)</span>）。补图与原图同顶点集，边集是原图中不存在的所有可能边。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">图操作：删除顶点会同时删除关联的边；删除边只移除该边；收缩边把两端点合并为新顶点；加新边在两个非邻接顶点间加边。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>18 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 7.1.28 / 7.1.29 / 例 7.1.20 · 图的运算" data-theme="light"><div class="chrome"><div>7.1.5 不交交并差</div><div>19 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.1.28、7.1.29 与 例 7.1.20</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">不交、交、并、差运算</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">两图不交当 <span aria-label="V₁∩V₂=⌀" class="math-inline-source" data-tex="V_{1}\cap V_{2}=\varnothing">\(V_{1}\cap V_{2}=\varnothing\)</span>。交图 <span aria-label="G₁∩G₂" class="math-inline-source" data-tex="G_{1}\cap G_{2}">\(G_{1}\cap G_{2}\)</span> 顶点集 <span aria-label="V₁∩V₂" class="math-inline-source" data-tex="V_{1}\cap V_{2}">\(V_{1}\cap V_{2}\)</span>、边集 <span aria-label="E₁∩E₂" class="math-inline-source" data-tex="E_{1}\cap E_{2}">\(E_{1}\cap E_{2}\)</span>；并图 <span aria-label="G₁∪G₂" class="math-inline-source" data-tex="G_{1}\cup G_{2}">\(G_{1}\cup G_{2}\)</span> 取两者并集；差图 <span aria-label="G₁−G₂" class="math-inline-source" data-tex="G_{1}-G_{2}">\(G_{1}-G_{2}\)</span> 顶点集 <span aria-label="V₁" class="math-inline-source" data-tex="V_{1}">\(V_{1}\)</span>、边集 <span aria-label="E₁−E₂" class="math-inline-source" data-tex="E_{1}-E_{2}">\(E_{1}-E_{2}\)</span>。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><svg class="digraph" viewbox="0 0 410 280"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="70" x2="250" y1="70" y2="70"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="250" y1="70" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="70" y1="210" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="70" x2="70" y1="210" y2="70"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="70" x2="250" y1="70" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="340" y1="210" y2="70"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="340" x2="340" y1="70" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="340" x2="250" y1="210" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="70" x2="340" y1="210" y2="210"></line><circle cx="70" cy="70" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="70" y="76">1</text><circle cx="250" cy="70" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="76">2</text><circle cx="250" cy="210" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="216">3</text><circle cx="70" cy="210" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="70" y="216">4</text><circle cx="340" cy="70" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="340" y="76">5</text><circle cx="340" cy="210" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="340" y="216">6</text></svg></div><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">例</div><p class="body-zh" style="margin-top:.6vh">例 7.1.20：<span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 与 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span> 共享顶点 3,4 与边 (3,4)，并图含两者全部顶点与边，交图仅含 (3,4)，差图含 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 中不在 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span> 的边。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>19 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 典型图与图运算" data-theme="dark"><div class="chrome"><div>应用示例 · 典型图与图运算</div><div>20 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">典型图与图运算的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">n 阶图建模社会群体成员与关系，识别关键节点与信息传播路径</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">K-正则图使网络负载均匀分布，避免节点过载</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">图的并合并两个局域网，交找共同朋友，差模拟网络攻击后的剩余结构</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>20 / 61</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 典型图与图运算" data-theme="dark"><div class="chrome"><div>应用动画 · 典型图与图运算</div><div>21 / 61</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">典型图与图运算</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch7/ch7_02_app_85184370.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_02_app_85184370.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>21 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="7.1.6 小结" data-theme="dark"><div class="chrome"><div>7.1.6 小结</div><div>22 / 61</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">图由顶点和边组成，分有向图、无向图、混合图、加权图等，顶点的度是与之相连的边数</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">握手定理：度数之和等于边数两倍；奇数度顶点个数必为偶数</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">图同构指存在保持边连接的双射，顶点数边数度序列相同是必要条件</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">典型图含完全图、正则图、彼得森图、立方体图；图运算含子图、补图、并交差</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>22 / 61</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="7.1 习题" data-theme="light"><div class="chrome"><div>7.1 习题</div><div>23 / 61</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 7.1</div><h2 class="h1-zh anim-item" style="max-width:18em">图概述练习</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist twocol anim-item"><li>顶点的度指（答案 A：与该顶点相连的边数）</li><li><span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 与 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span> 同构则（答案 B：必有相同的度数序列）</li><li>n 顶点完全图 <span aria-label="Kₙ" class="math-inline-source" data-tex="K_{n}">\(K_{n}\)</span> 的边数（答案 A：n(n−1)/2）</li><li>6 顶点 5 边的图（答案 C：度数和必定为 10）</li><li>解释图同构的定义并举例两个同构图</li><li>讨论图的并与图的交的定义及应用</li><li>绘制度数序列为 4,3,3,2,2 的图</li><li>计算两图交图的度数序列</li><li>计算 <span aria-label="K₅" class="math-inline-source" data-tex="K_{5}">\(K_{5}\)</span> 与 <span aria-label="K₃" class="math-inline-source" data-tex="K_{3}">\(K_{3}\)</span> 的并与交</li><li>证明两个连通图的并图也连通</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>23 / 61</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="7.1 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 7.1</div><div>24 / 61</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:18em">把图概述推向更深的六个问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist anim-item"><li>理论：图同构问题是 NP 完全问题吗，是否属于 NP 难但非 NP 完全</li><li>实践：网络优化中如何用图运算分析与优化网络结构</li><li>工程：交通规划中如何用典型图设计与优化交通网络</li><li>科研：如何把图运算理论应用于生物信息学、社会科学等跨学科研究</li><li>习题：习题 8 和 10 的求解过程</li><li>代码：示例 7.1.11 与示例 7.1.12 的详细解释与分析</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 61</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="7.2 图的连通" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">7.2</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">图的连通</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">连通性、割点与连通度、图的矩阵表示，以及 Dijkstra 与 Floyd-Warshall 最短通路</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 7.2.1 至 7.2.3 · 通路与回路" data-theme="light"><div class="chrome"><div>7.2.1 连通性</div><div>26 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.2.1 至 7.2.3</div><h2 class="h1-zh anim-item" style="max-width:16em">通路、回路、初级与简单</h2><p class="lead-zh anim-item" style="max-width:26em">通路是顶点序列 <span aria-label="v₁,…,vₖ" class="math-inline-source" data-tex="v_{1},\ldots ,v_{k}">\(v_{1},\ldots ,v_{k}\)</span>，相邻顶点间有边；回路是起点终点相同的闭合通路。初级通路无重复顶点，初级回路（圈）除起终点外不重复顶点；简单通路不重复任何边，简单回路不重复任何边。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 7.2.1</div><p class="body-zh" style="margin-top:.8vh">例 7.2.1：序列 1,2,3,4,5 不重复顶点也不重复边，是初级通路也是简单通路；1,5,4,3,4,5 有重复，都不是。</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>26 / 61</div></div></section>
+<section class="slide light" data-screen-label="Example+Code" data-source="例 7.2.2 · K3 与 K4 的圈数" data-theme="light"><div class="chrome"><div>例 7.2.2</div><div>27 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 7.2.2 · 完全图的圈数</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh"><span aria-label="K₃" class="math-inline-source" data-tex="K_{3}">\(K_{3}\)</span> 有 6 个圈，<span aria-label="K₄" class="math-inline-source" data-tex="K_{4}">\(K_{4}\)</span> 有 48 个圈</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)"><span aria-label="K₃" class="math-inline-source" data-tex="K_{3}">\(K_{3}\)</span> 考虑顶点标定与方向有 <span aria-label="3!=6" class="math-inline-source" data-tex="3!=6">\(3!=6\)</span> 个圈。<span aria-label="K₄" class="math-inline-source" data-tex="K_{4}">\(K_{4}\)</span> 含长度为 3 的圈 <span aria-label="C(4,3)×3!=24" class="math-inline-source" data-tex="C(4,3)\times 3!=24">\(C(4,3)\times 3!=24\)</span> 个，长度为 4 的圈 <span aria-label="4!=24" class="math-inline-source" data-tex="4!=24">\(4!=24\)</span> 个，共 48 个。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>from math import comb, factorial
+print(factorial(3))                           # K3: 6 个圈
+print(comb(4, 3) * factorial(3) + factorial(4))   # K4: 24+24 = 48</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>27 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 7.2.4 / 7.2.5 / 例 7.2.3 · 连通分量" data-theme="light"><div class="chrome"><div>7.2.1 连通与连通分量</div><div>28 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.2.4、7.2.5 与 例 7.2.3</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">连通、连通分量与极大连通子图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">任意两顶点间有通路则图连通。连通分量是极大连通子图（maximal，不可再扩充，未必规模最大）。例 7.2.3：<span aria-label="V={1,…,9}" class="math-inline-source" data-tex="V=\{1,\ldots ,9\}">\(V=\{1,\ldots ,9\}\)</span>，边 (1,2)(2,3)(3,1)(4,5)(5,6)(6,4)(7,8)，图不连通，有 4 个连通分量 {1,2,3}、{4,5,6}、{7,8}、{9}。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><svg class="digraph" viewbox="0 0 400 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="60" x2="150" y1="60" y2="60"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="150" x2="105" y1="60" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="105" x2="60" y1="150" y2="60"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="340" y1="60" y2="60"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="340" x2="295" y1="60" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="295" x2="250" y1="150" y2="60"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="60" x2="150" y1="250" y2="250"></line><circle cx="60" cy="60" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="60" y="66">1</text><circle cx="150" cy="60" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="150" y="66">2</text><circle cx="105" cy="150" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="105" y="156">3</text><circle cx="250" cy="60" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="66">4</text><circle cx="340" cy="60" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="340" y="66">5</text><circle cx="295" cy="150" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="156">6</text><circle cx="60" cy="250" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="60" y="256">7</text><circle cx="150" cy="250" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="150" y="256">8</text><circle cx="300" cy="250" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="300" y="256">9</text></svg></div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.Graph()
+G.add_edges_from([(1,2),(2,3),(3,1),(4,5),(5,6),(6,4),(7,8)])
+G.add_node(9)
+print("连通:", nx.is_connected(G))                  # False
+print("连通分量:", list(nx.connected_components(G)))
+# [{1,2,3}, {4,5,6}, {7,8}, {9}]</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>28 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 7.2.6 / 7.2.7 / 定理 7.2.1 · 割点与连通度" data-theme="dark"><div class="chrome"><div>7.2.1 割点、割边与连通度</div><div>29 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.2.6、7.2.7 与 定理 7.2.1</div><h2 class="h1-zh anim-item" style="max-width:16em">割点、割边、点连通度与边连通度</h2><p class="lead-zh anim-item" style="max-width:26em">删除割点（及关联边）使图不连通；删除割边使图不连通。点连通度 k(G) 是最小点割集大小，边连通度 λ(G) 是最小边割集大小。</p><div aria-label="k(G) ≤ λ(G) ≤ δ(G)" class="formula anim-item mathjax-display-source" data-tex="k(G) \le λ(G) \le δ(G)">\[\displaystyle k(G) \le λ(G) \le δ(G)\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 7.2.1：点连通度不超过边连通度，边连通度不超过最小度数 δ(G)。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>29 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 7.2.9 / 例 7.2.7 · 有向图连通" data-theme="light"><div class="chrome"><div>7.2.1 单向强弱连通</div><div>30 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.2.9 与 例 7.2.7</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">单向连通、强连通与弱连通</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">有向图中任意一对顶点至少有一向路径则单向连通；双向都有路径则强连通；把有向边换成无向边后连通则弱连通。例 7.2.7：含回路 <span aria-label="1→2→3→1" class="math-inline-source" data-tex="1\to 2\to 3\to 1">\(1\to 2\to 3\to 1\)</span> 的图，加 <span aria-label="4→2" class="math-inline-source" data-tex="4\to 2">\(4\to 2\)</span> 后是弱连通单向连通；4-环 <span aria-label="1→2→3→4→1" class="math-inline-source" data-tex="1\to 2\to 3\to 4\to 1">\(1\to 2\to 3\to 4\to 1\)</span> 是强连通。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G1 = nx.DiGraph([(1,2),(2,3),(3,1),(4,2)])
+G2 = nx.DiGraph([(1,2),(2,3),(3,4),(4,1)])
+for name, G in [("G1", G1), ("G2", G2)]:
+    print(name, "强连通:", nx.is_strongly_connected(G),
+          "弱连通:", nx.is_weakly_connected(G))</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>30 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="算法 7.2.1 / 定义 7.2.11 · 极大路径与图距离" data-theme="light"><div class="chrome"><div>7.2.1 极大路径与图距离</div><div>31 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">算法 7.2.1 与 定义 7.2.11</div><h2 class="h1-zh anim-item" style="max-width:16em">极大路径与图距离</h2><p class="lead-zh anim-item" style="max-width:26em">扩大路径法从某顶点出发逐步添加未访问的相邻顶点，直到无法扩展，所得为极大路径。极大路径未必是最长路径。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">图距离 d(u,v) 是 u 到 v 最短路径的长度，满足非负、<span aria-label="d(u,u)=0" class="math-inline-source" data-tex="d(u,u)=0">\(d(u,u)=0\)</span>、三角不等式 <span aria-label="d(u,v)+d(v,w)≥d(u,w)" class="math-inline-source" data-tex="d(u,v)+d(v,w)\ge d(u,w)">\(d(u,v)+d(v,w)\ge d(u,w)\)</span>；不可达时 <span aria-label="d=∞" class="math-inline-source" data-tex="d=\infty">\(d=\infty\)</span>；有向图中 d(u,v) 未必等于 d(v,u)。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 连通性" data-theme="dark"><div class="chrome"><div>应用示例 · 连通性</div><div>32 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">连通性的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">计算机网络中连通性保证任意两点有路径，识别冗余路径抵御单点故障</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">社交网络中连通分量表示彼此有联系的自然群体，分析关系紧密程度</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">强连通网络中数据包可多路径传输，提高效率减少延迟</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>32 / 61</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 连通性" data-theme="dark"><div class="chrome"><div>应用动画 · 连通性</div><div>33 / 61</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">连通性</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch7/ch7_03_app_55a2b402.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_03_app_55a2b402.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>33 / 61</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 7.2.12 / 例 7.2.9 · 邻接矩阵" data-theme="light"><div class="chrome"><div>7.2.2 图的矩阵表示</div><div>34 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.2.12 · 邻接矩阵</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">邻接矩阵用 0/1 表示边的存在</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">n 个顶点的图，邻接矩阵 A 是 n×n 矩阵，<span aria-label="Aᵢⱼ=1" class="math-inline-source" data-tex="A_{ij}=1">\(A_{ij}=1\)</span> 表示顶点 i、j 间有边，否则为 0；加权图中 <span aria-label="Aᵢⱼ" class="math-inline-source" data-tex="A_{ij}">\(A_{ij}\)</span> 为权重，自环使 <span aria-label="Aᵢᵢ=1" class="math-inline-source" data-tex="A_{ii}=1">\(A_{ii}=1\)</span>。例 7.2.9：<span aria-label="V={1,2,3}" class="math-inline-source" data-tex="V=\{1,2,3\}">\(V=\{1,2,3\}\)</span>，<span aria-label="E={(1,2),(2,3)}" class="math-inline-source" data-tex="E=\{(1,2),(2,3)\}">\(E=\{(1,2),(2,3)\}\)</span> 的邻接矩阵。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(3,1fr)"><span class="zero">0</span><span class="one">1</span><span class="zero">0</span><span class="one">1</span><span class="zero">0</span><span class="one">1</span><span class="zero">0</span><span class="one">1</span><span class="zero">0</span></span><span class="br r"></span></span></div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.Graph()
+G.add_edges_from([(1, 2), (2, 3)])
+print(nx.to_numpy_array(G, nodelist=[1, 2, 3]))
+# [[0 1 0]
+#  [1 0 1]
+#  [0 1 0]]</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Theorem+Code" data-source="定理 7.2.2 / 例 7.2.11 · 矩阵幂与通路数" data-theme="dark"><div class="chrome"><div>7.2.2 矩阵幂与通路数</div><div>35 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定理 <span aria-label="7.2.2 · Aⁿ" class="math-inline-source" data-tex="7.2.2 \cdot A^{n}">\(7.2.2 \cdot A^{n}\)</span> 的含义</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh"><span aria-label="Aⁿ" class="math-inline-source" data-tex="A^{n}">\(A^{n}\)</span> 的元素是长度为 n 的通路数</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">邻接矩阵 A 的 n 次幂中，<span aria-label="(Aⁿ)ᵢⱼ" class="math-inline-source" data-tex="(A^{n})_{ij}">\((A^{n})_{ij}\)</span> 等于从顶点 i 到顶点 j 长度为 n 的通路数目（数学归纳法可证）。例 7.2.11：<span aria-label="A=[[0,1],[1,0]]" class="math-inline-source" data-tex="A=[[0,1],[1,0]]">\(A=[[0,1],[1,0]]\)</span> 时 <span aria-label="A²=单位矩阵" class="math-inline-source" data-tex="A^{2}=\text{单位矩阵}">\(A^{2}=\text{单位矩阵}\)</span>，表示每个顶点到自身有长度为 2 的通路；<span aria-label="A+B" class="math-inline-source" data-tex="A+B">\(A+B\)</span> 是并图的邻接矩阵。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><div class="matgroup"><div class="matcell"><div class="matlabel">A</div><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(2,1fr)"><span class="zero">0</span><span class="one">1</span><span class="one">1</span><span class="zero">0</span></span><span class="br r"></span></span></div><div class="matcell"><div class="matlabel"><span aria-label="A²" class="math-inline-source" data-tex="A^{2}">\(A^{2}\)</span></div><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(2,1fr)"><span class="one">1</span><span class="zero">0</span><span class="zero">0</span><span class="one">1</span></span><span class="br r"></span></span></div><div class="matcell"><div class="matlabel"><span aria-label="A+B" class="math-inline-source" data-tex="A+B">\(A+B\)</span></div><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(2,1fr)"><span class="zero">0</span><span class="one">1</span><span class="one">1</span><span class="one">1</span></span><span class="br r"></span></span></div></div></div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import numpy as np
+A = np.array([[0, 1], [1, 0]])
+B = np.array([[0, 0], [0, 1]])
+print(np.matmul(A, A))   # A²：长度为2的通路数
+print(A + B)             # 并图的邻接矩阵</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>35 / 61</div></div></section>
+<section class="slide light" data-screen-label="Theorem+Code" data-source="定义 7.2.17 / 定理 7.2.3 / 例 7.2.15 · 可达矩阵" data-theme="light"><div class="chrome"><div>7.2.2 可达矩阵</div><div>36 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.2.17 与 定理 7.2.3</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">可达矩阵表示顶点间是否可达</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">可达矩阵 R 中 <span aria-label="Rᵢⱼ=1" class="math-inline-source" data-tex="R_{ij}=1">\(R_{ij}=1\)</span> 表示存在从 i 到 j 的路径。定理 7.2.3：<span aria-label="R = I + A + A² + … + Aⁿ" class="math-inline-source" data-tex="R = I + A + A^{2} + \ldots + A^{n}">\(R = I + A + A^{2} + \ldots + A^{n}\)</span>（取布尔值）。例 7.2.15：4 阶有向环的可达矩阵是全 1 矩阵，表示任一顶点可达所有顶点。</p><div aria-label="R = I + A + A² + A³ + … + Aⁿ" class="formula formula-sm mathjax-display-source" data-tex="R = I + A + A^{2} + A^{3} + \ldots + A^{n}" style="margin-top:clamp(.9rem,2vh,1.6rem);text-align:left">\[\displaystyle R = I + A + A^{2} + A^{3} + \ldots + A^{n}\]</div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import numpy as np
+A = np.array([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]])
+R = (np.eye(4) + A + np.linalg.matrix_power(A, 2)
+     + np.linalg.matrix_power(A, 3) + np.linalg.matrix_power(A, 4))
+print((R &gt; 0).astype(int))   # 全 1：彼此可达</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>36 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 7.2.18 / 7.2.19 · 关联矩阵" data-theme="dark"><div class="chrome"><div>7.2.2 关联矩阵</div><div>37 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.2.18 与 7.2.19</div><h2 class="h1-zh anim-item" style="max-width:16em">关联矩阵表示顶点与边的关联</h2><p class="lead-zh anim-item" style="max-width:26em">无向图关联矩阵 M 是 |V|×|E| 矩阵，边 <span aria-label="eⱼ" class="math-inline-source" data-tex="e_{j}">\(e_{j}\)</span> 与顶点 <span aria-label="vᵢ" class="math-inline-source" data-tex="v_{i}">\(v_{i}\)</span> 关联则 <span aria-label="Mᵢⱼ=1" class="math-inline-source" data-tex="M_{ij}=1">\(M_{ij}=1\)</span>。每列两个 1 表示一条边的两端，每行元素和是该顶点的度。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">有向图关联矩阵中边的起点取 1、终点取 −1，每列 1 与 −1 各一个，全矩阵元素和为 0；非零元素总数是边数的两倍。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>37 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 矩阵表示" data-theme="dark"><div class="chrome"><div>应用示例 · 图的矩阵表示</div><div>38 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">图的矩阵表示的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">邻接矩阵分析网络拓扑、度、连通性与稠密度，矩阵幂给出路径数</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">可达矩阵分析数据传输能力，识别连通性与断点、薄弱环节</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">关联矩阵分析电路电流电压分布，建立节点方程与支路方程</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>38 / 61</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 图的矩阵表示" data-theme="dark"><div class="chrome"><div>应用动画 · 图的矩阵表示</div><div>39 / 61</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">图的矩阵表示</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch7/ch7_04_app_551eb3e4.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_04_app_551eb3e4.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>39 / 61</div></div></section>
+<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 7.2.2 / 例 7.2.16 · Dijkstra" data-theme="light"><div class="chrome"><div>7.2.3 最短通路 · Dijkstra</div><div>40 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">算法 7.2.2 · Dijkstra</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Dijkstra 求单源最短路径</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">每次选最小未处理顶点，更新其相邻顶点的最短估计值。适用于非负权图。例 7.2.16：从 A 出发，到 <span aria-label="B=1" class="math-inline-source" data-tex="B=1">\(B=1\)</span>、<span aria-label="C=3" class="math-inline-source" data-tex="C=3">\(C=3\)</span>、<span aria-label="D=4" class="math-inline-source" data-tex="D=4">\(D=4\)</span>。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><svg class="digraph" viewbox="0 0 360 300"><line opacity="0.6" stroke="currentColor" stroke-width="2" x1="60.0" x2="180.0" y1="150.0" y2="60.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="111.0" y="94.0"></rect><text class="gw" x="120.0" y="107.0">1</text><line opacity="0.6" stroke="currentColor" stroke-width="2" x1="60.0" x2="180.0" y1="150.0" y2="240.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="111.0" y="184.0"></rect><text class="gw" x="120.0" y="197.0">3</text><line opacity="0.6" stroke="currentColor" stroke-width="2" x1="180.0" x2="180.0" y1="60.0" y2="240.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="171.0" y="139.0"></rect><text class="gw" x="180.0" y="152.0">2</text><line opacity="0.6" stroke="currentColor" stroke-width="2" x1="180.0" x2="300.0" y1="60.0" y2="150.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="231.0" y="94.0"></rect><text class="gw" x="240.0" y="107.0">4</text><line opacity="0.6" stroke="currentColor" stroke-width="2" x1="180.0" x2="300.0" y1="240.0" y2="150.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="231.0" y="184.0"></rect><text class="gw" x="240.0" y="197.0">1</text><circle cx="60" cy="150" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="60" y="156">A</text><circle cx="180" cy="60" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="180" y="66">B</text><circle cx="180" cy="240" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="180" y="246">C</text><circle cx="300" cy="150" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="300" y="156">D</text></svg></div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import heapq
+def dijkstra(graph, start):
+    dist = {v: float('inf') for v in graph}
+    dist[start] = 0
+    pq = [(0, start)]
+    while pq:
+        d, u = heapq.heappop(pq)
+        if d &gt; dist[u]: continue
+        for v, w in graph[u].items():
+            if d + w &lt; dist[v]:
+                dist[v] = d + w
+                heapq.heappush(pq, (dist[v], v))
+    return dist
+
+g = {'A':{'B':1,'C':3}, 'B':{'A':1,'C':2,'D':4},
+     'C':{'A':3,'B':2,'D':1}, 'D':{'B':4,'C':1}}
+print(dijkstra(g, 'A'))   # {'A':0,'B':1,'C':3,'D':4}</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>40 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 7.2.17 · Dijkstra 路径" data-theme="dark"><div class="chrome"><div>例 7.2.17</div><div>41 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">例 7.2.17 · 最短路径与权重</div><h2 class="h1-zh anim-item" style="max-width:16em">从 A 到各顶点的最短路径</h2><p class="lead-zh anim-item" style="max-width:26em">加权图 <span aria-label="E={(A,B,3),(A,C,1),(B,C,7),(B,D,5),(B,E,1),(C,D,2),(D,E,7)}" class="math-inline-source" data-tex="E=\{(A,B,3),(A,C,1),(B,C,7),(B,D,5),(B,E,1),(C,D,2),(D,E,7)\}">\(E=\{(A,B,3),(A,C,1),(B,C,7),(B,D,5),(B,E,1),(C,D,2),(D,E,7)\}\)</span>。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">到 B：<span aria-label="A→B" class="math-inline-source" data-tex="A\to B">\(A\to B\)</span> 权重 3；到 C：<span aria-label="A→C" class="math-inline-source" data-tex="A\to C">\(A\to C\)</span> 权重 1；到 D：<span aria-label="A→C→D" class="math-inline-source" data-tex="A\to C\to D">\(A\to C\to D\)</span> 权重 3；到 E：<span aria-label="A→B→E" class="math-inline-source" data-tex="A\to B\to E">\(A\to B\to E\)</span> 权重 4。Dijkstra 逐步扩展，得到单源到所有顶点的最短路径。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>41 / 61</div></div></section>
+<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 7.2.3 / 例 7.2.18 · Floyd-Warshall" data-theme="light"><div class="chrome"><div>7.2.3 最短通路 · Floyd-Warshall</div><div>42 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">算法 7.2.3 · Floyd-Warshall</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Floyd-Warshall 求所有顶点对最短路径</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">初始化距离矩阵，对每个中转顶点 k 更新 <span aria-label="D[i][j]=min(D[i][j], D[i][k]+D[k][j])" class="math-inline-source" data-tex="D[i][j]=\operatorname{min}(D[i][j], D[i][k]+D[k][j])">\(D[i][j]=\operatorname{min}(D[i][j], D[i][k]+D[k][j])\)</span>。可处理负权边但不能处理负权环。例 7.2.18 计算得到全对最短路径矩阵。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(4,1fr)"><span class="one">0</span><span class="one">2</span><span class="one">3</span><span class="one">5</span><span class="one">∞</span><span class="one">0</span><span class="one">1</span><span class="one">3</span><span class="one">∞</span><span class="one">-1</span><span class="one">0</span><span class="one">2</span><span class="one">∞</span><span class="one">-3</span><span class="one">-2</span><span class="one">0</span></span><span class="br r"></span></span></div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def floyd_warshall(w):
+    n = len(w)
+    d = [[float('inf') if i != j and w[i][j] == 0 else w[i][j]
+          for j in range(n)] for i in range(n)]
+    for k in range(n):
+        for i in range(n):
+            for j in range(n):
+                d[i][j] = min(d[i][j], d[i][k] + d[k][j])
+    return d
+
+weights = [[0,2,4,0],[0,0,1,0],[0,0,0,2],[0,-3,0,0]]
+for row in floyd_warshall(weights):
+    print(row)</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>42 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Compare" data-source="7.2.3 两种算法对比" data-theme="dark"><div class="chrome"><div>Dijkstra vs Floyd-Warshall</div><div>43 / 61</div></div>
+<div class="slide-body">
+<div class="table-wrap">
+<h2 class="h1-zh anim-item" style="text-align:center;max-width:17em;margin:0 auto">两种最短路径算法对比</h2>
+<table class="data-table keyed anim-item">
+<thead><tr><th>维度</th><th>Dijkstra</th><th>Floyd-Warshall</th></tr></thead>
+<tbody><tr><td>求解范围</td><td>单源到所有顶点</td><td>所有顶点对之间</td></tr><tr><td>负权边</td><td>不适用</td><td>可处理（无负权环）</td></tr><tr><td>适用图</td><td>大型稀疏图更高效</td><td>顶点少的稠密图</td></tr><tr><td>时间复杂度</td><td>适合实时单源问题</td><td><span aria-label="O(V³)" class="math-inline-source" data-tex="O(V^{3})">\(O(V^{3})\)</span>，与边数无关</td></tr></tbody>
+</table>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>43 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 最短通路" data-theme="dark"><div class="chrome"><div>应用示例 · 最短通路</div><div>44 / 61</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">最短通路算法的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">Dijkstra 优化网络路由，实时计算到其他节点的最短转发路径</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">Floyd-Warshall 预计算所有路段最短路径，用于交通调度与导航</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">Floyd-Warshall 可处理表示优惠或优先通行的负权边</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>44 / 61</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 最短通路" data-theme="dark"><div class="chrome"><div>应用动画 · 最短通路</div><div>45 / 61</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">最短通路</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch7/ch7_05_app_ab352041.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_05_app_ab352041.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>45 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="7.2.4 小结" data-theme="dark"><div class="chrome"><div>7.2.4 小结</div><div>46 / 61</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">连通性描述顶点间可达性，含通路回路、割点割边、点连通度边连通度、强弱连通</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">邻接矩阵用 0/1 表示边，<span aria-label="Aⁿ" class="math-inline-source" data-tex="A^{n}">\(A^{n}\)</span> 给出长度为 n 的通路数；可达矩阵 <span aria-label="R=I+A+…+Aⁿ" class="math-inline-source" data-tex="R=I+A+\ldots +A^{n}">\(R=I+A+\ldots +A^{n}\)</span></p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">关联矩阵表示顶点与边的关联关系，每列对应一条边</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">Dijkstra 求单源最短路径（非负权），Floyd-Warshall 求所有顶点对最短路径（可负权）</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>46 / 61</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="7.2 习题" data-theme="light"><div class="chrome"><div>7.2 习题</div><div>47 / 61</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 7.2</div><h2 class="h1-zh anim-item" style="max-width:18em">图的连通练习</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist twocol anim-item"><li>简单连通图邻接矩阵的性质（答案 B：A 是对称矩阵）</li><li>可达矩阵 R 的定义（答案 C：是否可达的布尔矩阵）</li><li>可达矩阵元素 <span aria-label="rᵢⱼ" class="math-inline-source" data-tex="r_{ij}">\(r_{ij}\)</span> 的含义（答案 C：是否存在路径）</li><li>由邻接矩阵得可达矩阵（答案 D：<span aria-label="R=A+A²+…+Aⁿ⁻¹" class="math-inline-source" data-tex="R=A+A^{2}+\ldots +A^{n-1}">\(R=A+A^{2}+\ldots +A^{n-1}\)</span>）</li><li>关联矩阵行列对应（答案 B：行数=顶点数，列数=边数）</li><li>Dijkstra 的前提（答案 B：边权必须为正）</li><li>用矩阵求可达矩阵与关联矩阵</li><li>用 Floyd-Warshall 求全对最短路径</li><li>用 Dijkstra 求单源最短路径</li><li>证明连通当且仅当可达矩阵全为 1</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>47 / 61</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="7.2 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 7.2</div><div>48 / 61</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:18em">把图的连通推向更深的六个问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist anim-item"><li>理论：如何综合考虑连通性、矩阵表示与最短通路问题的复杂性</li><li>实践：如何用图的连通性提高社会网络的抗干扰能力</li><li>工程：机器人导航中如何用最短通路算法进行路径规划与避障</li><li>科研：如何把最短通路算法应用于生物信息学、社会科学等跨学科研究</li><li>习题：习题 14、16、17 的求解过程</li><li>代码：示例 7.2.9 与示例 7.2.10 的详细解释与分析</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>48 / 61</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="7.3 应用案例和 Python 实现" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">7.3</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">应用案例与 Python 实现</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">灾害救援调度、城市交通网络、智能制造网络、智慧城市综合管理四个图论案例</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>49 / 61</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="7.3.1 灾害救援调度" data-theme="light"><div class="chrome"><div>7.3.1 灾害救援调度</div><div>50 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例一 · 救援调度</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Dijkstra 优化救援队调度</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">顶点表示受灾小区，边表示道路，权重表示通过时间。用 Dijkstra 找从救援中心到所有小区的最短路径，从而优化调度，体现图论在公共服务中的价值。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.DiGraph()
+G.add_weighted_edges_from([
+    ('Rescue','A',2), ('A','B',1), ('A','D',4), ('B','C',2),
+    ('B','D',2), ('C','D',3), ('C','Rescue',7), ('D','Rescue',1)])
+dist, paths = nx.single_source_dijkstra(G, 'Rescue')
+for t in G.nodes():
+    if t != 'Rescue':
+        print(f"到 {t}: 路径 {paths[t]}, 时间 {dist[t]}")</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 61</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 7.3.1 灾害救援调度" data-theme="light"><div class="chrome"><div>应用动画 · 7.3.1 灾害救援调度</div><div>51 / 61</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">7.3.1 灾害救援调度</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch7/ch7_06_case_7_3_1_ee5e9550.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_06_case_7_3_1_ee5e9550.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>51 / 61</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="7.3.2 城市交通网络优化" data-theme="light"><div class="chrome"><div>7.3.2 城市交通网络</div><div>52 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 城市交通</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">图运算分析自行车道与汽车道</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">自行车道网络 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 与汽车道网络 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span>。交运算 <span aria-label="G₁∩G₂" class="math-inline-source" data-tex="G_{1}\cap G_{2}">\(G_{1}\cap G_{2}\)</span> 找共用路段增设安全措施；并运算合并网络；差运算识别专用路段；补运算发现未利用的潜在路段。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+bike = nx.Graph()
+bike.add_edges_from([('A','B'),('B','C'),('C','D'),('E','F')])
+car = nx.Graph()
+car.add_edges_from([('A','B'),('D','E'),('C','F'),('B','D')])
+# 交运算：共用路段
+print("共用路段:", list(nx.intersection(bike, car).edges()))   # [('A','B')]
+# 并运算：完整网络
+union = nx.union(bike, car, rename=('bike-', 'car-'))
+print("并图边数:", union.number_of_edges())</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>52 / 61</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 7.3.2 城市交通网络" data-theme="light"><div class="chrome"><div>应用动画 · 7.3.2 城市交通网络</div><div>53 / 61</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">7.3.2 城市交通网络</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch7/ch7_07_case_7_3_2_af8607c9.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_07_case_7_3_2_af8607c9.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>53 / 61</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="7.3.3 智能制造网络分析" data-theme="light"><div class="chrome"><div>7.3.3 智能制造网络</div><div>54 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例三 · 智能制造</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">矩阵表示分析制造网络</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">顶点表示制造单元，边表示物流路径。用邻接矩阵快速识别直接相连的单元，用关联矩阵分析物流路径的连接强度，优化路径选择、合理分配资源、提高生产效率。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.Graph()
+G.add_edges_from([('1','2'),('1','3'),('2','4'),('3','4'),('3','5')])
+print("邻接矩阵:\n", nx.adjacency_matrix(G).todense())
+print("关联矩阵:\n", nx.incidence_matrix(G).todense())</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>54 / 61</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 7.3.3 智能制造网络" data-theme="light"><div class="chrome"><div>应用动画 · 7.3.3 智能制造网络</div><div>55 / 61</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">7.3.3 智能制造网络</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch7/ch7_08_case_7_3_3_c12ca226.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_08_case_7_3_3_c12ca226.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>55 / 61</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="7.3.4 智慧城市综合管理" data-theme="light"><div class="chrome"><div>7.3.4 智慧城市综合管理</div><div>56 / 61</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例四 · 智慧城市</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">综合应用图论优化城市管理</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">综合应用图论：用 Dijkstra 计算交通网络最短路径减少出行时间；用邻接与关联矩阵优化制造物流；构建救援网络模型确保快速灾害响应。下例计算各节点到节点 G 的最短路径。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.DiGraph()
+G.add_weighted_edges_from([
+    ('A','B',10), ('A','C',15), ('B','D',12), ('B','F',15),
+    ('C','E',10), ('D','E',2), ('D','G',1), ('E','G',5), ('F','G',5)])
+for node in G.nodes:
+    if node != 'G':
+        path = nx.shortest_path(G, node, 'G', weight='weight')
+        length = nx.shortest_path_length(G, node, 'G', weight='weight')
+        print(f"{node}→G: {path}, 长度 {length}")</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 61</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 7.3.4 智慧城市综合管理" data-theme="light"><div class="chrome"><div>应用动画 · 7.3.4 智慧城市综合管理</div><div>57 / 61</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">7.3.4 智慧城市综合管理</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch7/ch7_09_case_7_3_4_97532cc2.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_09_case_7_3_4_97532cc2.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>57 / 61</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="7.3.5 小结" data-theme="dark"><div class="chrome"><div>7.3.5 小结</div><div>58 / 61</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">灾害救援调度用 Dijkstra 算法求救援中心到各小区的最短路径，优化调度</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">城市交通用交并差补运算分析自行车道与汽车道的共用、合并、专用与潜在路段</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">智能制造用邻接与关联矩阵分析网络结构，优化物流与资源分配</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">智慧城市综合应用最短路径与矩阵表示，提升交通、制造与灾害响应的管理水平</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>58 / 61</div></div></section>
+<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 1 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>59 / 61</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">图 <span aria-label="G=&lt;V,E,φ&gt; 用顶点与边刻画关系" class="math-inline-source" data-tex="G=\langle V,E,φ\rangle \text{用顶点与边刻画关系}">\(G=\langle V,E,φ\rangle \text{用顶点与边刻画关系}\)</span>，分有向无向加权等；握手定理 <span aria-label="∑deg(v)=2|E|" class="math-inline-source" data-tex="\sum \operatorname{deg}(v)=2|E|">\(\sum \operatorname{deg}(v)=2|E|\)</span></p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">图同构是保持边连接的双射，典型图含完全图、正则图、彼得森图、立方体图</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">图运算含子图、补图与并交差；连通性含通路回路、割点割边、点边连通度、强弱连通</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 61</div></div></section>
+<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 2 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>60 / 61</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">邻接矩阵 0/1 表示边，<span aria-label="Aⁿ" class="math-inline-source" data-tex="A^{n}">\(A^{n}\)</span> 给出长度 n 的通路数；可达矩阵 <span aria-label="R=I+A+…+Aⁿ" class="math-inline-source" data-tex="R=I+A+\ldots +A^{n}">\(R=I+A+\ldots +A^{n}\)</span>；关联矩阵表顶点与边关联</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">05</div><p class="body-zh">Dijkstra 求非负权单源最短路径，Floyd-Warshall 求所有顶点对最短路径且可处理负权边</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">06</div><p class="body-zh">图论广泛应用于救援调度、城市交通、智能制造与智慧城市等现实网络优化</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 61</div></div></section>
+<section class="slide dark bare" data-screen-label="Closing" data-source="本章收束" data-theme="dark">
+<div class="slide-body" style="align-items:center;text-align:center">
+<div class="w-quote guest-mark">
+<div class="kicker anim-item" style="margin-bottom:clamp(1rem,2vh,1.6rem)">第 7 章 · 完</div>
+<h2 class="h1-zh anim-item" style="max-width:15em">图论把复杂系统的关系抽象成顶点与边，让连通与最短路径变得可计算</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin:clamp(1.6rem,3.5vh,2.6rem) auto 0;opacity:.62">本章 Python 程序源码与学习指南均提供二维码下载。从欧拉的七桥到今天的智慧城市，图论始终是建模现实网络的核心工具。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 61</div></div></section>
+</div>
+<div id="nav"></div>
+<script>
+(function(){
+  const deck=document.getElementById('deck');
+  const slides=Array.from(deck.querySelectorAll('.slide'));
+  const total=slides.length;let current=0;
+  const nav=document.getElementById('nav');
+  const DUR=560,OFF=64;
+  function renderNav(){
+    if(nav.children.length!==total){
+      nav.innerHTML='';
+      slides.forEach((s,i)=>{const d=document.createElement('button');
+        d.className='dot';d.onclick=()=>goTo(i);nav.appendChild(d);});
+    }
+    const t=slides[current].dataset.theme;
+    nav.style.background=t==='light'?'rgba(0,0,0,.12)':'rgba(255,255,255,.15)';
+    Array.from(nav.children).forEach((d,i)=>{
+      d.classList.toggle('active',i===current);
+      d.style.background=i===current
+        ?(t==='light'?'rgba(0,0,0,.7)':'rgba(255,255,255,.95)')
+        :(t==='light'?'rgba(0,0,0,.18)':'rgba(255,255,255,.3)');});
+    if(nav.scrollWidth>nav.clientWidth){
+      const d=nav.children[current];
+      if(d){try{nav.scrollTo({left:d.offsetLeft-nav.clientWidth/2,behavior:'smooth'});}catch(e){}}
+    }
+  }
+  function goTo(idx){
+    if(idx<0||idx>=total||idx===current)return;
+    const dir=idx>current?1:-1;
+    const prev=slides[current],next=slides[idx];
+    current=idx;
+    slides.forEach(s=>{if(s!==prev&&s!==next){s.classList.remove('active','leaving');s.style.transform='';if(s.__lt){clearTimeout(s.__lt);s.__lt=null;}}});
+    prev.classList.remove('active');
+    prev.classList.add('leaving');
+    prev.style.transform='translateX('+(-dir*OFF)+'px)';
+    if(prev.__lt)clearTimeout(prev.__lt);
+    prev.__lt=setTimeout(()=>{prev.classList.remove('leaving');prev.style.transform='';prev.__lt=null;},DUR);
+    if(next.__lt){clearTimeout(next.__lt);next.__lt=null;}
+    next.classList.remove('leaving');
+    next.style.transition='none';
+    next.style.transform='translateX('+(dir*OFF)+'px)';
+    void next.offsetWidth;
+    next.style.transition='';
+    next.classList.add('active');
+    next.style.transform='';
+    renderNav();save();
+  }
+  window.__deckGoTo=goTo;
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();goTo(current+1);}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goTo(current-1);}
+    if(e.key==='Home'){e.preventDefault();goTo(0);}
+    if(e.key==='End'){e.preventDefault();goTo(total-1);}});
+  let acc=0,lastNav=0,lastDir=0;
+  document.addEventListener('wheel',e=>{
+    const now=performance.now();
+    const d=e.deltaY;
+    if(now-lastNav<420){acc=0;return;}
+    const dir=d>0?1:-1;
+    if(dir!==lastDir){acc=0;lastDir=dir;}
+    acc+=d;
+    if(Math.abs(acc)>=60){acc=0;lastNav=now;goTo(current+dir);}
+  },{passive:true});
+  let tx=0,ty=0;
+  document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
+    if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy))return;
+    if(dx>0)goTo(current+1);else goTo(current-1);},{passive:true});
+  const KEY='discrete-ch07-progress';
+  function save(){try{localStorage.setItem(KEY,current);}catch(e){}}
+  function load(){try{const p=parseInt(localStorage.getItem(KEY),10);
+    if(!isNaN(p)&&p>=0&&p<total){current=p;}}catch(e){}}
+  load();
+  slides.forEach(s=>s.classList.remove('active','leaving'));
+  slides[current].classList.add('active');
+  renderNav();
+})();
+</script>
+<!--TB-ENHANCE-START-->
+<div id="tb-bar"></div>
+<div id="tb-toast"></div>
+<div id="tb-dock"></div>
+<script id="tb-enhance">
+(function(){
+  if(window.__tbInit) return; window.__tbInit=true;
+  var CH=7;
+  var FILES=["离散数学_第1章_计数和数论基础.html", "离散数学_第2章_集合及其运算.html", "离散数学_第3章_二元关系.html", "离散数学_第4章_特殊关系.html", "离散数学_第5章_命题逻辑.html", "离散数学_第6章_谓词逻辑.html", "离散数学_第7章_图论基础.html", "离散数学_第8章_特殊图.html", "离散数学_第9章_代数系统.html", "离散数学_第10章_群论基础.html", "离散数学_第11章_环域格和布尔代数.html"];
+  var ICON={
+    toc:'<svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>',
+    grid:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+    mark:'<svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>',
+    home:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/></svg>'
+  };
+  function pad(n){return (n<10?'0':'')+n;}
+  var deck=document.getElementById('deck'); if(!deck) return;
+  var slides=Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var total=slides.length;
+  function dots(){return document.querySelectorAll('#nav .dot');}
+  function curIdx(){for(var i=0;i<slides.length;i++){if(slides[i].classList.contains('active'))return i;}return 0;}
+  function jump(i){if(i<0||i>=total)return;if(window.__deckGoTo){window.__deckGoTo(i);}else{var d=dots();if(d[i])d[i].click();}closeAll();}
+
+  /* ---------- 持久化：已读 / 书签 ---------- */
+  var RKEY='discrete-ch'+pad(CH)+'-read', BKEY='discrete-ch'+pad(CH)+'-marks';
+  function loadSet(k){try{var v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+  function saveSet(k,o){try{localStorage.setItem(k,JSON.stringify(o));}catch(e){}}
+  var readSet=loadSet(RKEY), markSet=loadSet(BKEY);
+  function readCount(){var n=0;for(var k in readSet)if(readSet[k])n++;return n;}
+
+  /* ---------- 幻灯片元数据 ---------- */
+  var meta=slides.map(function(s,i){
+    var src=s.getAttribute('data-source')||'';
+    var lab=s.getAttribute('data-screen-label')||'';
+    var h=s.querySelector('.display-zh,.h1-zh,.h2-zh');
+    var title=src||(h?h.textContent.trim():'')||('第 '+(i+1)+' 页');
+    return {i:i,src:src,lab:lab,title:title};
+  });
+
+  /* ---------- 控制坞 ---------- */
+  var dock=document.getElementById('tb-dock');
+  function ctl(tip,icon,fn,id){var b=document.createElement('button');b.className='tb-ctl';b.setAttribute('data-tip',tip);b.innerHTML=icon;if(id)b.id=id;b.onclick=function(e){e.stopPropagation();fn();};dock.appendChild(b);return b;}
+  ctl('目录  (M)',ICON.toc,toggleTOC);
+  ctl('总览  (G)',ICON.grid,toggleGrid);
+  ctl('搜索  (/)',ICON.search,openSearch);
+  var bmBtn=ctl('收藏本页  (B)',ICON.mark,toggleMark);
+  ctl('字号  (T)','Aa',cycleFont);
+  ctl('帮助  (?)','?',toggleHelp);
+  ctl('返回书目',ICON.home,function(){parent.location.href='index.html';});
+
+  /* ---------- 浮层骨架 ---------- */
+  function overlay(id,inner){var o=document.createElement('div');o.id=id;o.className='tb-overlay';o.innerHTML=inner;document.body.appendChild(o);o.addEventListener('click',function(e){if(e.target===o)closeAll();});o.addEventListener('wheel',function(e){e.stopPropagation();},{passive:true});return o;}
+  var tocEl=overlay('tb-toc','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">目录 <small id="tb-toc-pct"></small></div><button class="tb-close" data-close>&times;</button></div><div class="tb-pbody" id="tb-toc-body"></div></div>');
+  var gridEl=overlay('tb-grid','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">幻灯片总览 <small id="tb-grid-pct"></small></div><button class="tb-close" data-close>&times;</button></div><div class="tb-pbody"><div class="tb-gwrap" id="tb-grid-body"></div></div></div>');
+  var searchEl=overlay('tb-search','<div class="tb-panel"><div class="tb-phead"><input class="tb-sinput" id="tb-sin" placeholder="搜索本章内容…" autocomplete="off"><button class="tb-close" data-close>&times;</button></div><div class="tb-sres" id="tb-sres"></div></div>');
+  var helpEl=overlay('tb-help','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">使用说明</div><button class="tb-close" data-close>&times;</button></div><div class="tb-help-body" id="tb-help-body"></div></div>');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-close]'),function(b){b.onclick=closeAll;});
+
+  /* ---------- 目录构建 ---------- */
+  (function buildTOC(){
+    var body=document.getElementById('tb-toc-body');
+    var html='', grpTitle='本章导览', opened=false;
+    function grp(t){return '<div class="tb-grp">'+esc(t)+'</div>';}
+    html+=grp('本章导览');
+    meta.forEach(function(m){
+      if(m.lab==='Section'){html+=grp(m.src||'章节');}
+      html+='<div class="tb-item" data-j="'+m.i+'"><span class="tb-idx">'+pad(m.i+1)+'</span><span class="tb-rdot"></span><span class="tb-it-txt">'+esc(m.title)+'</span><span class="tb-star">&#9733;</span></div>';
+    });
+    body.innerHTML=html;
+    body.addEventListener('click',function(e){var it=e.target.closest('.tb-item');if(it)jump(+it.getAttribute('data-j'));});
+  })();
+
+  /* ---------- 总览构建 ---------- */
+  (function buildGrid(){
+    var w=document.getElementById('tb-grid-body'),html='';
+    meta.forEach(function(m){
+      html+='<div class="tb-card" data-j="'+m.i+'"><span class="tb-crd"></span><span class="tb-cnum">'+pad(m.i+1)+' / '+total+'</span>'+(m.lab?'<span class="tb-clab">'+esc(m.lab)+'</span>':'')+'<span class="tb-ctxt">'+esc(m.title)+'</span></div>';
+    });
+    w.innerHTML=html;
+    w.addEventListener('click',function(e){var c=e.target.closest('.tb-card');if(c)jump(+c.getAttribute('data-j'));});
+  })();
+
+  /* ---------- 帮助构建 ---------- */
+  (function buildHelp(){
+    var rows=[['下一页','→ / ↓ / 空格'],['上一页','← / ↑'],['目录','M'],['总览','G'],['搜索','/ 或 Ctrl/⌘ K'],['收藏本页','B'],['字号','T'],['专注模式','F'],['复制代码','悬停代码块点「复制」'],['本章首/末页','Home / End'],['关闭浮层','Esc']];
+    var h='';rows.forEach(function(r){h+='<div class="tb-krow"><span>'+r[0]+'</span><span class="tb-keys"><span class="tb-key">'+r[1]+'</span></span></div>';});
+    var prev=CH>1?FILES[CH-2]:null, next=CH<FILES.length?FILES[CH]:null;
+    h+='<div class="tb-help-foot">';
+    h+='<a class="tb-fbtn"'+(prev?' href="'+encodeURI(prev)+'"':' disabled')+'>&larr; 上一章</a>';
+    h+='<a class="tb-fbtn" href="index.html">全书目录</a>';
+    h+='<a class="tb-fbtn"'+(next?' href="'+encodeURI(next)+'"':' disabled')+'>下一章 &rarr;</a>';
+    h+='</div>';
+    document.getElementById('tb-help-body').innerHTML=h;
+  })();
+
+  /* ---------- 搜索 ---------- */
+  var sin=document.getElementById('tb-sin'), sres=document.getElementById('tb-sres'), stext=[];
+  function slideText(i){if(stext[i]==null){stext[i]=(slides[i].textContent||'').replace(/\s+/g,' ').trim();}return stext[i];}
+  function doSearch(){
+    var q=sin.value.trim();
+    if(!q){sres.innerHTML='<div class="tb-snone">输入关键词以检索本章全部 '+total+' 页内容。</div>';return;}
+    var ql=q.toLowerCase(),out='',n=0;
+    for(var i=0;i<total;i++){
+      var t=slideText(i),tl=t.toLowerCase(),p=tl.indexOf(ql);
+      if(p<0)continue;n++;
+      var s=Math.max(0,p-26);
+      var pre=t.slice(s,p), hit=t.slice(p,p+q.length), post=t.slice(p+q.length,p+q.length+60);
+      var snip=(s>0?'…':'')+esc(pre)+'<mark>'+esc(hit)+'</mark>'+esc(post)+'…';
+      out+='<div class="tb-sr" data-j="'+i+'"><div class="tb-sr-t"><span class="tb-idx">'+pad(i+1)+'</span>'+esc(meta[i].title)+'</div><div class="tb-sr-s">'+snip+'</div></div>';
+      if(n>=60)break;
+    }
+    sres.innerHTML=out||'<div class="tb-snone">未找到「'+esc(q)+'」。</div>';
+  }
+  sin.addEventListener('input',doSearch);
+  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
+  sres.addEventListener('click',function(e){var r=e.target.closest('.tb-sr');if(r)jump(+r.getAttribute('data-j'));});
+
+  /* ---------- 习题自测：隐藏答案 ---------- */
+  (function exercises(){
+    slides.forEach(function(s){
+      var lab=(s.getAttribute('data-screen-label')||'').toLowerCase();
+      var src=s.getAttribute('data-source')||'';
+      if(lab.indexOf('exercise')<0 && src.indexOf('习题')<0) return;
+      var lis=s.querySelectorAll('ol.biglist li, ol.steps li, .biglist li');
+      Array.prototype.forEach.call(lis,function(li){
+        if(li.getAttribute('data-tb-ex'))return;
+        var html=li.innerHTML,mathKeep=[];
+        html=html.replace(/<span[^>]*math-inline-source[^>]*>[\s\S]*?<\/span>/g,function(m){
+          var token='@@TBMATH'+mathKeep.length+'@@'; mathKeep.push(m); return token;
+        });
+        if(/[（(]/.test(html)){
+          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner){
+            return '<span class="tb-ans" title="点击查看答案">（<span class="tb-ans-x">'+inner+'</span>）</span>';
+          });
+          html=html.replace(/@@TBMATH(\d+)@@/g,function(m,i){return mathKeep[+i];});
+          li.innerHTML=html; li.setAttribute('data-tb-ex','1');
+        }
+      });
+    });
+    document.addEventListener('click',function(e){
+      var a=e.target.closest?e.target.closest('.tb-ans'):null;
+      if(a){a.classList.toggle('tb-revealed');e.stopPropagation();}
+    });
+  })();
+
+  /* ---------- 代码一键复制 ---------- */
+  (function copyButtons(){
+    var COPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);return true;}catch(e){return false;}}
+    Array.prototype.forEach.call(document.querySelectorAll('pre.code'),function(pre){
+      if(pre.__tbCopy)return; pre.__tbCopy=1;
+      var wrap=document.createElement('div'); wrap.className='tb-codewrap';
+      pre.parentNode.insertBefore(wrap,pre); wrap.appendChild(pre);
+      var btn=document.createElement('button'); btn.className='tb-copy'; btn.type='button';
+      btn.setAttribute('aria-label','复制代码'); btn.innerHTML=COPY+'<span>复制</span>';
+      var label=btn.querySelector('span');
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        var code=pre.querySelector('code'); var text=(code?code.innerText:pre.innerText).replace(/\u00a0/g,' ');
+        function done(){btn.classList.add('tb-copied');label.textContent='已复制';toast('代码已复制到剪贴板');clearTimeout(btn.__t);btn.__t=setTimeout(function(){btn.classList.remove('tb-copied');label.textContent='复制';},1600);}
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallbackCopy(text);done();});}
+        else{fallbackCopy(text);done();}
+      });
+      wrap.appendChild(btn);
+    });
+  })();
+
+  /* ---------- 字号 ---------- */
+  var fonts=['100%','112%','124%','90%'],fi=0;
+  try{var fs=+localStorage.getItem('tb-font');if(fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
+  function applyFont(){document.documentElement.style.fontSize=fonts[fi];}
+  function cycleFont(){fi=(fi+1)%fonts.length;applyFont();try{localStorage.setItem('tb-font',fi);}catch(e){}toast('字号：<b>'+fonts[fi]+'</b>');}
+
+  /* ---------- 专注模式 ---------- */
+  function toggleFocus(){document.body.classList.toggle('tb-focus');toast(document.body.classList.contains('tb-focus')?'已进入<b>专注模式</b>（按 F 退出）':'已退出专注模式');}
+
+  /* ---------- 浮层开关 ---------- */
+  function anyOpen(){return document.querySelector('.tb-overlay.tb-show');}
+  function closeAll(){Array.prototype.forEach.call(document.querySelectorAll('.tb-overlay.tb-show'),function(o){o.classList.remove('tb-show');});}
+  function toggleO(el,after){var was=el.classList.contains('tb-show');closeAll();if(!was){el.classList.add('tb-show');if(after)after();}}
+  function toggleTOC(){toggleO(tocEl,function(){updateTOCcur(curIdx());var cur=tocEl.querySelector('.tb-cur');if(cur)cur.scrollIntoView({block:'center'});});}
+  function toggleGrid(){toggleO(gridEl,function(){updateGridCur(curIdx());});}
+  function openSearch(){toggleO(searchEl,function(){doSearch();setTimeout(function(){sin.focus();sin.select();},60);});}
+  function toggleHelp(){toggleO(helpEl);}
+
+  /* ---------- 书签 ---------- */
+  function toggleMark(){var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
+  function updateMarkUI(i){bmBtn.classList.toggle('tb-on',!!markSet[i]);var it=tocEl.querySelector('.tb-item[data-j="'+i+'"]');if(it)it.classList.toggle('tb-mark',!!markSet[i]);}
+
+  /* ---------- 状态同步 ---------- */
+  function updateTOCcur(i){
+    Array.prototype.forEach.call(tocEl.querySelectorAll('.tb-item'),function(it){
+      var j=+it.getAttribute('data-j');
+      it.classList.toggle('tb-cur',j===i);
+      it.classList.toggle('tb-isread',!!readSet[j]);
+      it.classList.toggle('tb-mark',!!markSet[j]);
+    });
+    var pct=Math.round(readCount()/total*100);
+    var el=document.getElementById('tb-toc-pct');if(el)el.textContent='已读 '+pct+'%';
+  }
+  function updateGridCur(i){
+    Array.prototype.forEach.call(gridEl.querySelectorAll('.tb-card'),function(c){
+      var j=+c.getAttribute('data-j');
+      c.classList.toggle('tb-cur',j===i);
+      c.classList.toggle('tb-isread',!!readSet[j]);
+    });
+    var pct=Math.round(readCount()/total*100);
+    var el=document.getElementById('tb-grid-pct');if(el)el.textContent='已读 '+readCount()+' / '+total+'（'+pct+'%）';
+  }
+  function updateBar(i){var b=document.getElementById('tb-bar');if(b)b.style.width=((i+1)/total*100)+'%';}
+  function updateTheme(i){document.body.setAttribute('data-tb-theme',slides[i].getAttribute('data-theme')||'dark');}
+
+  var raf=null;
+  function onChange(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;
+    var i=curIdx();
+    if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}
+    updateBar(i);updateTheme(i);updateMarkUI(i);
+    if(tocEl.classList.contains('tb-show'))updateTOCcur(i);
+    if(gridEl.classList.contains('tb-show'))updateGridCur(i);
+    var s=slides[i];
+    if(!s.__tbHinted && s.querySelector('.tb-ans')){s.__tbHinted=1;toast('本页为<b>习题</b>：答案已隐藏，点击模糊处逐题查看');}
+  });}
+  new MutationObserver(onChange).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});
+
+  /* ---------- 提示气泡 ---------- */
+  var toastT=null;
+  function toast(html){var t=document.getElementById('tb-toast');t.innerHTML=html;t.classList.add('tb-show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('tb-show');},2600);}
+
+  /* ---------- 键盘（捕获阶段，先于原导航） ---------- */
+  document.addEventListener('keydown',function(e){
+    if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){if(!searchEl.classList.contains('tb-show'))openSearch();e.preventDefault();e.stopPropagation();return;}
+    if(anyOpen()){
+      if(e.key==='Escape'){closeAll();e.stopPropagation();e.preventDefault();return;}
+      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].indexOf(e.key)>-1){e.stopPropagation();}
+      return;
+    }
+    var tn=(e.target.tagName||'');
+    if(tn==='INPUT'||tn==='TEXTAREA')return;
+    var k=e.key;
+    if(k==='m'||k==='M'){toggleTOC();e.stopPropagation();}
+    else if(k==='g'||k==='G'){toggleGrid();e.stopPropagation();}
+    else if(k==='/'){openSearch();e.preventDefault();e.stopPropagation();}
+    else if(k==='?'){toggleHelp();e.stopPropagation();}
+    else if(k==='b'||k==='B'){toggleMark();e.stopPropagation();}
+    else if(k==='t'||k==='T'){cycleFont();e.stopPropagation();}
+    else if(k==='f'||k==='F'){toggleFocus();e.stopPropagation();}
+  },true);
+
+  /* ---------- 初始化 ---------- */
+  var i0=curIdx();updateBar(i0);updateTheme(i0);updateMarkUI(i0);if(!readSet[i0]){readSet[i0]=1;saveSet(RKEY,readSet);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  try{if(!localStorage.getItem('tb-hint-seen')){localStorage.setItem('tb-hint-seen','1');setTimeout(function(){toast('数字教材模式已启用 · <b>M</b> 目录 · <b>G</b> 总览 · <b>/</b> 搜索 · <b>?</b> 帮助');},900);}}catch(e){}
+})();
+</script>
+<!--TB-ENHANCE-END-->
+
+
+
+
+<script>
+(function(){
+  if(window.__appVideoRuntimeV3) return; window.__appVideoRuntimeV3=true;
+
+  function absUrl(rel){
+    try{ return new URL(rel, document.baseURI || location.href).href; }
+    catch(e){ return rel; }
+  }
+
+  function fixVideo(v){
+    var rel=v.getAttribute('data-app-video') || v.getAttribute('src');
+    if(!rel) return;
+    // strip query noise
+    var abs=absUrl(rel);
+    var cur=v.currentSrc || v.getAttribute('src') || '';
+    if(cur!==abs){
+      v.setAttribute('src', abs);
+      try{ v.load(); }catch(e){}
+    }
+    // ensure visible box
+    v.setAttribute('playsinline','');
+    v.setAttribute('controls','');
+    v.setAttribute('preload','auto');
+  }
+
+  function fixAll(){
+    document.querySelectorAll('video[data-app-video], .app-video-stage video').forEach(fixVideo);
+  }
+
+  function pauseOthers(except){
+    document.querySelectorAll('video').forEach(function(v){
+      if(except && v===except) return;
+      try{ v.pause(); }catch(e){}
+    });
+  }
+
+  // When a slide becomes active, reload its videos (metadata may not load while hidden)
+  function watchSlides(){
+    var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    if(!slides.length) return;
+    var obs=new MutationObserver(function(){
+      slides.forEach(function(s){
+        var active=s.classList.contains('active')||s.classList.contains('visible');
+        s.querySelectorAll('video').forEach(function(v){
+          if(active){
+            fixVideo(v);
+          }else{
+            try{ v.pause(); }catch(e){}
+          }
+        });
+      });
+    });
+    slides.forEach(function(s){ obs.observe(s,{attributes:true,attributeFilter:['class']}); });
+  }
+
+  document.addEventListener('play', function(e){
+    if(e.target && e.target.tagName==='VIDEO') pauseOthers(e.target);
+  }, true);
+
+  document.addEventListener('error', function(e){
+    if(e.target && e.target.tagName==='VIDEO'){
+      console.warn('video error', e.target.getAttribute('src'), e.target.error);
+      // one retry with cache buster
+      var v=e.target;
+      var rel=v.getAttribute('data-app-video');
+      if(rel && !v.__retried){
+        v.__retried=true;
+        v.src=absUrl(rel)+(absUrl(rel).indexOf('?')>-1?'&':'?')+'t='+Date.now();
+        try{ v.load(); }catch(err){}
+      }
+    }
+  }, true);
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', function(){ fixAll(); watchSlides(); });
+  }else{
+    fixAll(); watchSlides();
+  }
+  setTimeout(fixAll, 300);
+  setTimeout(fixAll, 1200);
+})();
+</script>
+
+</body>
+</html>

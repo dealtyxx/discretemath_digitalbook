@@ -1,0 +1,1593 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<base target="_top"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300..600&amp;family=DM+Mono:wght@400..500&amp;family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
+<title>离散数学 第5章 · 命题逻辑</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700;900&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#231a1d; --ink-rgb:35,26,29;
+  --paper:#f7f3f2; --paper-rgb:247,243,242;
+  --accent:#a23a4e; --accent-rgb:162,58,78;
+  --muted:#766066;
+  --serif-zh:"Noto Serif SC","Source Serif 4",serif;
+  --sans-zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"IBM Plex Mono",monospace;
+  --w-quote:min(100%,48rem); --w-statement:min(100%,58rem);
+  --w-note:min(100%,66rem); --w-default:min(100%,80rem); --w-wide:min(100%,94rem);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-wrap:pretty}
+h1,h2,h3,p,li{text-wrap:pretty}
+#deck{position:fixed;inset:0;width:100vw;height:100vh;z-index:10}
+.slide{position:absolute;inset:0;width:100vw;height:100vh;padding:clamp(2rem,4.5vw,5rem) clamp(2rem,6vw,6.5rem) clamp(1.4rem,3vw,2.6rem);display:flex;flex-direction:column;overflow:hidden;visibility:hidden;opacity:0;pointer-events:none;z-index:1;transition:opacity .56s cubic-bezier(.22,1,.36,1),transform .56s cubic-bezier(.22,1,.36,1)}
+.slide.active{visibility:visible;opacity:1;pointer-events:auto;z-index:3}
+.slide.leaving{visibility:visible;opacity:0;pointer-events:none;z-index:2}
+@media (prefers-reduced-motion:reduce){.slide{transition-duration:.15s}}
+.slide.dark{background:var(--ink);color:var(--paper)}
+.slide.light{background:var(--paper);color:var(--ink)}
+.slide.bare .chrome{display:none}
+.slide.bare .foot{opacity:.32}
+.display-zh{font-family:var(--serif-zh);font-weight:900;font-size:clamp(3rem,6.5vw,6.4rem);line-height:1.1}
+.h1-zh{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.85rem,3.9vw,3.5rem);line-height:1.2}
+.h2-zh{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.5rem,2.7vw,2.4rem);line-height:1.3}
+.lead-zh{font-family:var(--serif-zh);font-weight:400;font-size:clamp(1.3rem,1.8vw,1.88rem);line-height:1.5}
+.body-zh{font-family:var(--sans-zh);font-weight:400;font-size:clamp(1.12rem,1.32vw,1.52rem);line-height:1.6}
+.kicker{font-family:var(--mono);font-size:clamp(.74rem,.86vw,1rem);text-transform:uppercase;letter-spacing:.14em;opacity:.55;margin-bottom:.6vh}
+.meta{font-family:var(--mono);font-size:clamp(.74rem,.82vw,.92rem);letter-spacing:.1em;opacity:.6}
+.slide-body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.w-quote{width:var(--w-quote);margin:0 auto}
+.w-statement{width:var(--w-statement);margin:0 auto}
+.w-note{width:var(--w-note);margin:0 auto}
+.w-default{width:var(--w-default);margin:0 auto}
+.w-wide{width:var(--w-wide);margin:0 auto}
+.chrome{display:flex;justify-content:space-between;font-family:var(--mono);font-size:clamp(.74rem,.8vw,.9rem);letter-spacing:.1em;text-transform:uppercase;opacity:.45;margin-bottom:1.6vh}
+.foot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:clamp(.72rem,.78vw,.88rem);letter-spacing:.1em;text-transform:uppercase;opacity:.4;margin-top:auto;padding-top:1.6vh}
+.grid-2-7-5{display:grid;grid-template-columns:7fr 5fr;gap:clamp(1.4rem,3.5vw,4rem);flex:1;min-height:0}
+.vis-center{display:flex;justify-content:center;align-items:center}
+.vis-left{display:flex;justify-content:flex-start}
+/* 公式 */
+.formula{font-family:var(--serif-zh);font-size:clamp(1.32rem,2.1vw,2rem);line-height:1.5;color:var(--accent);text-align:center;letter-spacing:.01em}
+.formula-sm{font-size:clamp(1.12rem,1.75vw,1.6rem)}
+sup{font-size:.66em;vertical-align:super;line-height:0}
+sub{font-size:.66em;vertical-align:sub;line-height:0}
+/* 真值表 */
+.ttable{border-collapse:separate;border-spacing:0;font-family:var(--mono);font-size:clamp(.92rem,1.15vw,1.4rem);margin:0 auto}
+.ttable th{font-family:var(--mono);padding:.5em .95em;color:var(--accent);border-bottom:2px solid rgba(var(--accent-rgb),.35);font-weight:600;text-align:center}
+.ttable td{padding:.42em .95em;text-align:center}
+.ttable .vT{color:var(--accent);font-weight:700}
+.ttable .vF{opacity:.38}
+.slide.light .ttable tbody tr:nth-child(even){background:rgba(var(--ink-rgb),.04)}
+.slide.dark .ttable tbody tr:nth-child(even){background:rgba(var(--paper-rgb),.06)}
+/* 推理证明表 */
+.proof{display:grid;grid-template-columns:auto 1fr auto;gap:clamp(.4rem,1vh,.7rem) clamp(1rem,2vw,2rem);font-family:var(--mono);font-size:clamp(.95rem,1.18vw,1.4rem);align-items:baseline}
+.proof .pn{color:var(--accent);font-weight:600}
+.proof .pf{text-align:left}
+.proof .pr{opacity:.55;font-size:.82em;white-space:nowrap}
+/* 运算定律卡片 */
+.laws-grid{display:grid;gap:clamp(.9rem,2vh,1.6rem) clamp(2rem,4vw,4rem)}
+.law-card{display:flex;flex-direction:column;gap:.4vh;border-left:3px solid rgba(var(--accent-rgb),.55);padding-left:clamp(.9rem,1.5vw,1.3rem)}
+.law-name{font-family:var(--mono);font-size:clamp(.76rem,.86vw,.98rem);letter-spacing:.05em;color:var(--accent)}
+.law-formula{font-family:var(--serif-zh);font-size:clamp(1.05rem,1.35vw,1.5rem);line-height:1.4}
+/* 例题块 */
+.example{border-left:3px solid var(--accent);padding-left:clamp(1rem,1.6vw,1.4rem)}
+.example .body-zh{opacity:.92}
+/* 代码 */
+.code-pane{min-width:0}
+pre.code{font-family:var(--mono);background:rgba(var(--ink-rgb),.93);color:#f2e9ea;border-radius:8px;padding:clamp(1rem,1.8vw,1.6rem) clamp(1.1rem,2vw,1.7rem);overflow:auto;text-align:left;line-height:1.55;box-shadow:0 1.2rem 3rem rgba(0,0,0,.22);border:1px solid rgba(var(--paper-rgb),.08);max-height:80vh}
+.slide.dark pre.code{background:rgba(0,0,0,.3);border-color:rgba(var(--paper-rgb),.1)}
+pre.code code{white-space:pre;display:block}
+pre.code-normal{font-size:clamp(.92rem,1.05vw,1.28rem)}
+pre.code-small{font-size:clamp(.8rem,.9vw,1.06rem)}
+pre.code-tiny{font-size:clamp(.68rem,.78vw,.92rem);line-height:1.42}
+/* 列表 */
+.listrow{display:grid;grid-template-columns:auto 1fr;gap:clamp(.9rem,1.6vw,1.4rem);align-items:start}
+.ldot{width:.6rem;height:.6rem;border-radius:50%;background:var(--accent);opacity:.7;margin-top:.85em}
+ol.biglist{list-style:none;counter-reset:bl;display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)}
+ol.biglist.twocol{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.7rem,1.4vh,1.1rem) clamp(2rem,4vw,4rem)}
+ol.biglist li{counter-increment:bl;position:relative;padding-left:2.6em;font-family:var(--sans-zh);font-size:clamp(.98rem,1.18vw,1.38rem);line-height:1.5}
+ol.biglist li::before{content:counter(bl,decimal-leading-zero);position:absolute;left:0;top:0;font-family:var(--mono);font-size:.92em;color:var(--accent);opacity:.85}
+ol.steps{list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:.7vh}
+ol.steps li{counter-increment:st;position:relative;padding-left:2.1em;font-family:var(--sans-zh);font-size:clamp(1rem,1.18vw,1.36rem);line-height:1.45}
+ol.steps li::before{content:counter(st);position:absolute;left:0;top:0;font-family:var(--mono);color:var(--accent);font-weight:600}
+/* 时间线 */
+.timeline-row{position:relative}
+.timeline-row::before{content:"";position:absolute;top:clamp(.8rem,1.5vh,1.3rem);left:5%;right:5%;height:1px;background:rgba(var(--ink-rgb),.12);z-index:0}
+.slide.dark .timeline-row::before{background:rgba(var(--paper-rgb),.14)}
+.timeline-node{position:relative;z-index:1}
+.timeline-node .meta{display:inline-block;padding-right:.6em}
+.slide.light .timeline-node .meta{background:var(--paper)}
+.slide.dark .timeline-node .meta{background:var(--ink)}
+/* 核心总结编号 */
+.summary-num{font-family:var(--serif-zh);font-size:clamp(2.6rem,5.5vw,5rem);font-weight:600;color:var(--accent);opacity:.85;line-height:.95}
+/* 嘉宾签章 */
+.guest-mark{display:flex;flex-direction:column;align-items:center}
+.guest-mark::before{content:"";display:block;width:clamp(2.4rem,4em,4.8rem);height:1px;background:currentColor;opacity:.35;margin-bottom:clamp(1.4rem,3vh,2.4rem)}
+/* 表格 */
+.table-wrap{width:var(--w-wide);margin:0 auto;display:flex;flex-direction:column;gap:clamp(1.4rem,3.5vh,2.6rem)}
+.data-table{width:100%;border-collapse:separate;border-spacing:0 clamp(.45rem,1vh,.8rem);font-family:var(--sans-zh);font-size:clamp(1rem,1.18vw,1.38rem);line-height:1.45}
+.data-table th,.data-table td{padding:clamp(.75rem,1.25vw,1.15rem) clamp(.9rem,1.5vw,1.4rem);text-align:left;vertical-align:middle}
+.data-table th{font-family:var(--mono);font-size:clamp(.74rem,.8vw,.92rem);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+.data-table td{background:rgba(var(--ink-rgb),.05)}
+.slide.dark .data-table td{background:rgba(var(--paper-rgb),.08)}
+.data-table.keyed td:first-child{font-weight:600}
+.data-table tr>*:first-child{border-radius:6px 0 0 6px}
+.data-table tr>*:last-child{border-radius:0 6px 6px 0}
+/* 导航 */
+#nav{position:fixed;left:50%;bottom:1.4vh;transform:translateX(-50%);z-index:30;display:flex;gap:4px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);max-width:94vw;overflow-x:auto}
+#nav .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);border:none;padding:0;cursor:pointer;transition:all .3s ease;flex:0 0 auto}
+#nav .dot.active{background:rgba(255,255,255,.95);width:15px;border-radius:999px}
+/* 动效 */
+.anim-item{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.slide.active .anim-item{opacity:1;transform:translateY(0)}
+.slide.active .anim-item:nth-child(1){transition-delay:.05s}
+.slide.active .anim-item:nth-child(2){transition-delay:.13s}
+.slide.active .anim-item:nth-child(3){transition-delay:.21s}
+.slide.active .anim-item:nth-child(4){transition-delay:.29s}
+.slide.active .anim-item:nth-child(5){transition-delay:.37s}
+.slide.active .anim-item:nth-child(n+6){transition-delay:.45s}
+</style>
+<style id="tb-style">
+/*TB-CSS-START*/
+/* ===== 离散数学数字教材 · 增强层 ===== */
+#tb-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:9100;transition:width .45s cubic-bezier(.16,1,.3,1);box-shadow:0 0 10px rgba(var(--accent-rgb),.7);pointer-events:none}
+#tb-dock{position:fixed;right:clamp(.6rem,1.2vw,1.25rem);top:50%;transform:translateY(-50%);z-index:9000;display:flex;flex-direction:column;gap:.5rem}
+.tb-ctl{position:relative;width:2.7rem;height:2.7rem;border-radius:50%;border:1px solid rgba(var(--accent-rgb),.28);cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(var(--paper-rgb),.62);color:var(--accent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s,background .2s,color .2s;padding:0;font-family:var(--serif-zh);font-weight:700;font-size:.95rem}
+body[data-tb-theme="dark"] .tb-ctl{background:rgba(var(--ink-rgb),.5);border-color:rgba(var(--paper-rgb),.2);color:#9db4e0}
+.tb-ctl:hover{transform:scale(1.1);background:var(--accent);color:#fff;border-color:transparent}
+.tb-ctl.tb-on{background:var(--accent);color:#fff;border-color:transparent}
+.tb-ctl svg{width:1.24rem;height:1.24rem;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tb-ctl[data-tip]::after{content:attr(data-tip);position:absolute;right:122%;top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--mono);font-size:.7rem;padding:.34em .62em;border-radius:6px;background:rgba(15,20,30,.9);color:#fff;opacity:0;pointer-events:none;transition:opacity .2s;letter-spacing:.04em}
+.tb-ctl:hover::after{opacity:1}
+/* 浮层通用 */
+.tb-overlay{position:fixed;inset:0;z-index:9200;display:none;background:rgba(10,14,22,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tb-overlay.tb-show{display:block;animation:tbfade .22s ease}
+@keyframes tbfade{from{opacity:0}to{opacity:1}}
+.tb-panel{position:absolute;background:var(--paper);color:var(--ink);box-shadow:0 1.6rem 4.4rem rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--sans-zh)}
+.tb-phead{padding:clamp(1.2rem,3vh,1.9rem) clamp(1.3rem,3vw,2rem) .9rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(var(--ink-rgb),.1);gap:1rem}
+.tb-ptitle{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.15rem,2vw,1.5rem);display:flex;align-items:baseline;gap:.6rem}
+.tb-ptitle small{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--accent);font-weight:400}
+.tb-pbody{flex:1;overflow-y:auto;padding:.5rem 0 2.4rem}
+.tb-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.5rem;line-height:1;padding:.1em .3em;border-radius:6px;transition:background .15s}
+.tb-close:hover{background:rgba(var(--ink-rgb),.08)}
+/* 目录 */
+#tb-toc .tb-panel{top:0;left:0;height:100%;width:min(93vw,31rem);animation:tbslideL .32s cubic-bezier(.16,1,.3,1)}
+@keyframes tbslideL{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.tb-grp{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:1.15rem 1.6rem .35rem;font-weight:600}
+.tb-item{display:flex;gap:.7rem;align-items:center;padding:.5rem 1.6rem;cursor:pointer;font-size:.95rem;line-height:1.4;border-left:3px solid transparent;transition:background .15s}
+.tb-item:hover{background:rgba(var(--accent-rgb),.09)}
+.tb-item.tb-cur{border-left-color:var(--accent);background:rgba(var(--accent-rgb),.12);font-weight:600}
+.tb-idx{font-family:var(--mono);font-size:.74rem;color:var(--muted);min-width:2.3em;flex:0 0 auto}
+.tb-item .tb-rdot{width:.5rem;height:.5rem;border-radius:50%;background:rgba(var(--ink-rgb),.16);flex:0 0 auto}
+.tb-item.tb-isread .tb-rdot{background:var(--accent)}
+.tb-it-txt{flex:1;min-width:0}
+.tb-star{color:#e0a93a;flex:0 0 auto;opacity:0;font-size:.85rem}
+.tb-item.tb-mark .tb-star{opacity:1}
+/* 总览网格 */
+#tb-grid .tb-panel{inset:clamp(1rem,3vh,2.4rem);border-radius:14px}
+.tb-gwrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:.9rem;padding:1.3rem clamp(1.2rem,2.5vw,2rem) 2rem}
+.tb-card{position:relative;border:1px solid rgba(var(--ink-rgb),.12);border-radius:10px;padding:.85rem .95rem;cursor:pointer;background:rgba(var(--ink-rgb),.03);transition:transform .18s,box-shadow .18s,border-color .18s;min-height:5.4rem;display:flex;flex-direction:column;gap:.35rem;overflow:hidden}
+.tb-card:hover{transform:translateY(-3px);box-shadow:0 .7rem 1.6rem rgba(0,0,0,.16);border-color:var(--accent)}
+.tb-card.tb-cur{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.35)}
+.tb-card .tb-cnum{font-family:var(--mono);font-size:.7rem;color:var(--accent);letter-spacing:.06em}
+.tb-card .tb-clab{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);background:rgba(var(--accent-rgb),.1);padding:.1em .5em;border-radius:99px;align-self:flex-start}
+.tb-card .tb-ctxt{font-size:.9rem;line-height:1.35;font-weight:600;color:var(--ink)}
+.tb-card .tb-crd{position:absolute;top:.6rem;right:.7rem;width:.55rem;height:.55rem;border-radius:50%;background:rgba(var(--ink-rgb),.15)}
+.tb-card.tb-isread .tb-crd{background:var(--accent)}
+/* 搜索 */
+#tb-search .tb-panel{top:clamp(2.5rem,8vh,6rem);left:50%;transform:translateX(-50%);width:min(94vw,46rem);max-height:80vh;border-radius:14px}
+.tb-sinput{width:100%;border:none;outline:none;background:transparent;font-family:var(--serif-zh);font-size:clamp(1.1rem,2.4vw,1.6rem);color:var(--ink);padding:.2em 0}
+.tb-sinput::placeholder{color:var(--muted);opacity:.6}
+.tb-sres{flex:1;overflow-y:auto;padding:.4rem 0 1.4rem}
+.tb-sr{padding:.7rem 1.6rem;cursor:pointer;border-left:3px solid transparent;transition:background .15s}
+.tb-sr:hover{background:rgba(var(--accent-rgb),.09);border-left-color:var(--accent)}
+.tb-sr .tb-sr-t{font-weight:600;font-size:.95rem;display:flex;gap:.6rem;align-items:baseline}
+.tb-sr .tb-sr-t .tb-idx{min-width:auto}
+.tb-sr .tb-sr-s{font-size:.82rem;color:var(--muted);line-height:1.4;margin-top:.2rem}
+.tb-sr mark{background:rgba(var(--accent-rgb),.28);color:inherit;border-radius:3px;padding:0 .12em}
+.tb-snone{padding:1.4rem 1.6rem;color:var(--muted);font-size:.9rem}
+/* 帮助 */
+#tb-help .tb-panel{top:50%;left:50%;transform:translate(-50%,-50%);width:min(94vw,34rem);border-radius:14px}
+.tb-help-body{padding:1.2rem clamp(1.3rem,3vw,2rem) 1.8rem;display:flex;flex-direction:column;gap:.55rem}
+.tb-krow{display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:.92rem;padding:.3rem 0;border-bottom:1px dashed rgba(var(--ink-rgb),.1)}
+.tb-krow:last-child{border-bottom:none}
+.tb-keys{display:flex;gap:.35rem;flex:0 0 auto}
+.tb-key{font-family:var(--mono);font-size:.78rem;background:rgba(var(--ink-rgb),.08);border:1px solid rgba(var(--ink-rgb),.14);border-radius:5px;padding:.16em .5em;min-width:1.6em;text-align:center}
+.tb-help-foot{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+.tb-fbtn{font-family:var(--sans-zh);font-size:.86rem;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;padding:.5em 1em;cursor:pointer;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:.4em}
+.tb-fbtn:hover{background:var(--accent);color:#fff}
+.tb-fbtn[disabled]{opacity:.35;pointer-events:none}
+/* 习题自测：隐藏答案 */
+.tb-ans-x{filter:blur(5.5px);cursor:pointer;transition:filter .25s,background .25s;background:rgba(var(--accent-rgb),.14);border-radius:4px;padding:0 .22em;-webkit-user-select:none;user-select:none}
+.tb-ans.tb-revealed .tb-ans-x{filter:none;background:rgba(var(--accent-rgb),.16)}
+/* 提示气泡 */
+#tb-toast{position:fixed;left:50%;bottom:4.2vh;transform:translateX(-50%) translateY(1.4rem);z-index:9300;background:rgba(15,20,30,.92);color:#fff;font-family:var(--sans-zh);font-size:.86rem;line-height:1.5;padding:.7em 1.2em;border-radius:10px;box-shadow:0 .8rem 2rem rgba(0,0,0,.35);max-width:min(90vw,30rem);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;text-align:center}
+#tb-toast.tb-show{opacity:1;transform:translateX(-50%) translateY(0)}
+#tb-toast b{color:#9db4e0}
+/* 专注模式 */
+body.tb-focus .chrome,body.tb-focus .foot{opacity:0 !important;transition:opacity .3s}
+body.tb-focus #nav{opacity:.25;transition:opacity .3s}
+body.tb-focus #nav:hover{opacity:1}
+@media print{#tb-dock,#tb-bar,.tb-overlay,#tb-toast,.tb-copy{display:none !important}}
+/* 代码一键复制 */
+.tb-codewrap{position:relative}
+.tb-copy{position:absolute;top:.55rem;right:.55rem;z-index:6;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:#d4ddee;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:7px;padding:.36em .7em;cursor:pointer;opacity:0;transition:opacity .2s,background .2s,color .2s,border-color .2s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:inline-flex;align-items:center;gap:.34em}
+.tb-codewrap:hover .tb-copy,.tb-copy:focus-visible{opacity:1}
+.tb-copy:hover{background:var(--accent);color:#fff;border-color:transparent}
+.tb-copy.tb-copied{background:#2f8a5c;color:#fff;border-color:transparent;opacity:1}
+.tb-copy svg{width:.86rem;height:.86rem;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:none){.tb-copy{opacity:.5}}
+/* ===== 视觉增强：门面页纹理 + 大数光晕 ===== */
+.slide.bare.dark{position:absolute}
+.slide.bare.dark::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(125% 85% at 50% -12%, rgba(var(--accent-rgb),.20), transparent 60%),
+    radial-gradient(85% 62% at 102% 112%, rgba(var(--accent-rgb),.12), transparent 55%),
+    repeating-linear-gradient(0deg, rgba(var(--paper-rgb),.030) 0 1px, transparent 1px 66px),
+    repeating-linear-gradient(90deg, rgba(var(--paper-rgb),.030) 0 1px, transparent 1px 66px);
+  -webkit-mask-image:radial-gradient(120% 100% at 50% 30%, #000 55%, transparent 100%);
+  mask-image:radial-gradient(120% 100% at 50% 30%, #000 55%, transparent 100%);
+}
+.slide.bare.dark > *{position:relative;z-index:1}
+.slide[data-screen-label="Section"] .w-statement > .kicker{position:relative}
+.slide[data-screen-label="Section"] .w-statement > .kicker::before{
+  content:"";position:absolute;left:-.85em;top:.05em;width:.26em;height:1.45em;border-radius:2px;
+  background:var(--accent);box-shadow:0 0 18px rgba(var(--accent-rgb),.7);
+}
+.stat-num{text-shadow:0 .02em .9em rgba(var(--accent-rgb),.38)}
+.slide.light .stat-num{text-shadow:0 .02em .7em rgba(var(--accent-rgb),.28)}
+.formula{padding:.1em 0}
+/* ===== 美学精修层 ===== */
+::selection{background:rgba(var(--accent-rgb),.26);color:inherit}
+.display-zh,.h1-zh,.h2-zh{letter-spacing:-.012em}
+.stat-num{letter-spacing:-.02em}
+.data-table tbody tr td{transition:background .18s ease}
+.data-table tbody tr:hover td{background:rgba(var(--accent-rgb),.15)}
+.slide.dark .data-table tbody tr:hover td{background:rgba(var(--accent-rgb),.24)}
+.example{transition:border-color .2s ease}
+.law-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.law-card:hover{transform:translateY(-3px);box-shadow:0 .6rem 1.5rem rgba(0,0,0,.16)}
+.tb-card:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+pre.code{scrollbar-width:thin;scrollbar-color:rgba(var(--paper-rgb),.25) transparent}
+pre.code::-webkit-scrollbar{height:8px;width:8px}
+pre.code::-webkit-scrollbar-thumb{background:rgba(var(--paper-rgb),.22);border-radius:99px}
+pre.code::-webkit-scrollbar-track{background:transparent}
+/*TB-CSS-END*/
+</style>
+<style id="cartesian-override">
+
+/* ===========================================
+   CARTESIAN / 笛卡尔 · DISCRETE MATHEMATICS EDITION
+   Museum-catalog editorial system adapted from the official template.
+   =========================================== */
+:root {
+  --ink:#1A1A1A !important;
+  --ink-rgb:26,26,26 !important;
+  --paper:#EDE8E0 !important;
+  --paper-rgb:237,232,224 !important;
+  --accent:#8A8178 !important;
+  --accent-rgb:138,129,120 !important;
+  --accent-2:#5A5A5A !important;
+  --muted:#5A5A5A !important;
+  --stone:#E2DBD1 !important;
+  --line:#B8B0A4 !important;
+  --serif-zh:"Playfair Display","Noto Serif SC",serif !important;
+  --sans-zh:"Inter","Noto Serif SC",sans-serif !important;
+  --mono:"Inter","Noto Serif SC",sans-serif !important;
+}
+
+/* === STONE CANVAS === */
+html,body{background:var(--paper)!important;color:var(--ink)!important}
+.slide,.slide.dark,.slide.light{
+  background:var(--paper)!important;color:var(--ink)!important;isolation:isolate;
+  padding:72px 84px 60px!important;
+}
+.slide::before,.slide::after{content:"";position:absolute;pointer-events:none;border-radius:50%;z-index:0}
+.slide::before{width:640px;height:640px;right:24px;top:24px;transform:none;border:1px solid var(--line);opacity:.42}
+.slide::after{width:500px;height:500px;right:94px;top:94px;transform:none;border:1px dashed var(--line);opacity:.30}
+.slide:nth-child(even)::before{right:auto;left:24px;top:auto;bottom:24px;transform:none;width:640px;height:640px}
+.slide:nth-child(even)::after{right:auto;left:94px;top:auto;bottom:94px;transform:none;width:500px;height:500px}
+.slide>*{position:relative;z-index:2}
+
+/* === EDITORIAL TYPOGRAPHY === */
+.display-zh,.h1-zh,.h2-zh,.lead-zh,.summary-num,.stat-num,.sec-h,.ch-name,.htitle,
+.formula,.formula-sm{
+  font-family:"Playfair Display","Noto Serif SC",serif!important;
+  color:var(--ink)!important;font-weight:400!important;letter-spacing:0!important;
+}
+.display-zh,.h1-zh,.h2-zh{line-height:1.18!important}
+.body-zh,p,li,.tb-panel,.data-table,button,input{
+  font-family:"Inter","Noto Serif SC",sans-serif!important;color:var(--muted)!important;
+  line-height:1.72!important;
+}
+.kicker,.meta,.chrome,.foot,.ch-no,.ch-pages,.ch-prog-txt{
+  font-family:"Inter","Noto Serif SC",sans-serif!important;color:var(--accent)!important;
+  font-weight:500!important;letter-spacing:.08em!important;text-transform:none!important;
+}
+.chrome{opacity:.88!important;border:0!important;padding:0!important;margin-bottom:26px!important}
+.foot{opacity:.78!important;border:0!important;padding-top:12px!important;margin-top:auto!important}
+strong{color:var(--ink)!important;font-weight:600!important}
+
+/* === ONE-PIXEL STRUCTURAL LANGUAGE === */
+.example,.code-pane,.stat-card,.card,.panel,.callout,.note,.definition,.theorem{
+  background:rgba(255,255,255,.30)!important;border:1px solid var(--line)!important;
+  border-radius:0!important;box-shadow:none!important;
+}
+.example{border-left:1px solid var(--line)!important;padding:18px 22px!important}
+.ldot{width:10px!important;height:10px!important;border:1px solid var(--line)!important;border-radius:50%!important;background:transparent!important}
+pre.code,.slide.dark pre.code{
+  background:rgba(255,255,255,.30)!important;color:var(--ink)!important;
+  border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;
+}
+pre.code code{color:var(--ink)!important;font-family:"DM Mono",monospace!important}
+.data-table{border-collapse:collapse!important;border-spacing:0!important}
+.data-table th,.data-table td,.slide.dark .data-table td{
+  color:var(--muted)!important;background:transparent!important;
+  border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;
+}
+.data-table th{color:var(--ink)!important;font-family:"Playfair Display","Noto Serif SC",serif!important;font-weight:400!important;background:rgba(255,255,255,.24)!important}
+.timeline-row::before{height:1px!important;background:var(--line)!important}
+.slide.light .timeline-node .meta,.slide.dark .timeline-node .meta{background:var(--paper)!important}
+.summary-num,.stat-num{color:var(--accent)!important;font-weight:400!important}
+
+/* === COVER / SECTION GEOMETRY === */
+.slide.bare::before{width:820px;height:820px;right:40px;top:130px;left:auto;bottom:auto;transform:none;opacity:.55}
+.slide.bare::after{width:620px;height:620px;right:20px;top:230px;left:auto;bottom:auto;transform:none;opacity:.38}
+.slide.bare .slide-body::after{content:none!important}
+.slide.bare .w-statement{align-items:flex-start!important;margin-left:84px!important;margin-right:auto!important;text-align:left!important;max-width:1120px}
+
+/* === STUDY TOOLS AND NAVIGATION === */
+#nav{background:rgba(237,232,224,.95)!important;border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}
+#nav .dot{width:8px!important;height:8px!important;background:var(--line)!important;border-radius:50%!important}
+#nav .dot.active{background:var(--ink)!important;transform:scale(1.3)}
+#tb-bar{background:var(--ink)!important;box-shadow:none!important}
+.tb-ctl,.tb-ctl.tb-on{
+  border:1px solid var(--line)!important;border-radius:0!important;background:var(--paper)!important;color:var(--accent)!important;box-shadow:none!important;backdrop-filter:none!important;
+}
+.tb-ctl:hover{background:var(--ink)!important;color:var(--paper)!important}
+.tb-panel{background:var(--paper)!important;color:var(--muted)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:0!important}
+.tb-overlay{background:rgba(26,26,26,.14)!important;backdrop-filter:none!important}
+.tb-phead,.tb-item,.tb-card,.tb-krow{border-color:var(--line)!important}
+.tb-item:hover,.tb-item.tb-cur,.tb-card:hover,.tb-card.tb-cur{background:rgba(255,255,255,.35)!important}
+.tb-copy,.tb-copy.tb-copied{border:1px solid var(--line)!important;border-radius:0!important;background:transparent!important;color:var(--ink)!important}
+#tb-toast{background:var(--ink)!important;color:var(--paper)!important;border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important}
+#tb-toast b{color:var(--paper)!important}
+mark{background:var(--stone)!important;color:var(--ink)!important}
+
+/* === QUIET EDITORIAL MOTION === */
+.anim-item{transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
+@media (prefers-reduced-motion:reduce){.anim-item{transform:none!important}}
+
+</style>
+<style id="mathjax-review">
+
+/* === MATHJAX / NUMERIC TYPOGRAPHY REVIEW === */
+html,body{font-variant-numeric:lining-nums tabular-nums;font-kerning:normal}
+.formula,.formula-sm,.math-inline-source,sup,sub{
+  font-family:"MathJax_Newcm","Cambria Math","STIX Two Math","Noto Serif SC",serif;
+  font-synthesis:none;font-variant-numeric:lining-nums tabular-nums;
+}
+.formula,.formula-sm{min-width:0;max-width:100%;overflow:visible;line-height:1.25!important;letter-spacing:0!important}
+.formula mjx-container[display="true"],.formula-sm mjx-container[display="true"]{
+  margin:.12em 0!important;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.12em .16em;
+}
+.math-inline-source{white-space:nowrap;display:inline-block;max-width:100%;vertical-align:-.08em}
+.math-inline-source mjx-container{margin:0 .04em!important}
+mjx-container{color:inherit!important;outline-offset:3px}
+sup,sub{font-size:.7em;line-height:0;position:relative;vertical-align:baseline;font-feature-settings:"lnum" 1,"tnum" 1}
+sup{top:-.58em}sub{bottom:-.18em}
+.frac{white-space:nowrap}
+@media (prefers-reduced-motion:reduce){mjx-container{transition:none!important}}
+
+
+
+
+/* Dedicated full-page application video stage — forced 16:9, never collapse */
+.app-video-stage-page .slide-body{
+  display:flex!important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(0.55rem,1.2vh,1.1rem);
+  padding:clamp(0.3rem,1vh,0.9rem) clamp(2vw,3.5vw,4.5vw);
+  box-sizing:border-box;
+  min-height:0;
+}
+.app-video-stage-page .app-video-kicker{
+  font:500 14px/1.2 "Inter","Noto Serif SC",sans-serif;
+  letter-spacing:.08em;
+  color:var(--accent);
+  opacity:.95;
+  flex:0 0 auto;
+}
+.app-video-stage-page .app-video-title{
+  margin:0;
+  text-align:center;
+  max-width:22em;
+  font-size:clamp(1.25rem,2.2vw,1.75rem);
+  line-height:1.35;
+  flex:0 0 auto;
+}
+.app-video-stage-page .app-video-stage{
+  width:min(92%, 1280px);
+  aspect-ratio:16 / 9;
+  max-height:min(62vh, 640px);
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:0 16px 40px rgba(0,0,0,.16);
+  background:#111;
+  position:relative;
+  flex:0 1 auto;
+}
+.slide.dark .app-video-stage-page .app-video-stage{
+  border-color:rgba(255,255,255,.14);
+  box-shadow:0 16px 40px rgba(0,0,0,.4);
+}
+.app-video-stage-page .app-video-stage video{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain;
+  background:#111;
+  border:0;
+  outline:none;
+}
+.app-video-stage-page .app-video-foot-hint{
+  margin:0;
+  font:400 13px/1.4 "Noto Serif SC",serif;
+  color:var(--ink);
+  opacity:.5;
+  text-align:center;
+  flex:0 0 auto;
+}
+.slide.dark .app-video-stage-page .app-video-foot-hint{
+  color:rgba(255,255,255,.55);
+}
+
+
+/* Keep legacy card styles harmless if residual */
+.app-video-card{display:flex;flex-direction:column;gap:.7rem;min-width:0;width:100%;max-width:100%}
+.app-video-label{font:500 14px/1.2 "Inter","Noto Serif SC",sans-serif;letter-spacing:.06em;color:var(--accent);opacity:.95}
+.app-video-card video{width:100%;max-height:min(52vh,560px);border-radius:14px;background:#1a1a1a;border:1px solid var(--line)}
+.app-video-hint{font:400 13px/1.4 "Noto Serif SC",serif;color:var(--ink);opacity:.55}
+.app-video-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(1.2rem,2.5vw,2.4rem);align-items:center;width:100%;height:100%;min-height:0}
+
+</style>
+<script id="mathjax-config">
+window.MathJax={
+  loader:{paths:{fonts:'assets/@mathjax'}},
+  tex:{
+    inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],
+    processEscapes:true,packages:{'[+]':['ams']}
+  },
+  output:{
+    displayOverflow:'linebreak',
+    linebreaks:{inline:true,width:'100%',lineleading:.18}
+  },
+  options:{enableMenu:true,enableExplorer:true},
+  startup:{
+    ready:function(){
+      MathJax.startup.defaultReady();
+      MathJax.startup.promise.then(function(){
+        document.documentElement.classList.add('mathjax-ready');
+      });
+    }
+  }
+};
+</script>
+<script defer="" src="assets/mathjax/tex-chtml.js"></script>
+</head>
+<body>
+<div id="deck">
+<section class="slide dark active bare" data-screen-label="Cover" data-source="第5章 标题页" data-theme="dark">
+<div class="slide-body" style="align-items:center">
+<div class="w-statement" style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.4rem,3vh,2.4rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">离散数学 · 第 5 章</div>
+<h1 class="display-zh anim-item" style="max-width:10em">命题逻辑</h1>
+<p class="lead-zh anim-item" style="max-width:26em;opacity:.62">从命题与联结词到真值表、范式与推理，命题逻辑如何把真与假的判断变成可计算的形式系统，并用 Python 逐一实现</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>1 / 78</div></div></section>
+<section class="slide light" data-screen-label="Map" data-source="本章思维导图" data-theme="light"><div class="chrome"><div>本章地图</div><div>2 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">Chapter Map</div><h2 class="h1-zh anim-item" style="max-width:18em">三条主线，从联结词走到形式推理</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">5.1 命题与联结词：命题及分类、命题标识符、五种联结词</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">5.2 命题公式：定义与符号化、解释与真值表、等价与蕴含、对偶与范式</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">5.3 命题逻辑推理：命题演算推证、推理系统的可靠性一致性完备性；5.4 两个应用案例</p></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>2 / 78</div></div></section>
+<section class="slide dark" data-screen-label="History" data-source="章首 · 命题逻辑发展史" data-theme="dark"><div class="chrome"><div>命题逻辑发展史</div><div>3 / 78</div></div>
+<div class="slide-body">
+<div class="w-wide">
+<h2 class="h1-zh anim-item" style="text-align:center;max-width:17em;margin:0 auto clamp(2rem,5vh,3.6rem)">命题逻辑：从三段论到布尔代数</h2>
+<div class="timeline-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.9rem,2vw,2rem)">
+<div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">古希腊</div><p class="body-zh" style="margin-top:1.2vh">亚里士多德在工具论中首次系统阐述三段论推理</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">斯多葛学派</div><p class="body-zh" style="margin-top:1.2vh">在蕴含、否定等逻辑运算的理论上做出重要贡献</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">中世纪</div><p class="body-zh" style="margin-top:1.2vh">12 世纪随阿拉伯与拉丁文献引入，逻辑学得到广泛传播</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">19 世纪</div><p class="body-zh" style="margin-top:1.2vh">布尔在思维的数学分析中提出布尔代数，为逻辑形式化奠基</p></div>
+</div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>3 / 78</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="5.1 命题与联结词" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">5.1</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">命题与联结词</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">命题及其分类、命题标识符、否定合取析取条件等价五种联结词</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>4 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.1.1 / 5.1.2 · 命题" data-theme="light"><div class="chrome"><div>5.1.1 命题及分类</div><div>5 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.1.1 与 5.1.2</div><h2 class="h1-zh anim-item" style="max-width:17em">命题是可唯一判断真假的陈述句</h2><p class="lead-zh anim-item" style="max-width:27em">命题必须有确定真值、真值独立、是完整的陈述。在特定语境下被判断为真的是真命题，被判断为假的是假命题。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">太阳升起于东方是真命题，冬天温度永远高于夏天是假命题。真假相对于特定语境或逻辑体系而言。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>5 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 5.1.1 · 判断命题" data-theme="dark"><div class="chrome"><div>例 5.1.1</div><div>6 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">例 5.1.1 · 哪些是命题</div><h2 class="h1-zh anim-item" style="max-width:17em">疑问句、感叹句与悖论都不是命题</h2><p class="lead-zh anim-item" style="max-width:27em">感叹句、疑问句不是命题；这句话是假的是悖论，无法判断真假，不是命题；我无法相信任何人自相矛盾，不是命题。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">数学是一门有趣的学科是命题，可判真假；8−6 &gt; 5 为假命题；<span aria-label="sin²θ+cos²θ=1" class="math-inline-source" data-tex="sin^{2}θ+cos^{2}θ=1">\(sin^{2}θ+cos^{2}θ=1\)</span> 与欧拉公式 <span aria-label="eⁱπ+1=0" class="math-inline-source" data-tex="e^{i}π+1=0">\(e^{i}π+1=0\)</span> 都是真命题。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>6 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.1.3 / 5.1.4 · 原子与复合命题" data-theme="light"><div class="chrome"><div>5.1.1 原子与复合命题</div><div>7 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.1.3 与 5.1.4</div><h2 class="h1-zh anim-item" style="max-width:17em">原子命题不可再分，复合命题由联结词组合</h2><p class="lead-zh anim-item" style="max-width:27em">原子命题是基本、不可分解的陈述句，不含逻辑联结词，是推理的基本单元。复合命题由两个或多个原子命题通过联结词组合而成。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 5.1.2 与 5.1.3</div><p class="body-zh" style="margin-top:.8vh">例 5.1.2：保护环境是每个人的责任是原子命题。例 5.1.3：用若那么、并且连接的句子是复合命题，其真假取决于组成部分与联结词。</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>7 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.1.5 至 5.1.7 · 命题标识符" data-theme="light"><div class="chrome"><div>5.1.2 命题标识符</div><div>8 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.1.5 至 5.1.7</div><h2 class="h1-zh anim-item" style="max-width:17em">标识符、变元、常元与指派</h2><p class="lead-zh anim-item" style="max-width:27em">命题标识符用符号表示特定命题，如 P、Q、R。命题变元是表示未知命题的占位符，本身无确定含义；命题常元是已确定真值的命题。指派把命题变元与真值关联，是构建真值表的关键。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">例 5.1.5：P、Q 是命题变元。例 5.1.6：首都是北京为真、地球上没有生命为假，是命题常元。例 5.1.7：指派 <span aria-label="P=T, Q=F" class="math-inline-source" data-tex="P=T, Q=F">\(P=T, Q=F\)</span>。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>8 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.1.8 至 5.1.12 · 五种联结词" data-theme="light"><div class="chrome"><div>5.1.3 命题联结词</div><div>9 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.1.8 至 5.1.12</div><h2 class="h1-zh anim-item" style="max-width:17em">否定、合取、析取、条件、等价</h2><p class="lead-zh anim-item" style="max-width:27em">否定 <span aria-label="¬P" class="math-inline-source" data-tex="\neg P">\(\neg P\)</span> 取反；合取 <span aria-label="P∧Q" class="math-inline-source" data-tex="P\land Q">\(P\land Q\)</span> 都真才真；析取 <span aria-label="P∨Q" class="math-inline-source" data-tex="P\lor Q">\(P\lor Q\)</span> 至少一真即真；条件 <span aria-label="P→Q" class="math-inline-source" data-tex="P\to Q">\(P\to Q\)</span> 只有前真后假才假；等价 <span aria-label="P↔Q" class="math-inline-source" data-tex="P\leftrightarrow Q">\(P\leftrightarrow Q\)</span> 同真同假才真。</p><div aria-label="¬　∧　∨　→　↔" class="formula anim-item mathjax-display-source" data-tex="\neg \land \lor \to \leftrightarrow">\[\displaystyle \neg \land \lor \to \leftrightarrow\]</div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>9 / 78</div></div></section>
+<section class="slide dark" data-screen-label="TruthTable" data-source="5.1.3 五联结词真值表" data-theme="dark"><div class="chrome"><div>5.1.3 联结词真值表</div><div>10 / 78</div></div>
+<div class="slide-body" style="align-items:center;text-align:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.2rem,3vh,2.2rem)">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">联结词真值表总览</div>
+<h2 class="h2-zh" style="max-width:20em;margin-top:.6vh">一张表看齐五种联结词</h2>
+</div>
+<div class="anim-item"><table class="ttable"><thead><tr><th>P</th><th>Q</th><th><span aria-label="¬P" class="math-inline-source" data-tex="\neg P">\(\neg P\)</span></th><th><span aria-label="P∧Q" class="math-inline-source" data-tex="P\land Q">\(P\land Q\)</span></th><th><span aria-label="P∨Q" class="math-inline-source" data-tex="P\lor Q">\(P\lor Q\)</span></th><th><span aria-label="P→Q" class="math-inline-source" data-tex="P\to Q">\(P\to Q\)</span></th><th><span aria-label="P↔Q" class="math-inline-source" data-tex="P\leftrightarrow Q">\(P\leftrightarrow Q\)</span></th></tr></thead><tbody><tr><td class="vT">T</td><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td><td class="vT">T</td><td class="vT">T</td><td class="vT">T</td></tr><tr><td class="vT">T</td><td class="vF">F</td><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td><td class="vF">F</td><td class="vF">F</td></tr><tr><td class="vF">F</td><td class="vT">T</td><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td><td class="vT">T</td><td class="vF">F</td></tr><tr><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td><td class="vT">T</td></tr></tbody></table></div>
+<p class="body-zh anim-item" style="max-width:27em;opacity:.7;margin-top:clamp(.8rem,2vh,1.6rem)">条件 <span aria-label="P→Q" class="math-inline-source" data-tex="P\to Q">\(P\to Q\)</span> 仅在 P 真且 Q 假时为假；等价 <span aria-label="P↔Q" class="math-inline-source" data-tex="P\leftrightarrow Q">\(P\leftrightarrow Q\)</span> 在 P、Q 真值相同时为真。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>10 / 78</div></div></section>
+<section class="slide light" data-screen-label="Code" data-source="Python 实现示例 5.1.1 至 5.1.5" data-theme="light"><div class="chrome"><div>Python 示例 5.1.1 至 5.1.5</div><div>11 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">Python 实现示例 5.1.1 至 5.1.5</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用 Python 表达五种联结词</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">否定用 not，合取用 and，析取用 or；条件 <span aria-label="P→Q" class="math-inline-source" data-tex="P\to Q">\(P\to Q\)</span> 等价于 not P or Q；等价 <span aria-label="P↔Q" class="math-inline-source" data-tex="P\leftrightarrow Q">\(P\leftrightarrow Q\)</span> 等价于同真同假。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>P, Q = True, False
+print(not P)                              # ¬P  -&gt; False
+print(P and Q)                            # P∧Q -&gt; False
+print(P or Q)                             # P∨Q -&gt; True
+print(not P or Q)                         # P→Q -&gt; False
+print((P and Q) or (not P and not Q))     # P↔Q -&gt; False</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>11 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 5.1.13 / 5.1.14 · 联结词组" data-theme="light"><div class="chrome"><div>5.1.3 全功能与极小联结词组</div><div>12 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 5.1.13 与 5.1.14</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">全功能联结词组与极小联结词组</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">全功能联结词组 {¬,∧,∨,→,↔} 能构建任何逻辑等价命题。极小联结词组用最少联结词表达全部命题，如 {¬,∧}：<span aria-label="P∨Q ⇔ ¬(¬P∧¬Q)" class="math-inline-source" data-tex="P\lor Q \Leftrightarrow \neg (\neg P\land \neg Q)">\(P\lor Q \Leftrightarrow \neg (\neg P\land \neg Q)\)</span>，<span aria-label="P→Q ⇔ ¬(P∧¬Q)" class="math-inline-source" data-tex="P\to Q \Leftrightarrow \neg (P\land \neg Q)">\(P\to Q \Leftrightarrow \neg (P\land \neg Q)\)</span>。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def OR(p, q):  return not (not p and not q)        # ∨
+def IMP(p, q): return not (p and not q)            # →
+def IFF(p, q): return (not (p and not q)) and \
+                      (not (q and not p))          # ↔
+
+p, q = True, False
+print("p ∨ q =", OR(p, q))    # True
+print("p → q =", IMP(p, q))   # False
+print("p ↔ q =", IFF(p, q))   # False</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 命题与联结词" data-theme="dark"><div class="chrome"><div>应用示例 · 编程与数据库</div><div>13 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">联结词无处不在</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">编程语言用 &amp;&amp; || ! 实现逻辑运算，以及 if-else、while、for 等结构</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">数据库用命题逻辑定义查询，如 SQL 的 WHERE 子句</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">机器学习决策树用命题联结词构建分裂条件，判断数据点的类别</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 78</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 编程与数据库" data-theme="dark"><div class="chrome"><div>应用动画 · 编程与数据库</div><div>14 / 78</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">编程与数据库</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch5/ch5_01_app_a54ae679.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch5/ch5_01_app_a54ae679.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="5.1.4 小结" data-theme="dark"><div class="chrome"><div>5.1.4 小结</div><div>15 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">命题是可判真假的陈述句，分为不可再分的原子命题和由联结词组合的复合命题</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">命题标识符用 P、Q、R 简化表达，命题变元表示未知命题，命题常元已确定真值</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">五种联结词否定合取析取条件等价用于构建复合命题，真值表给出其真假规则</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 78</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="5.1 习题" data-theme="light"><div class="chrome"><div>5.1 习题</div><div>16 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 5.1</div><h2 class="h1-zh anim-item" style="max-width:18em">命题与联结词练习</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li>哪个是命题（答案 B：2 是一个偶数）</li><li>哪个是复合命题（答案 C：<span aria-label="p∧(q∨¬r)" class="math-inline-source" data-tex="p\land (q\lor \neg r)">\(p\land (q\lor \neg r)\)</span>）</li><li>定义命题标识符并举例说明作用</li><li>构造一个包含 5 个命题的复合命题</li><li>解释复合命题 <span aria-label="p∧(q∨¬r)" class="math-inline-source" data-tex="p\land (q\lor \neg r)">\(p\land (q\lor \neg r)\)</span> 的含义</li><li>把若今天是星期一那么我会去上班符号化并证明与今天不是星期一或我会去上班等价</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 78</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="5.1 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 5.1</div><div>17 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:18em">把命题与联结词推向更深的六个问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist anim-item"><li>理论：能否把命题、标识符与联结词统一进一个逻辑框架，有何理论意义</li><li>实践：跨领域应用中如何综合利用命题、标识符与联结词解决复杂问题</li><li>工程：大型工程中如何用命题、标识符与联结词进行系统设计与优化</li><li>科研：如何把命题标识符理论应用于自动定理证明等符号化研究</li><li>习题：习题 6 的求解与形式化证明过程</li><li>代码：示例 5.1.6 的详细解释与分析</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 78</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="5.2 命题公式" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">5.2</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">命题公式</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">定义与符号化、解释与真值表、等价与蕴含关系，以及对偶与范式</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>18 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.2.1 / 5.2.2 · 命题公式与 BNF" data-theme="light"><div class="chrome"><div>5.2.1 命题公式定义</div><div>19 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.1 与 5.2.2</div><h2 class="h1-zh anim-item" style="max-width:17em">命题公式的递归构造</h2><p class="lead-zh anim-item" style="max-width:27em">命题公式由命题变元、联结词和括号组成：单个变元是公式；若 A 是公式则 <span aria-label="¬A" class="math-inline-source" data-tex="\neg A">\(\neg A\)</span> 是公式；若 A、B 是公式则 <span aria-label="(A∧B)" class="math-inline-source" data-tex="(A\land B)">\((A\land B)\)</span>、<span aria-label="(A∨B)" class="math-inline-source" data-tex="(A\lor B)">\((A\lor B)\)</span>、<span aria-label="(A→B)" class="math-inline-source" data-tex="(A\to B)">\((A\to B)\)</span>、<span aria-label="(A↔B)" class="math-inline-source" data-tex="(A\leftrightarrow B)">\((A\leftrightarrow B)\)</span> 都是公式；有限次应用上述规则得到的字符串是命题公式。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">巴科斯范式 BNF 用形式化文法描述命题公式的结构规则。例 5.2.1：<span aria-label="¬(P∨Q)" class="math-inline-source" data-tex="\neg (P\lor Q)">\(\neg (P\lor Q)\)</span> 可由 BNF 规则逐层展开构建。例 5.2.2：<span aria-label="(∧B)" class="math-inline-source" data-tex="(\land B)">\((\land B)\)</span> 等不是合法命题公式。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>19 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 5.2.3 · 减少括号" data-theme="dark"><div class="chrome"><div>5.2.1 优先级与括号</div><div>20 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.3 · n 元公式与优先级</div><h2 class="h1-zh anim-item" style="max-width:17em">联结词优先级与去括号</h2><p class="lead-zh anim-item" style="max-width:27em">n 元命题公式含 n 个命题变元。例 5.2.3：<span aria-label="((A→B)↔(C→D))" class="math-inline-source" data-tex="((A\to B)\leftrightarrow (C\to D))">\(((A\to B)\leftrightarrow (C\to D))\)</span> 是四元，<span aria-label="(¬A)" class="math-inline-source" data-tex="(\neg A)">\((\neg A)\)</span> 是一元。</p><div aria-label="优先级：¬　&gt;　∧　&gt;　∨　&gt;　→　&gt;　↔" class="formula anim-item mathjax-display-source" data-tex="\text{优先级}\text{：}\neg &gt; \land &gt; \lor &gt; \to &gt; \leftrightarrow">\[\displaystyle \text{优先级}\text{：}\neg &gt; \land &gt; \lor &gt; \to &gt; \leftrightarrow\]</div><p class="body-zh anim-item" style="max-width:29em;opacity:.7">不引起歧义时可省略最外层括号，按优先级省略括号；同优先级从左到右结合。例 5.2.4：<span aria-label="((P→((Q∧¬R)∨S))↔M)" class="math-inline-source" data-tex="((P\to ((Q\land \neg R)\lor S))\leftrightarrow M)">\(((P\to ((Q\land \neg R)\lor S))\leftrightarrow M)\)</span> 简化为 <span aria-label="P→Q∧¬R∨S↔M" class="math-inline-source" data-tex="P\to Q\land \neg R\lor S\leftrightarrow M">\(P\to Q\land \neg R\lor S\leftrightarrow M\)</span>。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>20 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 5.2.4 · 公式层次" data-theme="light"><div class="chrome"><div>5.2.1 公式层次</div><div>21 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:3fr 9fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 5.2.4 · 公式层次</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">联结词嵌套的深度</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">单个变元为 0 层公式；<span aria-label="¬B" class="math-inline-source" data-tex="\neg B">\(\neg B\)</span> 比 B 高一层；<span aria-label="A∧B" class="math-inline-source" data-tex="A\land B">\(A\land B\)</span>、<span aria-label="A∨B" class="math-inline-source" data-tex="A\lor B">\(A\lor B\)</span>、<span aria-label="A→B" class="math-inline-source" data-tex="A\to B">\(A\to B\)</span>、<span aria-label="A↔B" class="math-inline-source" data-tex="A\leftrightarrow B">\(A\leftrightarrow B\)</span> 的层次为两子公式层次的较大值加 1。例 5.2.5：<span aria-label="(¬P∧Q)→R" class="math-inline-source" data-tex="(\neg P\land Q)\to R">\((\neg P\land Q)\to R\)</span> 是 3 层，<span aria-label="(¬(P→¬Q))∧((R∨S)↔¬P)" class="math-inline-source" data-tex="(\neg (P\to \neg Q))\land ((R\lor S)\leftrightarrow \neg P)">\((\neg (P\to \neg Q))\land ((R\lor S)\leftrightarrow \neg P)\)</span> 是 4 层。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-tiny"><code>import re
+
+def depth(f):
+    f = f.replace(' ', '')
+    ops = ['↔', '→', '∨', '∧', '¬']        # 优先级低到高
+    def valid(s):
+        c = 0
+        for ch in s:
+            c += (ch == '(') - (ch == ')')
+            if c &lt; 0: return False
+        return c == 0
+    def split(s, op):
+        if op == '¬':
+            return [s[1:]] if s and s[0] == '¬' else None
+        d, parts, cur = 0, [], []
+        for ch in s:
+            if ch == '(': d += 1
+            elif ch == ')': d -= 1
+            elif ch == op and d == 0:
+                parts.append(''.join(cur)); cur = []; continue
+            cur.append(ch)
+        if cur: parts.append(''.join(cur))
+        return parts if len(parts) &gt; 1 else None
+    def parse(s):
+        if not s: return 0
+        while s and s[0] == '(' and s[-1] == ')' and valid(s[1:-1]):
+            s = s[1:-1]
+        if re.match(r'^[A-Z]$', s): return 0
+        return max((1 + max(parse(p) for p in split(s, op))
+                    for op in ops if split(s, op)), default=0)
+    return parse(f)
+
+print(depth("(¬P∧Q)→R"))                 # 3
+print(depth("(¬(P→¬Q))∧((R∨S)↔¬P)"))     # 4</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>21 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.2.5 · 符号化" data-theme="light"><div class="chrome"><div>5.2.1 命题公式符号化</div><div>22 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.5 · 符号化</div><h2 class="h1-zh anim-item" style="max-width:17em">把自然语言翻译成命题公式</h2><p class="lead-zh anim-item" style="max-width:27em">符号化即识别基本命题、识别逻辑关系词、选择联结词、按结构组合成形式化公式。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 5.2.6</div><p class="body-zh" style="margin-top:.8vh">例 5.2.6：又好又快 <span aria-label="→ P∧Q" class="math-inline-source" data-tex="\to P\land Q">\(\to P\land Q\)</span>；只要团结就能克服 <span aria-label="→ P→Q" class="math-inline-source" data-tex="\to P\to Q">\(\to P\to Q\)</span>；支教或志愿 <span aria-label="→ P∨Q" class="math-inline-source" data-tex="\to P\lor Q">\(\to P\lor Q\)</span>；保护环境并推动发展则创造世界 <span aria-label="→ (P∧Q)→R" class="math-inline-source" data-tex="\to (P\land Q)\to R">\(\to (P\land Q)\to R\)</span>；只有追求真理才能思考判断学习 <span aria-label="→ (Q∧R∧S)→P" class="math-inline-source" data-tex="\to (Q\land R\land S)\to P">\(\to (Q\land R\land S)\to P\)</span>（「只有 P 才 Q」表示 P 是必要条件，即 <span aria-label="Q→P" class="math-inline-source" data-tex="Q\to P">\(Q\to P\)</span>）。</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>22 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.2.6 / 5.2.7 · 解释与真值表" data-theme="light"><div class="chrome"><div>5.2.2 解释和真值表</div><div>23 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.6 与 5.2.7</div><h2 class="h1-zh anim-item" style="max-width:17em">解释、成真赋值与真值表</h2><p class="lead-zh anim-item" style="max-width:27em">给公式中全部命题变元各指定真值即为一个解释。使公式为真的赋值是成真赋值，为假的是成假赋值。真值表展示公式在所有赋值下的真假。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">算法 5.2.1：找出全部命题变元，列出 <span aria-label="2ⁿ" class="math-inline-source" data-tex="2^{n}">\(2^{n}\)</span> 个赋值，从低到高逐层计算真值，最终得到公式真值。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>23 / 78</div></div></section>
+<section class="slide light" data-screen-label="TruthTable" data-source="例 5.2.8 · P∧Q→R 真值表" data-theme="light"><div class="chrome"><div>例 5.2.8</div><div>24 / 78</div></div>
+<div class="slide-body" style="align-items:center;text-align:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.2rem,3vh,2.2rem)">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 5.2.8 · 构造真值表</div>
+<h2 class="h2-zh" style="max-width:20em;margin-top:.6vh"><span aria-label="P∧Q→R" class="math-inline-source" data-tex="P\land Q\to R">\(P\land Q\to R\)</span> 的真值表</h2>
+</div>
+<div class="anim-item"><table class="ttable"><thead><tr><th>P</th><th>Q</th><th>R</th><th><span aria-label="P∧Q" class="math-inline-source" data-tex="P\land Q">\(P\land Q\)</span></th><th><span aria-label="P∧Q→R" class="math-inline-source" data-tex="P\land Q\to R">\(P\land Q\to R\)</span></th></tr></thead><tbody><tr><td class="vT">T</td><td class="vT">T</td><td class="vT">T</td><td class="vT">T</td><td class="vT">T</td></tr><tr><td class="vT">T</td><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td><td class="vF">F</td></tr><tr><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td></tr><tr><td class="vT">T</td><td class="vF">F</td><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td></tr><tr><td class="vF">F</td><td class="vT">T</td><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td></tr><tr><td class="vF">F</td><td class="vT">T</td><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td></tr><tr><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td></tr><tr><td class="vF">F</td><td class="vF">F</td><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td></tr></tbody></table></div>
+<p class="body-zh anim-item" style="max-width:27em;opacity:.7;margin-top:clamp(.8rem,2vh,1.6rem)"><span aria-label="P∧Q→R" class="math-inline-source" data-tex="P\land Q\to R">\(P\land Q\to R\)</span> 仅在 P、Q 都真而 R 假时为假，其余赋值都为真。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 5.2.2" data-theme="dark"><div class="chrome"><div>Python 示例 5.2.2</div><div>25 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">Python 实现示例 5.2.2 · 真值表</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">遍历赋值生成真值表</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">三重循环遍历 P、Q、R 的全部 <span aria-label="2³" class="math-inline-source" data-tex="2^{3}">\(2^{3}\)</span> 种取值，逐层计算并打印。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>for P in [True, False]:
+    for Q in [True, False]:
+        for R in [True, False]:
+            PQ = P and Q                 # P∧Q
+            print(f"P={P} Q={Q} R={R} | "
+                  f"P∧Q={PQ} | P∧Q→R={not PQ or R}")</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 78</div></div></section>
+<section class="slide light" data-screen-label="TruthTable" data-source="例 5.2.9 / 5.2.10 · 永真与永假" data-theme="light"><div class="chrome"><div>例 5.2.9 与 5.2.10</div><div>26 / 78</div></div>
+<div class="slide-body" style="align-items:center;text-align:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.2rem,3vh,2.2rem)">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 5.2.9 · 永真式</div>
+<h2 class="h2-zh" style="max-width:20em;margin-top:.6vh"><span aria-label="P→(Q→P)" class="math-inline-source" data-tex="P\to (Q\to P)">\(P\to (Q\to P)\)</span> 是永真式</h2>
+</div>
+<div class="anim-item"><table class="ttable"><thead><tr><th>P</th><th>Q</th><th><span aria-label="Q→P" class="math-inline-source" data-tex="Q\to P">\(Q\to P\)</span></th><th><span aria-label="P→(Q→P)" class="math-inline-source" data-tex="P\to (Q\to P)">\(P\to (Q\to P)\)</span></th></tr></thead><tbody><tr><td class="vT">T</td><td class="vT">T</td><td class="vT">T</td><td class="vT">T</td></tr><tr><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td><td class="vT">T</td></tr><tr><td class="vF">F</td><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td></tr><tr><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td><td class="vT">T</td></tr></tbody></table></div>
+<p class="body-zh anim-item" style="max-width:27em;opacity:.7;margin-top:clamp(.8rem,2vh,1.6rem)"><span aria-label="P→(Q→P)" class="math-inline-source" data-tex="P\to (Q\to P)">\(P\to (Q\to P)\)</span> 在所有赋值下都为真，是永真式。相对地，<span aria-label="P∧Q∧R∧¬P" class="math-inline-source" data-tex="P\land Q\land R\land \neg P">\(P\land Q\land R\land \neg P\)</span> 含 P 与 <span aria-label="¬P" class="math-inline-source" data-tex="\neg P">\(\neg P\)</span>，在所有赋值下都为假，是永假式。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>26 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 5.2.8 · 公式类型" data-theme="dark"><div class="chrome"><div>5.2.2 公式类型</div><div>27 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.8 · 三种公式</div><h2 class="h1-zh anim-item" style="max-width:17em">永真式、永假式与可满足式</h2><p class="lead-zh anim-item" style="max-width:27em">永真式在任何赋值下都为真，是逻辑的真理；永假式在任何赋值下都为假，是谬误；可满足式至少有一组赋值使其为真。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">永真式是可满足式的特例。可满足式不一定永真，可能既有成真赋值又有成假赋值。例 5.2.4 的 Python 代码可验证 <span aria-label="P∧Q∧R∧¬P" class="math-inline-source" data-tex="P\land Q\land R\land \neg P">\(P\land Q\land R\land \neg P\)</span> 永假。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>27 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.2.9 · 逻辑等价" data-theme="light"><div class="chrome"><div>5.2.3 命题公式之间的关系</div><div>28 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.9 · 逻辑等价 ⇔</div><h2 class="h1-zh anim-item" style="max-width:17em">任何赋值下真值都相同即逻辑等价</h2><p class="lead-zh anim-item" style="max-width:27em">两公式 A、B 在任何赋值下真值都相同则逻辑等价，记 <span aria-label="A ⇔ B" class="math-inline-source" data-tex="A \Leftrightarrow B">\(A \Leftrightarrow B\)</span>。⇔ 表示公式之间的关系，而 ↔ 是联结词；<span aria-label="A ⇔ B" class="math-inline-source" data-tex="A \Leftrightarrow B">\(A \Leftrightarrow B\)</span> 当且仅当 <span aria-label="A↔B" class="math-inline-source" data-tex="A\leftrightarrow B">\(A\leftrightarrow B\)</span> 为永真式。等价满足自反、对称、传递。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 5.2.11</div><p class="body-zh" style="margin-top:.8vh">例 5.2.11：用真值表可验证 <span aria-label="(P∧Q)∨R ⇔ (P∨R)∧(Q∨R)" class="math-inline-source" data-tex="(P\land Q)\lor R \Leftrightarrow (P\lor R)\land (Q\lor R)">\((P\land Q)\lor R \Leftrightarrow (P\lor R)\land (Q\lor R)\)</span>，两公式在 8 种赋值下真值完全相同。</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>28 / 78</div></div></section>
+<section class="slide light" data-screen-label="Laws" data-source="定义 5.2.10 · 逻辑等值式（一）" data-theme="light"><div class="chrome"><div>5.2.3 逻辑等值式（一）</div><div>29 / 78</div></div>
+<div class="slide-body">
+<div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.3rem)">
+<h2 class="h1-zh anim-item" style="max-width:18em">基本逻辑等值式（一）</h2>
+<div class="laws-grid" style="grid-template-columns:repeat(2,1fr)"><div class="law-card anim-item"><div class="law-name">双重否定律</div><div class="law-formula"><span aria-label="¬(¬P) ⇔ P" class="math-inline-source" data-tex="\neg (\neg P) \Leftrightarrow P">\(\neg (\neg P) \Leftrightarrow P\)</span></div></div><div class="law-card anim-item"><div class="law-name">幂等律</div><div class="law-formula"><span aria-label="P∨P ⇔ P" class="math-inline-source" data-tex="P\lor P \Leftrightarrow P">\(P\lor P \Leftrightarrow P\)</span>，<span aria-label="P∧P ⇔ P" class="math-inline-source" data-tex="P\land P \Leftrightarrow P">\(P\land P \Leftrightarrow P\)</span></div></div><div class="law-card anim-item"><div class="law-name">交换律</div><div class="law-formula"><span aria-label="P∨Q ⇔ Q∨P" class="math-inline-source" data-tex="P\lor Q \Leftrightarrow Q\lor P">\(P\lor Q \Leftrightarrow Q\lor P\)</span>，<span aria-label="P∧Q ⇔ Q∧P" class="math-inline-source" data-tex="P\land Q \Leftrightarrow Q\land P">\(P\land Q \Leftrightarrow Q\land P\)</span></div></div><div class="law-card anim-item"><div class="law-name">结合律</div><div class="law-formula"><span aria-label="(P∨Q)∨R ⇔ P∨(Q∨R)" class="math-inline-source" data-tex="(P\lor Q)\lor R \Leftrightarrow P\lor (Q\lor R)">\((P\lor Q)\lor R \Leftrightarrow P\lor (Q\lor R)\)</span></div></div><div class="law-card anim-item"><div class="law-name">分配律</div><div class="law-formula"><span aria-label="P∧(Q∨R) ⇔ (P∧Q)∨(P∧R)" class="math-inline-source" data-tex="P\land (Q\lor R) \Leftrightarrow (P\land Q)\lor (P\land R)">\(P\land (Q\lor R) \Leftrightarrow (P\land Q)\lor (P\land R)\)</span></div></div><div class="law-card anim-item"><div class="law-name">德摩根律</div><div class="law-formula"><span aria-label="¬(P∨Q) ⇔ ¬P∧¬Q" class="math-inline-source" data-tex="\neg (P\lor Q) \Leftrightarrow \neg P\land \neg Q">\(\neg (P\lor Q) \Leftrightarrow \neg P\land \neg Q\)</span>，<span aria-label="¬(P∧Q) ⇔ ¬P∨¬Q" class="math-inline-source" data-tex="\neg (P\land Q) \Leftrightarrow \neg P\lor \neg Q">\(\neg (P\land Q) \Leftrightarrow \neg P\lor \neg Q\)</span></div></div><div class="law-card anim-item"><div class="law-name">吸收律</div><div class="law-formula"><span aria-label="P∨(P∧Q) ⇔ P" class="math-inline-source" data-tex="P\lor (P\land Q) \Leftrightarrow P">\(P\lor (P\land Q) \Leftrightarrow P\)</span>，<span aria-label="P∧(P∨Q) ⇔ P" class="math-inline-source" data-tex="P\land (P\lor Q) \Leftrightarrow P">\(P\land (P\lor Q) \Leftrightarrow P\)</span></div></div><div class="law-card anim-item"><div class="law-name">零律与同一律</div><div class="law-formula"><span aria-label="P∨1 ⇔ 1" class="math-inline-source" data-tex="P\lor 1 \Leftrightarrow 1">\(P\lor 1 \Leftrightarrow 1\)</span>，<span aria-label="P∧0 ⇔ 0" class="math-inline-source" data-tex="P\land 0 \Leftrightarrow 0">\(P\land 0 \Leftrightarrow 0\)</span>，<span aria-label="P∧1 ⇔ P" class="math-inline-source" data-tex="P\land 1 \Leftrightarrow P">\(P\land 1 \Leftrightarrow P\)</span>，<span aria-label="P∨0 ⇔ P" class="math-inline-source" data-tex="P\lor 0 \Leftrightarrow P">\(P\lor 0 \Leftrightarrow P\)</span></div></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>29 / 78</div></div></section>
+<section class="slide light" data-screen-label="Laws" data-source="定义 5.2.10 · 逻辑等值式（二）" data-theme="light"><div class="chrome"><div>5.2.3 逻辑等值式（二）</div><div>30 / 78</div></div>
+<div class="slide-body">
+<div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.3rem)">
+<h2 class="h1-zh anim-item" style="max-width:18em">基本逻辑等值式（二）</h2>
+<div class="laws-grid" style="grid-template-columns:repeat(2,1fr)"><div class="law-card anim-item"><div class="law-name">排中律</div><div class="law-formula"><span aria-label="P∨¬P ⇔ 1" class="math-inline-source" data-tex="P\lor \neg P \Leftrightarrow 1">\(P\lor \neg P \Leftrightarrow 1\)</span></div></div><div class="law-card anim-item"><div class="law-name">矛盾律</div><div class="law-formula"><span aria-label="P∧¬P ⇔ 0" class="math-inline-source" data-tex="P\land \neg P \Leftrightarrow 0">\(P\land \neg P \Leftrightarrow 0\)</span></div></div><div class="law-card anim-item"><div class="law-name">蕴含律</div><div class="law-formula"><span aria-label="P→Q ⇔ ¬P∨Q" class="math-inline-source" data-tex="P\to Q \Leftrightarrow \neg P\lor Q">\(P\to Q \Leftrightarrow \neg P\lor Q\)</span></div></div><div class="law-card anim-item"><div class="law-name">等价律</div><div class="law-formula"><span aria-label="P↔Q ⇔ (P→Q)∧(Q→P)" class="math-inline-source" data-tex="P\leftrightarrow Q \Leftrightarrow (P\to Q)\land (Q\to P)">\(P\leftrightarrow Q \Leftrightarrow (P\to Q)\land (Q\to P)\)</span></div></div><div class="law-card anim-item"><div class="law-name">假言易位律</div><div class="law-formula"><span aria-label="P→Q ⇔ ¬Q→¬P" class="math-inline-source" data-tex="P\to Q \Leftrightarrow \neg Q\to \neg P">\(P\to Q \Leftrightarrow \neg Q\to \neg P\)</span></div></div><div class="law-card anim-item"><div class="law-name">等价否定律</div><div class="law-formula"><span aria-label="P↔Q ⇔ ¬P↔¬Q" class="math-inline-source" data-tex="P\leftrightarrow Q \Leftrightarrow \neg P\leftrightarrow \neg Q">\(P\leftrightarrow Q \Leftrightarrow \neg P\leftrightarrow \neg Q\)</span></div></div><div class="law-card anim-item"><div class="law-name">归谬律</div><div class="law-formula"><span aria-label="(P→Q)∧(P→¬Q) ⇔ ¬P" class="math-inline-source" data-tex="(P\to Q)\land (P\to \neg Q) \Leftrightarrow \neg P">\((P\to Q)\land (P\to \neg Q) \Leftrightarrow \neg P\)</span></div></div><div class="law-card anim-item"><div class="law-name">等价的析取展开</div><div class="law-formula"><span aria-label="P↔Q ⇔ (P∧Q)∨(¬P∧¬Q)" class="math-inline-source" data-tex="P\leftrightarrow Q \Leftrightarrow (P\land Q)\lor (\neg P\land \neg Q)">\(P\leftrightarrow Q \Leftrightarrow (P\land Q)\lor (\neg P\land \neg Q)\)</span></div></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>30 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Concept+Code" data-source="定义 5.2.11 / 定理 5.2.1 · 子公式与替换" data-theme="dark"><div class="chrome"><div>5.2.3 子公式与替换</div><div>31 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 5.2.11 与 定理 5.2.1</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">子公式与替换定理</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">子公式是由原始变元经联结词连接形成且本身也是命题公式的子表达式。例 5.2.13：P、Q、R、<span aria-label="Q∨R" class="math-inline-source" data-tex="Q\lor R">\(Q\lor R\)</span> 是 <span aria-label="P∧(Q∨R)" class="math-inline-source" data-tex="P\land (Q\lor R)">\(P\land (Q\lor R)\)</span> 的子公式，而 <span aria-label="P∧Q" class="math-inline-source" data-tex="P\land Q">\(P\land Q\)</span>、<span aria-label="∧(Q∨R)" class="math-inline-source" data-tex="\land (Q\lor R)">\(\land (Q\lor R)\)</span> 不是。替换定理：把定理中子公式 P 全部替换为任意公式 B，所得仍是定理。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols, Not, Or, And, Implies
+A, B = symbols('A B')
+# 蕴含律 P=¬A, Q=¬B：¬A→¬B ⇔ ¬¬A∨¬B
+print(Implies(Not(A), Not(B)).simplify())
+# (A∨B)→(A∧B) ⇔ ¬(A∨B)∨(A∧B)
+print(Implies(Or(A, B), And(A, B)).simplify())</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 78</div></div></section>
+<section class="slide light" data-screen-label="Proof+Code" data-source="例 5.2.16 / 5.2.17 · 等值演算" data-theme="light"><div class="chrome"><div>例 5.2.16 与 5.2.17</div><div>32 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 5.2.16 与 5.2.17 · 验证等价</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用等值演算验证逻辑等价</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">例 5.2.16：<span aria-label="(A→B)→C ⇔ ¬(¬A∨B)∨C ⇔ (A∧¬B)∨C ⇔ (A∨C)∧(¬B∨C)" class="math-inline-source" data-tex="(A\to B)\to C \Leftrightarrow \neg (\neg A\lor B)\lor C \Leftrightarrow (A\land \neg B)\lor C \Leftrightarrow (A\lor C)\land (\neg B\lor C)">\((A\to B)\to C \Leftrightarrow \neg (\neg A\lor B)\lor C \Leftrightarrow (A\land \neg B)\lor C \Leftrightarrow (A\lor C)\land (\neg B\lor C)\)</span>。例 5.2.17：<span aria-label="(A∨B)→C ⇔ (A→C)∧(B→C)" class="math-inline-source" data-tex="(A\lor B)\to C \Leftrightarrow (A\to C)\land (B\to C)">\((A\lor B)\to C \Leftrightarrow (A\to C)\land (B\to C)\)</span>，用蕴含律、分配律、德摩根律逐步化简。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols, simplify
+from sympy.logic.boolalg import Implies, Not, Or, And
+A, B, C = symbols('A B C')
+e1 = Implies(Implies(A, B), C)          # (A→B)→C
+e2 = And(Or(A, C), Or(Not(B), C))       # (A∨C)∧(¬B∨C)
+print(simplify(e1) == simplify(e2))      # True
+
+f1 = And(Implies(A, C), Implies(B, C))  # (A→C)∧(B→C)
+f2 = Implies(Or(A, B), C)               # (A∨B)→C
+print(simplify(f1) == simplify(f2))      # True</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>32 / 78</div></div></section>
+<section class="slide light" data-screen-label="Proof+Code" data-source="例 5.2.18 至 5.2.20 · 判断类型" data-theme="light"><div class="chrome"><div>例 5.2.18 至 5.2.20</div><div>33 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 5.2.18 至 5.2.20 · 判断公式类型</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用等值演算判断公式类型</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">例 5.2.18：<span aria-label="((A→B)∧A)→B" class="math-inline-source" data-tex="((A\to B)\land A)\to B">\(((A\to B)\land A)\to B\)</span> 化简为 1，是永真式（假言推理）。例 5.2.19：<span aria-label="¬(A→(A∨B))∧C" class="math-inline-source" data-tex="\neg (A\to (A\lor B))\land C">\(\neg (A\to (A\lor B))\land C\)</span> 化简为 0，是永假式。例 5.2.20：<span aria-label="A∧(((A∨B)∧¬A)→B)" class="math-inline-source" data-tex="A\land (((A\lor B)\land \neg A)\to B)">\(A\land (((A\lor B)\land \neg A)\to B)\)</span> 化简为 A，是可满足式。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols
+from sympy.logic.boolalg import Implies, And, Not, Or
+from sympy.logic.inference import satisfiable
+A, B, C = symbols('A B C')
+e1 = Implies(And(Implies(A, B), A), B)        # ((A→B)∧A)→B
+print(not satisfiable(Not(e1)))                # True 永真式
+e2 = And(Not(Implies(A, Or(A, B))), C)        # ¬(A→(A∨B))∧C
+print(not satisfiable(e2))                     # True 永假式</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>33 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Case+Code" data-source="例 5.2.21 · 指鹿为马" data-theme="dark"><div class="chrome"><div>例 5.2.21</div><div>34 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 5.2.21 · 谁说真话</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">只有一人说真话</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">李大人说赵将军指鹿为马，赵将军说王公公指鹿为马，王公公说李大人和赵将军都指鹿为马。三人中只有一人说真话。经等值演算 <span aria-label="¬P∧Q∧¬R ⇔ 1" class="math-inline-source" data-tex="\neg P\land Q\land \neg R \Leftrightarrow 1">\(\neg P\land Q\land \neg R \Leftrightarrow 1\)</span>，赵将军说真话，李大人与王公公说谎。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols
+from sympy.logic.boolalg import And, Not, Or
+from sympy.logic.inference import satisfiable
+P, Q, R = symbols('李大人 赵将军 王公公')
+knowledge = And(
+    Or(And(P, Not(Q)), And(Not(P), Q)),          # 李大人:赵将军说谎
+    Or(And(Q, Not(R)), And(Not(Q), R)),          # 赵将军:王公公说谎
+    Or(And(R, Not(P), Not(Q)),
+       And(Not(R), Or(P, Q))))                   # 王公公:两人都说谎
+print(satisfiable(knowledge))   # 赵将军=True</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.2.12 / 定理 5.2.2 · 逻辑蕴含" data-theme="light"><div class="chrome"><div>5.2.3 逻辑蕴含</div><div>35 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.12 与 定理 5.2.2</div><h2 class="h1-zh anim-item" style="max-width:17em"><span aria-label="A→B" class="math-inline-source" data-tex="A\to B">\(A\to B\)</span> 为永真式即 A 逻辑蕴含 B</h2><div aria-label="A ⇒ B 当且仅当 A→B 为永真式" class="formula anim-item mathjax-display-source" data-tex="A \Rightarrow B \text{当且仅当} A\to B \text{为永真式}">\[\displaystyle A \Rightarrow B \text{当且仅当} A\to B \text{为永真式}\]</div><p class="body-zh anim-item" style="max-width:29em;opacity:.7">→ 是联结词（公式中的符号），⇒ 表示两公式之间的关系。<span aria-label="A⇔B" class="math-inline-source" data-tex="A\Leftrightarrow B">\(A\Leftrightarrow B\)</span> 的充要条件是 <span aria-label="A⇒B" class="math-inline-source" data-tex="A\Rightarrow B">\(A\Rightarrow B\)</span> 且 <span aria-label="B⇒A" class="math-inline-source" data-tex="B\Rightarrow A">\(B\Rightarrow A\)</span>。蕴含式证明有真值表法、等值演算法、前件为真推后件为真法、后件为假推前件为假法四种。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>35 / 78</div></div></section>
+<section class="slide dark" data-screen-label="TruthTable" data-source="例 5.2.22 · P∧Q⇒P" data-theme="dark"><div class="chrome"><div>例 5.2.22</div><div>36 / 78</div></div>
+<div class="slide-body" style="align-items:center;text-align:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.2rem,3vh,2.2rem)">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 5.2.22 · 真值表法证蕴含</div>
+<h2 class="h2-zh" style="max-width:20em;margin-top:.6vh"><span aria-label="P∧Q ⇒ P" class="math-inline-source" data-tex="P\land Q \Rightarrow P">\(P\land Q \Rightarrow P\)</span>：<span aria-label="P∧Q→P" class="math-inline-source" data-tex="P\land Q\to P">\(P\land Q\to P\)</span> 永真</h2>
+</div>
+<div class="anim-item"><table class="ttable"><thead><tr><th>P</th><th>Q</th><th><span aria-label="P∧Q" class="math-inline-source" data-tex="P\land Q">\(P\land Q\)</span></th><th><span aria-label="P∧Q→P" class="math-inline-source" data-tex="P\land Q\to P">\(P\land Q\to P\)</span></th></tr></thead><tbody><tr><td class="vT">T</td><td class="vT">T</td><td class="vT">T</td><td class="vT">T</td></tr><tr><td class="vT">T</td><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td></tr><tr><td class="vF">F</td><td class="vT">T</td><td class="vF">F</td><td class="vT">T</td></tr><tr><td class="vF">F</td><td class="vF">F</td><td class="vF">F</td><td class="vT">T</td></tr></tbody></table></div>
+<p class="body-zh anim-item" style="max-width:27em;opacity:.7;margin-top:clamp(.8rem,2vh,1.6rem)">无论 P、Q 取何值，<span aria-label="P∧Q→P" class="math-inline-source" data-tex="P\land Q\to P">\(P\land Q\to P\)</span> 始终为真，故 <span aria-label="P∧Q⇒P" class="math-inline-source" data-tex="P\land Q\Rightarrow P">\(P\land Q\Rightarrow P\)</span>。例 5.2.24 用等值演算证 <span aria-label="P→(Q∨R)⇒(P→Q)∨(P→R)" class="math-inline-source" data-tex="P\to (Q\lor R)\Rightarrow (P\to Q)\lor (P\to R)">\(P\to (Q\lor R)\Rightarrow (P\to Q)\lor (P\to R)\)</span>。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>36 / 78</div></div></section>
+<section class="slide light" data-screen-label="Laws" data-source="5.2.3 基本蕴含式" data-theme="light"><div class="chrome"><div>5.2.3 基本蕴含式</div><div>37 / 78</div></div>
+<div class="slide-body">
+<div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.3rem)">
+<h2 class="h1-zh anim-item" style="max-width:18em">十一条基本蕴含式</h2>
+<div class="laws-grid" style="grid-template-columns:repeat(2,1fr)"><div class="law-card anim-item"><div class="law-name">化简律</div><div class="law-formula"><span aria-label="P∧Q ⇒ P" class="math-inline-source" data-tex="P\land Q \Rightarrow P">\(P\land Q \Rightarrow P\)</span>，<span aria-label="P∧Q ⇒ Q" class="math-inline-source" data-tex="P\land Q \Rightarrow Q">\(P\land Q \Rightarrow Q\)</span></div></div><div class="law-card anim-item"><div class="law-name">化简律变形</div><div class="law-formula"><span aria-label="¬(P→Q) ⇒ P" class="math-inline-source" data-tex="\neg (P\to Q) \Rightarrow P">\(\neg (P\to Q) \Rightarrow P\)</span>，<span aria-label="¬(P→Q) ⇒ ¬Q" class="math-inline-source" data-tex="\neg (P\to Q) \Rightarrow \neg Q">\(\neg (P\to Q) \Rightarrow \neg Q\)</span></div></div><div class="law-card anim-item"><div class="law-name">附加律</div><div class="law-formula"><span aria-label="P ⇒ P∨Q" class="math-inline-source" data-tex="P \Rightarrow P\lor Q">\(P \Rightarrow P\lor Q\)</span>，<span aria-label="Q ⇒ P∨Q" class="math-inline-source" data-tex="Q \Rightarrow P\lor Q">\(Q \Rightarrow P\lor Q\)</span></div></div><div class="law-card anim-item"><div class="law-name">附加律变形</div><div class="law-formula"><span aria-label="¬P ⇒ P→Q" class="math-inline-source" data-tex="\neg P \Rightarrow P\to Q">\(\neg P \Rightarrow P\to Q\)</span>，<span aria-label="Q ⇒ P→Q" class="math-inline-source" data-tex="Q \Rightarrow P\to Q">\(Q \Rightarrow P\to Q\)</span></div></div><div class="law-card anim-item"><div class="law-name">假言推理</div><div class="law-formula"><span aria-label="P∧(P→Q) ⇒ Q" class="math-inline-source" data-tex="P\land (P\to Q) \Rightarrow Q">\(P\land (P\to Q) \Rightarrow Q\)</span></div></div><div class="law-card anim-item"><div class="law-name">拒取式</div><div class="law-formula"><span aria-label="¬Q∧(P→Q) ⇒ ¬P" class="math-inline-source" data-tex="\neg Q\land (P\to Q) \Rightarrow \neg P">\(\neg Q\land (P\to Q) \Rightarrow \neg P\)</span></div></div><div class="law-card anim-item"><div class="law-name">析取三段论</div><div class="law-formula"><span aria-label="¬P∧(P∨Q) ⇒ Q" class="math-inline-source" data-tex="\neg P\land (P\lor Q) \Rightarrow Q">\(\neg P\land (P\lor Q) \Rightarrow Q\)</span></div></div><div class="law-card anim-item"><div class="law-name">假言三段论</div><div class="law-formula"><span aria-label="(P→Q)∧(Q→R) ⇒ P→R" class="math-inline-source" data-tex="(P\to Q)\land (Q\to R) \Rightarrow P\to R">\((P\to Q)\land (Q\to R) \Rightarrow P\to R\)</span></div></div><div class="law-card anim-item"><div class="law-name">等价三段论</div><div class="law-formula"><span aria-label="(P↔Q)∧(Q↔R) ⇒ P↔R" class="math-inline-source" data-tex="(P\leftrightarrow Q)\land (Q\leftrightarrow R) \Rightarrow P\leftrightarrow R">\((P\leftrightarrow Q)\land (Q\leftrightarrow R) \Rightarrow P\leftrightarrow R\)</span></div></div><div class="law-card anim-item"><div class="law-name">构造性二难</div><div class="law-formula"><span aria-label="(P→Q)∧(R→S)∧(P∨R) ⇒ Q∨S" class="math-inline-source" data-tex="(P\to Q)\land (R\to S)\land (P\lor R) \Rightarrow Q\lor S">\((P\to Q)\land (R\to S)\land (P\lor R) \Rightarrow Q\lor S\)</span></div></div><div class="law-card anim-item"><div class="law-name">前件附加</div><div class="law-formula"><span aria-label="P→Q ⇒ (P∨R)→(Q∨R)" class="math-inline-source" data-tex="P\to Q \Rightarrow (P\lor R)\to (Q\lor R)">\(P\to Q \Rightarrow (P\lor R)\to (Q\lor R)\)</span></div></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>37 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 等价与蕴含" data-theme="dark"><div class="chrome"><div>应用示例 · 等价与蕴含</div><div>38 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">逻辑等价与蕴含的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">验证两个程序在所有输入下输出相同，确保逻辑行为一致，支持代码优化与重构</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">知识表示中用等价性简化推理规则，识别等价表达式减少冗余</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">逻辑蕴含用于构建高效推理机制，并在硬件验证中确保设计满足规格</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>38 / 78</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 等价与蕴含" data-theme="dark"><div class="chrome"><div>应用动画 · 等价与蕴含</div><div>39 / 78</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">等价与蕴含</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch5/ch5_02_app_78688453.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch5/ch5_02_app_78688453.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>39 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.2.13 / 定理 5.2.3 · 对偶" data-theme="light"><div class="chrome"><div>5.2.4 对偶与范式</div><div>40 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.13 与 定理 5.2.3</div><h2 class="h1-zh anim-item" style="max-width:17em">把 ∧∨ 互换、真假互换得对偶式</h2><p class="lead-zh anim-item" style="max-width:27em">在仅含 ¬、∧、∨ 的公式 A 中，把 ∧ 与 ∨ 互换、T 与 F 互换得到对偶式 A*。例 5.2.27：<span aria-label="(P∧Q)∨¬R" class="math-inline-source" data-tex="(P\land Q)\lor \neg R">\((P\land Q)\lor \neg R\)</span> 的对偶式是 <span aria-label="(P∨Q)∧¬R" class="math-inline-source" data-tex="(P\lor Q)\land \neg R">\((P\lor Q)\land \neg R\)</span>。</p><div aria-label="¬A(P₁,…,Pₙ) ⇔ A*(¬P₁,…,¬Pₙ)" class="formula anim-item mathjax-display-source" data-tex="\neg A(P_{1},\ldots ,P_{n}) \Leftrightarrow A*(\neg P_{1},\ldots ,\neg P_{n})">\[\displaystyle \neg A(P_{1},\ldots ,P_{n}) \Leftrightarrow A*(\neg P_{1},\ldots ,\neg P_{n})\]</div><p class="body-zh anim-item" style="max-width:29em;opacity:.7">对偶定理：公式的否定等价于其命题变元否定的对偶式。定理 5.2.4：若 <span aria-label="A⇔B" class="math-inline-source" data-tex="A\Leftrightarrow B">\(A\Leftrightarrow B\)</span> 则 <span aria-label="A*⇔B*" class="math-inline-source" data-tex="A*\Leftrightarrow B*">\(A*\Leftrightarrow B*\)</span>。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>40 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.2.14 / 5.2.15 · 文字与范式" data-theme="light"><div class="chrome"><div>5.2.4 范式</div><div>41 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.14 与 5.2.15</div><h2 class="h1-zh anim-item" style="max-width:17em">文字、简单合取式与范式</h2><p class="lead-zh anim-item" style="max-width:27em">命题变元及其否定称为文字。有限个文字的合取是简单合取式，析取是简单析取式。用析取连接简单合取式构成析取范式，用合取连接简单析取式构成合取范式。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 5.2.29 与 5.2.30</div><p class="body-zh" style="margin-top:.8vh">例 5.2.30：<span aria-label="P∧Q∧¬R" class="math-inline-source" data-tex="P\land Q\land \neg R">\(P\land Q\land \neg R\)</span> 是析取范式（一个简单合取式）；<span aria-label="¬P∨Q∨¬R" class="math-inline-source" data-tex="\neg P\lor Q\lor \neg R">\(\neg P\lor Q\lor \neg R\)</span> 是合取范式；<span aria-label="(P∨Q)∧(¬P∨¬Q)" class="math-inline-source" data-tex="(P\lor Q)\land (\neg P\lor \neg Q)">\((P\lor Q)\land (\neg P\lor \neg Q)\)</span> 是合取范式。</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>41 / 78</div></div></section>
+<section class="slide light" data-screen-label="Proof+Code" data-source="定理 5.2.5 · 求范式" data-theme="light"><div class="chrome"><div>5.2.4 求析取与合取范式</div><div>42 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定理 5.2.5 · 范式构造</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">任意公式都有等价的析取与合取范式</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">步骤：消去 →、↔；用双重否定与德摩根律把 ¬ 移到变元前；用结合律分配律整理。例 5.2.31：<span aria-label="(P∧(Q→R))→S ⇔ ¬P∨(Q∧¬R)∨S" class="math-inline-source" data-tex="(P\land (Q\to R))\to S \Leftrightarrow \neg P\lor (Q\land \neg R)\lor S">\((P\land (Q\to R))\to S \Leftrightarrow \neg P\lor (Q\land \neg R)\lor S\)</span>（析取范式）<span aria-label="⇔ (¬P∨Q∨S)∧(¬P∨¬R∨S)" class="math-inline-source" data-tex="\Leftrightarrow (\neg P\lor Q\lor S)\land (\neg P\lor \neg R\lor S)">\(\Leftrightarrow (\neg P\lor Q\lor S)\land (\neg P\lor \neg R\lor S)\)</span>（合取范式）。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols
+from sympy.logic.boolalg import Or, And, Not, Implies, to_dnf, to_cnf
+P, Q, R, S = symbols('P Q R S')
+f1 = Implies(And(P, Implies(Q, R)), S)   # (P∧(Q→R))→S
+print("DNF:", to_dnf(f1))                # 析取范式
+print("CNF:", to_cnf(f1))                # 合取范式</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>42 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定理 5.2.6 · 范式判定类型" data-theme="dark"><div class="chrome"><div>5.2.4 用范式判定类型</div><div>43 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定理 5.2.6</div><h2 class="h1-zh anim-item" style="max-width:17em">用范式判定永真与永假</h2><p class="lead-zh anim-item" style="max-width:27em">公式为永假式当且仅当其析取范式中每个简单合取式至少含一个变元及其否定。公式为永真式当且仅当其合取范式中每个简单析取式至少含一个变元及其否定。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">例 5.2.33：<span aria-label="P∨(Q→P)∨¬(P∨R)" class="math-inline-source" data-tex="P\lor (Q\to P)\lor \neg (P\lor R)">\(P\lor (Q\to P)\lor \neg (P\lor R)\)</span> 的合取范式每个简单析取式都含某变元及其否定，是永真式；<span aria-label="(P→Q)→P" class="math-inline-source" data-tex="(P\to Q)\to P">\((P\to Q)\to P\)</span> 既非永真也非永假，是可满足式。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>43 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.2.16 · 极小项与极大项" data-theme="light"><div class="chrome"><div>5.2.4 极小项与极大项</div><div>44 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.2.16 · 极小项与极大项</div><h2 class="h1-zh anim-item" style="max-width:17em">每个变元恰出现一次的合取与析取</h2><p class="lead-zh anim-item" style="max-width:27em">n 个变元的简单合取式中，若每个变元与其否定恰有一个出现一次，称极小项；对应的简单析取式称极大项。n 个变元共有 <span aria-label="2ⁿ" class="math-inline-source" data-tex="2^{n}">\(2^{n}\)</span> 个极小项和 <span aria-label="2ⁿ" class="math-inline-source" data-tex="2^{n}">\(2^{n}\)</span> 个极大项。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 5.2.35</div><p class="body-zh" style="margin-top:.8vh">例 5.2.35：P、Q 的极小项有 <span aria-label="P∧Q, P∧¬Q, ¬P∧Q, ¬P∧¬Q" class="math-inline-source" data-tex="P\land Q, P\land \neg Q, \neg P\land Q, \neg P\land \neg Q">\(P\land Q, P\land \neg Q, \neg P\land Q, \neg P\land \neg Q\)</span>；极大项有 <span aria-label="P∨Q, P∨¬Q, ¬P∨Q, ¬P∨¬Q" class="math-inline-source" data-tex="P\lor Q, P\lor \neg Q, \neg P\lor Q, \neg P\lor \neg Q">\(P\lor Q, P\lor \neg Q, \neg P\lor Q, \neg P\lor \neg Q\)</span>。</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>44 / 78</div></div></section>
+<section class="slide light" data-screen-label="TruthTable" data-source="表 5.16 · 极小项真值表" data-theme="light"><div class="chrome"><div>表 5.16 极小项</div><div>45 / 78</div></div>
+<div class="slide-body" style="align-items:center;text-align:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.2rem,3vh,2.2rem)">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">P、Q 的极小项真值表</div>
+<h2 class="h2-zh" style="max-width:20em;margin-top:.6vh">两变元极小项：每项只在一行为真</h2>
+</div>
+<div class="anim-item"><table class="ttable"><thead><tr><th>P</th><th>Q</th><th><span aria-label="¬P∧¬Q" class="math-inline-source" data-tex="\neg P\land \neg Q">\(\neg P\land \neg Q\)</span></th><th><span aria-label="¬P∧Q" class="math-inline-source" data-tex="\neg P\land Q">\(\neg P\land Q\)</span></th><th><span aria-label="P∧¬Q" class="math-inline-source" data-tex="P\land \neg Q">\(P\land \neg Q\)</span></th><th><span aria-label="P∧Q" class="math-inline-source" data-tex="P\land Q">\(P\land Q\)</span></th></tr></thead><tbody><tr><td class="">0</td><td class="">0</td><td class="">1</td><td class="">0</td><td class="">0</td><td class="">0</td></tr><tr><td class="">0</td><td class="">1</td><td class="">0</td><td class="">1</td><td class="">0</td><td class="">0</td></tr><tr><td class="">1</td><td class="">0</td><td class="">0</td><td class="">0</td><td class="">1</td><td class="">0</td></tr><tr><td class="">1</td><td class="">1</td><td class="">0</td><td class="">0</td><td class="">0</td><td class="">1</td></tr></tbody></table></div>
+<p class="body-zh anim-item" style="max-width:27em;opacity:.7;margin-top:clamp(.8rem,2vh,1.6rem)">极小项 <span aria-label="mᵢ" class="math-inline-source" data-tex="m_{i}">\(m_{i}\)</span> 恰在编号 i 对应的那一行取值为 1。极大项 <span aria-label="Mᵢ" class="math-inline-source" data-tex="M_{i}">\(M_{i}\)</span> 与之对偶，恰在编号 i 那一行取值为 0。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>45 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Concept+Code" data-source="定义 5.2.17 / 定理 5.2.7 / 5.2.8 · 主范式" data-theme="dark"><div class="chrome"><div>5.2.4 主范式</div><div>46 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 5.2.17 · 主范式</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">主析取范式与主合取范式唯一</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">所有简单合取式都是极小项的析取范式是主析取范式；所有简单析取式都是极大项的合取范式是主合取范式。非永假公式有唯一主析取范式，非永真公式有唯一主合取范式。主范式解决了等价判定问题。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols, And, Or, Not
+P, Q = symbols('P Q')
+minterms = [And(P, Q), And(P, Not(Q)),
+            And(Not(P), Q), And(Not(P), Not(Q))]
+maxterms = [Or(P, Q), Or(P, Not(Q)),
+            Or(Not(P), Q), Or(Not(P), Not(Q))]
+print("极小项:", minterms)
+print("极大项:", maxterms)</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>46 / 78</div></div></section>
+<section class="slide light" data-screen-label="TruthTable" data-source="例 5.2.36 · (P→Q)∧Q 主范式" data-theme="light"><div class="chrome"><div>例 5.2.36</div><div>47 / 78</div></div>
+<div class="slide-body" style="align-items:center;text-align:center">
+<div style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.2rem,3vh,2.2rem)">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 5.2.36 · 求主范式</div>
+<h2 class="h2-zh" style="max-width:20em;margin-top:.6vh"><span aria-label="(P→Q)∧Q" class="math-inline-source" data-tex="(P\to Q)\land Q">\((P\to Q)\land Q\)</span> 的主析取与主合取范式</h2>
+</div>
+<div class="anim-item"><table class="ttable"><thead><tr><th>P</th><th>Q</th><th><span aria-label="(P→Q)∧Q" class="math-inline-source" data-tex="(P\to Q)\land Q">\((P\to Q)\land Q\)</span></th><th>成真/成假</th></tr></thead><tbody><tr><td class="">0</td><td class="">0</td><td class="">0</td><td class=""><span aria-label="M₀" class="math-inline-source" data-tex="M_{0}">\(M_{0}\)</span> 成假</td></tr><tr><td class="">0</td><td class="">1</td><td class="">1</td><td class=""><span aria-label="m₁" class="math-inline-source" data-tex="m_{1}">\(m_{1}\)</span> 成真</td></tr><tr><td class="">1</td><td class="">0</td><td class="">0</td><td class=""><span aria-label="M₂" class="math-inline-source" data-tex="M_{2}">\(M_{2}\)</span> 成假</td></tr><tr><td class="">1</td><td class="">1</td><td class="">1</td><td class=""><span aria-label="m₃" class="math-inline-source" data-tex="m_{3}">\(m_{3}\)</span> 成真</td></tr></tbody></table></div>
+<p class="body-zh anim-item" style="max-width:27em;opacity:.7;margin-top:clamp(.8rem,2vh,1.6rem)">主析取范式取成真行：<span aria-label="m₁∨m₃ = (¬P∧Q)∨(P∧Q)" class="math-inline-source" data-tex="m_{1}\lor m_{3} = (\neg P\land Q)\lor (P\land Q)">\(m_{1}\lor m_{3} = (\neg P\land Q)\lor (P\land Q)\)</span>。主合取范式取成假行：<span aria-label="M₀∧M₂ = (P∨Q)∧(¬P∨Q)" class="math-inline-source" data-tex="M_{0}\land M_{2} = (P\lor Q)\land (\neg P\lor Q)">\(M_{0}\land M_{2} = (P\lor Q)\land (\neg P\lor Q)\)</span>。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>47 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Case+Code" data-source="例 5.2.39 · 选派人员" data-theme="dark"><div class="chrome"><div>例 5.2.39</div><div>48 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 5.2.39 · 主析取范式求方案</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用主析取范式求全部选派方案</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">若李红去则王刚同去 <span aria-label="L→G" class="math-inline-source" data-tex="L\to G">\(L\to G\)</span>；若刘勇去则王刚不去 <span aria-label="Y→¬G" class="math-inline-source" data-tex="Y\to \neg G">\(Y\to \neg G\)</span>；若王刚不去则李红或刘勇去 <span aria-label="¬G→(L∨Y)" class="math-inline-source" data-tex="\neg G\to (L\lor Y)">\(\neg G\to (L\lor Y)\)</span>。主析取范式给出三个成真赋值：王刚单独去；刘勇单独去；李红和王刚同去。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols, Or, And, Not, Implies, satisfiable
+L, Y, G = symbols('L Y G')
+cond = And(Implies(L, G),              # L→G
+           Implies(Y, Not(G)),         # Y→¬G
+           Implies(Not(G), Or(L, Y)))  # ¬G→(L∨Y)
+for s in satisfiable(cond, all_models=True):
+    print(s)</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>48 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 对偶与范式" data-theme="dark"><div class="chrome"><div>应用示例 · 软件测试</div><div>49 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">对偶与范式用于软件测试</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">生成对偶表达式的测试用例，系统覆盖所有逻辑路径，不遗漏任何输入组合</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">若表达式及其对偶式在所有输入下都得到预期结果，则认为表达式正确</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">用合取范式或析取范式系统生成所有可能输入组合，确保测试全面</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>49 / 78</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 软件测试" data-theme="dark"><div class="chrome"><div>应用动画 · 软件测试</div><div>50 / 78</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">软件测试</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch5/ch5_03_app_cabf11f7.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch5/ch5_03_app_cabf11f7.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="5.2.5 小结" data-theme="dark"><div class="chrome"><div>5.2.5 小结</div><div>51 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">命题公式由变元、联结词和括号按规则组成，符号化把自然语言转为形式化公式</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">真值表列出所有赋值及其真值，分出永真式、永假式与可满足式</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">等价 ⇔ 在所有赋值下真值相同，蕴含 ⇒ 即条件式为永真，皆可用等值演算与真值表验证</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">对偶把 ∧∨ 与真假互换；主析取范式与主合取范式唯一，解决公式判定与等价问题</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>51 / 78</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="5.2 习题" data-theme="light"><div class="chrome"><div>5.2 习题</div><div>52 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 5.2</div><h2 class="h1-zh anim-item" style="max-width:18em">命题公式练习</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li>哪个真值表是真命题（答案 B：<span aria-label="p∨¬p" class="math-inline-source" data-tex="p\lor \neg p">\(p\lor \neg p\)</span>）</li><li><span aria-label="(p→q)∧(q→r)" class="math-inline-source" data-tex="(p\to q)\land (q\to r)">\((p\to q)\land (q\to r)\)</span> 中标识符数量（答案 C：3）</li><li>若今天下雨我会带伞 的符号化（答案 C：<span aria-label="p→q" class="math-inline-source" data-tex="p\to q">\(p\to q\)</span>）</li><li>与 <span aria-label="¬(p∨q)" class="math-inline-source" data-tex="\neg (p\lor q)">\(\neg (p\lor q)\)</span> 等价的（答案 A：<span aria-label="¬p∧¬q" class="math-inline-source" data-tex="\neg p\land \neg q">\(\neg p\land \neg q\)</span>）</li><li><span aria-label="p∧¬q" class="math-inline-source" data-tex="p\land \neg q">\(p\land \neg q\)</span> 的对偶（答案 B：<span aria-label="p∨¬q" class="math-inline-source" data-tex="p\lor \neg q">\(p\lor \neg q\)</span>）</li><li>哪个是主析取范式（答案 B：<span aria-label="(p∧q)∨(¬p∧r)" class="math-inline-source" data-tex="(p\land q)\lor (\neg p\land r)">\((p\land q)\lor (\neg p\land r)\)</span>）</li><li>构造含全部联结词的复合命题并列真值表</li><li>判断给定句子是否为命题并说明理由</li><li>符号化两个复杂条件命题</li><li>构造 <span aria-label="p∧(q∨r)" class="math-inline-source" data-tex="p\land (q\lor r)">\(p\land (q\lor r)\)</span> 的对偶并证明对偶性</li><li>化简 <span aria-label="(p∧q)∨(¬p∧q)∨(p∧¬q)" class="math-inline-source" data-tex="(p\land q)\lor (\neg p\land q)\lor (p\land \neg q)">\((p\land q)\lor (\neg p\land q)\lor (p\land \neg q)\)</span> 等公式</li><li>把公式转换为主析取范式与主合取范式</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>52 / 78</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="5.2 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 5.2</div><div>53 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:18em">把命题公式推向更深的六个问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist anim-item"><li>理论：能否把公式定义、真值表、等价蕴含、对偶范式统一进一个逻辑框架</li><li>实践：知识图谱构建中如何用命题公式之间的关系进行知识表示与推理</li><li>工程：系统优化中如何用范式与对偶原理提升系统性能</li><li>科研：逻辑理论研究有哪些新趋势与值得关注的新兴领域</li><li>习题：习题 11、13、15 的求解过程</li><li>代码：示例 5.2.1 与示例 5.2.14 的详细解释与分析</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>53 / 78</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="5.3 命题逻辑推理" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">5.3</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">命题逻辑推理</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">命题演算推证、推理系统的可靠性一致性完备性，以及哥德尔不完全性定理</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>54 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.3.1 / 5.3.2 / 定理 5.3.1 · 有效推理" data-theme="light"><div class="chrome"><div>5.3.1 命题演算推证</div><div>55 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.3.1、5.3.2 与 定理 5.3.1</div><h2 class="h1-zh anim-item" style="max-width:17em">有效推理与永真条件式</h2><p class="lead-zh anim-item" style="max-width:27em">推理理论从前提出发依推理规则得出结论，记 <span aria-label="H₁,…,Hₙ ⇒ C" class="math-inline-source" data-tex="H_{1},\ldots ,H_{n} \Rightarrow C">\(H_{1},\ldots ,H_{n} \Rightarrow C\)</span>。若存在赋值使每个 <span aria-label="Hᵢ" class="math-inline-source" data-tex="H_{i}">\(H_{i}\)</span> 真而 C 假，则推理无效；否则有效。</p><div aria-label="H₁,…,Hₙ ⇒ C 有效 当且仅当 H₁∧…∧Hₙ→C 为永真式" class="formula anim-item mathjax-display-source" data-tex="H_{1},\ldots ,H_{n} \Rightarrow C \text{有效} \text{当且仅当} H_{1}\land \ldots \land H_{n}\to C \text{为永真式}">\[\displaystyle H_{1},\ldots ,H_{n} \Rightarrow C \text{有效} \text{当且仅当} H_{1}\land \ldots \land H_{n}\to C \text{为永真式}\]</div><p class="body-zh anim-item" style="max-width:29em;opacity:.7">C 称为前提的有效结论。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>55 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 5.3.3 · 推理规则" data-theme="dark"><div class="chrome"><div>5.3.1 推证要素</div><div>56 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.3.3 · 推理规则与方法</div><h2 class="h1-zh anim-item" style="max-width:17em">P 规则、T 规则与 CP 规则</h2><p class="lead-zh anim-item" style="max-width:27em">推理根据是基本等值式 E 与蕴含式 I。三条推理规则：P 规则引入前提；T 规则把已导出的结论作为后续前提；CP 规则证 <span aria-label="R→C" class="math-inline-source" data-tex="R\to C">\(R\to C\)</span> 时把前件 R 加入前提再推后件 C。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">证明方法有三种：从前提直接推结论；设结论的否定加入前提推出矛盾（反证法）；把结论前件并入前提推后件（CP 规则）。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 78</div></div></section>
+<section class="slide light" data-screen-label="Proof" data-source="例 5.3.1 · 直接推证" data-theme="light"><div class="chrome"><div>例 5.3.1</div><div>57 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 5.3.1 · 直接推证</div>
+<h2 class="h2-zh" style="max-width:14em;margin-top:1vh">前提 <span aria-label="P, P→¬Q, ¬Q→R, R→S" class="math-inline-source" data-tex="P, P\to \neg Q, \neg Q\to R, R\to S">\(P, P\to \neg Q, \neg Q\to R, R\to S\)</span> 推出 S</h2>
+<p class="body-zh" style="max-width:24em">从前提直接推导：由 <span aria-label="P→¬Q" class="math-inline-source" data-tex="P\to \neg Q">\(P\to \neg Q\)</span> 与 <span aria-label="¬Q→R" class="math-inline-source" data-tex="\neg Q\to R">\(\neg Q\to R\)</span> 得 <span aria-label="P→R" class="math-inline-source" data-tex="P\to R">\(P\to R\)</span>，结合 P 得 R，再由 <span aria-label="R→S" class="math-inline-source" data-tex="R\to S">\(R\to S\)</span> 得 S。</p>
+</div>
+<div class="anim-item"><div class="proof"><div class="pn">(1)</div><div class="pf"><span aria-label="P→¬Q" class="math-inline-source" data-tex="P\to \neg Q">\(P\to \neg Q\)</span></div><div class="pr">P</div><div class="pn">(2)</div><div class="pf"><span aria-label="¬Q→R" class="math-inline-source" data-tex="\neg Q\to R">\(\neg Q\to R\)</span></div><div class="pr">P</div><div class="pn">(3)</div><div class="pf"><span aria-label="P→R" class="math-inline-source" data-tex="P\to R">\(P\to R\)</span></div><div class="pr">T(1)(2)I</div><div class="pn">(4)</div><div class="pf">P</div><div class="pr">P</div><div class="pn">(5)</div><div class="pf">R</div><div class="pr">T(3)(4)I</div><div class="pn">(6)</div><div class="pf"><span aria-label="R→S" class="math-inline-source" data-tex="R\to S">\(R\to S\)</span></div><div class="pr">P</div><div class="pn">(7)</div><div class="pf">S</div><div class="pr">T(5)(6)I</div></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>57 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Proof+Code" data-source="例 5.3.2 · 等值与蕴含推证" data-theme="dark"><div class="chrome"><div>例 5.3.2</div><div>58 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 5.3.2 · 推证 <span aria-label="S∨R" class="math-inline-source" data-tex="S\lor R">\(S\lor R\)</span></div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">前提 <span aria-label="¬P→Q, P→R, ¬Q∨S" class="math-inline-source" data-tex="\neg P\to Q, P\to R, \neg Q\lor S">\(\neg P\to Q, P\to R, \neg Q\lor S\)</span> 推出 <span aria-label="S∨R" class="math-inline-source" data-tex="S\lor R">\(S\lor R\)</span></h2><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><div class="proof"><div class="pn">(1)</div><div class="pf"><span aria-label="¬P→Q" class="math-inline-source" data-tex="\neg P\to Q">\(\neg P\to Q\)</span></div><div class="pr">P</div><div class="pn">(2)</div><div class="pf"><span aria-label="¬Q∨S" class="math-inline-source" data-tex="\neg Q\lor S">\(\neg Q\lor S\)</span></div><div class="pr">P</div><div class="pn">(3)</div><div class="pf"><span aria-label="Q→S" class="math-inline-source" data-tex="Q\to S">\(Q\to S\)</span></div><div class="pr">T(2)E</div><div class="pn">(4)</div><div class="pf"><span aria-label="¬P→S" class="math-inline-source" data-tex="\neg P\to S">\(\neg P\to S\)</span></div><div class="pr">T(1)(3)I</div><div class="pn">(5)</div><div class="pf"><span aria-label="¬S→P" class="math-inline-source" data-tex="\neg S\to P">\(\neg S\to P\)</span></div><div class="pr">T(4)E</div><div class="pn">(6)</div><div class="pf"><span aria-label="P→R" class="math-inline-source" data-tex="P\to R">\(P\to R\)</span></div><div class="pr">P</div><div class="pn">(7)</div><div class="pf"><span aria-label="¬S→R" class="math-inline-source" data-tex="\neg S\to R">\(\neg S\to R\)</span></div><div class="pr">T(5)(6)I</div><div class="pn">(8)</div><div class="pf"><span aria-label="S∨R" class="math-inline-source" data-tex="S\lor R">\(S\lor R\)</span></div><div class="pr">T(7)E</div></div></div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols
+from sympy.logic.boolalg import Or, Not, And, Implies
+from sympy.logic.inference import satisfiable
+P, Q, R, S = symbols('P Q R S')
+premises = And(Implies(Not(P), Q),
+               Implies(P, R), Or(Not(Q), S))
+conclusion = Or(S, R)
+# 前提与非结论不可满足，则结论有效
+print(satisfiable(And(premises, Not(conclusion))))  # False</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>58 / 78</div></div></section>
+<section class="slide light" data-screen-label="Proof+Code" data-source="例 5.3.3 · 反证法" data-theme="light"><div class="chrome"><div>例 5.3.3</div><div>59 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 5.3.3 · 反证法推证</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">前提 <span aria-label="P∨Q, P→R, Q→R" class="math-inline-source" data-tex="P\lor Q, P\to R, Q\to R">\(P\lor Q, P\to R, Q\to R\)</span> 推出 R</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">设结论的否定 <span aria-label="¬R" class="math-inline-source" data-tex="\neg R">\(\neg R\)</span> 加入前提：由 <span aria-label="P→R" class="math-inline-source" data-tex="P\to R">\(P\to R\)</span> 与 <span aria-label="¬R" class="math-inline-source" data-tex="\neg R">\(\neg R\)</span> 得 <span aria-label="¬P" class="math-inline-source" data-tex="\neg P">\(\neg P\)</span>，由 <span aria-label="Q→R" class="math-inline-source" data-tex="Q\to R">\(Q\to R\)</span> 与 <span aria-label="¬R" class="math-inline-source" data-tex="\neg R">\(\neg R\)</span> 得 <span aria-label="¬Q" class="math-inline-source" data-tex="\neg Q">\(\neg Q\)</span>，再由 <span aria-label="P∨Q" class="math-inline-source" data-tex="P\lor Q">\(P\lor Q\)</span> 与 <span aria-label="¬P" class="math-inline-source" data-tex="\neg P">\(\neg P\)</span> 得 Q，与 <span aria-label="¬Q" class="math-inline-source" data-tex="\neg Q">\(\neg Q\)</span> 矛盾。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><div class="proof"><div class="pn">(1)</div><div class="pf"><span aria-label="P→R" class="math-inline-source" data-tex="P\to R">\(P\to R\)</span></div><div class="pr">P</div><div class="pn">(2)</div><div class="pf"><span aria-label="Q→R" class="math-inline-source" data-tex="Q\to R">\(Q\to R\)</span></div><div class="pr">P</div><div class="pn">(3)</div><div class="pf"><span aria-label="¬R" class="math-inline-source" data-tex="\neg R">\(\neg R\)</span></div><div class="pr"><span aria-label="P(" class="math-inline-source" data-tex="P(">\(P(\)</span>否定)</div><div class="pn">(4)</div><div class="pf"><span aria-label="¬P" class="math-inline-source" data-tex="\neg P">\(\neg P\)</span></div><div class="pr">T(1)(3)I</div><div class="pn">(5)</div><div class="pf"><span aria-label="¬Q" class="math-inline-source" data-tex="\neg Q">\(\neg Q\)</span></div><div class="pr">T(2)(3)I</div><div class="pn">(6)</div><div class="pf"><span aria-label="P∨Q" class="math-inline-source" data-tex="P\lor Q">\(P\lor Q\)</span></div><div class="pr">P</div><div class="pn">(7)</div><div class="pf">Q</div><div class="pr">T(4)(6)I</div><div class="pn">(8)</div><div class="pf"><span aria-label="Q∧¬Q" class="math-inline-source" data-tex="Q\land \neg Q">\(Q\land \neg Q\)</span></div><div class="pr">T(5)(7)I</div></div></div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols
+from sympy.logic.boolalg import Or, Not, And, Implies
+from sympy.logic.inference import satisfiable
+P, Q, R = symbols('P Q R')
+combined = And(Or(P, Q), Implies(P, R),
+               Implies(Q, R), Not(R))
+print("结论 R 有效" if satisfiable(combined) is False
+      else "结论 R 无效")</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Proof" data-source="例 5.3.4 · CP 规则" data-theme="dark"><div class="chrome"><div>例 5.3.4</div><div>60 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 5.3.4 · CP 规则推证</div>
+<h2 class="h2-zh" style="max-width:14em;margin-top:1vh">前提 <span aria-label="P→(Q→S), ¬R∨P, Q" class="math-inline-source" data-tex="P\to (Q\to S), \neg R\lor P, Q">\(P\to (Q\to S), \neg R\lor P, Q\)</span> 推出 <span aria-label="R→S" class="math-inline-source" data-tex="R\to S">\(R\to S\)</span></h2>
+<p class="body-zh" style="max-width:24em">结论是条件式 <span aria-label="R→S" class="math-inline-source" data-tex="R\to S">\(R\to S\)</span>，用 CP 规则把前件 R 加入前提，再推后件 S。</p>
+</div>
+<div class="anim-item"><div class="proof"><div class="pn">(1)</div><div class="pf"><span aria-label="¬R∨P" class="math-inline-source" data-tex="\neg R\lor P">\(\neg R\lor P\)</span></div><div class="pr">P</div><div class="pn">(2)</div><div class="pf">R</div><div class="pr"><span aria-label="P(" class="math-inline-source" data-tex="P(">\(P(\)</span>附加前提)</div><div class="pn">(3)</div><div class="pf">P</div><div class="pr">T(1)(2)I</div><div class="pn">(4)</div><div class="pf"><span aria-label="P→(Q→S)" class="math-inline-source" data-tex="P\to (Q\to S)">\(P\to (Q\to S)\)</span></div><div class="pr">P</div><div class="pn">(5)</div><div class="pf"><span aria-label="Q→S" class="math-inline-source" data-tex="Q\to S">\(Q\to S\)</span></div><div class="pr">T(3)(4)I</div><div class="pn">(6)</div><div class="pf">Q</div><div class="pr">P</div><div class="pn">(7)</div><div class="pf">S</div><div class="pr">T(5)(6)I</div></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 78</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 5.3.5 / 5.3.6 · 实际推理" data-theme="light"><div class="chrome"><div>例 5.3.5 与 5.3.6</div><div>61 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">例 5.3.5 与 5.3.6</div><h2 class="h1-zh anim-item" style="max-width:17em">图书馆与说谎者</h2><p class="lead-zh anim-item" style="max-width:27em">例 5.3.5：无辅导任务则去社区或图书馆 <span aria-label="T→S∨L" class="math-inline-source" data-tex="T\to S\lor L">\(T\to S\lor L\)</span>，社区满则不去社区 <span aria-label="M→¬S" class="math-inline-source" data-tex="M\to \neg S">\(M\to \neg S\)</span>，已知 T、M，用反证法证去图书馆 L。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">例 5.3.6：张三说李四说谎、李四说王五说谎、王五说张三和李四都说谎。经推证 <span aria-label="¬P∧Q∧¬R" class="math-inline-source" data-tex="\neg P\land Q\land \neg R">\(\neg P\land Q\land \neg R\)</span>，张三和王五在说谎，李四说的是真话。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 命题逻辑推理" data-theme="dark"><div class="chrome"><div>应用示例 · 命题逻辑推理</div><div>62 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">命题逻辑推理的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">程序验证中把程序转为命题公式，用推理规则检查行为是否符合规格</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">定理证明器与逻辑编程语言用推理发现新结论或验证已有结论</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">硬件设计中把电路转为命题公式，用推理检查行为是否符合设计规格</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>62 / 78</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 命题逻辑推理" data-theme="dark"><div class="chrome"><div>应用动画 · 命题逻辑推理</div><div>63 / 78</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">命题逻辑推理</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch5/ch5_04_app_54a22ff3.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch5/ch5_04_app_54a22ff3.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>63 / 78</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 5.3.4 至 5.3.6 · 系统性质" data-theme="light"><div class="chrome"><div>5.3.2 推理系统及性质</div><div>64 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 5.3.4 至 5.3.6</div><h2 class="h1-zh anim-item" style="max-width:17em">可靠性、一致性与完备性</h2><p class="lead-zh anim-item" style="max-width:27em">可靠性：从真前提出发推出的结论也为真，即不证明任何假命题。一致性：系统内不会同时证明某命题及其否定为真，即没有矛盾。完备性：所有在一切解释下为真的命题都能在系统内被证明。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">理想的推理系统应同时具备三者：证明所有真命题（完备）、不证明任何假命题（可靠）、内部无矛盾（一致），设计时需平衡三者。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>64 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定理 5.3.2 / 5.3.3 · 哥德尔不完全性定理" data-theme="dark"><div class="chrome"><div>5.3.2 哥德尔不完全性定理</div><div>65 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定理 5.3.2 与 5.3.3</div><h2 class="h1-zh anim-item" style="max-width:17em">哥德尔不完全性定理（1931 年）</h2><p class="lead-zh anim-item" style="max-width:27em">第一不完全性定理：任何足够强以包含基础算术的一致形式系统中，总存在既不能被证明也不能被证伪的命题，故系统一致却不完备。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">第二不完全性定理：系统不能用自身的规则证明其自身不含矛盾，即一致性不能在系统内部完全证明。它揭示了形式系统的根本局限，是逻辑与数学基础的关键基石。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>65 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="5.3.3 小结" data-theme="dark"><div class="chrome"><div>5.3.3 小结</div><div>66 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">推理理论从前提依规则推出结论，<span aria-label="H₁,…,Hₙ ⇒ C" class="math-inline-source" data-tex="H_{1},\ldots ,H_{n} \Rightarrow C">\(H_{1},\ldots ,H_{n} \Rightarrow C\)</span> 有效当且仅当其条件式为永真式</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">命题演算推证用 P、T、CP 规则与基本等值式蕴含式，支持直接证明、反证法与 CP 法</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">推理系统的可靠性保证不证假、一致性保证无矛盾、完备性保证能证所有真命题</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">哥德尔不完全性定理表明足够强的一致系统必不完备，且无法在内部证明自身一致</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>66 / 78</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="5.3 习题" data-theme="light"><div class="chrome"><div>5.3 习题</div><div>67 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 5.3</div><h2 class="h1-zh anim-item" style="max-width:18em">命题逻辑推理练习</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li><span aria-label="p→q" class="math-inline-source" data-tex="p\to q">\(p\to q\)</span> 与 <span aria-label="q→r" class="math-inline-source" data-tex="q\to r">\(q\to r\)</span> 为真则哪个为真（答案 A：<span aria-label="p→r" class="math-inline-source" data-tex="p\to r">\(p\to r\)</span>）</li><li>认真听讲且参与讨论则成绩提高，成绩提高，能否反推（答案 D：无法确定）</li><li>积极发言则合作能力增强，能力没增强，结论（答案 B：没有积极发言）</li><li>比较自然演绎法与公理化系统的优缺点</li><li>用演绎推理证明四组推理式</li><li>由 <span aria-label="p→q, r→s, q→t, ¬s" class="math-inline-source" data-tex="p\to q, r\to s, q\to t, \neg s">\(p\to q, r\to s, q\to t, \neg s\)</span> 推出 <span aria-label="¬r" class="math-inline-source" data-tex="\neg r">\(\neg r\)</span></li><li>用反证法证明三组式子成立</li><li>用 CP 规则证明三组式子</li><li>用演绎推理证明王平相关说法不可能同时成立</li><li>证明星期六去长城或故宫等多组推理</li><li>构造含给定公理的推理系统并证明完备性</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>67 / 78</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="5.3 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 5.3</div><div>68 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:18em">把命题逻辑推理推向更深的六个问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist anim-item"><li>理论：可靠性、一致性、完备性与哥德尔不完全性定理之间有何联系</li><li>实践：命题逻辑推理在自动推理系统中有哪些应用，如何构建</li><li>工程：智能助手项目中如何用命题逻辑推理实现自然语言理解与交互</li><li>科研：如何把逻辑理论应用于跨学科研究以解决实际问题</li><li>习题：习题 5、12、15 的求解过程</li><li>代码：示例 5.3.3 与示例 5.3.4 的详细解释与分析</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>68 / 78</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="5.4 应用案例和 Python 实现" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">5.4</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">应用案例与 Python 实现</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">科研中两弹一星精神、人工智能深度学习项目两个命题逻辑推理案例</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>69 / 78</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="5.4.1 两弹一星" data-theme="light"><div class="chrome"><div>5.4.1 两弹一星</div><div>70 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例一 · 两弹一星</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用推理验证项目能否完成</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">符号化：培养与经费 <span aria-label="P∧F→原子弹 A" class="math-inline-source" data-tex="P\land F\to \text{原子弹} A">\(P\land F\to \text{原子弹} A\)</span>；A 与设备经费 <span aria-label="A∧E∧F→氢弹 H" class="math-inline-source" data-tex="A\land E\land F\to \text{氢弹} H">\(A\land E\land F\to \text{氢弹} H\)</span>；H 与经费 <span aria-label="H∧F→卫星 S" class="math-inline-source" data-tex="H\land F\to \text{卫星} S">\(H\land F\to \text{卫星} S\)</span>；已知 P、E、F。经演算推证逐步得 A、H、S，结论 <span aria-label="A∧H∧S" class="math-inline-source" data-tex="A\land H\land S">\(A\land H\land S\)</span> 成立，可成功完成两弹一星。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols
+from sympy.logic.boolalg import And, Implies, Not
+from sympy.logic.inference import satisfiable
+P, F, A, E, H, S = symbols('P F A E H S')
+premises = And(Implies(And(P, F), A),       # 培养∧经费→原子弹
+               Implies(And(A, E, F), H),    # 原子弹∧设备∧经费→氢弹
+               Implies(And(H, F), S),       # 氢弹∧经费→卫星
+               P, E, F)
+conclusion = And(A, H, S)
+# 结论有效 ⟺ 前提∧¬结论 不可满足
+print("可完成" if not satisfiable(And(premises, Not(conclusion)))
+      else "无法完成")</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>70 / 78</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 5.4.1 两弹一星" data-theme="light"><div class="chrome"><div>应用动画 · 5.4.1 两弹一星</div><div>71 / 78</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">5.4.1 两弹一星</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch5/ch5_05_case_5_4_1_603a00df.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch5/ch5_05_case_5_4_1_603a00df.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>71 / 78</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="5.4.2 深度学习项目" data-theme="light"><div class="chrome"><div>5.4.2 深度学习项目</div><div>72 / 78</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 深度学习</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用推理验证项目可行性</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">数据预处理与网络结构 <span aria-label="A∧B→训练 H" class="math-inline-source" data-tex="A\land B\to \text{训练} H">\(A\land B\to \text{训练} H\)</span>；H 与团队协同 <span aria-label="H∧E→验证 F" class="math-inline-source" data-tex="H\land E\to \text{验证} F">\(H\land E\to \text{验证} F\)</span>；验证 <span aria-label="F→完成 G" class="math-inline-source" data-tex="F\to \text{完成} G">\(F\to \text{完成} G\)</span>。已知 A、B、C、D、E。经演算推证逐步得 H、F，最终结论 G 成立，可成功完成深度学习项目。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols
+from sympy.logic.boolalg import And, Implies, Not
+from sympy.logic.inference import satisfiable
+A, B, C, D, E, F, G, H = symbols('A B C D E F G H')
+conditions = And(Implies(And(A, B), H),   # 数据∧结构→训练
+                 Implies(And(D, C), H),   # 资源∧算法→训练
+                 Implies(And(H, E), F),   # 训练∧协同→验证
+                 Implies(F, G),           # 验证→完成
+                 A, B, D, C, E)
+# G 是有效结论 ⟺ 前提∧¬G 不可满足
+valid = not satisfiable(And(conditions, Not(G)))
+print("可以成功完成深度学习项目:", valid)</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>72 / 78</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 5.4.2 深度学习项目" data-theme="light"><div class="chrome"><div>应用动画 · 5.4.2 深度学习项目</div><div>73 / 78</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">5.4.2 深度学习项目</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch5/ch5_06_case_5_4_2_819a2712.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch5/ch5_06_case_5_4_2_819a2712.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>73 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Note" data-source="5.4 真值表的局限" data-theme="dark"><div class="chrome"><div>5.4 方法对比</div><div>74 / 78</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">方法对比</div><h2 class="h1-zh anim-item" style="max-width:17em">变量多时真值表不再可行</h2><p class="lead-zh anim-item" style="max-width:27em">简单问题可用真值表，但两弹一星与深度学习案例分别有 6 个和 8 个变量，完整真值表需要 <span aria-label="2⁶=64" class="math-inline-source" data-tex="2^{6}=64">\(2^{6}=64\)</span> 行与 <span aria-label="2⁸=256" class="math-inline-source" data-tex="2^{8}=256">\(2^{8}=256\)</span> 行。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">若有上百个逻辑变量，真值表行数巨大、几乎不可能处理，因此通常用逻辑推理算法高效求解，得到满足所有条件的解。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>74 / 78</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="5.4.3 小结" data-theme="dark"><div class="chrome"><div>5.4.3 小结</div><div>75 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">两弹一星案例用命题符号化与演算推证，验证在培养、设备、经费具备时项目可完成</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">深度学习案例用条件链推理，验证在数据、结构、资源、算法、协同具备时项目可完成</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">变量较多时真值表行数爆炸，需用逻辑推理算法高效求解</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>75 / 78</div></div></section>
+<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 1 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>76 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">命题是可判真假的陈述句，五种联结词否定合取析取条件等价用真值表给出真假规则</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">命题公式由变元联结词括号按规则组成，真值表分出永真式、永假式与可满足式</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">等价 ⇔ 是所有赋值真值相同，蕴含 ⇒ 是条件式永真，皆可用等值演算与真值表验证</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>76 / 78</div></div></section>
+<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 2 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>77 / 78</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">对偶把 ∧∨ 与真假互换；主析取范式与主合取范式唯一，解决公式判定与等价证明</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">05</div><p class="body-zh">命题演算推证用 P、T、CP 规则与基本等值式蕴含式，支持直接证明、反证法与 CP 法</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">06</div><p class="body-zh">推理系统追求可靠一致完备，哥德尔定理表明足够强的一致系统必不完备</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>77 / 78</div></div></section>
+<section class="slide dark bare" data-screen-label="Closing" data-source="本章收束" data-theme="dark">
+<div class="slide-body" style="align-items:center;text-align:center">
+<div class="w-quote guest-mark">
+<div class="kicker anim-item" style="margin-bottom:clamp(1rem,2vh,1.6rem)">第 5 章 · 完</div>
+<h2 class="h1-zh anim-item" style="max-width:15em">命题逻辑把真与假的判断，变成可符号化、可计算、可推理的形式系统</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin:clamp(1.6rem,3.5vh,2.6rem) auto 0;opacity:.62">本章 Python 程序源码与学习指南均提供二维码下载。命题逻辑是数理逻辑与计算机科学严密推理的共同基石。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>78 / 78</div></div></section>
+</div>
+<div id="nav"></div>
+<script>
+(function(){
+  const deck=document.getElementById('deck');
+  const slides=Array.from(deck.querySelectorAll('.slide'));
+  const total=slides.length;let current=0;
+  const nav=document.getElementById('nav');
+  const DUR=560,OFF=64;
+  function renderNav(){
+    if(nav.children.length!==total){
+      nav.innerHTML='';
+      slides.forEach((s,i)=>{const d=document.createElement('button');
+        d.className='dot';d.onclick=()=>goTo(i);nav.appendChild(d);});
+    }
+    const t=slides[current].dataset.theme;
+    nav.style.background=t==='light'?'rgba(0,0,0,.12)':'rgba(255,255,255,.15)';
+    Array.from(nav.children).forEach((d,i)=>{
+      d.classList.toggle('active',i===current);
+      d.style.background=i===current
+        ?(t==='light'?'rgba(0,0,0,.7)':'rgba(255,255,255,.95)')
+        :(t==='light'?'rgba(0,0,0,.18)':'rgba(255,255,255,.3)');});
+    if(nav.scrollWidth>nav.clientWidth){
+      const d=nav.children[current];
+      if(d){try{nav.scrollTo({left:d.offsetLeft-nav.clientWidth/2,behavior:'smooth'});}catch(e){}}
+    }
+  }
+  function goTo(idx){
+    if(idx<0||idx>=total||idx===current)return;
+    const dir=idx>current?1:-1;
+    const prev=slides[current],next=slides[idx];
+    current=idx;
+    slides.forEach(s=>{if(s!==prev&&s!==next){s.classList.remove('active','leaving');s.style.transform='';if(s.__lt){clearTimeout(s.__lt);s.__lt=null;}}});
+    prev.classList.remove('active');
+    prev.classList.add('leaving');
+    prev.style.transform='translateX('+(-dir*OFF)+'px)';
+    if(prev.__lt)clearTimeout(prev.__lt);
+    prev.__lt=setTimeout(()=>{prev.classList.remove('leaving');prev.style.transform='';prev.__lt=null;},DUR);
+    if(next.__lt){clearTimeout(next.__lt);next.__lt=null;}
+    next.classList.remove('leaving');
+    next.style.transition='none';
+    next.style.transform='translateX('+(dir*OFF)+'px)';
+    void next.offsetWidth;
+    next.style.transition='';
+    next.classList.add('active');
+    next.style.transform='';
+    renderNav();save();
+  }
+  window.__deckGoTo=goTo;
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();goTo(current+1);}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goTo(current-1);}
+    if(e.key==='Home'){e.preventDefault();goTo(0);}
+    if(e.key==='End'){e.preventDefault();goTo(total-1);}});
+  let acc=0,lastNav=0,lastDir=0;
+  document.addEventListener('wheel',e=>{
+    const now=performance.now();
+    const d=e.deltaY;
+    if(now-lastNav<420){acc=0;return;}
+    const dir=d>0?1:-1;
+    if(dir!==lastDir){acc=0;lastDir=dir;}
+    acc+=d;
+    if(Math.abs(acc)>=60){acc=0;lastNav=now;goTo(current+dir);}
+  },{passive:true});
+  let tx=0,ty=0;
+  document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
+    if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy))return;
+    if(dx>0)goTo(current+1);else goTo(current-1);},{passive:true});
+  const KEY='discrete-ch05-progress';
+  function save(){try{localStorage.setItem(KEY,current);}catch(e){}}
+  function load(){try{const p=parseInt(localStorage.getItem(KEY),10);
+    if(!isNaN(p)&&p>=0&&p<total){current=p;}}catch(e){}}
+  load();
+  slides.forEach(s=>s.classList.remove('active','leaving'));
+  slides[current].classList.add('active');
+  renderNav();
+})();
+</script>
+<!--TB-ENHANCE-START-->
+<div id="tb-bar"></div>
+<div id="tb-toast"></div>
+<div id="tb-dock"></div>
+<script id="tb-enhance">
+(function(){
+  if(window.__tbInit) return; window.__tbInit=true;
+  var CH=5;
+  var FILES=["离散数学_第1章_计数和数论基础.html", "离散数学_第2章_集合及其运算.html", "离散数学_第3章_二元关系.html", "离散数学_第4章_特殊关系.html", "离散数学_第5章_命题逻辑.html", "离散数学_第6章_谓词逻辑.html", "离散数学_第7章_图论基础.html", "离散数学_第8章_特殊图.html", "离散数学_第9章_代数系统.html", "离散数学_第10章_群论基础.html", "离散数学_第11章_环域格和布尔代数.html"];
+  var ICON={
+    toc:'<svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>',
+    grid:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+    mark:'<svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>',
+    home:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/></svg>'
+  };
+  function pad(n){return (n<10?'0':'')+n;}
+  var deck=document.getElementById('deck'); if(!deck) return;
+  var slides=Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var total=slides.length;
+  function dots(){return document.querySelectorAll('#nav .dot');}
+  function curIdx(){for(var i=0;i<slides.length;i++){if(slides[i].classList.contains('active'))return i;}return 0;}
+  function jump(i){if(i<0||i>=total)return;if(window.__deckGoTo){window.__deckGoTo(i);}else{var d=dots();if(d[i])d[i].click();}closeAll();}
+
+  /* ---------- 持久化：已读 / 书签 ---------- */
+  var RKEY='discrete-ch'+pad(CH)+'-read', BKEY='discrete-ch'+pad(CH)+'-marks';
+  function loadSet(k){try{var v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+  function saveSet(k,o){try{localStorage.setItem(k,JSON.stringify(o));}catch(e){}}
+  var readSet=loadSet(RKEY), markSet=loadSet(BKEY);
+  function readCount(){var n=0;for(var k in readSet)if(readSet[k])n++;return n;}
+
+  /* ---------- 幻灯片元数据 ---------- */
+  var meta=slides.map(function(s,i){
+    var src=s.getAttribute('data-source')||'';
+    var lab=s.getAttribute('data-screen-label')||'';
+    var h=s.querySelector('.display-zh,.h1-zh,.h2-zh');
+    var title=src||(h?h.textContent.trim():'')||('第 '+(i+1)+' 页');
+    return {i:i,src:src,lab:lab,title:title};
+  });
+
+  /* ---------- 控制坞 ---------- */
+  var dock=document.getElementById('tb-dock');
+  function ctl(tip,icon,fn,id){var b=document.createElement('button');b.className='tb-ctl';b.setAttribute('data-tip',tip);b.innerHTML=icon;if(id)b.id=id;b.onclick=function(e){e.stopPropagation();fn();};dock.appendChild(b);return b;}
+  ctl('目录  (M)',ICON.toc,toggleTOC);
+  ctl('总览  (G)',ICON.grid,toggleGrid);
+  ctl('搜索  (/)',ICON.search,openSearch);
+  var bmBtn=ctl('收藏本页  (B)',ICON.mark,toggleMark);
+  ctl('字号  (T)','Aa',cycleFont);
+  ctl('帮助  (?)','?',toggleHelp);
+  ctl('返回书目',ICON.home,function(){parent.location.href='index.html';});
+
+  /* ---------- 浮层骨架 ---------- */
+  function overlay(id,inner){var o=document.createElement('div');o.id=id;o.className='tb-overlay';o.innerHTML=inner;document.body.appendChild(o);o.addEventListener('click',function(e){if(e.target===o)closeAll();});o.addEventListener('wheel',function(e){e.stopPropagation();},{passive:true});return o;}
+  var tocEl=overlay('tb-toc','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">目录 <small id="tb-toc-pct"></small></div><button class="tb-close" data-close>&times;</button></div><div class="tb-pbody" id="tb-toc-body"></div></div>');
+  var gridEl=overlay('tb-grid','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">幻灯片总览 <small id="tb-grid-pct"></small></div><button class="tb-close" data-close>&times;</button></div><div class="tb-pbody"><div class="tb-gwrap" id="tb-grid-body"></div></div></div>');
+  var searchEl=overlay('tb-search','<div class="tb-panel"><div class="tb-phead"><input class="tb-sinput" id="tb-sin" placeholder="搜索本章内容…" autocomplete="off"><button class="tb-close" data-close>&times;</button></div><div class="tb-sres" id="tb-sres"></div></div>');
+  var helpEl=overlay('tb-help','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">使用说明</div><button class="tb-close" data-close>&times;</button></div><div class="tb-help-body" id="tb-help-body"></div></div>');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-close]'),function(b){b.onclick=closeAll;});
+
+  /* ---------- 目录构建 ---------- */
+  (function buildTOC(){
+    var body=document.getElementById('tb-toc-body');
+    var html='', grpTitle='本章导览', opened=false;
+    function grp(t){return '<div class="tb-grp">'+esc(t)+'</div>';}
+    html+=grp('本章导览');
+    meta.forEach(function(m){
+      if(m.lab==='Section'){html+=grp(m.src||'章节');}
+      html+='<div class="tb-item" data-j="'+m.i+'"><span class="tb-idx">'+pad(m.i+1)+'</span><span class="tb-rdot"></span><span class="tb-it-txt">'+esc(m.title)+'</span><span class="tb-star">&#9733;</span></div>';
+    });
+    body.innerHTML=html;
+    body.addEventListener('click',function(e){var it=e.target.closest('.tb-item');if(it)jump(+it.getAttribute('data-j'));});
+  })();
+
+  /* ---------- 总览构建 ---------- */
+  (function buildGrid(){
+    var w=document.getElementById('tb-grid-body'),html='';
+    meta.forEach(function(m){
+      html+='<div class="tb-card" data-j="'+m.i+'"><span class="tb-crd"></span><span class="tb-cnum">'+pad(m.i+1)+' / '+total+'</span>'+(m.lab?'<span class="tb-clab">'+esc(m.lab)+'</span>':'')+'<span class="tb-ctxt">'+esc(m.title)+'</span></div>';
+    });
+    w.innerHTML=html;
+    w.addEventListener('click',function(e){var c=e.target.closest('.tb-card');if(c)jump(+c.getAttribute('data-j'));});
+  })();
+
+  /* ---------- 帮助构建 ---------- */
+  (function buildHelp(){
+    var rows=[['下一页','→ / ↓ / 空格'],['上一页','← / ↑'],['目录','M'],['总览','G'],['搜索','/ 或 Ctrl/⌘ K'],['收藏本页','B'],['字号','T'],['专注模式','F'],['复制代码','悬停代码块点「复制」'],['本章首/末页','Home / End'],['关闭浮层','Esc']];
+    var h='';rows.forEach(function(r){h+='<div class="tb-krow"><span>'+r[0]+'</span><span class="tb-keys"><span class="tb-key">'+r[1]+'</span></span></div>';});
+    var prev=CH>1?FILES[CH-2]:null, next=CH<FILES.length?FILES[CH]:null;
+    h+='<div class="tb-help-foot">';
+    h+='<a class="tb-fbtn"'+(prev?' href="'+encodeURI(prev)+'"':' disabled')+'>&larr; 上一章</a>';
+    h+='<a class="tb-fbtn" href="index.html">全书目录</a>';
+    h+='<a class="tb-fbtn"'+(next?' href="'+encodeURI(next)+'"':' disabled')+'>下一章 &rarr;</a>';
+    h+='</div>';
+    document.getElementById('tb-help-body').innerHTML=h;
+  })();
+
+  /* ---------- 搜索 ---------- */
+  var sin=document.getElementById('tb-sin'), sres=document.getElementById('tb-sres'), stext=[];
+  function slideText(i){if(stext[i]==null){stext[i]=(slides[i].textContent||'').replace(/\s+/g,' ').trim();}return stext[i];}
+  function doSearch(){
+    var q=sin.value.trim();
+    if(!q){sres.innerHTML='<div class="tb-snone">输入关键词以检索本章全部 '+total+' 页内容。</div>';return;}
+    var ql=q.toLowerCase(),out='',n=0;
+    for(var i=0;i<total;i++){
+      var t=slideText(i),tl=t.toLowerCase(),p=tl.indexOf(ql);
+      if(p<0)continue;n++;
+      var s=Math.max(0,p-26);
+      var pre=t.slice(s,p), hit=t.slice(p,p+q.length), post=t.slice(p+q.length,p+q.length+60);
+      var snip=(s>0?'…':'')+esc(pre)+'<mark>'+esc(hit)+'</mark>'+esc(post)+'…';
+      out+='<div class="tb-sr" data-j="'+i+'"><div class="tb-sr-t"><span class="tb-idx">'+pad(i+1)+'</span>'+esc(meta[i].title)+'</div><div class="tb-sr-s">'+snip+'</div></div>';
+      if(n>=60)break;
+    }
+    sres.innerHTML=out||'<div class="tb-snone">未找到「'+esc(q)+'」。</div>';
+  }
+  sin.addEventListener('input',doSearch);
+  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
+  sres.addEventListener('click',function(e){var r=e.target.closest('.tb-sr');if(r)jump(+r.getAttribute('data-j'));});
+
+  /* ---------- 习题自测：隐藏答案 ---------- */
+  (function exercises(){
+    slides.forEach(function(s){
+      var lab=(s.getAttribute('data-screen-label')||'').toLowerCase();
+      var src=s.getAttribute('data-source')||'';
+      if(lab.indexOf('exercise')<0 && src.indexOf('习题')<0) return;
+      var lis=s.querySelectorAll('ol.biglist li, ol.steps li, .biglist li');
+      Array.prototype.forEach.call(lis,function(li){
+        if(li.getAttribute('data-tb-ex'))return;
+        var html=li.innerHTML,mathKeep=[];
+        html=html.replace(/<span[^>]*math-inline-source[^>]*>[\s\S]*?<\/span>/g,function(m){
+          var token='@@TBMATH'+mathKeep.length+'@@'; mathKeep.push(m); return token;
+        });
+        if(/[（(]/.test(html)){
+          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner){
+            return '<span class="tb-ans" title="点击查看答案">（<span class="tb-ans-x">'+inner+'</span>）</span>';
+          });
+          html=html.replace(/@@TBMATH(\d+)@@/g,function(m,i){return mathKeep[+i];});
+          li.innerHTML=html; li.setAttribute('data-tb-ex','1');
+        }
+      });
+    });
+    document.addEventListener('click',function(e){
+      var a=e.target.closest?e.target.closest('.tb-ans'):null;
+      if(a){a.classList.toggle('tb-revealed');e.stopPropagation();}
+    });
+  })();
+
+  /* ---------- 代码一键复制 ---------- */
+  (function copyButtons(){
+    var COPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);return true;}catch(e){return false;}}
+    Array.prototype.forEach.call(document.querySelectorAll('pre.code'),function(pre){
+      if(pre.__tbCopy)return; pre.__tbCopy=1;
+      var wrap=document.createElement('div'); wrap.className='tb-codewrap';
+      pre.parentNode.insertBefore(wrap,pre); wrap.appendChild(pre);
+      var btn=document.createElement('button'); btn.className='tb-copy'; btn.type='button';
+      btn.setAttribute('aria-label','复制代码'); btn.innerHTML=COPY+'<span>复制</span>';
+      var label=btn.querySelector('span');
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        var code=pre.querySelector('code'); var text=(code?code.innerText:pre.innerText).replace(/\u00a0/g,' ');
+        function done(){btn.classList.add('tb-copied');label.textContent='已复制';toast('代码已复制到剪贴板');clearTimeout(btn.__t);btn.__t=setTimeout(function(){btn.classList.remove('tb-copied');label.textContent='复制';},1600);}
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallbackCopy(text);done();});}
+        else{fallbackCopy(text);done();}
+      });
+      wrap.appendChild(btn);
+    });
+  })();
+
+  /* ---------- 字号 ---------- */
+  var fonts=['100%','112%','124%','90%'],fi=0;
+  try{var fs=+localStorage.getItem('tb-font');if(fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
+  function applyFont(){document.documentElement.style.fontSize=fonts[fi];}
+  function cycleFont(){fi=(fi+1)%fonts.length;applyFont();try{localStorage.setItem('tb-font',fi);}catch(e){}toast('字号：<b>'+fonts[fi]+'</b>');}
+
+  /* ---------- 专注模式 ---------- */
+  function toggleFocus(){document.body.classList.toggle('tb-focus');toast(document.body.classList.contains('tb-focus')?'已进入<b>专注模式</b>（按 F 退出）':'已退出专注模式');}
+
+  /* ---------- 浮层开关 ---------- */
+  function anyOpen(){return document.querySelector('.tb-overlay.tb-show');}
+  function closeAll(){Array.prototype.forEach.call(document.querySelectorAll('.tb-overlay.tb-show'),function(o){o.classList.remove('tb-show');});}
+  function toggleO(el,after){var was=el.classList.contains('tb-show');closeAll();if(!was){el.classList.add('tb-show');if(after)after();}}
+  function toggleTOC(){toggleO(tocEl,function(){updateTOCcur(curIdx());var cur=tocEl.querySelector('.tb-cur');if(cur)cur.scrollIntoView({block:'center'});});}
+  function toggleGrid(){toggleO(gridEl,function(){updateGridCur(curIdx());});}
+  function openSearch(){toggleO(searchEl,function(){doSearch();setTimeout(function(){sin.focus();sin.select();},60);});}
+  function toggleHelp(){toggleO(helpEl);}
+
+  /* ---------- 书签 ---------- */
+  function toggleMark(){var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
+  function updateMarkUI(i){bmBtn.classList.toggle('tb-on',!!markSet[i]);var it=tocEl.querySelector('.tb-item[data-j="'+i+'"]');if(it)it.classList.toggle('tb-mark',!!markSet[i]);}
+
+  /* ---------- 状态同步 ---------- */
+  function updateTOCcur(i){
+    Array.prototype.forEach.call(tocEl.querySelectorAll('.tb-item'),function(it){
+      var j=+it.getAttribute('data-j');
+      it.classList.toggle('tb-cur',j===i);
+      it.classList.toggle('tb-isread',!!readSet[j]);
+      it.classList.toggle('tb-mark',!!markSet[j]);
+    });
+    var pct=Math.round(readCount()/total*100);
+    var el=document.getElementById('tb-toc-pct');if(el)el.textContent='已读 '+pct+'%';
+  }
+  function updateGridCur(i){
+    Array.prototype.forEach.call(gridEl.querySelectorAll('.tb-card'),function(c){
+      var j=+c.getAttribute('data-j');
+      c.classList.toggle('tb-cur',j===i);
+      c.classList.toggle('tb-isread',!!readSet[j]);
+    });
+    var pct=Math.round(readCount()/total*100);
+    var el=document.getElementById('tb-grid-pct');if(el)el.textContent='已读 '+readCount()+' / '+total+'（'+pct+'%）';
+  }
+  function updateBar(i){var b=document.getElementById('tb-bar');if(b)b.style.width=((i+1)/total*100)+'%';}
+  function updateTheme(i){document.body.setAttribute('data-tb-theme',slides[i].getAttribute('data-theme')||'dark');}
+
+  var raf=null;
+  function onChange(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;
+    var i=curIdx();
+    if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}
+    updateBar(i);updateTheme(i);updateMarkUI(i);
+    if(tocEl.classList.contains('tb-show'))updateTOCcur(i);
+    if(gridEl.classList.contains('tb-show'))updateGridCur(i);
+    var s=slides[i];
+    if(!s.__tbHinted && s.querySelector('.tb-ans')){s.__tbHinted=1;toast('本页为<b>习题</b>：答案已隐藏，点击模糊处逐题查看');}
+  });}
+  new MutationObserver(onChange).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});
+
+  /* ---------- 提示气泡 ---------- */
+  var toastT=null;
+  function toast(html){var t=document.getElementById('tb-toast');t.innerHTML=html;t.classList.add('tb-show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('tb-show');},2600);}
+
+  /* ---------- 键盘（捕获阶段，先于原导航） ---------- */
+  document.addEventListener('keydown',function(e){
+    if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){if(!searchEl.classList.contains('tb-show'))openSearch();e.preventDefault();e.stopPropagation();return;}
+    if(anyOpen()){
+      if(e.key==='Escape'){closeAll();e.stopPropagation();e.preventDefault();return;}
+      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].indexOf(e.key)>-1){e.stopPropagation();}
+      return;
+    }
+    var tn=(e.target.tagName||'');
+    if(tn==='INPUT'||tn==='TEXTAREA')return;
+    var k=e.key;
+    if(k==='m'||k==='M'){toggleTOC();e.stopPropagation();}
+    else if(k==='g'||k==='G'){toggleGrid();e.stopPropagation();}
+    else if(k==='/'){openSearch();e.preventDefault();e.stopPropagation();}
+    else if(k==='?'){toggleHelp();e.stopPropagation();}
+    else if(k==='b'||k==='B'){toggleMark();e.stopPropagation();}
+    else if(k==='t'||k==='T'){cycleFont();e.stopPropagation();}
+    else if(k==='f'||k==='F'){toggleFocus();e.stopPropagation();}
+  },true);
+
+  /* ---------- 初始化 ---------- */
+  var i0=curIdx();updateBar(i0);updateTheme(i0);updateMarkUI(i0);if(!readSet[i0]){readSet[i0]=1;saveSet(RKEY,readSet);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  try{if(!localStorage.getItem('tb-hint-seen')){localStorage.setItem('tb-hint-seen','1');setTimeout(function(){toast('数字教材模式已启用 · <b>M</b> 目录 · <b>G</b> 总览 · <b>/</b> 搜索 · <b>?</b> 帮助');},900);}}catch(e){}
+})();
+</script>
+<!--TB-ENHANCE-END-->
+
+
+
+
+<script>
+(function(){
+  if(window.__appVideoRuntimeV3) return; window.__appVideoRuntimeV3=true;
+
+  function absUrl(rel){
+    try{ return new URL(rel, document.baseURI || location.href).href; }
+    catch(e){ return rel; }
+  }
+
+  function fixVideo(v){
+    var rel=v.getAttribute('data-app-video') || v.getAttribute('src');
+    if(!rel) return;
+    // strip query noise
+    var abs=absUrl(rel);
+    var cur=v.currentSrc || v.getAttribute('src') || '';
+    if(cur!==abs){
+      v.setAttribute('src', abs);
+      try{ v.load(); }catch(e){}
+    }
+    // ensure visible box
+    v.setAttribute('playsinline','');
+    v.setAttribute('controls','');
+    v.setAttribute('preload','auto');
+  }
+
+  function fixAll(){
+    document.querySelectorAll('video[data-app-video], .app-video-stage video').forEach(fixVideo);
+  }
+
+  function pauseOthers(except){
+    document.querySelectorAll('video').forEach(function(v){
+      if(except && v===except) return;
+      try{ v.pause(); }catch(e){}
+    });
+  }
+
+  // When a slide becomes active, reload its videos (metadata may not load while hidden)
+  function watchSlides(){
+    var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    if(!slides.length) return;
+    var obs=new MutationObserver(function(){
+      slides.forEach(function(s){
+        var active=s.classList.contains('active')||s.classList.contains('visible');
+        s.querySelectorAll('video').forEach(function(v){
+          if(active){
+            fixVideo(v);
+          }else{
+            try{ v.pause(); }catch(e){}
+          }
+        });
+      });
+    });
+    slides.forEach(function(s){ obs.observe(s,{attributes:true,attributeFilter:['class']}); });
+  }
+
+  document.addEventListener('play', function(e){
+    if(e.target && e.target.tagName==='VIDEO') pauseOthers(e.target);
+  }, true);
+
+  document.addEventListener('error', function(e){
+    if(e.target && e.target.tagName==='VIDEO'){
+      console.warn('video error', e.target.getAttribute('src'), e.target.error);
+      // one retry with cache buster
+      var v=e.target;
+      var rel=v.getAttribute('data-app-video');
+      if(rel && !v.__retried){
+        v.__retried=true;
+        v.src=absUrl(rel)+(absUrl(rel).indexOf('?')>-1?'&':'?')+'t='+Date.now();
+        try{ v.load(); }catch(err){}
+      }
+    }
+  }, true);
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', function(){ fixAll(); watchSlides(); });
+  }else{
+    fixAll(); watchSlides();
+  }
+  setTimeout(fixAll, 300);
+  setTimeout(fixAll, 1200);
+})();
+</script>
+
+</body>
+</html>

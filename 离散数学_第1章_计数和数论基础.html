@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>离散数学 第1章 · 计数和数论基础</title>
+<link rel="icon" href="data:,">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..600&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<style>
+/* Fixed 16:9 stage used by every generated chapter wrapper. */
+html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg,#000)}
+.deck-viewport{position:fixed;inset:0;overflow:hidden;background:var(--stage-bg,#000)}
+.deck-stage{position:absolute;left:0;top:0;width:1920px;height:1080px;overflow:hidden;transform-origin:0 0;background:var(--slide-bg,#fff)}
+.slide{position:absolute;inset:0;width:1920px;height:1080px;overflow:hidden;display:block;visibility:hidden;opacity:0;pointer-events:none;background:var(--slide-bg,#fff)}
+.slide.active,.slide.visible{visibility:visible;opacity:1;pointer-events:auto;z-index:1}
+img,video,canvas,svg{max-width:100%;max-height:100%}
+.deck-controls{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);z-index:1000}
+@media print{
+  html,body{width:1920px;height:auto;overflow:visible;background:#fff}
+  .deck-viewport{position:static;overflow:visible;background:#fff}
+  .deck-stage{position:static;width:auto;height:auto;transform:none!important;background:none}
+  .slide{position:relative;display:block!important;visibility:visible!important;opacity:1!important;pointer-events:auto!important;width:1920px;height:1080px;break-after:page;page-break-after:always}
+  .slide:last-child{break-after:auto;page-break-after:auto}
+  .deck-controls{display:none!important}
+}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;transition-duration:.2s!important}}
+
+/* Cartesian fixed book frame. */
+:root{--stage-bg:#E2DBD1;--slide-bg:#EDE8E0;--ink:#1A1A1A;--paper:#EDE8E0;--accent:#8A8178;--line:#B8B0A4}
+.deck-stage{background:var(--paper);border:1px solid var(--line)}
+.book-frame{position:absolute;inset:0;width:1920px;height:1080px;border:0;background:var(--paper)}
+.source-tools{position:fixed;right:18px;top:18px;z-index:5000;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:70vw}
+.source-tools a{font:500 12px/1 "Inter","Noto Serif SC",sans-serif;letter-spacing:.05em;color:var(--accent);background:rgba(237,232,224,.96);border:1px solid var(--line);padding:9px 12px;text-decoration:none}
+.source-tools a:hover{background:var(--ink);color:var(--paper)}
+.loading{position:fixed;inset:0;display:grid;place-items:center;color:var(--accent);font:14px "Inter",sans-serif;letter-spacing:.12em;pointer-events:none}
+@media print{.source-tools,.loading{display:none!important}.book-frame{position:static}}
+
+
+/* === CARTESIAN FIXED BOOK FRAME === */
+:root{--stage-bg:#E2DBD1;--slide-bg:#EDE8E0;--ink:#1A1A1A;--paper:#EDE8E0;--accent:#8A8178;--line:#B8B0A4}
+.deck-stage{background:var(--paper);border:1px solid var(--line)}
+.book-frame{position:absolute;inset:0;width:1920px;height:1080px;border:0;background:var(--paper)}
+.source-tools{position:fixed;right:18px;top:18px;z-index:5000;display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;max-width:70vw}
+.source-tools a{font:500 12px/1 "Inter","Noto Serif SC",sans-serif;letter-spacing:.05em;color:var(--accent);background:rgba(237,232,224,.96);border:1px solid var(--line);padding:9px 12px;text-decoration:none}
+.source-tools a:hover{background:var(--ink);color:var(--paper)}
+.loading{position:fixed;inset:0;display:grid;place-items:center;color:var(--accent);font:14px "Inter",sans-serif;letter-spacing:.12em;pointer-events:none}
+@media print{.source-tools,.loading{display:none!important}.book-frame{position:static}}
+
+
+/* fit-stage-v4 */
+.deck-stage{box-shadow:0 18px 70px rgba(26,26,26,.22)}
+
+/* copyright-bar-v1 */
+.copyright-bar{position:fixed;left:0;right:0;bottom:0;height:26px;z-index:4000;display:flex;align-items:center;justify-content:center;font:500 11px/1 "Inter","Noto Serif SC",serif;letter-spacing:.08em;color:var(--accent);background:var(--stage-bg,#E2DBD1);border-top:1px solid var(--line);user-select:none}
+@media print{.copyright-bar{display:none!important}}
+</style>
+</head>
+<body>
+<div class="deck-viewport">
+  <main class="deck-stage" id="deckStage" aria-label="固定 16:9 电子教材舞台">
+    <iframe class="book-frame" id="bookFrame" title="离散数学 第1章 · 计数和数论基础" allowfullscreen></iframe>
+  </main>
+</div>
+<nav class="source-tools" aria-label="教材导航">
+  <a href="index.html">全书目录</a>
+</nav>
+<div class="loading" id="loading">LOADING / 1920 × 1080</div>
+<script>
+
+(function(){
+  const frame=document.getElementById('bookFrame');
+  if(!frame) return;
+
+  function currentBodyName(){
+    const me=(location.pathname||location.href).split(/[\/]/).pop()||'';
+    const base=me.replace(/[?#].*$/,'').replace(/\.html$/i,'');
+    return base + '.body.html';
+  }
+
+  function resolveInDoc(doc){
+    if(!doc) return;
+    var bases=[];
+    try{ if(frame.contentWindow && frame.contentWindow.location && frame.contentWindow.location.href) bases.push(frame.contentWindow.location.href); }catch(e){}
+    bases.push(location.href);
+    doc.querySelectorAll('video[data-app-video], .app-video-stage video').forEach(function(v){
+      var rel=v.getAttribute('data-app-video')||v.getAttribute('src');
+      if(!rel) return;
+      // keep relative if already under assets/
+      var abs=null;
+      for(var i=0;i<bases.length;i++){
+        try{ abs=new URL(rel, bases[i]).href; break; }catch(e){}
+      }
+      if(!abs) abs=rel;
+      if((v.getAttribute('src')||'')!==abs){
+        v.setAttribute('src', abs);
+        try{ v.load(); }catch(e){}
+      }
+    });
+  }
+
+  function onFrameReady(){
+    const loading=document.getElementById('loading');
+    if(loading) loading.style.display='none';
+    try{ frame.contentWindow && frame.contentWindow.focus(); }catch(e){}
+    try{
+      const doc=frame.contentDocument || (frame.contentWindow && frame.contentWindow.document);
+      resolveInDoc(doc);
+      // retries: slide pages may mount late
+      setTimeout(()=>resolveInDoc(doc), 200);
+      setTimeout(()=>resolveInDoc(doc), 800);
+      setTimeout(()=>resolveInDoc(frame.contentDocument), 2000);
+      if(doc && !frame.__videoObs){
+        frame.__videoObs=new MutationObserver(()=>resolveInDoc(frame.contentDocument));
+        const root=doc.body||doc.documentElement;
+        if(root) frame.__videoObs.observe(root,{subtree:true,attributes:true,attributeFilter:['class','src']});
+      }
+    }catch(e){ console.warn(e); }
+
+    const tool=new URLSearchParams(location.search).get('tool');
+    const toolKeys={toc:'m',grid:'g',search:'/',help:'?',bookmark:'b',focus:'f',font:'t'};
+    if(tool && toolKeys[tool]){
+      setTimeout(()=>{
+        try{
+          const d=frame.contentDocument;
+          if(!d) return;
+          d.dispatchEvent(new frame.contentWindow.KeyboardEvent('keydown',{key:toolKeys[tool],bubbles:true,cancelable:true}));
+        }catch(e){}
+      }, 220);
+    }
+  }
+
+  frame.addEventListener('load', onFrameReady);
+
+  // Primary: load sibling body.html so relative assets resolve against real file URL
+  const bodyName=currentBodyName();
+  frame.src=bodyName;
+
+  // Keyboard proxy to iframe
+  addEventListener('keydown',e=>{
+    const tag=(e.target&&e.target.tagName||'').toUpperCase();
+    if((tag==='A'||tag==='BUTTON')&&e.key==='Enter')return;
+    const key=e.key;
+    const plain=['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','PageUp','PageDown','Home','End','Escape','m','M','g','G','/','?','b','B','f','F','t','T'];
+    const shortcut=plain.indexOf(key)>-1||((e.ctrlKey||e.metaKey)&&(key==='k'||key==='K'));
+    if(!shortcut)return;
+    try{
+      if(!frame.contentDocument)return;
+      const init={key:key,code:e.code||'',bubbles:true,cancelable:true,ctrlKey:!!e.ctrlKey,metaKey:!!e.metaKey,shiftKey:!!e.shiftKey,altKey:!!e.altKey};
+      frame.contentDocument.dispatchEvent(new frame.contentWindow.KeyboardEvent('keydown',init));
+      e.preventDefault(); e.stopPropagation();
+    }catch(err){}
+  }, true);
+})();
+
+</script>
+<div class="copyright-bar">离散数学数字化教材©2026 湖南信息学院 ｜ 作者：谢鑫</div>
+<script id="fit-stage-v4">
+(function(){
+  var stage=document.getElementById('deckStage');
+  if(!stage) return;
+  function fit(){
+    var w=window.innerWidth,h=window.innerHeight;
+    if(!w||!h) return;
+    h-=26;var s=Math.min(w/1920,h/1080);
+    stage.style.transform='translate('+((w-1920*s)/2)+'px,'+((h-1080*s)/2)+'px) scale('+s+')';
+  }
+  window.addEventListener('resize',fit);
+  window.addEventListener('orientationchange',fit);
+  fit();
+  setTimeout(fit,120);
+})();
+</script>
+</body>
+</html>

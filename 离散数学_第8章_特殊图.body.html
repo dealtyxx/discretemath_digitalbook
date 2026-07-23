@@ -1,0 +1,1849 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<base target="_top"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300..600&amp;family=DM+Mono:wght@400..500&amp;family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
+<title>离散数学 第8章 · 特殊图</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700;900&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#241a10; --ink-rgb:36,26,16;
+  --paper:#f5efe4; --paper-rgb:245,239,228;
+  --accent:#b9701d; --accent-rgb:185,112,29;
+  --muted:#6e6149;
+  --serif-zh:"Noto Serif SC","Source Serif 4",serif;
+  --sans-zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"IBM Plex Mono",monospace;
+  --w-quote:min(100%,48rem); --w-statement:min(100%,58rem);
+  --w-note:min(100%,66rem); --w-default:min(100%,80rem); --w-wide:min(100%,94rem);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-wrap:pretty}
+h1,h2,h3,p,li{text-wrap:pretty}
+#deck{position:fixed;inset:0;width:100vw;height:100vh;z-index:10}
+.slide{position:absolute;inset:0;width:100vw;height:100vh;padding:clamp(2rem,4.5vw,5rem) clamp(2rem,6vw,6.5rem) clamp(1.4rem,3vw,2.6rem);display:flex;flex-direction:column;overflow:hidden;visibility:hidden;opacity:0;pointer-events:none;z-index:1;transition:opacity .56s cubic-bezier(.22,1,.36,1),transform .56s cubic-bezier(.22,1,.36,1)}
+.slide.active{visibility:visible;opacity:1;pointer-events:auto;z-index:3}
+.slide.leaving{visibility:visible;opacity:0;pointer-events:none;z-index:2}
+@media (prefers-reduced-motion:reduce){.slide{transition-duration:.15s}}
+.slide.dark{background:var(--ink);color:var(--paper)}
+.slide.light{background:var(--paper);color:var(--ink)}
+.slide.bare .chrome{display:none}
+.slide.bare .foot{opacity:.32}
+.display-zh{font-family:var(--serif-zh);font-weight:900;font-size:clamp(3rem,6.5vw,6.4rem);line-height:1.1}
+.h1-zh{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.85rem,3.9vw,3.5rem);line-height:1.2}
+.h2-zh{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.5rem,2.7vw,2.4rem);line-height:1.3}
+.lead-zh{font-family:var(--serif-zh);font-weight:400;font-size:clamp(1.3rem,1.8vw,1.88rem);line-height:1.5}
+.body-zh{font-family:var(--sans-zh);font-weight:400;font-size:clamp(1.12rem,1.32vw,1.52rem);line-height:1.6}
+.kicker{font-family:var(--mono);font-size:clamp(.74rem,.86vw,1rem);text-transform:uppercase;letter-spacing:.14em;opacity:.55;margin-bottom:.6vh}
+.meta{font-family:var(--mono);font-size:clamp(.74rem,.82vw,.92rem);letter-spacing:.1em;opacity:.6}
+.slide-body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.w-quote{width:var(--w-quote);margin:0 auto}
+.w-statement{width:var(--w-statement);margin:0 auto}
+.w-note{width:var(--w-note);margin:0 auto}
+.w-default{width:var(--w-default);margin:0 auto}
+.w-wide{width:var(--w-wide);margin:0 auto}
+.chrome{display:flex;justify-content:space-between;font-family:var(--mono);font-size:clamp(.74rem,.8vw,.9rem);letter-spacing:.1em;text-transform:uppercase;opacity:.45;margin-bottom:1.6vh}
+.foot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:clamp(.72rem,.78vw,.88rem);letter-spacing:.1em;text-transform:uppercase;opacity:.4;margin-top:auto;padding-top:1.6vh}
+.grid-2-7-5{display:grid;grid-template-columns:7fr 5fr;gap:clamp(1.4rem,3.5vw,4rem);flex:1;min-height:0}
+.vis-center{display:flex;justify-content:center;align-items:center}
+.vis-left{display:flex;justify-content:flex-start}
+.formula{font-family:var(--serif-zh);font-size:clamp(1.32rem,2.1vw,2rem);line-height:1.5;color:var(--accent);text-align:center;letter-spacing:.01em}
+.formula-sm{font-size:clamp(1.12rem,1.75vw,1.6rem)}
+.frac{display:inline-flex;flex-direction:column;text-align:center;vertical-align:middle;margin:0 .18em}
+.frac .num{padding:0 .45em .08em}
+.frac .den{padding:.08em .45em 0;border-top:2px solid currentColor}
+sup{font-size:.66em;vertical-align:super;line-height:0}
+sub{font-size:.66em;vertical-align:sub;line-height:0}
+.matrix{display:inline-flex;align-items:stretch;gap:.4em;font-family:var(--mono);font-size:clamp(.95rem,1.4vw,1.45rem);vertical-align:middle}
+.matrix .br{width:.5em;border:2px solid currentColor}
+.matrix .br.l{border-right:none;border-radius:4px 0 0 4px}
+.matrix .br.r{border-left:none;border-radius:0 4px 4px 0}
+.matrix .grid{display:grid;gap:.18em .5em;padding:.4em .15em}
+.matrix .grid span{text-align:center;min-width:1ch}
+.matrix .one{color:var(--accent);font-weight:600}
+.matrix .zero{opacity:.32}
+.matgroup{display:flex;gap:clamp(1rem,2.5vw,2.4rem);align-items:center;flex-wrap:wrap;justify-content:center}
+.matcell{display:flex;flex-direction:column;align-items:center;gap:.5em}
+.matlabel{font-family:var(--mono);font-size:clamp(.8rem,.95vw,1.05rem);color:var(--accent)}
+.digraph{width:100%;max-width:18rem;height:auto;color:var(--ink)}
+.slide.dark .digraph{color:var(--paper)}
+.digraph .gl{font-family:var(--sans-zh);font-size:15px;font-weight:600;fill:var(--ink);text-anchor:middle}
+.digraph .gw{font-family:var(--mono);font-size:12px;fill:var(--accent);text-anchor:middle;font-weight:600}
+.example{border-left:3px solid var(--accent);padding-left:clamp(1rem,1.6vw,1.4rem)}
+.example .body-zh{opacity:.92}
+.code-pane{min-width:0}
+pre.code{font-family:var(--mono);background:rgba(var(--ink-rgb),.93);color:#f0e6d6;border-radius:8px;padding:clamp(1rem,1.8vw,1.6rem) clamp(1.1rem,2vw,1.7rem);overflow:auto;text-align:left;line-height:1.55;box-shadow:0 1.2rem 3rem rgba(0,0,0,.22);border:1px solid rgba(var(--paper-rgb),.08);max-height:80vh}
+.slide.dark pre.code{background:rgba(0,0,0,.32);border-color:rgba(var(--paper-rgb),.1)}
+pre.code code{white-space:pre;display:block}
+pre.code-normal{font-size:clamp(.92rem,1.05vw,1.28rem)}
+pre.code-small{font-size:clamp(.8rem,.9vw,1.06rem)}
+pre.code-tiny{font-size:clamp(.7rem,.8vw,.94rem);line-height:1.45}
+.listrow{display:grid;grid-template-columns:auto 1fr;gap:clamp(.9rem,1.6vw,1.4rem);align-items:start}
+.ldot{width:.6rem;height:.6rem;border-radius:50%;background:var(--accent);opacity:.7;margin-top:.85em}
+ol.biglist{list-style:none;counter-reset:bl;display:flex;flex-direction:column;gap:clamp(.8rem,1.8vh,1.3rem)}
+ol.biglist.twocol{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.72rem,1.5vh,1.15rem) clamp(2rem,4vw,4rem)}
+ol.biglist li{counter-increment:bl;position:relative;padding-left:2.6em;font-family:var(--sans-zh);font-size:clamp(1rem,1.2vw,1.4rem);line-height:1.5}
+ol.biglist li::before{content:counter(bl,decimal-leading-zero);position:absolute;left:0;top:0;font-family:var(--mono);font-size:.92em;color:var(--accent);opacity:.85}
+ol.steps{list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:.7vh}
+ol.steps li{counter-increment:st;position:relative;padding-left:2.1em;font-family:var(--sans-zh);font-size:clamp(1rem,1.18vw,1.36rem);line-height:1.45}
+ol.steps li::before{content:counter(st);position:absolute;left:0;top:0;font-family:var(--mono);color:var(--accent);font-weight:600}
+.timeline-row{position:relative}
+.timeline-row::before{content:"";position:absolute;top:clamp(.8rem,1.5vh,1.3rem);left:5%;right:5%;height:1px;background:rgba(var(--ink-rgb),.12);z-index:0}
+.slide.dark .timeline-row::before{background:rgba(var(--paper-rgb),.14)}
+.timeline-node{position:relative;z-index:1}
+.timeline-node .meta{display:inline-block;padding-right:.6em}
+.slide.light .timeline-node .meta{background:var(--paper)}
+.slide.dark .timeline-node .meta{background:var(--ink)}
+.stat-num{font-family:var(--serif-zh);font-weight:900;font-size:clamp(3.4rem,8vw,7.5rem);color:var(--accent);line-height:1;letter-spacing:.01em}
+.summary-num{font-family:var(--serif-zh);font-size:clamp(2.6rem,5.5vw,5rem);font-weight:600;color:var(--accent);opacity:.85;line-height:.95}
+.guest-mark{display:flex;flex-direction:column;align-items:center}
+.guest-mark::before{content:"";display:block;width:clamp(2.4rem,4em,4.8rem);height:1px;background:currentColor;opacity:.35;margin-bottom:clamp(1.4rem,3vh,2.4rem)}
+.table-wrap{width:var(--w-wide);margin:0 auto;display:flex;flex-direction:column;gap:clamp(1.4rem,3.5vh,2.6rem)}
+.data-table{width:100%;border-collapse:separate;border-spacing:0 clamp(.45rem,1vh,.8rem);font-family:var(--sans-zh);font-size:clamp(1rem,1.18vw,1.38rem);line-height:1.45}
+.data-table th,.data-table td{padding:clamp(.75rem,1.25vw,1.15rem) clamp(.9rem,1.5vw,1.4rem);text-align:left;vertical-align:middle}
+.data-table th{font-family:var(--mono);font-size:clamp(.74rem,.8vw,.92rem);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+.data-table td{background:rgba(var(--ink-rgb),.05)}
+.slide.dark .data-table td{background:rgba(var(--paper-rgb),.08)}
+.data-table.keyed td:first-child{font-weight:600}
+.data-table tr>*:first-child{border-radius:6px 0 0 6px}
+.data-table tr>*:last-child{border-radius:0 6px 6px 0}
+#nav{position:fixed;left:50%;bottom:1.4vh;transform:translateX(-50%);z-index:30;display:flex;gap:4px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);max-width:94vw;overflow-x:auto}
+#nav .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);border:none;padding:0;cursor:pointer;transition:all .3s ease;flex:0 0 auto}
+#nav .dot.active{background:rgba(255,255,255,.95);width:15px;border-radius:999px}
+.anim-item{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.slide.active .anim-item{opacity:1;transform:translateY(0)}
+.slide.active .anim-item:nth-child(1){transition-delay:.05s}
+.slide.active .anim-item:nth-child(2){transition-delay:.13s}
+.slide.active .anim-item:nth-child(3){transition-delay:.21s}
+.slide.active .anim-item:nth-child(4){transition-delay:.29s}
+.slide.active .anim-item:nth-child(5){transition-delay:.37s}
+.slide.active .anim-item:nth-child(n+6){transition-delay:.45s}
+</style>
+<style id="tb-style">
+/*TB-CSS-START*/
+/* ===== 离散数学数字教材 · 增强层 ===== */
+#tb-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:9100;transition:width .45s cubic-bezier(.16,1,.3,1);box-shadow:0 0 10px rgba(var(--accent-rgb),.7);pointer-events:none}
+#tb-dock{position:fixed;right:clamp(.6rem,1.2vw,1.25rem);top:50%;transform:translateY(-50%);z-index:9000;display:flex;flex-direction:column;gap:.5rem}
+.tb-ctl{position:relative;width:2.7rem;height:2.7rem;border-radius:50%;border:1px solid rgba(var(--accent-rgb),.28);cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(var(--paper-rgb),.62);color:var(--accent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s,background .2s,color .2s;padding:0;font-family:var(--serif-zh);font-weight:700;font-size:.95rem}
+body[data-tb-theme="dark"] .tb-ctl{background:rgba(var(--ink-rgb),.5);border-color:rgba(var(--paper-rgb),.2);color:#9db4e0}
+.tb-ctl:hover{transform:scale(1.1);background:var(--accent);color:#fff;border-color:transparent}
+.tb-ctl.tb-on{background:var(--accent);color:#fff;border-color:transparent}
+.tb-ctl svg{width:1.24rem;height:1.24rem;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tb-ctl[data-tip]::after{content:attr(data-tip);position:absolute;right:122%;top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--mono);font-size:.7rem;padding:.34em .62em;border-radius:6px;background:rgba(15,20,30,.9);color:#fff;opacity:0;pointer-events:none;transition:opacity .2s;letter-spacing:.04em}
+.tb-ctl:hover::after{opacity:1}
+/* 浮层通用 */
+.tb-overlay{position:fixed;inset:0;z-index:9200;display:none;background:rgba(10,14,22,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tb-overlay.tb-show{display:block;animation:tbfade .22s ease}
+@keyframes tbfade{from{opacity:0}to{opacity:1}}
+.tb-panel{position:absolute;background:var(--paper);color:var(--ink);box-shadow:0 1.6rem 4.4rem rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--sans-zh)}
+.tb-phead{padding:clamp(1.2rem,3vh,1.9rem) clamp(1.3rem,3vw,2rem) .9rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(var(--ink-rgb),.1);gap:1rem}
+.tb-ptitle{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.15rem,2vw,1.5rem);display:flex;align-items:baseline;gap:.6rem}
+.tb-ptitle small{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--accent);font-weight:400}
+.tb-pbody{flex:1;overflow-y:auto;padding:.5rem 0 2.4rem}
+.tb-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.5rem;line-height:1;padding:.1em .3em;border-radius:6px;transition:background .15s}
+.tb-close:hover{background:rgba(var(--ink-rgb),.08)}
+/* 目录 */
+#tb-toc .tb-panel{top:0;left:0;height:100%;width:min(93vw,31rem);animation:tbslideL .32s cubic-bezier(.16,1,.3,1)}
+@keyframes tbslideL{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.tb-grp{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:1.15rem 1.6rem .35rem;font-weight:600}
+.tb-item{display:flex;gap:.7rem;align-items:center;padding:.5rem 1.6rem;cursor:pointer;font-size:.95rem;line-height:1.4;border-left:3px solid transparent;transition:background .15s}
+.tb-item:hover{background:rgba(var(--accent-rgb),.09)}
+.tb-item.tb-cur{border-left-color:var(--accent);background:rgba(var(--accent-rgb),.12);font-weight:600}
+.tb-idx{font-family:var(--mono);font-size:.74rem;color:var(--muted);min-width:2.3em;flex:0 0 auto}
+.tb-item .tb-rdot{width:.5rem;height:.5rem;border-radius:50%;background:rgba(var(--ink-rgb),.16);flex:0 0 auto}
+.tb-item.tb-isread .tb-rdot{background:var(--accent)}
+.tb-it-txt{flex:1;min-width:0}
+.tb-star{color:#e0a93a;flex:0 0 auto;opacity:0;font-size:.85rem}
+.tb-item.tb-mark .tb-star{opacity:1}
+/* 总览网格 */
+#tb-grid .tb-panel{inset:clamp(1rem,3vh,2.4rem);border-radius:14px}
+.tb-gwrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:.9rem;padding:1.3rem clamp(1.2rem,2.5vw,2rem) 2rem}
+.tb-card{position:relative;border:1px solid rgba(var(--ink-rgb),.12);border-radius:10px;padding:.85rem .95rem;cursor:pointer;background:rgba(var(--ink-rgb),.03);transition:transform .18s,box-shadow .18s,border-color .18s;min-height:5.4rem;display:flex;flex-direction:column;gap:.35rem;overflow:hidden}
+.tb-card:hover{transform:translateY(-3px);box-shadow:0 .7rem 1.6rem rgba(0,0,0,.16);border-color:var(--accent)}
+.tb-card.tb-cur{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.35)}
+.tb-card .tb-cnum{font-family:var(--mono);font-size:.7rem;color:var(--accent);letter-spacing:.06em}
+.tb-card .tb-clab{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);background:rgba(var(--accent-rgb),.1);padding:.1em .5em;border-radius:99px;align-self:flex-start}
+.tb-card .tb-ctxt{font-size:.9rem;line-height:1.35;font-weight:600;color:var(--ink)}
+.tb-card .tb-crd{position:absolute;top:.6rem;right:.7rem;width:.55rem;height:.55rem;border-radius:50%;background:rgba(var(--ink-rgb),.15)}
+.tb-card.tb-isread .tb-crd{background:var(--accent)}
+/* 搜索 */
+#tb-search .tb-panel{top:clamp(2.5rem,8vh,6rem);left:50%;transform:translateX(-50%);width:min(94vw,46rem);max-height:80vh;border-radius:14px}
+.tb-sinput{width:100%;border:none;outline:none;background:transparent;font-family:var(--serif-zh);font-size:clamp(1.1rem,2.4vw,1.6rem);color:var(--ink);padding:.2em 0}
+.tb-sinput::placeholder{color:var(--muted);opacity:.6}
+.tb-sres{flex:1;overflow-y:auto;padding:.4rem 0 1.4rem}
+.tb-sr{padding:.7rem 1.6rem;cursor:pointer;border-left:3px solid transparent;transition:background .15s}
+.tb-sr:hover{background:rgba(var(--accent-rgb),.09);border-left-color:var(--accent)}
+.tb-sr .tb-sr-t{font-weight:600;font-size:.95rem;display:flex;gap:.6rem;align-items:baseline}
+.tb-sr .tb-sr-t .tb-idx{min-width:auto}
+.tb-sr .tb-sr-s{font-size:.82rem;color:var(--muted);line-height:1.4;margin-top:.2rem}
+.tb-sr mark{background:rgba(var(--accent-rgb),.28);color:inherit;border-radius:3px;padding:0 .12em}
+.tb-snone{padding:1.4rem 1.6rem;color:var(--muted);font-size:.9rem}
+/* 帮助 */
+#tb-help .tb-panel{top:50%;left:50%;transform:translate(-50%,-50%);width:min(94vw,34rem);border-radius:14px}
+.tb-help-body{padding:1.2rem clamp(1.3rem,3vw,2rem) 1.8rem;display:flex;flex-direction:column;gap:.55rem}
+.tb-krow{display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:.92rem;padding:.3rem 0;border-bottom:1px dashed rgba(var(--ink-rgb),.1)}
+.tb-krow:last-child{border-bottom:none}
+.tb-keys{display:flex;gap:.35rem;flex:0 0 auto}
+.tb-key{font-family:var(--mono);font-size:.78rem;background:rgba(var(--ink-rgb),.08);border:1px solid rgba(var(--ink-rgb),.14);border-radius:5px;padding:.16em .5em;min-width:1.6em;text-align:center}
+.tb-help-foot{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+.tb-fbtn{font-family:var(--sans-zh);font-size:.86rem;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;padding:.5em 1em;cursor:pointer;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:.4em}
+.tb-fbtn:hover{background:var(--accent);color:#fff}
+.tb-fbtn[disabled]{opacity:.35;pointer-events:none}
+/* 习题自测：隐藏答案 */
+.tb-ans-x{filter:blur(5.5px);cursor:pointer;transition:filter .25s,background .25s;background:rgba(var(--accent-rgb),.14);border-radius:4px;padding:0 .22em;-webkit-user-select:none;user-select:none}
+.tb-ans.tb-revealed .tb-ans-x{filter:none;background:rgba(var(--accent-rgb),.16)}
+/* 提示气泡 */
+#tb-toast{position:fixed;left:50%;bottom:4.2vh;transform:translateX(-50%) translateY(1.4rem);z-index:9300;background:rgba(15,20,30,.92);color:#fff;font-family:var(--sans-zh);font-size:.86rem;line-height:1.5;padding:.7em 1.2em;border-radius:10px;box-shadow:0 .8rem 2rem rgba(0,0,0,.35);max-width:min(90vw,30rem);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;text-align:center}
+#tb-toast.tb-show{opacity:1;transform:translateX(-50%) translateY(0)}
+#tb-toast b{color:#9db4e0}
+/* 专注模式 */
+body.tb-focus .chrome,body.tb-focus .foot{opacity:0 !important;transition:opacity .3s}
+body.tb-focus #nav{opacity:.25;transition:opacity .3s}
+body.tb-focus #nav:hover{opacity:1}
+@media print{#tb-dock,#tb-bar,.tb-overlay,#tb-toast,.tb-copy{display:none !important}}
+/* 代码一键复制 */
+.tb-codewrap{position:relative}
+.tb-copy{position:absolute;top:.55rem;right:.55rem;z-index:6;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:#d4ddee;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:7px;padding:.36em .7em;cursor:pointer;opacity:0;transition:opacity .2s,background .2s,color .2s,border-color .2s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:inline-flex;align-items:center;gap:.34em}
+.tb-codewrap:hover .tb-copy,.tb-copy:focus-visible{opacity:1}
+.tb-copy:hover{background:var(--accent);color:#fff;border-color:transparent}
+.tb-copy.tb-copied{background:#2f8a5c;color:#fff;border-color:transparent;opacity:1}
+.tb-copy svg{width:.86rem;height:.86rem;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:none){.tb-copy{opacity:.5}}
+/* ===== 视觉增强：门面页纹理 + 大数光晕 ===== */
+.slide.bare.dark{position:absolute}
+.slide.bare.dark::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(125% 85% at 50% -12%, rgba(var(--accent-rgb),.20), transparent 60%),
+    radial-gradient(85% 62% at 102% 112%, rgba(var(--accent-rgb),.12), transparent 55%),
+    repeating-linear-gradient(0deg, rgba(var(--paper-rgb),.030) 0 1px, transparent 1px 66px),
+    repeating-linear-gradient(90deg, rgba(var(--paper-rgb),.030) 0 1px, transparent 1px 66px);
+  -webkit-mask-image:radial-gradient(120% 100% at 50% 30%, #000 55%, transparent 100%);
+  mask-image:radial-gradient(120% 100% at 50% 30%, #000 55%, transparent 100%);
+}
+.slide.bare.dark > *{position:relative;z-index:1}
+.slide[data-screen-label="Section"] .w-statement > .kicker{position:relative}
+.slide[data-screen-label="Section"] .w-statement > .kicker::before{
+  content:"";position:absolute;left:-.85em;top:.05em;width:.26em;height:1.45em;border-radius:2px;
+  background:var(--accent);box-shadow:0 0 18px rgba(var(--accent-rgb),.7);
+}
+.stat-num{text-shadow:0 .02em .9em rgba(var(--accent-rgb),.38)}
+.slide.light .stat-num{text-shadow:0 .02em .7em rgba(var(--accent-rgb),.28)}
+.formula{padding:.1em 0}
+/* ===== 美学精修层 ===== */
+::selection{background:rgba(var(--accent-rgb),.26);color:inherit}
+.display-zh,.h1-zh,.h2-zh{letter-spacing:-.012em}
+.stat-num{letter-spacing:-.02em}
+.data-table tbody tr td{transition:background .18s ease}
+.data-table tbody tr:hover td{background:rgba(var(--accent-rgb),.15)}
+.slide.dark .data-table tbody tr:hover td{background:rgba(var(--accent-rgb),.24)}
+.example{transition:border-color .2s ease}
+.law-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.law-card:hover{transform:translateY(-3px);box-shadow:0 .6rem 1.5rem rgba(0,0,0,.16)}
+.tb-card:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+pre.code{scrollbar-width:thin;scrollbar-color:rgba(var(--paper-rgb),.25) transparent}
+pre.code::-webkit-scrollbar{height:8px;width:8px}
+pre.code::-webkit-scrollbar-thumb{background:rgba(var(--paper-rgb),.22);border-radius:99px}
+pre.code::-webkit-scrollbar-track{background:transparent}
+/*TB-CSS-END*/
+</style>
+<style id="cartesian-override">
+
+/* ===========================================
+   CARTESIAN / 笛卡尔 · DISCRETE MATHEMATICS EDITION
+   Museum-catalog editorial system adapted from the official template.
+   =========================================== */
+:root {
+  --ink:#1A1A1A !important;
+  --ink-rgb:26,26,26 !important;
+  --paper:#EDE8E0 !important;
+  --paper-rgb:237,232,224 !important;
+  --accent:#8A8178 !important;
+  --accent-rgb:138,129,120 !important;
+  --accent-2:#5A5A5A !important;
+  --muted:#5A5A5A !important;
+  --stone:#E2DBD1 !important;
+  --line:#B8B0A4 !important;
+  --serif-zh:"Playfair Display","Noto Serif SC",serif !important;
+  --sans-zh:"Inter","Noto Serif SC",sans-serif !important;
+  --mono:"Inter","Noto Serif SC",sans-serif !important;
+}
+
+/* === STONE CANVAS === */
+html,body{background:var(--paper)!important;color:var(--ink)!important}
+.slide,.slide.dark,.slide.light{
+  background:var(--paper)!important;color:var(--ink)!important;isolation:isolate;
+  padding:72px 84px 60px!important;
+}
+.slide::before,.slide::after{content:"";position:absolute;pointer-events:none;border-radius:50%;z-index:0}
+.slide::before{width:640px;height:640px;right:24px;top:24px;transform:none;border:1px solid var(--line);opacity:.42}
+.slide::after{width:500px;height:500px;right:94px;top:94px;transform:none;border:1px dashed var(--line);opacity:.30}
+.slide:nth-child(even)::before{right:auto;left:24px;top:auto;bottom:24px;transform:none;width:640px;height:640px}
+.slide:nth-child(even)::after{right:auto;left:94px;top:auto;bottom:94px;transform:none;width:500px;height:500px}
+.slide>*{position:relative;z-index:2}
+
+/* === EDITORIAL TYPOGRAPHY === */
+.display-zh,.h1-zh,.h2-zh,.lead-zh,.summary-num,.stat-num,.sec-h,.ch-name,.htitle,
+.formula,.formula-sm{
+  font-family:"Playfair Display","Noto Serif SC",serif!important;
+  color:var(--ink)!important;font-weight:400!important;letter-spacing:0!important;
+}
+.display-zh,.h1-zh,.h2-zh{line-height:1.18!important}
+.body-zh,p,li,.tb-panel,.data-table,button,input{
+  font-family:"Inter","Noto Serif SC",sans-serif!important;color:var(--muted)!important;
+  line-height:1.72!important;
+}
+.kicker,.meta,.chrome,.foot,.ch-no,.ch-pages,.ch-prog-txt{
+  font-family:"Inter","Noto Serif SC",sans-serif!important;color:var(--accent)!important;
+  font-weight:500!important;letter-spacing:.08em!important;text-transform:none!important;
+}
+.chrome{opacity:.88!important;border:0!important;padding:0!important;margin-bottom:26px!important}
+.foot{opacity:.78!important;border:0!important;padding-top:12px!important;margin-top:auto!important}
+strong{color:var(--ink)!important;font-weight:600!important}
+
+/* === ONE-PIXEL STRUCTURAL LANGUAGE === */
+.example,.code-pane,.stat-card,.card,.panel,.callout,.note,.definition,.theorem{
+  background:rgba(255,255,255,.30)!important;border:1px solid var(--line)!important;
+  border-radius:0!important;box-shadow:none!important;
+}
+.example{border-left:1px solid var(--line)!important;padding:18px 22px!important}
+.ldot{width:10px!important;height:10px!important;border:1px solid var(--line)!important;border-radius:50%!important;background:transparent!important}
+pre.code,.slide.dark pre.code{
+  background:rgba(255,255,255,.30)!important;color:var(--ink)!important;
+  border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;
+}
+pre.code code{color:var(--ink)!important;font-family:"DM Mono",monospace!important}
+.data-table{border-collapse:collapse!important;border-spacing:0!important}
+.data-table th,.data-table td,.slide.dark .data-table td{
+  color:var(--muted)!important;background:transparent!important;
+  border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;
+}
+.data-table th{color:var(--ink)!important;font-family:"Playfair Display","Noto Serif SC",serif!important;font-weight:400!important;background:rgba(255,255,255,.24)!important}
+.timeline-row::before{height:1px!important;background:var(--line)!important}
+.slide.light .timeline-node .meta,.slide.dark .timeline-node .meta{background:var(--paper)!important}
+.summary-num,.stat-num{color:var(--accent)!important;font-weight:400!important}
+
+/* === COVER / SECTION GEOMETRY === */
+.slide.bare::before{width:820px;height:820px;right:40px;top:130px;left:auto;bottom:auto;transform:none;opacity:.55}
+.slide.bare::after{width:620px;height:620px;right:20px;top:230px;left:auto;bottom:auto;transform:none;opacity:.38}
+.slide.bare .slide-body::after{content:none!important}
+.slide.bare .w-statement{align-items:flex-start!important;margin-left:84px!important;margin-right:auto!important;text-align:left!important;max-width:1120px}
+
+/* === STUDY TOOLS AND NAVIGATION === */
+#nav{background:rgba(237,232,224,.95)!important;border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}
+#nav .dot{width:8px!important;height:8px!important;background:var(--line)!important;border-radius:50%!important}
+#nav .dot.active{background:var(--ink)!important;transform:scale(1.3)}
+#tb-bar{background:var(--ink)!important;box-shadow:none!important}
+.tb-ctl,.tb-ctl.tb-on{
+  border:1px solid var(--line)!important;border-radius:0!important;background:var(--paper)!important;color:var(--accent)!important;box-shadow:none!important;backdrop-filter:none!important;
+}
+.tb-ctl:hover{background:var(--ink)!important;color:var(--paper)!important}
+.tb-panel{background:var(--paper)!important;color:var(--muted)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:0!important}
+.tb-overlay{background:rgba(26,26,26,.14)!important;backdrop-filter:none!important}
+.tb-phead,.tb-item,.tb-card,.tb-krow{border-color:var(--line)!important}
+.tb-item:hover,.tb-item.tb-cur,.tb-card:hover,.tb-card.tb-cur{background:rgba(255,255,255,.35)!important}
+.tb-copy,.tb-copy.tb-copied{border:1px solid var(--line)!important;border-radius:0!important;background:transparent!important;color:var(--ink)!important}
+#tb-toast{background:var(--ink)!important;color:var(--paper)!important;border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important}
+#tb-toast b{color:var(--paper)!important}
+mark{background:var(--stone)!important;color:var(--ink)!important}
+
+/* === QUIET EDITORIAL MOTION === */
+.anim-item{transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
+@media (prefers-reduced-motion:reduce){.anim-item{transform:none!important}}
+
+</style>
+<style id="mathjax-review">
+
+/* === MATHJAX / NUMERIC TYPOGRAPHY REVIEW === */
+html,body{font-variant-numeric:lining-nums tabular-nums;font-kerning:normal}
+.formula,.formula-sm,.math-inline-source,sup,sub{
+  font-family:"MathJax_Newcm","Cambria Math","STIX Two Math","Noto Serif SC",serif;
+  font-synthesis:none;font-variant-numeric:lining-nums tabular-nums;
+}
+.formula,.formula-sm{min-width:0;max-width:100%;overflow:visible;line-height:1.25!important;letter-spacing:0!important}
+.formula mjx-container[display="true"],.formula-sm mjx-container[display="true"]{
+  margin:.12em 0!important;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.12em .16em;
+}
+.math-inline-source{white-space:nowrap;display:inline-block;max-width:100%;vertical-align:-.08em}
+.math-inline-source mjx-container{margin:0 .04em!important}
+mjx-container{color:inherit!important;outline-offset:3px}
+sup,sub{font-size:.7em;line-height:0;position:relative;vertical-align:baseline;font-feature-settings:"lnum" 1,"tnum" 1}
+sup{top:-.58em}sub{bottom:-.18em}
+.frac{white-space:nowrap}
+@media (prefers-reduced-motion:reduce){mjx-container{transition:none!important}}
+
+
+
+
+/* Dedicated full-page application video stage — forced 16:9, never collapse */
+.app-video-stage-page .slide-body{
+  display:flex!important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(0.55rem,1.2vh,1.1rem);
+  padding:clamp(0.3rem,1vh,0.9rem) clamp(2vw,3.5vw,4.5vw);
+  box-sizing:border-box;
+  min-height:0;
+}
+.app-video-stage-page .app-video-kicker{
+  font:500 14px/1.2 "Inter","Noto Serif SC",sans-serif;
+  letter-spacing:.08em;
+  color:var(--accent);
+  opacity:.95;
+  flex:0 0 auto;
+}
+.app-video-stage-page .app-video-title{
+  margin:0;
+  text-align:center;
+  max-width:22em;
+  font-size:clamp(1.25rem,2.2vw,1.75rem);
+  line-height:1.35;
+  flex:0 0 auto;
+}
+.app-video-stage-page .app-video-stage{
+  width:min(92%, 1280px);
+  aspect-ratio:16 / 9;
+  max-height:min(62vh, 640px);
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:0 16px 40px rgba(0,0,0,.16);
+  background:#111;
+  position:relative;
+  flex:0 1 auto;
+}
+.slide.dark .app-video-stage-page .app-video-stage{
+  border-color:rgba(255,255,255,.14);
+  box-shadow:0 16px 40px rgba(0,0,0,.4);
+}
+.app-video-stage-page .app-video-stage video{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain;
+  background:#111;
+  border:0;
+  outline:none;
+}
+.app-video-stage-page .app-video-foot-hint{
+  margin:0;
+  font:400 13px/1.4 "Noto Serif SC",serif;
+  color:var(--ink);
+  opacity:.5;
+  text-align:center;
+  flex:0 0 auto;
+}
+.slide.dark .app-video-stage-page .app-video-foot-hint{
+  color:rgba(255,255,255,.55);
+}
+
+
+/* Keep legacy card styles harmless if residual */
+.app-video-card{display:flex;flex-direction:column;gap:.7rem;min-width:0;width:100%;max-width:100%}
+.app-video-label{font:500 14px/1.2 "Inter","Noto Serif SC",sans-serif;letter-spacing:.06em;color:var(--accent);opacity:.95}
+.app-video-card video{width:100%;max-height:min(52vh,560px);border-radius:14px;background:#1a1a1a;border:1px solid var(--line)}
+.app-video-hint{font:400 13px/1.4 "Noto Serif SC",serif;color:var(--ink);opacity:.55}
+.app-video-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(1.2rem,2.5vw,2.4rem);align-items:center;width:100%;height:100%;min-height:0}
+
+</style>
+<script id="mathjax-config">
+window.MathJax={
+  loader:{paths:{fonts:'assets/@mathjax'}},
+  tex:{
+    inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],
+    processEscapes:true,packages:{'[+]':['ams']}
+  },
+  output:{
+    displayOverflow:'linebreak',
+    linebreaks:{inline:true,width:'100%',lineleading:.18}
+  },
+  options:{enableMenu:true,enableExplorer:true},
+  startup:{
+    ready:function(){
+      MathJax.startup.defaultReady();
+      MathJax.startup.promise.then(function(){
+        document.documentElement.classList.add('mathjax-ready');
+      });
+    }
+  }
+};
+</script>
+<script defer="" src="assets/mathjax/tex-chtml.js"></script>
+</head>
+<body>
+<div id="deck">
+<section class="slide dark active bare" data-screen-label="Cover" data-source="第8章 标题页" data-theme="dark">
+<div class="slide-body" style="align-items:center">
+<div class="w-statement" style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.4rem,3vh,2.4rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">离散数学 · 第 8 章</div>
+<h1 class="display-zh anim-item" style="max-width:10em">特殊图</h1>
+<p class="lead-zh anim-item" style="max-width:26em;opacity:.62">从欧拉回路到哈密顿圈、从二部图匹配到平面图与对偶、再到树与最小生成树和哈夫曼编码，本章把图论提升为面向应用的强大建模工具，并逐一用 Python 实现</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>1 / 116</div></div></section>
+<section class="slide light" data-screen-label="Map" data-source="本章思维导图" data-theme="light"><div class="chrome"><div>本章地图</div><div>2 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">Chapter Map</div><h2 class="h1-zh anim-item" style="max-width:18em">两大主线加一组案例，覆盖最常用的特殊图模型</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">8.1 多类型的图：欧拉图、哈密顿图、二部图、平面图四类经典结构与判定算法</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">8.2 多类型的树：树的基本概念、生成树与最小生成树、根树与哈夫曼最优编码树</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">8.3 应用案例：古镇修复、志愿配对、城市交通、文化遗产、航天通信、智能农业六例</p></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>2 / 116</div></div></section>
+<section class="slide dark" data-screen-label="History" data-source="章首 · 特殊图的源流" data-theme="dark"><div class="chrome"><div>特殊图的历史脉络</div><div>3 / 116</div></div>
+<div class="slide-body">
+<div class="w-wide">
+<h2 class="h1-zh anim-item" style="text-align:center;max-width:17em;margin:0 auto clamp(2rem,5vh,3.6rem)">从七桥与哈密顿游戏到树与森林</h2>
+<div class="timeline-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.9rem,2vw,2rem)">
+<div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">欧拉</div><p class="body-zh" style="margin-top:1.2vh">欧拉对一笔画与平面图作系统研究，奠定欧拉图与欧拉公式的基础</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">哈密顿</div><p class="body-zh" style="margin-top:1.2vh">19 世纪中期哈密顿提出多面体上的循环路径游戏，成为图论重要方向</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">二部图</div><p class="body-zh" style="margin-top:1.2vh">20 世纪初组合数学与优化理论中，二部图及其匹配性质被系统研究</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">树与森林</div><p class="body-zh" style="margin-top:1.2vh">计算机科学兴起后，树因在数据组织与算法设计中的广泛应用而尤为重要</p></div>
+</div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>3 / 116</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="8.1 多类型的图" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">8.1</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">多类型的图</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">欧拉图、哈密顿图、二部图与平面图：四类经典特殊图的定义、判定定理与算法</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>4 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.1.1 · 欧拉回路与欧拉图" data-theme="light"><div class="chrome"><div>8.1.1 欧拉图</div><div>5 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.1</div><h2 class="h1-zh anim-item" style="max-width:16em">走遍每条边恰好一次</h2><p class="lead-zh anim-item" style="max-width:26em">欧拉回路是通过图中每条边恰好一次并返回起点的路径；欧拉通路通过每条边恰好一次但不要求回到起点。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">至少包含一条欧拉回路的图称为欧拉图；包含欧拉通路但不包含欧拉回路的图称为半欧拉图（否则每个欧拉图也会成为半欧拉图）。欧拉图关注的是边的遍历。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>5 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.1.1 · 欧拉图与半欧拉图" data-theme="light"><div class="chrome"><div>例 8.1.1</div><div>6 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">判定欧拉图与半欧拉图</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">四节点环：每点度数皆偶则为欧拉图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">左图四个节点 A,B,C,D 各连接另外两个节点，每点度数为偶，存在欧拉回路 <span aria-label="A→B→C→D→A" class="math-inline-source" data-tex="A\to B\to C\to D\to A">\(A\to B\to C\to D\to A\)</span>，因此是欧拉图。若恰有两个节点度数为奇，则只存在欧拉通路，为半欧拉图。</p></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 340 265"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="60" x2="280" y1="55" y2="55"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="280" x2="280" y1="55" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="280" x2="60" y1="210" y2="210"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="60" x2="60" y1="210" y2="55"></line><circle cx="60" cy="55" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="60" y="61">A</text><circle cx="280" cy="55" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="280" y="61">B</text><circle cx="280" cy="210" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="280" y="216">C</text><circle cx="60" cy="210" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="60" y="216">D</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>6 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.1 · 无向欧拉回路充要条件" data-theme="dark"><div class="chrome"><div>定理 8.1.1</div><div>7 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">无向图 · 欧拉回路</div><h2 class="h1-zh anim-item" style="max-width:16em">连通无向图有欧拉回路，当且仅当每个节点度数都是偶数</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">必要性：沿回路遍历时每个节点都被一进一出地经过，度数必为偶。充分性：连通且各点度数为偶时，每次进入一个节点后必能找到另一条未用边离开，最终回到起点形成闭合回路。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>7 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.2 · 无向欧拉通路充要条件" data-theme="light"><div class="chrome"><div>定理 8.1.2</div><div>8 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">无向图 · 欧拉通路</div><h2 class="h1-zh anim-item" style="max-width:16em">有欧拉通路但无欧拉回路，当且仅当恰有两个奇度节点</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">这两个奇度节点正是欧拉通路的起点与终点；除它们之外的所有节点度数都必须是偶数。从一个奇度节点出发，最终在另一个奇度节点结束。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>8 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.3 · 有向欧拉回路充要条件" data-theme="dark"><div class="chrome"><div>定理 8.1.3</div><div>9 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">有向图 · 欧拉回路</div><h2 class="h1-zh anim-item" style="max-width:16em">强连通有向图有欧拉回路，当且仅当每个节点入度等于出度</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">每次经过一个节点都需一条边进入、一条边离开，故入度必等于出度；反之入出度处处相等且强连通时，总能找到未用边离开，直到回到起点。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>9 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.4 · 有向欧拉通路充要条件" data-theme="light"><div class="chrome"><div>定理 8.1.4</div><div>10 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">有向图 · 欧拉通路</div><h2 class="h1-zh anim-item" style="max-width:16em">有向欧拉通路：一点出度比入度多 1，另一点入度比出度多 1</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">强连通有向图有欧拉通路而无回路，当且仅当恰有一个节点出度比入度多 1（起点）、另一个节点入度比出度多 1（终点），其余所有节点入度等于出度。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>10 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.1.2 与例 8.1.3 · 欧拉图判定" data-theme="light"><div class="chrome"><div>例 8.1.2 / 8.1.3</div><div>11 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">判定要点</div><h2 class="h1-zh anim-item" style="max-width:18em">判定步骤：先看连通，再数度数或入出度</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">无向图：含两个奇度节点者非欧拉图而是半欧拉图；各点度数皆偶者为欧拉图</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">有向图：逐点比较入度与出度，处处相等且强连通才是欧拉图</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">若有节点出度小于入度或大于入度，则既无欧拉回路也无欧拉通路</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">例 8.1.3 左图有 6 个奇度节点，既非欧拉图也非半欧拉图</p></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>11 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="欧拉图示例 · K5 与 K7" data-theme="dark"><div class="chrome"><div>完全图与欧拉性</div><div>12 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">K5 完全图</div><h2 class="h1-zh anim-item" style="max-width:16em">K5 完全图是欧拉图</h2><p class="lead-zh anim-item" style="max-width:26em">K5 含 5 个节点，每个节点都与其余 4 个相连，每点度数为 4，皆偶，故无向 K5 是欧拉图。</p><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 340 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="276.5" y1="38.0" y2="115.4"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="235.8" y1="38.0" y2="240.6"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="104.2" y1="38.0" y2="240.6"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="63.5" y1="38.0" y2="115.4"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="276.5" x2="235.8" y1="115.4" y2="240.6"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="276.5" x2="104.2" y1="115.4" y2="240.6"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="276.5" x2="63.5" y1="115.4" y2="115.4"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="235.8" x2="104.2" y1="240.6" y2="240.6"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="235.8" x2="63.5" y1="240.6" y2="115.4"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="104.2" x2="63.5" y1="240.6" y2="115.4"></line><circle cx="170.0" cy="38.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="44.0">1</text><circle cx="276.5" cy="115.4" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="276.5" y="121.4">2</text><circle cx="235.8" cy="240.6" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="235.8" y="246.6">3</text><circle cx="104.2" cy="240.6" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="104.2" y="246.6">4</text><circle cx="63.5" cy="115.4" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="63.5" y="121.4">5</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">有向 K7 中每对节点之间有两条相反方向的边，每点入度与出度都为 4，因此也是欧拉图。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 116</div></div></section>
+<section class="slide light" data-screen-label="Algorithm" data-source="算法 8.1.1 · Fleury 算法" data-theme="light"><div class="chrome"><div>算法 8.1.1</div><div>13 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">Fleury 算法</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Fleury：优先走非割边</h2><ol class="steps" style="margin-top:clamp(.9rem,2vh,1.6rem)"><li>任选一个节点作为起点（若有奇度节点则从奇度节点起）</li><li>选一条边移动到相邻节点，优先选择非割边以保持连通</li><li>走过一条边后立即把它从图中删除</li><li>重复直到所有边被删除，得到的闭合路径即欧拉回路</li></ol></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+def is_bridge(g, u, v):
+    c0 = nx.number_connected_components(g)
+    g.remove_edge(u, v)
+    c1 = nx.number_connected_components(g)
+    g.add_edge(u, v)
+    return c1 &gt; c0
+def fleury(g):
+    u = next(iter(g.nodes))
+    for v in g.nodes:
+        if g.degree[v] % 2 != 0:
+            u = v; break
+    path = [u]
+    while g.number_of_edges() &gt; 0:
+        for v in list(g.neighbors(u)):
+            if not is_bridge(g, u, v) or g.degree[u] == 1:
+                path.append(v)
+                g.remove_edge(u, v)
+                u = v; break
+    return path</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Algorithm" data-source="算法 8.1.2 · Hierholzer 算法" data-theme="dark"><div class="chrome"><div>算法 8.1.2</div><div>14 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">Hierholzer 算法</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Hierholzer：拼接回路片段</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">从起点遍历构造一个闭合回路片段；若仍有未用边，则在含未用边的节点上构造新片段并合并。其效率高于 Fleury，是大型图求欧拉回路的首选。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+def hierholzer(g):
+    u = next(iter(g.nodes))
+    for v in g.nodes:
+        if g.out_degree(v) &gt; 0:
+            u = v; break
+    stack = [u]; path = []
+    while stack:
+        u = stack[-1]
+        if g.out_degree(u) == 0:
+            path.append(u); stack.pop()
+        else:
+            v = next(g.neighbors(u))
+            stack.append(v)
+            g.remove_edge(u, v)
+    return path[::-1]</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 116</div></div></section>
+<section class="slide light" data-screen-label="Application" data-source="8.1.1 应用示例 · 欧拉图" data-theme="light"><div class="chrome"><div>应用示例</div><div>15 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">欧拉图的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">一笔画思想优化遍历型任务</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">工厂自动化：规划机器人经过所有工作站的最优路径，提高效率</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">物流配送：优化配送车辆经过所有配送点的路线，减少运输时间与成本</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">传感器网络：优化从所有传感器节点采集数据的路径，提升网络效率</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 116</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="light"><div class="chrome"><div>应用动画</div><div>16 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">应用示例</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_01_app_8_1_1_35051fba.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_01_app_8_1_1_35051fba.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 8.1.2 与 8.1.3 · 哈密顿图" data-theme="dark"><div class="chrome"><div>8.1.2 哈密顿图</div><div>17 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.2 / 8.1.3</div><h2 class="h1-zh anim-item" style="max-width:16em">走遍每个节点恰好一次</h2><p class="lead-zh anim-item" style="max-width:26em">哈密顿通路经过每个节点恰好一次；哈密顿回路是闭合的哈密顿通路，遍历所有节点后回到起点。</p><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 340 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="270.5" y1="34.0" y2="92.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="270.5" x2="270.5" y1="92.0" y2="208.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="270.5" x2="170.0" y1="208.0" y2="266.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="69.5" y1="266.0" y2="208.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="69.5" x2="69.5" y1="208.0" y2="92.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="69.5" x2="170.0" y1="92.0" y2="34.0"></line><circle cx="170.0" cy="34.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="40.0">A</text><circle cx="270.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="98.0">B</text><circle cx="270.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="214.0">C</text><circle cx="170.0" cy="266.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="272.0">D</text><circle cx="69.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="214.0">E</text><circle cx="69.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="98.0">F</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">包含至少一条哈密顿回路的图是哈密顿图；只含哈密顿通路的是半哈密顿图。与欧拉图不同，哈密顿图关注节点的遍历而非边。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.1.4 · 哈密顿图判定" data-theme="light"><div class="chrome"><div>例 8.1.4</div><div>18 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">无向与有向哈密顿图</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">六节点环含哈密顿回路</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">六边形 <span aria-label="A→B→C→D→E→F→A" class="math-inline-source" data-tex="A\to B\to C\to D\to E\to F\to A">\(A\to B\to C\to D\to E\to F\to A\)</span> 遍历每个节点恰好一次并回到起点，是哈密顿回路，对应图为哈密顿图。若路径遍历所有节点但不闭合，则该图为半哈密顿图。</p></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 340 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="270.5" y1="34.0" y2="92.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="270.5" x2="270.5" y1="92.0" y2="208.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="270.5" x2="170.0" y1="208.0" y2="266.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="69.5" y1="266.0" y2="208.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="69.5" x2="69.5" y1="208.0" y2="92.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="69.5" x2="170.0" y1="92.0" y2="34.0"></line><circle cx="170.0" cy="34.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="40.0">A</text><circle cx="270.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="98.0">B</text><circle cx="270.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="214.0">C</text><circle cx="170.0" cy="266.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="272.0">D</text><circle cx="69.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="214.0">E</text><circle cx="69.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="98.0">F</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>18 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.5 · 哈密顿图的必要条件" data-theme="light"><div class="chrome"><div>定理 8.1.5</div><div>19 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">必要条件</div><h2 class="h1-zh anim-item" style="max-width:16em">去掉点集 S 后连通分量数不超过 |S|</h2><div aria-label="ω(G − S) ≤ |S|" class="formula anim-item mathjax-display-source" data-tex="ω(G - S) \le |S|">\[\displaystyle ω(G - S) \le |S|\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若连通图 G 是哈密顿图，S 是顶点集 V 的任意真子集，则移除 S 后的连通分量个数 ω(G − S) 不超过 |S|。这是哈密顿图的必要条件，可用于否定判定。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>19 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.6 · Dirac 型充分条件" data-theme="dark"><div class="chrome"><div>定理 8.1.6</div><div>20 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">充分条件 · 最小度</div><h2 class="h1-zh anim-item" style="max-width:16em">每点度数至少为 n/2 则为哈密顿图</h2><div aria-label="∀v : deg(v) ≥ n / 2  ⟹  G 含哈密顿回路" class="formula anim-item mathjax-display-source" data-tex="\forall v : \operatorname{deg}(v) \ge n / 2 \Longrightarrow G \text{含哈密顿回路}">\[\displaystyle \forall v : \operatorname{deg}(v) \ge n / 2 \Longrightarrow G \text{含哈密顿回路}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对含 n 个节点（<span aria-label="n ≥ 3" class="math-inline-source" data-tex="n \ge 3">\(n \ge 3\)</span>）的图 G，若每个节点的度数都至少为 n/2，则 G 一定是哈密顿图。这是充分而非必要条件。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>20 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.7 · Ore 型充分条件" data-theme="light"><div class="chrome"><div>定理 8.1.7</div><div>21 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">充分条件 · 度数之和</div><h2 class="h1-zh anim-item" style="max-width:16em">非相邻两点度数之和至少为 n 则为哈密顿图</h2><div aria-label="∀ 非相邻 u,v : deg(u) + deg(v) ≥ n  ⟹  G 含哈密顿回路" class="formula anim-item mathjax-display-source" data-tex="\forall \text{非相邻} u,v : \operatorname{deg}(u) + \operatorname{deg}(v) \ge n \Longrightarrow G \text{含哈密顿回路}">\[\displaystyle \forall \text{非相邻} u,v : \operatorname{deg}(u) + \operatorname{deg}(v) \ge n \Longrightarrow G \text{含哈密顿回路}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对含 n 个节点（<span aria-label="n ≥ 3" class="math-inline-source" data-tex="n \ge 3">\(n \ge 3\)</span>）的图 G，若每一对非相邻节点 u 与 v 的度数之和都至少为 n，则 G 是哈密顿图。该条件比定理 8.1.6 更宽松。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>21 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.1.5 · 应用充分条件判定" data-theme="dark"><div class="chrome"><div>例 8.1.5</div><div>22 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">套用定理 8.1.6 / 8.1.7</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">六节点图的两种判定路径</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">左图六点度数为 3,4,5,5,4,3，每点至少为 <span aria-label="6/2=3" class="math-inline-source" data-tex="6/2=3">\(6/2=3\)</span>，由定理 8.1.6 知为哈密顿图。右图每点度数至少为 3，非相邻点 A 与 E 度数之和为 <span aria-label="4+4=8 ≥ 6" class="math-inline-source" data-tex="4+4=8 \ge 6">\(4+4=8 \ge 6\)</span>，逐对检验均满足定理 8.1.7，故也是哈密顿图。</p></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 340 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="270.5" y1="34.0" y2="92.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="270.5" x2="270.5" y1="92.0" y2="208.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="270.5" x2="170.0" y1="208.0" y2="266.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="69.5" y1="266.0" y2="208.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="69.5" x2="69.5" y1="208.0" y2="92.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="69.5" x2="170.0" y1="92.0" y2="34.0"></line><circle cx="170.0" cy="34.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="40.0">A</text><circle cx="270.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="98.0">B</text><circle cx="270.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="214.0">C</text><circle cx="170.0" cy="266.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="272.0">D</text><circle cx="69.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="214.0">E</text><circle cx="69.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="98.0">F</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>22 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.1.6 · 七社区道路规划" data-theme="light"><div class="chrome"><div>例 8.1.6</div><div>23 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">建模与加边建议</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">七社区：现有道路尚不满足闭环目标</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">七个社区 A 到 G 的度数为 4,4,3,4,3,2,2。需每点度数至少为 <span aria-label="7/2=3.5" class="math-inline-source" data-tex="7/2=3.5">\(7/2=3.5\)</span>，取上界 4；但并非所有点都达到，无法直接套用定理 8.1.6。节点 A 与 F 不相邻且度数之和为 <span aria-label="4+2=6 &lt; 7" class="math-inline-source" data-tex="4+2=6 &lt; 7">\(4+2=6 &lt; 7\)</span>，也无法直接套用定理 8.1.7。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">结论</div><p class="body-zh" style="margin-top:.6vh">建议增加边 (A,F)、(B,G)、(C,E) 等以提高相关节点度数，从而形成哈密顿回路，满足任一社区出发遍历全部并返回起点的目标。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>23 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.1.7 · 八节点交通系统" data-theme="dark"><div class="chrome"><div>例 8.1.7</div><div>24 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">同时满足两条充分条件</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">八节点皆四度：道路规划满足闭环</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">新城区八个交通节点 A 到 H 每点度数均为 4，满足定理 8.1.6 的 <span aria-label="n/2=4" class="math-inline-source" data-tex="n/2=4">\(n/2=4\)</span> 条件；同时任意两个非相邻节点度数之和都是 8，满足定理 8.1.7。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">结论</div><p class="body-zh" style="margin-top:.6vh">现有道路规划满足目标：从任一节点出发都能经过其余所有节点一次后回到起点，形成闭环。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 116</div></div></section>
+<section class="slide light" data-screen-label="Note" data-source="哈密顿判定 · 复杂度" data-theme="light"><div class="chrome"><div>复杂度说明</div><div>25 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">NP 完全</div><h2 class="h1-zh anim-item" style="max-width:16em">哈密顿图判定是 NP 完全问题</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">目前没有已知的多项式时间算法可解决所有情形。一种简单常见的做法是尝试所有可能的节点序列以检查是否存在哈密顿回路。该方法时间复杂度很高，但对小型图可行，常用回溯法实现。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="代码 8.1.3 · 哈密顿回路回溯法" data-theme="dark"><div class="chrome"><div>Python 实现</div><div>26 / 116</div></div>
+<div class="slide-body">
+<div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1rem,2.2vh,1.8rem)">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">代码 8.1.3 · 回溯法</div>
+<h2 class="h2-zh" style="max-width:18em;margin-top:.6vh">回溯搜索哈密顿回路</h2>
+</div>
+<div class="anim-item code-pane"><pre class="code code-small"><code>def is_safe(v, graph, path, pos):
+    if graph[path[pos - 1]][v] == 0:   # 与前一节点不相邻
+        return False
+    if v in path:                      # 节点已在路径中
+        return False
+    return True
+
+def ham_util(graph, path, pos):
+    if pos == len(graph):              # 所有节点已加入
+        return graph[path[pos - 1]][path[0]] == 1
+    for v in range(1, len(graph)):
+        if is_safe(v, graph, path, pos):
+            path[pos] = v
+            if ham_util(graph, path, pos + 1):
+                return True
+            path[pos] = -1             # 回溯
+    return False
+
+def is_hamiltonian(graph):
+    path = [-1] * len(graph)
+    path[0] = 0
+    return ham_util(graph, path, 1)</code></pre></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>26 / 116</div></div></section>
+<section class="slide light" data-screen-label="Application" data-source="8.1.2 应用示例 · 哈密顿图" data-theme="light"><div class="chrome"><div>应用示例</div><div>27 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">哈密顿图的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">覆盖所有节点的最优巡回</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">集成电路设计：用哈密顿路径确保每个组件被有效访问，优化布局与信号传输</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">仓库自动化：为机器人设计最短时间访问所有货架的最优路径</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">网络通信：保证数据包高效经过每个节点到达目的地，提升整体性能与可靠性</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>27 / 116</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="light"><div class="chrome"><div>应用动画</div><div>28 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">应用示例</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_02_app_8_1_2_daad6a3f.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_02_app_8_1_2_daad6a3f.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>28 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 8.1.4 · 二部图" data-theme="dark"><div class="chrome"><div>8.1.3 二部图</div><div>29 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.4</div><h2 class="h1-zh anim-item" style="max-width:16em">节点可分成互不相交的两组</h2><p class="lead-zh anim-item" style="max-width:26em">图 <span aria-label="G=⟨U,W,E⟩" class="math-inline-source" data-tex="G=\langle U,W,E\rangle">\(G=\langle U,W,E\rangle\)</span> 是二部图：节点集可划分为互不相交的 U 与 W，使每条边都连接 U 中一点与 W 中一点。</p><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 365 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="90" y2="50"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="90" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="215" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="215" y2="250"></line><circle cx="80" cy="90" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="80" y="96">u1</text><circle cx="80" cy="215" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="80" y="221">u2</text><circle cx="295" cy="50" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="56">w1</text><circle cx="295" cy="150" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="156">w2</text><circle cx="295" cy="250" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="256">w3</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">也就是说，每条边都跨接两个集合，同一集合内部的节点之间没有边相连。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>29 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.1.8 · 二部图判定" data-theme="light"><div class="chrome"><div>例 8.1.8</div><div>30 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">验证两侧无内部边</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">跨接两侧即为二部图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">U 含 u1,u2，W 含 w1,w2,w3，边集为 (u1,w1),(u1,w2),(u2,w2),(u2,w3)。U 中每点只与 W 中节点相连，反之亦然，同侧内部无边，因此是二部图。</p></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 365 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="90" y2="50"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="90" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="215" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="215" y2="250"></line><circle cx="80" cy="90" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="80" y="96">u1</text><circle cx="80" cy="215" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="80" y="221">u2</text><circle cx="295" cy="50" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="56">w1</text><circle cx="295" cy="150" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="156">w2</text><circle cx="295" cy="250" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="256">w3</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>30 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.1.5 · 完全二部图" data-theme="light"><div class="chrome"><div>完全二部图</div><div>31 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.5</div><h2 class="h1-zh anim-item" style="max-width:16em">一侧每点都连另一侧每点：Kr,s</h2><div aria-label="K r,s 含 r × s 条边" class="formula anim-item mathjax-display-source" data-tex="K_{r,s}\text{含} r \times s \text{条边}">\[\displaystyle K_{r,s}\text{含} r \times s \text{条边}\]</div><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 365 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="95" y2="48"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="95" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="95" y2="252"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="210" y2="48"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="210" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="210" y2="252"></line><circle cx="80" cy="95" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="80" y="101">u1</text><circle cx="80" cy="210" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="80" y="216">u2</text><circle cx="295" cy="48" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="54">v1</text><circle cx="295" cy="150" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="156">v2</text><circle cx="295" cy="252" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="258">v3</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若 U 与 W 分别有 r 个和 s 个节点，且 U 中每点都与 W 中每点相连、同侧无边，则记为 Kr,s，共 r×s 条边。图中所示为 K2,3。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.8 · 二部图与奇环" data-theme="dark"><div class="chrome"><div>定理 8.1.8</div><div>32 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">二部图的奇环性质</div><h2 class="h1-zh anim-item" style="max-width:16em">二部图中不存在奇数长度的回路</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">把一侧染蓝、另一侧染绿，则任何路径上节点颜色蓝绿交替。奇数长度的闭合路径会回到与起点同色的节点，这与二部图定义矛盾，故二部图不含奇数长度回路。这也是判定二部图的充要特征。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>32 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.1.6 · 匹配" data-theme="light"><div class="chrome"><div>匹配</div><div>33 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.6</div><h2 class="h1-zh anim-item" style="max-width:16em">匹配、最大匹配与完美匹配</h2><p class="lead-zh anim-item" style="max-width:26em">匹配是一组两两不共享节点的边集合 <span aria-label="M ⊆ E" class="math-inline-source" data-tex="M \subseteq E">\(M \subseteq E\)</span>。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">最大匹配是包含边数最多的匹配；完美匹配覆盖图中所有节点，即每个节点都恰好关联匹配中的一条边。完美匹配必为最大匹配。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>33 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.1.9 · 匹配示例" data-theme="dark"><div class="chrome"><div>例 8.1.9</div><div>34 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">最大匹配即完美匹配</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">六环上的完美匹配</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">节点集 A 到 F、边集为六边形环。匹配 <span aria-label="M={(A,B),(C,D)}" class="math-inline-source" data-tex="M=\{(A,B),(C,D)\}">\(M=\{(A,B),(C,D)\}\)</span> 不共享节点；最大匹配 <span aria-label="Mmax={(A,B),(C,D),(E,F)}" class="math-inline-source" data-tex="Mmax=\{(A,B),(C,D),(E,F)\}">\(Mmax=\{(A,B),(C,D),(E,F)\}\)</span> 覆盖了全部节点，因此同时是完美匹配。</p></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 340 300"><line opacity="0.95" stroke="var(--accent)" stroke-width="4.5" x1="170.0" x2="270.5" y1="34.0" y2="92.0"></line><line opacity="0.5" stroke="currentColor" stroke-width="2" x1="270.5" x2="270.5" y1="92.0" y2="208.0"></line><line opacity="0.95" stroke="var(--accent)" stroke-width="4.5" x1="270.5" x2="170.0" y1="208.0" y2="266.0"></line><line opacity="0.5" stroke="currentColor" stroke-width="2" x1="170.0" x2="69.5" y1="266.0" y2="208.0"></line><line opacity="0.95" stroke="var(--accent)" stroke-width="4.5" x1="69.5" x2="69.5" y1="208.0" y2="92.0"></line><line opacity="0.5" stroke="currentColor" stroke-width="2" x1="69.5" x2="170.0" y1="92.0" y2="34.0"></line><circle cx="170.0" cy="34.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="40.0">A</text><circle cx="270.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="98.0">B</text><circle cx="270.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="214.0">C</text><circle cx="170.0" cy="266.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="272.0">D</text><circle cx="69.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="214.0">E</text><circle cx="69.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="98.0">F</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.1.10 · 匹配示例" data-theme="light"><div class="chrome"><div>例 8.1.10</div><div>35 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">八节点的三种匹配</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">同一图上的匹配、最大匹配与完美匹配</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">八节点图中：<span aria-label="M={(A,B),(C,D),(E,G)}" class="math-inline-source" data-tex="M=\{(A,B),(C,D),(E,G)\}">\(M=\{(A,B),(C,D),(E,G)\}\)</span> 是一个匹配；<span aria-label="Mmax={(A,B),(C,E),(D,F),(G,H)}" class="math-inline-source" data-tex="Mmax=\{(A,B),(C,E),(D,F),(G,H)\}">\(Mmax=\{(A,B),(C,E),(D,F),(G,H)\}\)</span> 是最大匹配，覆盖全部节点故也是完美匹配；<span aria-label="Mperf={(A,C),(B,D),(E,F),(G,H)}" class="math-inline-source" data-tex="Mperf=\{(A,C),(B,D),(E,F),(G,H)\}">\(Mperf=\{(A,C),(B,D),(E,F),(G,H)\}\)</span> 同样覆盖全部节点，每点恰关联一条边，是另一组完美匹配。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">观察</div><p class="body-zh" style="margin-top:.6vh">一个图可以有多组不同的完美匹配，它们的边数相同且都覆盖所有节点。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>35 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 8.1.7 · 交错路径与可增广路径" data-theme="dark"><div class="chrome"><div>增广路径</div><div>36 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.7</div><h2 class="h1-zh anim-item" style="max-width:16em">交错路径与可增广路径</h2><p class="lead-zh anim-item" style="max-width:26em">交错路径的边交替地属于和不属于匹配 M。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若一条交错路径的起点和终点都不在匹配 M 中（两端均为非匹配节点），则它是可增广路径。沿可增广路径翻转匹配状态可使匹配边数增加一条。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>36 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.1.11 · 交错与可增广路径" data-theme="light"><div class="chrome"><div>例 8.1.11</div><div>37 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">识别两类路径</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">判断路径是否可增广</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">路径 <span aria-label="A→C→F→J→N" class="math-inline-source" data-tex="A\to C\to F\to J\to N">\(A\to C\to F\to J\to N\)</span> 交替经过匹配内与匹配外的边，是交错路径，但两端并非都为非匹配节点，故不可增广。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">可增广</div><p class="body-zh" style="margin-top:.6vh">路径 <span aria-label="D→B→A→C→G→K→O" class="math-inline-source" data-tex="D\to B\to A\to C\to G\to K\to O">\(D\to B\to A\to C\to G\to K\to O\)</span> 是交错的，且以非匹配节点 D 开始、非匹配节点 O 结束，因此是可增广路径。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>37 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Algorithm" data-source="算法 8.1.3 · 增广路径求最大匹配" data-theme="dark"><div class="chrome"><div>算法 8.1.3</div><div>38 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">匈牙利算法思想</div><h2 class="h1-zh anim-item" style="max-width:18em">不断寻找可增广路径以扩大匹配</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist anim-item"><li>从空匹配或非最大匹配开始，逐步增大匹配规模</li><li>寻找一条交错路径，其边交替属于匹配与非匹配集合</li><li>进一步寻找可增广路径：两端都是非匹配节点</li><li>沿可增广路径翻转匹配与非匹配边的状态，匹配边数加一</li><li>重复直到再也找不到可增广路径，此时匹配即为最大匹配</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>38 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.9 · Hall 定理" data-theme="light"><div class="chrome"><div>定理 8.1.9</div><div>39 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">完美匹配存在条件</div><h2 class="h1-zh anim-item" style="max-width:16em">Hall 条件：邻居集不小于子集本身</h2><div aria-label="∀ S ⊆ U : |N(S)| ≥ |S|" class="formula anim-item mathjax-display-source" data-tex="\forall S \subseteq U : |N(S)| \ge |S|">\[\displaystyle \forall S \subseteq U : |N(S)| \ge |S|\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">二部图 <span aria-label="G=⟨U,V,E⟩" class="math-inline-source" data-tex="G=\langle U,V,E\rangle">\(G=\langle U,V,E\rangle\)</span> 中存在从 U 到 V 的完美匹配，当且仅当对所有子集 <span aria-label="S ⊆ U" class="math-inline-source" data-tex="S \subseteq U">\(S \subseteq U\)</span> 都有其邻居集合 N(S) 的大小不小于 S 的大小。若存在某个 S 使 |N(S)| &lt; |S|，则不可能完美匹配。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>39 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="8.1.3 应用示例 · 二部图" data-theme="dark"><div class="chrome"><div>应用示例</div><div>40 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">二部图的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">一切分配与匹配问题的骨架</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">网络流：一侧为资源来源、另一侧为需求点，边表示流动容量，优化资源分配</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">社交网络分析：用户与兴趣小组构成两侧，用于个性化推荐与社交推荐</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">数据挖掘聚类：数据点与聚类中心构成两侧，边权表示相似度，用于分组</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>40 / 116</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>41 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">应用示例</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_03_app_8_1_3_6ba1018c.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_03_app_8_1_3_6ba1018c.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>41 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.1.8 · 平面图" data-theme="light"><div class="chrome"><div>8.1.4 平面图</div><div>42 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.8</div><h2 class="h1-zh anim-item" style="max-width:16em">能画在平面上且边不相交</h2><p class="lead-zh anim-item" style="max-width:26em">给定图 <span aria-label="G=⟨V,E⟩" class="math-inline-source" data-tex="G=\langle V,E\rangle">\(G=\langle V,E\rangle\)</span>，若能把所有节点与边放在平面上，使任意两条边只在公共节点处相交，则 G 是平面图。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">注意：图画出来表面相交并不代表非平面，关键是能否经过适当变动使各边互不相交。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>42 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.1.12 · 平面图判定" data-theme="dark"><div class="chrome"><div>例 8.1.12</div><div>43 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">变形检验</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">表面相交未必非平面</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">有些图表面上的边相交，但经过适当移动后可使各边互不相交，它们仍是平面图。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">要点</div><p class="body-zh" style="margin-top:.6vh">另一些图无论如何变动总会出现相交的边，这类图才是非平面图。判定的关键在于是否存在一种无交叉的平面表示。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>43 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.1.9 与 8.1.10 · 面与次数" data-theme="light"><div class="chrome"><div>面与次数</div><div>44 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.9 / 8.1.10</div><h2 class="h1-zh anim-item" style="max-width:16em">外部面、内部面与面的次数</h2><p class="lead-zh anim-item" style="max-width:26em">平面表示把平面划分为若干面：外部面是围绕图形外侧的区域，内部面是被边界包围的内部区域。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">面的次数是围绕该面的边的数量；对内部面即其边界上的边数，对外部面为围绕外侧的边数。球面表示与平面表示可相互转换。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>44 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.1.13 · 面的次数" data-theme="dark"><div class="chrome"><div>例 8.1.13</div><div>45 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">数面与数边</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">带对角线四边形的面次数</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">四边形被一条对角线分成两个三角形：外部面由四条外边围成，次数为 4。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">计数</div><p class="body-zh" style="margin-top:.6vh">两个内部三角形各由三条边围成，次数分别为 3 和 3。三角形图中外部面次数为 5，三个内部三角形面次数各为 3。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>45 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.1.11 · 对偶图" data-theme="light"><div class="chrome"><div>对偶图</div><div>46 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.11</div><h2 class="h1-zh anim-item" style="max-width:16em">每个面化作一个节点</h2><div aria-label="G* 的节点 ↔ G 的面，G* 的边 ↔ 相邻两面共享的边界" class="formula anim-item mathjax-display-source" data-tex="G* \text{的节点} \leftrightarrow G \text{的面}\text{，}G* \text{的边} \leftrightarrow \text{相邻两面共享的边界}">\[\displaystyle G* \text{的节点} \leftrightarrow G \text{的面}\text{，}G* \text{的边} \leftrightarrow \text{相邻两面共享的边界}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对偶图 G* 由平面图 G 派生：G 的每个面对应 G* 的一个节点；G 中两个相邻面所共享的边界，对应 G* 中连接相应两节点的一条边。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>46 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.1.14 · 对偶图" data-theme="dark"><div class="chrome"><div>例 8.1.14</div><div>47 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">由面建点、由邻接连边</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">从面的邻接关系构造对偶图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">四边形定义内部区域 A 与外部区域 B，二者相邻，故对偶图有两个节点并以一条边相连。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">构造</div><p class="body-zh" style="margin-top:.6vh">四节点图有内部区域 A,B 与外部区域 C：A 与 B 相邻、且都与 C 相邻，对偶图中对应节点按相邻关系连边。五节点图同理为每个内部区域建节点。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>47 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.10 · 欧拉公式" data-theme="dark"><div class="chrome"><div>定理 8.1.10 · 欧拉公式</div><div>48 / 116</div></div>
+<div class="slide-body" style="align-items:center;text-align:center">
+<div class="stat-num anim-item"><span aria-label="V − E + F = 2" class="math-inline-source" data-tex="V - E + F = 2">\(V - E + F = 2\)</span></div>
+<h2 class="h2-zh anim-item" style="max-width:18em;margin-top:clamp(1rem,2vh,2rem)">连通平面图的节点数、边数、面数恒满足欧拉公式</h2>
+<p class="body-zh anim-item" style="max-width:28em;margin-top:clamp(.8rem,1.5vh,1.5rem);opacity:.62">V 为节点数、E 为边数、F 为面数（含外部区域）。可用归纳法证明：从单节点无边图出发，逐次添加边时该式始终成立。它是平面图的必要条件，不满足者必非平面图。</p>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>48 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.1.15 · 用欧拉公式判定" data-theme="light"><div class="chrome"><div>例 8.1.15</div><div>49 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">K4 是平面图</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">K4 满足欧拉公式且无交叉</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">五边形 <span aria-label="5−5+2=2" class="math-inline-source" data-tex="5-5+2=2">\(5-5+2=2\)</span>、带对角线四边形 <span aria-label="4−5+3=2" class="math-inline-source" data-tex="4-5+3=2">\(4-5+3=2\)</span> 均满足欧拉公式且无交叉，为平面图。K4 有 4 点、6 边，画成三角锥时有 4 个面，<span aria-label="4−6+4=2" class="math-inline-source" data-tex="4-6+4=2">\(4-6+4=2\)</span>，亦为平面图。</p></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 340 290"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="300" y1="48" y2="235"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="300" x2="40" y1="235" y2="235"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="40" x2="170" y1="235" y2="48"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="170" y1="48" y2="168"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="300" x2="170" y1="235" y2="168"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="40" x2="170" y1="235" y2="168"></line><circle cx="170" cy="48" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170" y="54">A</text><circle cx="300" cy="235" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="300" y="241">B</text><circle cx="40" cy="235" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="40" y="241">C</text><circle cx="170" cy="168" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170" y="174">D</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>49 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.11 · 边数上界（三角形面）" data-theme="dark"><div class="chrome"><div>定理 8.1.11</div><div>50 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">边数上界</div><h2 class="h1-zh anim-item" style="max-width:16em">只含三角形面的平面图满足 <span aria-label="E ≤ 3V − 6" class="math-inline-source" data-tex="E \le 3V - 6">\(E \le 3V - 6\)</span></h2><div aria-label="3F ≤ 2E ， 代入 V − E + F = 2  ⟹  E ≤ 3V − 6" class="formula anim-item mathjax-display-source" data-tex="3F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 3V - 6">\[\displaystyle 3F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 3V - 6\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">每个面至少由 3 条边围成，每条边被两个面共享计两次，故 <span aria-label="3F ≤ 2E" class="math-inline-source" data-tex="3F \le 2E">\(3F \le 2E\)</span>；结合欧拉公式即得边数上界 <span aria-label="E ≤ 3V − 6" class="math-inline-source" data-tex="E \le 3V - 6">\(E \le 3V - 6\)</span>。它常用于快速否定平面性。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.12 · 边数上界（四边形面）" data-theme="light"><div class="chrome"><div>定理 8.1.12</div><div>51 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">边数上界</div><h2 class="h1-zh anim-item" style="max-width:16em">各面至少为四边形时满足 <span aria-label="E ≤ 2V − 4" class="math-inline-source" data-tex="E \le 2V - 4">\(E \le 2V - 4\)</span></h2><div aria-label="4F ≤ 2E ， 代入 V − E + F = 2  ⟹  E ≤ 2V − 4" class="formula anim-item mathjax-display-source" data-tex="4F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 2V - 4">\[\displaystyle 4F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 2V - 4\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若图中任何区域至少是四边形，则每个面至少贡献 4 条边、每条边计两次，<span aria-label="4F ≤ 2E" class="math-inline-source" data-tex="4F \le 2E">\(4F \le 2E\)</span>，结合欧拉公式得 <span aria-label="E ≤ 2V − 4" class="math-inline-source" data-tex="E \le 2V - 4">\(E \le 2V - 4\)</span>。无三角形的二部平面图常用此式。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>51 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 8.1.12 · 同胚" data-theme="dark"><div class="chrome"><div>同胚</div><div>52 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.12</div><h2 class="h1-zh anim-item" style="max-width:16em">通过 2 度节点的增删而等价</h2><p class="lead-zh anim-item" style="max-width:26em">两个图若可通过一系列添加、删除或替换度数为 2 的节点而相互变换，则称它们同胚。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">同胚保持图的本质结构：在一条边中间插入或去掉度数为 2 的过渡节点，不改变图的平面性等拓扑性质。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>52 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.13 · 库拉托夫斯基定理" data-theme="light"><div class="chrome"><div>定理 8.1.13</div><div>53 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">Kuratowski 定理</div><h2 class="h1-zh anim-item" style="max-width:16em">平面图的充要刻画：不含 K5 或 K3,3 同胚子图</h2><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 365 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="50" y2="50"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="50" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="50" y2="250"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="150" y2="50"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="150" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="150" y2="250"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="250" y2="50"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="250" y2="150"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="80" x2="295" y1="250" y2="250"></line><circle cx="80" cy="50" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="80" y="56">u1</text><circle cx="80" cy="150" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="80" y="156">u2</text><circle cx="80" cy="250" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="80" y="256">u3</text><circle cx="295" cy="50" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="56">v1</text><circle cx="295" cy="150" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="156">v2</text><circle cx="295" cy="250" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="256">v3</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">一个无向图是平面图，当且仅当它不包含与 K5 或完全二部图 K3,3 同胚的子图。只要图中某部分本质上像 K5 或 K3,3，就无法在平面上无交叉绘制。图示为 K3,3。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>53 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="代码 8.1.4 · 平面图判定" data-theme="dark"><div class="chrome"><div>Python 实现</div><div>54 / 116</div></div>
+<div class="slide-body">
+<div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1rem,2.2vh,1.8rem)">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">代码 8.1.4</div>
+<h2 class="h2-zh" style="max-width:18em;margin-top:.6vh">基于 K5 与 K3,3 子图的平面性判定</h2>
+</div>
+<div class="anim-item code-pane"><pre class="code code-small"><code>def has_k5(graph):                       # 是否含 K5 子图
+    nodes = list(graph.keys())
+    from itertools import combinations
+    for c in combinations(nodes, 5):
+        if all(b in graph[a] for a in c for b in c if a != b):
+            return True
+    return False
+
+def has_k33(graph):                      # 是否含 K3,3 子图
+    nodes = list(graph.keys())
+    from itertools import combinations
+    for six in combinations(nodes, 6):
+        p1, p2 = six[:3], six[3:]
+        if all((b in graph[a]) or (a in graph[b])
+               for a in p1 for b in p2):
+            return True
+    return False
+
+def is_planar(graph):
+    return not (has_k5(graph) or has_k33(graph))</code></pre></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>54 / 116</div></div></section>
+<section class="slide light" data-screen-label="Application" data-source="8.1.4 应用示例 · 平面图" data-theme="light"><div class="chrome"><div>应用示例</div><div>55 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">平面图的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">布局与布线的几何约束</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">网络设计：布置节点与连线使其无交叉，减少信号干扰与传输延迟</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">地理信息系统：表示道路、河流等地理实体及其关系，支持空间分析与路径规划</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">计算机图形学：表示多边形网格与模型，实现平滑渲染与高效显示</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>55 / 116</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="light"><div class="chrome"><div>应用动画</div><div>56 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">应用示例</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_04_app_8_1_4_1bc58f4c.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_04_app_8_1_4_1bc58f4c.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="8.1.5 小结 · 多类型的图" data-theme="dark"><div class="chrome"><div>8.1 小结</div><div>57 / 116</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">欧拉图：连通且各点度数为偶（有向图为入度等于出度），关注边的遍历</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">哈密顿图：含遍历所有节点一次的闭合回路，判定为 NP 完全，有度数充分条件</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">二部图：节点可分两侧、同侧无边，等价于不含奇环，是匹配问题的骨架</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">平面图：可无交叉绘制，满足欧拉公式 <span aria-label="V−E+F=2" class="math-inline-source" data-tex="V-E+F=2">\(V-E+F=2\)</span>，由 K5 与 K3,3 同胚刻画</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>57 / 116</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="8.1 习题与 AI 提问" data-theme="light"><div class="chrome"><div>8.1 习题 / AI 提问</div><div>58 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">巩固与延伸</div><h2 class="h1-zh anim-item" style="max-width:18em">自测要点与向大模型探索的问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">判定欧拉图与欧拉通路、哈密顿图必要与充分条件、二部图与奇环、平面图的 K5 与 K3,3 刻画</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">由邻接矩阵计算度数序列并判定欧拉性或哈密顿性；绘制 K3,3 并验证哈密顿性</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">向大模型可探索：图分类研究的综合视角、推荐系统中二部图匹配、游戏地图的平面图设计</p></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>58 / 116</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="8.2 多类型的树" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">8.2</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">多类型的树</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">树的基本概念、生成树与最小生成树、根树与遍历，以及哈夫曼最优编码树</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.2.1 · 树" data-theme="light"><div class="chrome"><div>8.2.1 树的基本概念</div><div>60 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.1</div><h2 class="h1-zh anim-item" style="max-width:16em">树是无环连通图的三种等价刻画</h2><p class="lead-zh anim-item" style="max-width:26em">图 G 是树，当且仅当满足以下任一条件：</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">(1) G 无环且连通；(2) G 连通，且移除任一条边都会使其不连通；(3) G 无环，且添加任一条边都会产生环。树中任意两节点之间有且只有一条简单路径；无任何节点的树称为空树。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 8.2.2 · 节点术语" data-theme="dark"><div class="chrome"><div>节点术语</div><div>61 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.2</div><h2 class="h1-zh anim-item" style="max-width:16em">根、子、父、叶子、分支与兄弟</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">根节点没有父节点，是层级结构最顶端；某节点的直接后继是其子节点、直接前驱是其父节点；没有子节点的是叶子节点或终端节点；至少有一个子节点的是分支节点或内部节点；同一父节点下的节点互为兄弟节点。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.2.3 · 深度、层级与高度" data-theme="light"><div class="chrome"><div>定义 8.2.3</div><div>62 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">深度 / 层级 / 高度</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">三个易混的度量</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">深度是从根节点到该节点路径的长度；层级表示节点的深度（根在第 1 层）；高度是从该节点到最远叶子节点的最长路径长度。树的高度即其根节点的高度。</p></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 340 290"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="90" y1="45" y2="140"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="250" y1="45" y2="140"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="90" x2="45" y1="140" y2="235"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="90" x2="135" y1="140" y2="235"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="210" y1="140" y2="235"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="290" y1="140" y2="235"></line><circle cx="170" cy="45" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170" y="51">A</text><circle cx="90" cy="140" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="90" y="146">B</text><circle cx="250" cy="140" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="146">C</text><circle cx="45" cy="235" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="45" y="241">D</text><circle cx="135" cy="235" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="135" y="241">E</text><circle cx="210" cy="235" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="210" y="241">F</text><circle cx="290" cy="235" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="290" y="241">G</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>62 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.2.1 · 深度、层级与高度" data-theme="dark"><div class="chrome"><div>例 8.2.1</div><div>63 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">读图计数</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">同一棵树上的三种度量</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">某树中节点 E 的深度为 2、层级为 3；根节点位于第 1 层，根的子节点位于第 2 层，依此类推。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">结果</div><p class="body-zh" style="margin-top:.6vh">节点 B 的高度为 1，该树高度为 2；另一棵树中内部节点 1 的高度为 2，整树高度为 3。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>63 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.2.4 · 森林" data-theme="light"><div class="chrome"><div>森林</div><div>64 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.4</div><h2 class="h1-zh anim-item" style="max-width:16em">森林是互不相交的树的集合</h2><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 340 215"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="70" x2="35" y1="55" y2="165"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="70" x2="110" y1="55" y2="165"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="215" y1="55" y2="165"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="290" y1="55" y2="165"></line><circle cx="70" cy="55" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="70" y="61">a</text><circle cx="35" cy="165" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="35" y="171">b</text><circle cx="110" cy="165" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="110" y="171">c</text><circle cx="250" cy="55" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="61">x</text><circle cx="215" cy="165" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="215" y="171">y</text><circle cx="290" cy="165" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="290" y="171">z</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">森林的每个组成部分都是一棵树，彼此不共享节点。从森林中任意一棵树移除一条边，会得到更多的树，从而增加森林中树的数量。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>64 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.2.1 至 8.2.6 · 树的性质" data-theme="dark"><div class="chrome"><div>定理 8.2.1 ~ 8.2.6</div><div>65 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">树的基本性质</div><h2 class="h1-zh anim-item" style="max-width:18em">树的六条基本性质</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist twocol anim-item"><li>定理 8.2.1：树是无环图，不存在闭合路径</li><li>定理 8.2.2：树是连通的，任意两点间存在路径</li><li>定理 8.2.3：含 V 个节点的树恰好有 V−1 条边</li><li>定理 8.2.4：任意两节点间有唯一的一条简单路径</li><li>定理 8.2.5：删任一边即不连通，加任一边即生环</li><li>定理 8.2.6：树是包含所有节点的最小连通子图</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>65 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.2.7 至 8.2.9 · 叶子节点" data-theme="light"><div class="chrome"><div>定理 8.2.7 ~ 8.2.9</div><div>66 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">叶子节点性质</div><h2 class="h1-zh anim-item" style="max-width:18em">关于度与叶子节点的三条定理</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist anim-item"><li>定理 8.2.7：任何至少含两个顶点的树中至少有两个度为 1 的节点（单顶点树的唯一顶点度为 0）</li><li>定理 8.2.8：任意非空有限树都存在度 <span aria-label="≤ 1" class="math-inline-source" data-tex="\le 1">\(\le 1\)</span> 的顶点，故不存在所有顶点度都大于 1 的有限树</li><li>定理 8.2.9：任何至少含一条边的树，至少有两个叶子节点</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>66 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="8.2.1 应用示例 · 树" data-theme="dark"><div class="chrome"><div>应用示例</div><div>67 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">树结构的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">层次关系的天然载体</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">计算机网络：OSPF 等路由协议用树结构表示网络拓扑与路由路径</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">编译器设计：抽象语法树 AST 表示程序语法结构，支撑语法分析与代码生成</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">机器学习：决策树通过递归分割数据集构建分类或回归模型</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>67 / 116</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>68 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">应用示例</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_05_app_8_2_1_0c661756.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_05_app_8_2_1_0c661756.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>68 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.2.5 · 生成树" data-theme="light"><div class="chrome"><div>8.2.2 生成树</div><div>69 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.5</div><h2 class="h1-zh anim-item" style="max-width:16em">连接所有节点而不成环的最小子图</h2><p class="lead-zh anim-item" style="max-width:26em">生成树 T 连接图 G 中的所有节点而不形成任何环，且使用尽可能少的边。对非连通图按连通分量分别求生成树则得生成森林。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">性质：含原图所有节点、不含环、是最小连通子图；若原图有 V 个节点，则生成树有 V−1 条边；除非原图本身是树，否则一般有多棵不同生成树。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>69 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.2.10 · 生成树存在性" data-theme="dark"><div class="chrome"><div>定理 8.2.10</div><div>70 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">存在性</div><h2 class="h1-zh anim-item" style="max-width:16em">每个连通图至少有一棵生成树</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">用归纳法：单节点图自身即生成树。对 n 节点连通图 G，移除一条边 e 得 G′：若 G′ 仍连通，由归纳假设其生成树即 G 的生成树；若 e 是割边，则 G′ 分成两个较小连通子图，各取生成树再用 e 连接即得 G 的生成树。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>70 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.2.2 · 判断生成树" data-theme="light"><div class="chrome"><div>例 8.2.2</div><div>71 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">含全部节点且本身为树</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">高亮边构成一棵生成树</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">一个子图若包含原图的所有节点、本身又是一棵树（连通且无环），则它是原图的生成树。图中加粗的三条边连接了全部四个节点且不成环，构成生成树。</p></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 340 285"><line opacity="0.95" stroke="var(--accent)" stroke-width="4.5" x1="70" x2="270" y1="60" y2="60"></line><line opacity="0.95" stroke="var(--accent)" stroke-width="4.5" x1="270" x2="270" y1="60" y2="220"></line><line opacity="0.95" stroke="var(--accent)" stroke-width="4.5" x1="270" x2="70" y1="220" y2="220"></line><line opacity="0.5" stroke="currentColor" stroke-width="2" x1="70" x2="70" y1="220" y2="60"></line><line opacity="0.5" stroke="currentColor" stroke-width="2" x1="70" x2="270" y1="60" y2="220"></line><circle cx="70" cy="60" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="70" y="66">A</text><circle cx="270" cy="60" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270" y="66">B</text><circle cx="270" cy="220" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270" y="226">C</text><circle cx="70" cy="220" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="70" y="226">D</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>71 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.2.11 · 生成树与割边" data-theme="dark"><div class="chrome"><div>定理 8.2.11</div><div>72 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">割边</div><h2 class="h1-zh anim-item" style="max-width:16em">任意生成树必包含图的所有割边</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">割边 e 连接了两个不同的连通部分，移除它会使图不连通。若某生成树不含 e，则它无法连接被 e 分隔的两部分，与生成树覆盖所有节点且连通矛盾。故所有生成树都必须包含每一条割边。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>72 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.2.6 · 最小生成树" data-theme="light"><div class="chrome"><div>最小生成树</div><div>73 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.6</div><h2 class="h1-zh anim-item" style="max-width:16em">边权之和最小的生成树</h2><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 380 305"><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="60.0" x2="160.0" y1="150.0" y2="55.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="101.0" y="91.5"></rect><text class="gw" x="110.0" y="104.5">2</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="60.0" x2="60.0" y1="150.0" y2="255.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="51.0" y="191.5"></rect><text class="gw" x="60.0" y="204.5">2</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="160.0" x2="255.0" y1="55.0" y2="70.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="198.5" y="51.5"></rect><text class="gw" x="207.5" y="64.5">2</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="255.0" x2="215.0" y1="70.0" y2="180.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="226.0" y="114.0"></rect><text class="gw" x="235.0" y="127.0">1</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="215.0" x2="335.0" y1="180.0" y2="150.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="266.0" y="154.0"></rect><text class="gw" x="275.0" y="167.0">3</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="335.0" x2="325.0" y1="150.0" y2="258.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="321.0" y="193.0"></rect><text class="gw" x="330.0" y="206.0">2</text><circle cx="60" cy="150" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="60" y="156">A</text><circle cx="160" cy="55" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="160" y="61">B</text><circle cx="60" cy="255" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="60" y="261">G</text><circle cx="255" cy="70" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="255" y="76">D</text><circle cx="215" cy="180" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="215" y="186">C</text><circle cx="335" cy="150" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="335" y="156">E</text><circle cx="325" cy="258" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="325" y="264">F</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对加权图，最小生成树是所有生成树中边的权重总和最小者，广泛用于网络设计与优化。常用普里姆算法与克鲁斯卡尔算法求解。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>73 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Algorithm" data-source="算法 8.2.1 · 广度优先搜索" data-theme="dark"><div class="chrome"><div>算法 8.2.1</div><div>74 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">BFS 广度优先</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">BFS：逐层访问，易找最短路径</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">从起点出发逐层访问邻居并标记已访问，适用于最短路径搜索，可能占用较多内存。注意 BFS 本身不直接构造最小生成树。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from collections import deque
+def bfs(graph, start, end):
+    visited = {start}
+    queue = deque([(start, [start])])
+    while queue:
+        current, path = queue.popleft()
+        if current == end:
+            return path
+        for nb in graph[current]:
+            if nb not in visited:
+                visited.add(nb)
+                queue.append((nb, path + [nb]))
+    return None</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>74 / 116</div></div></section>
+<section class="slide light" data-screen-label="Algorithm" data-source="算法 8.2.2 · 深度优先搜索" data-theme="light"><div class="chrome"><div>算法 8.2.2</div><div>75 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">DFS 深度优先</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">DFS：尽可能深入再回溯</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">从某节点出发尽可能深入遍历，到达末端后回溯到其他分支。占用空间小，适合目标较深的搜索，但找到的路径不一定最短，且需注意避免无限循环。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def dfs(graph, current, end, path=None, visited=None):
+    if path is None: path = []
+    if visited is None: visited = set()
+    path.append(current)
+    if current == end:
+        return path
+    visited.add(current)
+    for nb in graph[current]:
+        if nb not in visited:
+            res = dfs(graph, nb, end, path, visited)
+            if res: return res
+    path.pop()
+    return None</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>75 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Compare" data-source="BFS 与 DFS 对比" data-theme="dark"><div class="chrome"><div>BFS vs DFS</div><div>76 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">遍历策略对比</div><h2 class="h1-zh anim-item" style="max-width:16em">逐层广搜 与 深入深搜</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">BFS 逐层访问、通常用队列实现，因需存同层全部顶点而更耗内存，适合最短路径问题；DFS 倾向优先深入分支、通常用递归或栈实现，空间复杂度主要取决于递归深度，更适合遍历或寻找特定路径。最小生成树则通常用普里姆或克鲁斯卡尔算法构造。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>76 / 116</div></div></section>
+<section class="slide light" data-screen-label="Algorithm" data-source="算法 8.2.3 与例 8.2.3 · 普里姆算法" data-theme="light"><div class="chrome"><div>算法 8.2.3</div><div>77 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">Prim 普里姆 · 例 8.2.3</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Prim：从一点生长最小树</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">从任一节点起，每次在连接已选集合 S 与集合外节点的边中选权重最小者，把该边及新节点并入 S，直到包含所有节点。适合边多的稠密图。例 8.2.3 中依次选边 (A,B)、(B,D)、(D,C)、(C,E)、(E,F)、(A,G)。</p></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 380 305"><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="60.0" x2="160.0" y1="150.0" y2="55.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="101.0" y="91.5"></rect><text class="gw" x="110.0" y="104.5">2</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="60.0" x2="60.0" y1="150.0" y2="255.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="51.0" y="191.5"></rect><text class="gw" x="60.0" y="204.5">2</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="160.0" x2="255.0" y1="55.0" y2="70.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="198.5" y="51.5"></rect><text class="gw" x="207.5" y="64.5">2</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="255.0" x2="215.0" y1="70.0" y2="180.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="226.0" y="114.0"></rect><text class="gw" x="235.0" y="127.0">1</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="215.0" x2="335.0" y1="180.0" y2="150.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="266.0" y="154.0"></rect><text class="gw" x="275.0" y="167.0">3</text><line opacity="0.95" stroke="var(--accent)" stroke-width="4.0" x1="335.0" x2="325.0" y1="150.0" y2="258.0"></line><rect fill="var(--paper)" height="16" rx="3" width="18" x="321.0" y="193.0"></rect><text class="gw" x="330.0" y="206.0">2</text><circle cx="60" cy="150" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="60" y="156">A</text><circle cx="160" cy="55" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="160" y="61">B</text><circle cx="60" cy="255" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="60" y="261">G</text><circle cx="255" cy="70" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="255" y="76">D</text><circle cx="215" cy="180" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="215" y="186">C</text><circle cx="335" cy="150" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="335" y="156">E</text><circle cx="325" cy="258" fill="var(--accent)" fill-opacity="0.12" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="325" y="264">F</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>77 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="代码 8.2.3 · 普里姆算法" data-theme="dark"><div class="chrome"><div>Python 实现</div><div>78 / 116</div></div>
+<div class="slide-body">
+<div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1rem,2.2vh,1.8rem)">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">代码 8.2.3 · Prim</div>
+<h2 class="h2-zh" style="max-width:18em;margin-top:.6vh">用 NetworkX 求最小生成树</h2>
+</div>
+<div class="anim-item code-pane"><pre class="code code-small"><code>import networkx as nx
+G = nx.Graph()
+G.add_weighted_edges_from([
+    ("A", "B", 2), ("A", "C", 3), ("A", "G", 2),
+    ("B", "C", 4), ("B", "D", 2), ("C", "D", 1),
+    ("C", "E", 3), ("D", "E", 4), ("D", "F", 5),
+    ("E", "F", 2), ("E", "G", 3), ("F", "G", 4)])
+MST = nx.minimum_spanning_tree(G, algorithm="prim")
+print(MST.edges(data=True), MST.nodes())</code></pre></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>78 / 116</div></div></section>
+<section class="slide light" data-screen-label="Algorithm" data-source="算法 8.2.4 与例 8.2.4 · 克鲁斯卡尔算法" data-theme="light"><div class="chrome"><div>算法 8.2.4</div><div>79 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">Kruskal 克鲁斯卡尔 · 例 8.2.4</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Kruskal：按边权从小到大并入</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">把所有边按权重从小到大排序，每个节点初始各成一棵树构成森林；依次考察每条边，若两端属于不同的树则加入并合并，若属于同一棵树则舍弃以免成环，直到森林合并为一棵树。适合边少的稀疏图。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">选边过程</div><p class="body-zh" style="margin-top:.6vh">例 8.2.4 中依次选 (B,D) 权 1、(A,D) 权 2、(C,E) 权 2、(D,E) 权 3；(A,B) 权 3 因与已选边成环而舍弃。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>79 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Compare" data-source="普里姆与克鲁斯卡尔对比" data-theme="dark"><div class="chrome"><div>Prim vs Kruskal</div><div>80 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">两种贪心算法</div><h2 class="h1-zh anim-item" style="max-width:16em">同为贪心，侧重不同</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">两者都求加权连通图的最小生成树，都是贪心算法，每步作局部最优选择并始终保持无环。普里姆从一个顶点生长、适合稠密图；克鲁斯卡尔按边权排序合并森林、适合稀疏图。具体选择取决于图的稠密度与实现复杂性。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>80 / 116</div></div></section>
+<section class="slide light" data-screen-label="Application" data-source="8.2.2 应用示例 · 生成树" data-theme="light"><div class="chrome"><div>应用示例</div><div>81 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">生成树的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">去冗余、保连通的优化工具</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">图像处理：基于最小生成树的分割算法高效地把图像分成若干区域</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">数据挖掘与机器学习：构建数据点的最小生成树以发现内在结构与聚类关系</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">集成电路设计：用生成树简化电路布局与布线，减少信号干扰、优化传输</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>81 / 116</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="light"><div class="chrome"><div>应用动画</div><div>82 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">应用示例</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_06_app_8_2_2_d7596c26.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_06_app_8_2_2_d7596c26.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>82 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 8.2.7 与 8.2.8 · 有向树与根树" data-theme="dark"><div class="chrome"><div>8.2.3 根树</div><div>83 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.7 / 8.2.8</div><h2 class="h1-zh anim-item" style="max-width:16em">有向树与根树</h2><p class="lead-zh anim-item" style="max-width:26em">有向树是不存在有向环的有向图，任意两节点间存在唯一有向路径，所有边都有方向，除根节点外每个节点恰有一条入边。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">根树是入度为 0 的根节点加上其余节点入度均为 1 的有向树，直观表示层次关系，使层次数据的分析与遍历更系统化。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>83 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="根树的主要性质" data-theme="light"><div class="chrome"><div>根树性质</div><div>84 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">七条性质</div><h2 class="h1-zh anim-item" style="max-width:18em">根树的主要性质</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist twocol anim-item"><li>有唯一的根作为起点，没有父节点</li><li>除根外每个节点都有一个父节点，可有零或多个子节点</li><li>从根到任意节点的路径唯一</li><li>根在第 1 层，其直接子节点在第 2 层，依此类推</li><li>节点与其后代及连接共同构成一棵子树</li><li>根树无环，不存在出发后回到自身的路径</li><li>节点的深度是从根到该节点的边数</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>84 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 8.2.9 至 8.2.13 · m 叉树家族" data-theme="dark"><div class="chrome"><div>m 叉树家族</div><div>85 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.9 ~ 8.2.13</div><h2 class="h1-zh anim-item" style="max-width:16em">m 叉树、二叉树及其完全与正则形态</h2><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 340 280"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="90" y1="45" y2="135"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="250" y1="45" y2="135"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="90" x2="50" y1="135" y2="225"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="90" x2="130" y1="135" y2="225"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="290" y1="135" y2="225"></line><circle cx="170" cy="45" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170" y="51">A</text><circle cx="90" cy="135" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="90" y="141">B</text><circle cx="250" cy="135" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="141">C</text><circle cx="50" cy="225" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="50" y="231">D</text><circle cx="130" cy="225" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="130" y="231">E</text><circle cx="290" cy="225" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="290" y="231">F</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">m 叉树每个节点最多 m 个子节点；二叉树每点最多两个子节点（左、右）；完全二叉树除最后一层外每层填满且子节点要么 0 个要么 2 个；完全 m 叉树类似但子节点 0 或 m 个；正则二叉树（满二叉树）所有叶子层次相同、每层填满。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>85 / 116</div></div></section>
+<section class="slide light" data-screen-label="Algorithm" data-source="算法 8.2.5 · m 叉树转二叉树" data-theme="light"><div class="chrome"><div>算法 8.2.5</div><div>86 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">左孩子右兄弟</div><h2 class="h1-zh anim-item" style="max-width:18em">m 叉树到二叉树的转换</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist anim-item"><li>遍历 m 叉树，处理每个节点</li><li>把节点的第一个子节点作为二叉树中的左子节点</li><li>其余子节点依次作为左子节点的右兄弟、右兄弟的右兄弟，连成一条右链</li><li>该方法可推广到有序森林到二叉树的转换</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>86 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.2.12 与例 8.2.5 · 二叉树最大节点数" data-theme="dark"><div class="chrome"><div>定理 8.2.12</div><div>87 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">深度与节点上界</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">深度为 d 的二叉树最大节点数</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">根深度记为 0。例 8.2.5 中深度 3,4,5,6 的二叉树最大节点数分别为 15,31,63,127。</p><div aria-label="2 d+1 − 1" class="formula formula-sm mathjax-display-source" data-tex="2^{d+1}- 1" style="margin-top:clamp(.9rem,2vh,1.6rem);text-align:left">\[\displaystyle 2^{d+1}- 1\]</div></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def max_nodes_in_binary_tree(depth):
+    return 2 ** (depth + 1) - 1
+
+depths = [3, 4, 5, 6]
+print([max_nodes_in_binary_tree(d) for d in depths])
+# [15, 31, 63, 127]</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>87 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.2.13 与推论 · 完全二叉树" data-theme="light"><div class="chrome"><div>定理 8.2.13</div><div>88 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">完全二叉树 · 叶子与总数</div><h2 class="h1-zh anim-item" style="max-width:16em">完全二叉树：N 个叶子则共 2N − 1 个节点</h2><div aria-label="叶子数 N  ⟹  总节点数 = 2N − 1" class="formula anim-item mathjax-display-source" data-tex="\text{叶子数} N \Longrightarrow \text{总节点数} = 2N - 1">\[\displaystyle \text{叶子数} N \Longrightarrow \text{总节点数} = 2N - 1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">推论 8.2.1：完全二叉树有 N 个叶子时，非叶子节点为 N−1 个。推论 8.2.2：完全二叉树的节点个数必为奇数。可用归纳法证明：每新增两个叶子，原有一个叶子变为内部节点。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>88 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.2.6 与代码 8.2.5 · 完全二叉树计数" data-theme="dark"><div class="chrome"><div>例 8.2.6</div><div>89 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">叶子、内部与总数</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">完全二叉树的计数练习</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">非叶子 10 则叶子 11、总数 21；叶子 5 则总数 9；第 3 层全满（4 个叶子）则总数 7。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>non_leaf = 10
+leaf1 = non_leaf + 1          # 11
+total1 = 2 * leaf1 - 1        # 21
+total2 = 2 * 5 - 1            # 9
+leaf3 = 2 ** 2               # 4
+total3 = 2 * leaf3 - 1        # 7
+print(leaf1, total1, total2, leaf3, total3)</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>89 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.2.14 · 完全二叉树高度" data-theme="light"><div class="chrome"><div>定理 8.2.14</div><div>90 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">高度与节点数</div><h2 class="h1-zh anim-item" style="max-width:16em">n 个节点的完全二叉树高度 h</h2><div aria-label="2 h−1 + 1 ≤ n ≤ 2 h − 1" class="formula anim-item mathjax-display-source" data-tex="2^{h-1}+ 1 \le n \le 2^{h}- 1">\[\displaystyle 2^{h-1}+ 1 \le n \le 2^{h}- 1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">下界对应前 h−1 层填满再加最后一层至少两个节点：<span aria-label="1+2+…+2^(h−2)" class="math-inline-source" data-tex="1+2+\ldots +2^{h-2}">\(1+2+\ldots +2^{h-2}\)</span> 即 <span aria-label="2^(h−1)−1" class="math-inline-source" data-tex="2^{h-1}-1">\(2^{h-1}-1\)</span>，加 2 得 <span aria-label="2^(h−1)+1" class="math-inline-source" data-tex="2^{h-1}+1">\(2^{h-1}+1\)</span>；上界对应所有层填满：<span aria-label="1+2+…+2^(h−1) = 2^h − 1" class="math-inline-source" data-tex="1+2+\ldots +2^{h-1} = 2^{h} - 1">\(1+2+\ldots +2^{h-1} = 2^{h} - 1\)</span>。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>90 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.2.15 至 8.2.17 · 三条计数定理" data-theme="dark"><div class="chrome"><div>定理 8.2.15 ~ 8.2.17</div><div>91 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">正则二叉树与 m 叉树</div><h2 class="h1-zh anim-item" style="max-width:16em">层节点数与完全 m 叉树的叶子分支关系</h2><div aria-label="正则二叉树第 i 层 2 i 个 ， m 叉树最大 1+m+…+m d ， t = (m−1)·i + 1" class="formula anim-item mathjax-display-source" data-tex="\text{正则二叉树第} i \text{层} 2^{i}\text{个} \text{，} m \text{叉树最大} 1+m+\ldots +m^{d}\text{，} t = (m-1)\cdot i + 1">\[\displaystyle \text{正则二叉树第} i \text{层} 2^{i}\text{个} \text{，} m \text{叉树最大} 1+m+\ldots +m^{d}\text{，} t = (m-1)\cdot i + 1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 8.2.15：正则二叉树第 i 层有 <span aria-label="2^i" class="math-inline-source" data-tex="2^{i}">\(2^{i}\)</span> 个节点（i 从 0 计）。定理 8.2.16：深度 d 的 m 叉树最大节点总数为 <span aria-label="1+m+m²+…+m^d" class="math-inline-source" data-tex="1+m+m^{2}+\ldots +m^{d}">\(1+m+m^{2}+\ldots +m^{d}\)</span>。定理 8.2.17：完全 m 叉树设叶子数 t、分支节点数 i，则 <span aria-label="t = (m−1)·i + 1" class="math-inline-source" data-tex="t = (m-1)\cdot i + 1">\(t = (m-1)\cdot i + 1\)</span>。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>91 / 116</div></div></section>
+<section class="slide light" data-screen-label="Algorithm" data-source="算法 8.2.6 · 二叉树遍历" data-theme="light"><div class="chrome"><div>算法 8.2.6</div><div>92 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">前序 / 中序 / 后序</div><h2 class="h1-zh anim-item" style="max-width:16em">二叉树的三种深度遍历</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">前序遍历顺序为 根→左子树→右子树；中序遍历为 左子树→根→右子树；后序遍历为 左子树→右子树→根。遍历是输出节点、计数、查找等二叉树算法以及排序、搜索的核心基础操作。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>92 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 8.2.14 · 加权二叉树" data-theme="dark"><div class="chrome"><div>加权二叉树</div><div>93 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.14</div><h2 class="h1-zh anim-item" style="max-width:16em">带权叶子与树的权</h2><div aria-label="w(T) = ∑ i=1 n w i · L(w i )" class="formula anim-item mathjax-display-source" data-tex="w(T) = \sum_{i=1}^{n}w_{i}\cdot L(w_{i})">\[\displaystyle w(T) = \sum_{i=1}^{n}w_{i}\cdot L(w_{i})\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">给 n 个叶子分别指派权重 w1,…,wn，则该二叉树为加权二叉树。权为 wi 的叶子层级记为 L(wi)，所有叶子权与层级乘积之和称为树的权 w(T)。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>93 / 116</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 8.2.15 与 8.2.16 · 最优树" data-theme="light"><div class="chrome"><div>最优树</div><div>94 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.15 / 8.2.16</div><h2 class="h1-zh anim-item" style="max-width:16em">最优二叉树即哈夫曼树</h2><p class="lead-zh anim-item" style="max-width:26em">给定一组权重，若加权二叉树 T0 的权 w(T0) 不大于任意同权加权二叉树的权，则 T0 是最优二叉树，又称哈夫曼树。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">最优 m 叉树是其推广：在给定节点权重下最小化加权路径长度，每个节点最多 m 个子节点。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>94 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 8.2.18 · 最优树的结构" data-theme="dark"><div class="chrome"><div>定理 8.2.18</div><div>95 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">最小权叶子是兄弟</div><h2 class="h1-zh anim-item" style="max-width:16em">两个最小权叶子互为最深兄弟</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设 T 为带权 <span aria-label="w1 ≤ w2 ≤ … ≤ wn" class="math-inline-source" data-tex="w1 \le w2 \le \ldots \le wn">\(w1 \le w2 \le \ldots \le wn\)</span> 的最优树，则权值最小的两个叶子 vw1 与 vw2 互为兄弟，且其父节点是哈夫曼构造中最早生成的内部节点，处于所有分支节点中最深的层级。可用对调反证法证明。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>95 / 116</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.2.19 · 合并保持最优" data-theme="light"><div class="chrome"><div>定理 8.2.19</div><div>96 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">归并不破坏最优性</div><h2 class="h1-zh anim-item" style="max-width:16em">合并最小两权为新叶子后仍最优</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设 T 为带权 <span aria-label="w1 ≤ w2 ≤ … ≤ wn" class="math-inline-source" data-tex="w1 \le w2 \le \ldots \le wn">\(w1 \le w2 \le \ldots \le wn\)</span> 的最优树，将权 w1 与 w2 叶子的父节点改为权 <span aria-label="w1+w2" class="math-inline-source" data-tex="w1+w2">\(w1+w2\)</span> 的叶子，得到的新树 T′ 仍是最优树。这正是哈夫曼算法自底向上合并的理论依据。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>96 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Algorithm" data-source="算法 8.2.7 · 哈夫曼算法" data-theme="dark"><div class="chrome"><div>算法 8.2.7</div><div>97 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">贪心合并最小权</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">哈夫曼：反复合并两个最小权节点</h2><ol class="steps" style="margin-top:clamp(.9rem,2vh,1.6rem)"><li>为 n 个符号各建一个节点，按权重放入优先队列 Q</li><li>取出两个权最小的节点 x 与 y，新建内部节点 z，权为 <span aria-label="w(x)+w(y)" class="math-inline-source" data-tex="w(x)+w(y)">\(w(x)+w(y)\)</span></li><li>令 x、y 为 z 的左右子节点，把 z 放回 Q</li><li>重复直到队列只剩一个节点，即最优二叉树的根</li></ol></div>
+<div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 350 250"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="95" y1="40" y2="120"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="250" y1="40" y2="120"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="95" x2="50" y1="120" y2="205"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="95" x2="140" y1="120" y2="205"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="210" y1="120" y2="205"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="295" y1="120" y2="205"></line><circle cx="170" cy="40" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170" y="46">18</text><circle cx="95" cy="120" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="95" y="126">7</text><circle cx="250" cy="120" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="126">11</text><circle cx="50" cy="205" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="50" y="211">3</text><circle cx="140" cy="205" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="140" y="211">4</text><circle cx="210" cy="205" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="210" y="211">5</text><circle cx="295" cy="205" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="295" y="211">6</text></svg></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>97 / 116</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 8.2.7 与代码 8.2.6 · 构造最优树" data-theme="light"><div class="chrome"><div>例 8.2.7</div><div>98 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">自底向上构造</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">对一组权重构造哈夫曼树</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">对权重 2,2,2,3,4,6,6,7,9,12,13，每次合并两个最小权重的节点，逐步得到最优树。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import heapq
+class Node:
+    def __init__(self, value, weight):
+        self.value, self.weight = value, weight
+        self.left = self.right = None
+    def __lt__(self, other):
+        return self.weight &lt; other.weight
+
+def build_huffman(elements):
+    pq = [Node(v, w) for v, w in elements]
+    heapq.heapify(pq)
+    while len(pq) &gt; 1:
+        a = heapq.heappop(pq)
+        b = heapq.heappop(pq)
+        m = Node(None, a.weight + b.weight)
+        m.left, m.right = a, b
+        heapq.heappush(pq, m)
+    return pq[0]</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>98 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.2.8 · 最优前缀码" data-theme="dark"><div class="chrome"><div>例 8.2.8</div><div>99 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">哈夫曼编码节省比特</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">按频率构造最优前缀码</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">字母 a 到 h 频率为 20,5,7,11,30,7,5,15（百分比）。以频率为权用哈夫曼算法构造最优二叉树，得变长前缀码。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">效果</div><p class="body-zh" style="margin-top:.6vh">若 10000 个字母用定长 3 位码需 30000 比特；用最优前缀码仅需 27400 比特，节省 2600 比特。频率越高的字母编码越短。</p></div></div>
+<div class="anim-item"><div class="vis-center"></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>99 / 116</div></div></section>
+<section class="slide light" data-screen-label="Summary" data-source="8.2.4 小结 · 多类型的树" data-theme="light"><div class="chrome"><div>8.2 小结</div><div>100 / 116</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">树是无环连通图，任意两点间有且仅有一条简单路径，V 个节点恰 V−1 条边</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">生成树保留连通性并删去多余边；最小生成树由普里姆或克鲁斯卡尔算法求解</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">根树表示层级与递归结构，可用前序、中序、后序遍历，并有丰富的计数定理</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">哈夫曼算法贪心合并最小权节点，构造最优前缀编码树，广泛用于无损压缩</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>100 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Exercise" data-source="8.2 习题与 AI 提问" data-theme="dark"><div class="chrome"><div>8.2 习题 / AI 提问</div><div>101 / 116</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">巩固与延伸</div><h2 class="h1-zh anim-item" style="max-width:18em">自测要点与向大模型探索的问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">树与生成树的定义、生成树边数 V−1、普里姆与克鲁斯卡尔异同、哈夫曼编码优缺点</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">由邻接矩阵用两种算法求最小生成树并比较；按字符频率构造哈夫曼树并算平均码长</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">向大模型可探索：哈夫曼算法的时空复杂性、最优树在网络设计与多媒体压缩中的应用</p></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>101 / 116</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="8.3 应用案例和 Python 实现" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">8.3</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">应用案例和 Python 实现</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">六个把特殊图理论落到实处的工程与社会案例，每例配可运行的 Python 代码</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>102 / 116</div></div></section>
+<section class="slide light" data-screen-label="Case" data-source="8.3.1 古镇修复路径规划" data-theme="light"><div class="chrome"><div>案例 8.3.1</div><div>103 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">欧拉回路</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">古镇修复路径规划</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">把建筑角落、城墙拐角作为顶点，通行路径作为边，构建图模型。利用欧拉回路使工程队经过每段城墙至少一次且首尾一致，前提是图连通且每点度数为偶。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.Graph()
+G.add_edges_from([
+    ("A","B"),("B","C"),("C","D"),("D","A"),
+    ("A","E"),("B","F"),("C","G"),("D","H"),
+    ("E","F"),("F","G"),("G","H"),("H","E")])
+if nx.is_eulerian(G):
+    print("该图是欧拉图")
+    print(list(nx.eulerian_circuit(G)))
+else:
+    print("该图不是欧拉图，需要重新规划")</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>103 / 116</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 8.3.1" data-theme="light"><div class="chrome"><div>应用动画 · 案例 8.3.1</div><div>104 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">案例 8.3.1</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_07_case_8_3_1_f65d32ce.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_07_case_8_3_1_f65d32ce.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>104 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Case" data-source="8.3.2 大学生志愿服务配对系统" data-theme="dark"><div class="chrome"><div>案例 8.3.2</div><div>105 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">二部图 · 匈牙利算法</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">大学生志愿服务配对系统</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">志愿者与服务项目分别为二部图两侧，边表示潜在匹配。用最大匹配（匈牙利算法）实现志愿者与项目的最优配对，兼顾技能、兴趣与需求。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+B = nx.Graph()
+volunteers = ["v1", "v2", "v3", "v4"]
+projects = ["p1", "p2", "p3"]
+B.add_nodes_from(volunteers, bipartite=0)
+B.add_nodes_from(projects, bipartite=1)
+B.add_edges_from([("v1","p1"),("v1","p2"),("v2","p2"),
+                  ("v3","p1"),("v3","p3"),("v4","p3")])
+match = nx.bipartite.maximum_matching(B)
+for k, v in match.items():
+    if k in volunteers:
+        print(k, "-&gt;", v)</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>105 / 116</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 8.3.2" data-theme="dark"><div class="chrome"><div>应用动画 · 案例 8.3.2</div><div>106 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">案例 8.3.2</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_08_case_8_3_2_e4299a8d.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_08_case_8_3_2_e4299a8d.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>106 / 116</div></div></section>
+<section class="slide light" data-screen-label="Case" data-source="8.3.3 智慧城市交通规划" data-theme="light"><div class="chrome"><div>案例 8.3.3</div><div>107 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">平面图</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">智慧城市交通规划</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">按平面图原则设计交通网络，避免出现 K5 或 K3,3 子图导致的不可平面结构，减少道路交叉带来的拥堵与事故。用 NetworkX 检验平面性。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.Graph()
+G.add_nodes_from(["A", "B", "C", "D", "E"])
+G.add_edges_from([("A","B"),("A","C"),("A","D"),
+                  ("B","C"),("C","D"),("D","E")])
+is_planar, embedding = nx.check_planarity(G)
+print("该图是平面图:", is_planar)</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>107 / 116</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 8.3.3" data-theme="light"><div class="chrome"><div>应用动画 · 案例 8.3.3</div><div>108 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">案例 8.3.3</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_09_case_8_3_3_6d7e5e2b.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_09_case_8_3_3_6d7e5e2b.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>108 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Case" data-source="8.3.4 湖南省文化遗产数字化连接项目" data-theme="dark"><div class="chrome"><div>案例 8.3.4</div><div>109 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">最小生成树 · Prim</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">湖南省文化遗产数字化连接</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">连接省内各文化遗产地构建数字信息网络，在每对地点连接成本不同的情况下，以最小总成本保证连通。用普里姆算法求加权连通图的最小生成树。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.Graph()
+G.add_weighted_edges_from([
+    ("岳麓书院","湖南省博物馆",10),("岳麓书院","韶山",30),
+    ("湖南省博物馆","凤凰古城",20),("韶山","凤凰古城",25),
+    ("凤凰古城","张家界",15),("韶山","张家界",40)])
+mst = nx.minimum_spanning_tree(G, algorithm="prim")
+print(mst.edges(data=True))</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>109 / 116</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 8.3.4" data-theme="dark"><div class="chrome"><div>应用动画 · 案例 8.3.4</div><div>110 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">案例 8.3.4</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_10_case_8_3_4_261ec9d2.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_10_case_8_3_4_261ec9d2.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>110 / 116</div></div></section>
+<section class="slide light" data-screen-label="Case" data-source="8.3.5 航天通信网络优化" data-theme="light"><div class="chrome"><div>案例 8.3.5</div><div>111 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">最小生成树 · Kruskal</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">航天通信网络优化</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">顶点代表通信节点、边权代表链路成本，求最小生成树以最小总成本连通整个网络。用克鲁斯卡尔算法按边权从小到大并入，弘扬自力更生、勇攀高峰的航天精神。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
+G = nx.Graph()
+G.add_weighted_edges_from([
+    ("地面基站1","卫星1",5),("地面基站1","空间站",9),
+    ("地面基站2","卫星2",6),("卫星1","空间站",7),
+    ("卫星1","卫星2",8),("空间站","卫星2",4)])
+mst = nx.minimum_spanning_tree(G, algorithm="kruskal")
+print(mst.edges(data=True))</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>111 / 116</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 8.3.5" data-theme="light"><div class="chrome"><div>应用动画 · 案例 8.3.5</div><div>112 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">案例 8.3.5</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_11_case_8_3_5_7a2a3c39.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_11_case_8_3_5_7a2a3c39.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>112 / 116</div></div></section>
+<section class="slide dark" data-screen-label="Case" data-source="8.3.6 智能农业监测系统" data-theme="dark"><div class="chrome"><div>案例 8.3.6</div><div>113 / 116</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">根树 · DFS / BFS</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">智能农业监测系统</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">把监测系统建模为根树：根为整个农场、子节点为区域、叶子为传感器。用 DFS 深入分析特定区域，用 BFS 快速获取所有区域状态概览。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>class TreeNode:
+    def __init__(self, name, data=None):
+        self.name, self.data = name, data
+        self.children = []
+    def add_child(self, c):
+        self.children.append(c)
+
+def dfs(node, depth=0):
+    print(" " * depth + f"{node.name}: {node.data}")
+    for c in node.children:
+        dfs(c, depth + 1)
+
+def bfs(root):
+    from collections import deque
+    queue = deque([(root, 0)])
+    while queue:
+        node, depth = queue.popleft()
+        print(" " * depth + f"{node.name}: {node.data}")
+        for c in node.children:
+            queue.append((c, depth + 1))</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>113 / 116</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 8.3.6" data-theme="dark"><div class="chrome"><div>应用动画 · 案例 8.3.6</div><div>114 / 116</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">案例 8.3.6</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch8/ch8_12_case_8_3_6_98bb4836.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch8/ch8_12_case_8_3_6_98bb4836.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>114 / 116</div></div></section>
+<section class="slide light" data-screen-label="Summary" data-source="8.3.7 小结 · 应用案例" data-theme="light"><div class="chrome"><div>8.3 小结</div><div>115 / 116</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">古镇修复用欧拉回路保证无重复地走遍每段城墙并回到起点</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">志愿配对与城市交通分别落地二部图匹配与平面图无交叉布线</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">文化遗产连接与航天通信用最小生成树以最小成本保证连通</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">智能农业用根树组织传感器层级，并用 DFS 与 BFS 处理数据</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>115 / 116</div></div></section>
+<section class="slide dark bare" data-screen-label="Closing" data-source="本章收束" data-theme="dark">
+<div class="slide-body" style="align-items:center;text-align:center">
+<div class="w-quote guest-mark">
+<div class="kicker anim-item" style="margin-bottom:clamp(1rem,2vh,1.6rem)">第 8 章 · 完</div>
+<h2 class="h1-zh anim-item" style="max-width:15em">四类特殊图与树，把图论从描述结构推进到求解现实问题</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin:clamp(1.6rem,3.5vh,2.6rem) auto 0;opacity:.62">本章 Python 程序源码与学习指南均提供二维码下载。从一笔画到最优编码，特殊图为复杂应用提供了可计算的理论方法与工具。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>116 / 116</div></div></section>
+</div>
+<div id="nav"></div>
+<script>
+(function(){
+  const deck=document.getElementById('deck');
+  const slides=Array.from(deck.querySelectorAll('.slide'));
+  const total=slides.length;let current=0;
+  const nav=document.getElementById('nav');
+  const DUR=560,OFF=64;
+  function renderNav(){
+    if(nav.children.length!==total){
+      nav.innerHTML='';
+      slides.forEach((s,i)=>{const d=document.createElement('button');
+        d.className='dot';d.onclick=()=>goTo(i);nav.appendChild(d);});
+    }
+    const t=slides[current].dataset.theme;
+    nav.style.background=t==='light'?'rgba(0,0,0,.12)':'rgba(255,255,255,.15)';
+    Array.from(nav.children).forEach((d,i)=>{
+      d.classList.toggle('active',i===current);
+      d.style.background=i===current
+        ?(t==='light'?'rgba(0,0,0,.7)':'rgba(255,255,255,.95)')
+        :(t==='light'?'rgba(0,0,0,.18)':'rgba(255,255,255,.3)');});
+    if(nav.scrollWidth>nav.clientWidth){
+      const d=nav.children[current];
+      if(d){try{nav.scrollTo({left:d.offsetLeft-nav.clientWidth/2,behavior:'smooth'});}catch(e){}}
+    }
+  }
+  function goTo(idx){
+    if(idx<0||idx>=total||idx===current)return;
+    const dir=idx>current?1:-1;
+    const prev=slides[current],next=slides[idx];
+    current=idx;
+    slides.forEach(s=>{if(s!==prev&&s!==next){s.classList.remove('active','leaving');s.style.transform='';if(s.__lt){clearTimeout(s.__lt);s.__lt=null;}}});
+    prev.classList.remove('active');
+    prev.classList.add('leaving');
+    prev.style.transform='translateX('+(-dir*OFF)+'px)';
+    if(prev.__lt)clearTimeout(prev.__lt);
+    prev.__lt=setTimeout(()=>{prev.classList.remove('leaving');prev.style.transform='';prev.__lt=null;},DUR);
+    if(next.__lt){clearTimeout(next.__lt);next.__lt=null;}
+    next.classList.remove('leaving');
+    next.style.transition='none';
+    next.style.transform='translateX('+(dir*OFF)+'px)';
+    void next.offsetWidth;
+    next.style.transition='';
+    next.classList.add('active');
+    next.style.transform='';
+    renderNav();save();
+  }
+  window.__deckGoTo=goTo;
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();goTo(current+1);}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goTo(current-1);}
+    if(e.key==='Home'){e.preventDefault();goTo(0);}
+    if(e.key==='End'){e.preventDefault();goTo(total-1);}});
+  let acc=0,lastNav=0,lastDir=0;
+  document.addEventListener('wheel',e=>{
+    const now=performance.now();
+    const d=e.deltaY;
+    if(now-lastNav<420){acc=0;return;}
+    const dir=d>0?1:-1;
+    if(dir!==lastDir){acc=0;lastDir=dir;}
+    acc+=d;
+    if(Math.abs(acc)>=60){acc=0;lastNav=now;goTo(current+dir);}
+  },{passive:true});
+  let tx=0,ty=0;
+  document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
+    if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy))return;
+    if(dx>0)goTo(current+1);else goTo(current-1);},{passive:true});
+  const KEY='discrete-ch08-progress';
+  function save(){try{localStorage.setItem(KEY,current);}catch(e){}}
+  function load(){try{const p=parseInt(localStorage.getItem(KEY),10);
+    if(!isNaN(p)&&p>=0&&p<total){current=p;}}catch(e){}}
+  load();
+  slides.forEach(s=>s.classList.remove('active','leaving'));
+  slides[current].classList.add('active');
+  renderNav();
+})();
+</script>
+<!--TB-ENHANCE-START-->
+<div id="tb-bar"></div>
+<div id="tb-toast"></div>
+<div id="tb-dock"></div>
+<script id="tb-enhance">
+(function(){
+  if(window.__tbInit) return; window.__tbInit=true;
+  var CH=8;
+  var FILES=["离散数学_第1章_计数和数论基础.html", "离散数学_第2章_集合及其运算.html", "离散数学_第3章_二元关系.html", "离散数学_第4章_特殊关系.html", "离散数学_第5章_命题逻辑.html", "离散数学_第6章_谓词逻辑.html", "离散数学_第7章_图论基础.html", "离散数学_第8章_特殊图.html", "离散数学_第9章_代数系统.html", "离散数学_第10章_群论基础.html", "离散数学_第11章_环域格和布尔代数.html"];
+  var ICON={
+    toc:'<svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>',
+    grid:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+    mark:'<svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>',
+    home:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/></svg>'
+  };
+  function pad(n){return (n<10?'0':'')+n;}
+  var deck=document.getElementById('deck'); if(!deck) return;
+  var slides=Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var total=slides.length;
+  function dots(){return document.querySelectorAll('#nav .dot');}
+  function curIdx(){for(var i=0;i<slides.length;i++){if(slides[i].classList.contains('active'))return i;}return 0;}
+  function jump(i){if(i<0||i>=total)return;if(window.__deckGoTo){window.__deckGoTo(i);}else{var d=dots();if(d[i])d[i].click();}closeAll();}
+
+  /* ---------- 持久化：已读 / 书签 ---------- */
+  var RKEY='discrete-ch'+pad(CH)+'-read', BKEY='discrete-ch'+pad(CH)+'-marks';
+  function loadSet(k){try{var v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+  function saveSet(k,o){try{localStorage.setItem(k,JSON.stringify(o));}catch(e){}}
+  var readSet=loadSet(RKEY), markSet=loadSet(BKEY);
+  function readCount(){var n=0;for(var k in readSet)if(readSet[k])n++;return n;}
+
+  /* ---------- 幻灯片元数据 ---------- */
+  var meta=slides.map(function(s,i){
+    var src=s.getAttribute('data-source')||'';
+    var lab=s.getAttribute('data-screen-label')||'';
+    var h=s.querySelector('.display-zh,.h1-zh,.h2-zh');
+    var title=src||(h?h.textContent.trim():'')||('第 '+(i+1)+' 页');
+    return {i:i,src:src,lab:lab,title:title};
+  });
+
+  /* ---------- 控制坞 ---------- */
+  var dock=document.getElementById('tb-dock');
+  function ctl(tip,icon,fn,id){var b=document.createElement('button');b.className='tb-ctl';b.setAttribute('data-tip',tip);b.innerHTML=icon;if(id)b.id=id;b.onclick=function(e){e.stopPropagation();fn();};dock.appendChild(b);return b;}
+  ctl('目录  (M)',ICON.toc,toggleTOC);
+  ctl('总览  (G)',ICON.grid,toggleGrid);
+  ctl('搜索  (/)',ICON.search,openSearch);
+  var bmBtn=ctl('收藏本页  (B)',ICON.mark,toggleMark);
+  ctl('字号  (T)','Aa',cycleFont);
+  ctl('帮助  (?)','?',toggleHelp);
+  ctl('返回书目',ICON.home,function(){parent.location.href='index.html';});
+
+  /* ---------- 浮层骨架 ---------- */
+  function overlay(id,inner){var o=document.createElement('div');o.id=id;o.className='tb-overlay';o.innerHTML=inner;document.body.appendChild(o);o.addEventListener('click',function(e){if(e.target===o)closeAll();});o.addEventListener('wheel',function(e){e.stopPropagation();},{passive:true});return o;}
+  var tocEl=overlay('tb-toc','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">目录 <small id="tb-toc-pct"></small></div><button class="tb-close" data-close>&times;</button></div><div class="tb-pbody" id="tb-toc-body"></div></div>');
+  var gridEl=overlay('tb-grid','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">幻灯片总览 <small id="tb-grid-pct"></small></div><button class="tb-close" data-close>&times;</button></div><div class="tb-pbody"><div class="tb-gwrap" id="tb-grid-body"></div></div></div>');
+  var searchEl=overlay('tb-search','<div class="tb-panel"><div class="tb-phead"><input class="tb-sinput" id="tb-sin" placeholder="搜索本章内容…" autocomplete="off"><button class="tb-close" data-close>&times;</button></div><div class="tb-sres" id="tb-sres"></div></div>');
+  var helpEl=overlay('tb-help','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">使用说明</div><button class="tb-close" data-close>&times;</button></div><div class="tb-help-body" id="tb-help-body"></div></div>');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-close]'),function(b){b.onclick=closeAll;});
+
+  /* ---------- 目录构建 ---------- */
+  (function buildTOC(){
+    var body=document.getElementById('tb-toc-body');
+    var html='', grpTitle='本章导览', opened=false;
+    function grp(t){return '<div class="tb-grp">'+esc(t)+'</div>';}
+    html+=grp('本章导览');
+    meta.forEach(function(m){
+      if(m.lab==='Section'){html+=grp(m.src||'章节');}
+      html+='<div class="tb-item" data-j="'+m.i+'"><span class="tb-idx">'+pad(m.i+1)+'</span><span class="tb-rdot"></span><span class="tb-it-txt">'+esc(m.title)+'</span><span class="tb-star">&#9733;</span></div>';
+    });
+    body.innerHTML=html;
+    body.addEventListener('click',function(e){var it=e.target.closest('.tb-item');if(it)jump(+it.getAttribute('data-j'));});
+  })();
+
+  /* ---------- 总览构建 ---------- */
+  (function buildGrid(){
+    var w=document.getElementById('tb-grid-body'),html='';
+    meta.forEach(function(m){
+      html+='<div class="tb-card" data-j="'+m.i+'"><span class="tb-crd"></span><span class="tb-cnum">'+pad(m.i+1)+' / '+total+'</span>'+(m.lab?'<span class="tb-clab">'+esc(m.lab)+'</span>':'')+'<span class="tb-ctxt">'+esc(m.title)+'</span></div>';
+    });
+    w.innerHTML=html;
+    w.addEventListener('click',function(e){var c=e.target.closest('.tb-card');if(c)jump(+c.getAttribute('data-j'));});
+  })();
+
+  /* ---------- 帮助构建 ---------- */
+  (function buildHelp(){
+    var rows=[['下一页','→ / ↓ / 空格'],['上一页','← / ↑'],['目录','M'],['总览','G'],['搜索','/ 或 Ctrl/⌘ K'],['收藏本页','B'],['字号','T'],['专注模式','F'],['复制代码','悬停代码块点「复制」'],['本章首/末页','Home / End'],['关闭浮层','Esc']];
+    var h='';rows.forEach(function(r){h+='<div class="tb-krow"><span>'+r[0]+'</span><span class="tb-keys"><span class="tb-key">'+r[1]+'</span></span></div>';});
+    var prev=CH>1?FILES[CH-2]:null, next=CH<FILES.length?FILES[CH]:null;
+    h+='<div class="tb-help-foot">';
+    h+='<a class="tb-fbtn"'+(prev?' href="'+encodeURI(prev)+'"':' disabled')+'>&larr; 上一章</a>';
+    h+='<a class="tb-fbtn" href="index.html">全书目录</a>';
+    h+='<a class="tb-fbtn"'+(next?' href="'+encodeURI(next)+'"':' disabled')+'>下一章 &rarr;</a>';
+    h+='</div>';
+    document.getElementById('tb-help-body').innerHTML=h;
+  })();
+
+  /* ---------- 搜索 ---------- */
+  var sin=document.getElementById('tb-sin'), sres=document.getElementById('tb-sres'), stext=[];
+  function slideText(i){if(stext[i]==null){stext[i]=(slides[i].textContent||'').replace(/\s+/g,' ').trim();}return stext[i];}
+  function doSearch(){
+    var q=sin.value.trim();
+    if(!q){sres.innerHTML='<div class="tb-snone">输入关键词以检索本章全部 '+total+' 页内容。</div>';return;}
+    var ql=q.toLowerCase(),out='',n=0;
+    for(var i=0;i<total;i++){
+      var t=slideText(i),tl=t.toLowerCase(),p=tl.indexOf(ql);
+      if(p<0)continue;n++;
+      var s=Math.max(0,p-26);
+      var pre=t.slice(s,p), hit=t.slice(p,p+q.length), post=t.slice(p+q.length,p+q.length+60);
+      var snip=(s>0?'…':'')+esc(pre)+'<mark>'+esc(hit)+'</mark>'+esc(post)+'…';
+      out+='<div class="tb-sr" data-j="'+i+'"><div class="tb-sr-t"><span class="tb-idx">'+pad(i+1)+'</span>'+esc(meta[i].title)+'</div><div class="tb-sr-s">'+snip+'</div></div>';
+      if(n>=60)break;
+    }
+    sres.innerHTML=out||'<div class="tb-snone">未找到「'+esc(q)+'」。</div>';
+  }
+  sin.addEventListener('input',doSearch);
+  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
+  sres.addEventListener('click',function(e){var r=e.target.closest('.tb-sr');if(r)jump(+r.getAttribute('data-j'));});
+
+  /* ---------- 习题自测：隐藏答案 ---------- */
+  (function exercises(){
+    slides.forEach(function(s){
+      var lab=(s.getAttribute('data-screen-label')||'').toLowerCase();
+      var src=s.getAttribute('data-source')||'';
+      if(lab.indexOf('exercise')<0 && src.indexOf('习题')<0) return;
+      var lis=s.querySelectorAll('ol.biglist li, ol.steps li, .biglist li');
+      Array.prototype.forEach.call(lis,function(li){
+        if(li.getAttribute('data-tb-ex'))return;
+        var html=li.innerHTML,mathKeep=[];
+        html=html.replace(/<span[^>]*math-inline-source[^>]*>[\s\S]*?<\/span>/g,function(m){
+          var token='@@TBMATH'+mathKeep.length+'@@'; mathKeep.push(m); return token;
+        });
+        if(/[（(]/.test(html)){
+          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner){
+            return '<span class="tb-ans" title="点击查看答案">（<span class="tb-ans-x">'+inner+'</span>）</span>';
+          });
+          html=html.replace(/@@TBMATH(\d+)@@/g,function(m,i){return mathKeep[+i];});
+          li.innerHTML=html; li.setAttribute('data-tb-ex','1');
+        }
+      });
+    });
+    document.addEventListener('click',function(e){
+      var a=e.target.closest?e.target.closest('.tb-ans'):null;
+      if(a){a.classList.toggle('tb-revealed');e.stopPropagation();}
+    });
+  })();
+
+  /* ---------- 代码一键复制 ---------- */
+  (function copyButtons(){
+    var COPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);return true;}catch(e){return false;}}
+    Array.prototype.forEach.call(document.querySelectorAll('pre.code'),function(pre){
+      if(pre.__tbCopy)return; pre.__tbCopy=1;
+      var wrap=document.createElement('div'); wrap.className='tb-codewrap';
+      pre.parentNode.insertBefore(wrap,pre); wrap.appendChild(pre);
+      var btn=document.createElement('button'); btn.className='tb-copy'; btn.type='button';
+      btn.setAttribute('aria-label','复制代码'); btn.innerHTML=COPY+'<span>复制</span>';
+      var label=btn.querySelector('span');
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        var code=pre.querySelector('code'); var text=(code?code.innerText:pre.innerText).replace(/\u00a0/g,' ');
+        function done(){btn.classList.add('tb-copied');label.textContent='已复制';toast('代码已复制到剪贴板');clearTimeout(btn.__t);btn.__t=setTimeout(function(){btn.classList.remove('tb-copied');label.textContent='复制';},1600);}
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallbackCopy(text);done();});}
+        else{fallbackCopy(text);done();}
+      });
+      wrap.appendChild(btn);
+    });
+  })();
+
+  /* ---------- 字号 ---------- */
+  var fonts=['100%','112%','124%','90%'],fi=0;
+  try{var fs=+localStorage.getItem('tb-font');if(fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
+  function applyFont(){document.documentElement.style.fontSize=fonts[fi];}
+  function cycleFont(){fi=(fi+1)%fonts.length;applyFont();try{localStorage.setItem('tb-font',fi);}catch(e){}toast('字号：<b>'+fonts[fi]+'</b>');}
+
+  /* ---------- 专注模式 ---------- */
+  function toggleFocus(){document.body.classList.toggle('tb-focus');toast(document.body.classList.contains('tb-focus')?'已进入<b>专注模式</b>（按 F 退出）':'已退出专注模式');}
+
+  /* ---------- 浮层开关 ---------- */
+  function anyOpen(){return document.querySelector('.tb-overlay.tb-show');}
+  function closeAll(){Array.prototype.forEach.call(document.querySelectorAll('.tb-overlay.tb-show'),function(o){o.classList.remove('tb-show');});}
+  function toggleO(el,after){var was=el.classList.contains('tb-show');closeAll();if(!was){el.classList.add('tb-show');if(after)after();}}
+  function toggleTOC(){toggleO(tocEl,function(){updateTOCcur(curIdx());var cur=tocEl.querySelector('.tb-cur');if(cur)cur.scrollIntoView({block:'center'});});}
+  function toggleGrid(){toggleO(gridEl,function(){updateGridCur(curIdx());});}
+  function openSearch(){toggleO(searchEl,function(){doSearch();setTimeout(function(){sin.focus();sin.select();},60);});}
+  function toggleHelp(){toggleO(helpEl);}
+
+  /* ---------- 书签 ---------- */
+  function toggleMark(){var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
+  function updateMarkUI(i){bmBtn.classList.toggle('tb-on',!!markSet[i]);var it=tocEl.querySelector('.tb-item[data-j="'+i+'"]');if(it)it.classList.toggle('tb-mark',!!markSet[i]);}
+
+  /* ---------- 状态同步 ---------- */
+  function updateTOCcur(i){
+    Array.prototype.forEach.call(tocEl.querySelectorAll('.tb-item'),function(it){
+      var j=+it.getAttribute('data-j');
+      it.classList.toggle('tb-cur',j===i);
+      it.classList.toggle('tb-isread',!!readSet[j]);
+      it.classList.toggle('tb-mark',!!markSet[j]);
+    });
+    var pct=Math.round(readCount()/total*100);
+    var el=document.getElementById('tb-toc-pct');if(el)el.textContent='已读 '+pct+'%';
+  }
+  function updateGridCur(i){
+    Array.prototype.forEach.call(gridEl.querySelectorAll('.tb-card'),function(c){
+      var j=+c.getAttribute('data-j');
+      c.classList.toggle('tb-cur',j===i);
+      c.classList.toggle('tb-isread',!!readSet[j]);
+    });
+    var pct=Math.round(readCount()/total*100);
+    var el=document.getElementById('tb-grid-pct');if(el)el.textContent='已读 '+readCount()+' / '+total+'（'+pct+'%）';
+  }
+  function updateBar(i){var b=document.getElementById('tb-bar');if(b)b.style.width=((i+1)/total*100)+'%';}
+  function updateTheme(i){document.body.setAttribute('data-tb-theme',slides[i].getAttribute('data-theme')||'dark');}
+
+  var raf=null;
+  function onChange(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;
+    var i=curIdx();
+    if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}
+    updateBar(i);updateTheme(i);updateMarkUI(i);
+    if(tocEl.classList.contains('tb-show'))updateTOCcur(i);
+    if(gridEl.classList.contains('tb-show'))updateGridCur(i);
+    var s=slides[i];
+    if(!s.__tbHinted && s.querySelector('.tb-ans')){s.__tbHinted=1;toast('本页为<b>习题</b>：答案已隐藏，点击模糊处逐题查看');}
+  });}
+  new MutationObserver(onChange).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});
+
+  /* ---------- 提示气泡 ---------- */
+  var toastT=null;
+  function toast(html){var t=document.getElementById('tb-toast');t.innerHTML=html;t.classList.add('tb-show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('tb-show');},2600);}
+
+  /* ---------- 键盘（捕获阶段，先于原导航） ---------- */
+  document.addEventListener('keydown',function(e){
+    if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){if(!searchEl.classList.contains('tb-show'))openSearch();e.preventDefault();e.stopPropagation();return;}
+    if(anyOpen()){
+      if(e.key==='Escape'){closeAll();e.stopPropagation();e.preventDefault();return;}
+      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].indexOf(e.key)>-1){e.stopPropagation();}
+      return;
+    }
+    var tn=(e.target.tagName||'');
+    if(tn==='INPUT'||tn==='TEXTAREA')return;
+    var k=e.key;
+    if(k==='m'||k==='M'){toggleTOC();e.stopPropagation();}
+    else if(k==='g'||k==='G'){toggleGrid();e.stopPropagation();}
+    else if(k==='/'){openSearch();e.preventDefault();e.stopPropagation();}
+    else if(k==='?'){toggleHelp();e.stopPropagation();}
+    else if(k==='b'||k==='B'){toggleMark();e.stopPropagation();}
+    else if(k==='t'||k==='T'){cycleFont();e.stopPropagation();}
+    else if(k==='f'||k==='F'){toggleFocus();e.stopPropagation();}
+  },true);
+
+  /* ---------- 初始化 ---------- */
+  var i0=curIdx();updateBar(i0);updateTheme(i0);updateMarkUI(i0);if(!readSet[i0]){readSet[i0]=1;saveSet(RKEY,readSet);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  try{if(!localStorage.getItem('tb-hint-seen')){localStorage.setItem('tb-hint-seen','1');setTimeout(function(){toast('数字教材模式已启用 · <b>M</b> 目录 · <b>G</b> 总览 · <b>/</b> 搜索 · <b>?</b> 帮助');},900);}}catch(e){}
+})();
+</script>
+<!--TB-ENHANCE-END-->
+
+
+
+
+<script>
+(function(){
+  if(window.__appVideoRuntimeV3) return; window.__appVideoRuntimeV3=true;
+
+  function absUrl(rel){
+    try{ return new URL(rel, document.baseURI || location.href).href; }
+    catch(e){ return rel; }
+  }
+
+  function fixVideo(v){
+    var rel=v.getAttribute('data-app-video') || v.getAttribute('src');
+    if(!rel) return;
+    // strip query noise
+    var abs=absUrl(rel);
+    var cur=v.currentSrc || v.getAttribute('src') || '';
+    if(cur!==abs){
+      v.setAttribute('src', abs);
+      try{ v.load(); }catch(e){}
+    }
+    // ensure visible box
+    v.setAttribute('playsinline','');
+    v.setAttribute('controls','');
+    v.setAttribute('preload','auto');
+  }
+
+  function fixAll(){
+    document.querySelectorAll('video[data-app-video], .app-video-stage video').forEach(fixVideo);
+  }
+
+  function pauseOthers(except){
+    document.querySelectorAll('video').forEach(function(v){
+      if(except && v===except) return;
+      try{ v.pause(); }catch(e){}
+    });
+  }
+
+  // When a slide becomes active, reload its videos (metadata may not load while hidden)
+  function watchSlides(){
+    var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    if(!slides.length) return;
+    var obs=new MutationObserver(function(){
+      slides.forEach(function(s){
+        var active=s.classList.contains('active')||s.classList.contains('visible');
+        s.querySelectorAll('video').forEach(function(v){
+          if(active){
+            fixVideo(v);
+          }else{
+            try{ v.pause(); }catch(e){}
+          }
+        });
+      });
+    });
+    slides.forEach(function(s){ obs.observe(s,{attributes:true,attributeFilter:['class']}); });
+  }
+
+  document.addEventListener('play', function(e){
+    if(e.target && e.target.tagName==='VIDEO') pauseOthers(e.target);
+  }, true);
+
+  document.addEventListener('error', function(e){
+    if(e.target && e.target.tagName==='VIDEO'){
+      console.warn('video error', e.target.getAttribute('src'), e.target.error);
+      // one retry with cache buster
+      var v=e.target;
+      var rel=v.getAttribute('data-app-video');
+      if(rel && !v.__retried){
+        v.__retried=true;
+        v.src=absUrl(rel)+(absUrl(rel).indexOf('?')>-1?'&':'?')+'t='+Date.now();
+        try{ v.load(); }catch(err){}
+      }
+    }
+  }, true);
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', function(){ fixAll(); watchSlides(); });
+  }else{
+    fixAll(); watchSlides();
+  }
+  setTimeout(fixAll, 300);
+  setTimeout(fixAll, 1200);
+})();
+</script>
+
+</body>
+</html>

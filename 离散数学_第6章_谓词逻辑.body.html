@@ -1,0 +1,1406 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<base target="_top"/>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300..600&amp;family=DM+Mono:wght@400..500&amp;family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet"/>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
+<title>离散数学 第6章 · 谓词逻辑</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700;900&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
+<style>
+:root{
+  --ink:#17231c; --ink-rgb:23,35,28;
+  --paper:#f3f6f1; --paper-rgb:243,246,241;
+  --accent:#2f6e4e; --accent-rgb:47,110,78;
+  --muted:#5f6b62;
+  --serif-zh:"Noto Serif SC","Source Serif 4",serif;
+  --sans-zh:"Noto Sans SC","PingFang SC","Microsoft YaHei",sans-serif;
+  --mono:"IBM Plex Mono",monospace;
+  --w-quote:min(100%,48rem); --w-statement:min(100%,58rem);
+  --w-note:min(100%,66rem); --w-default:min(100%,80rem); --w-wide:min(100%,94rem);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{width:100%;height:100%;overflow:hidden;background:var(--ink);color:var(--paper);font-family:var(--sans-zh);-webkit-font-smoothing:antialiased;text-wrap:pretty}
+h1,h2,h3,p,li{text-wrap:pretty}
+#deck{position:fixed;inset:0;width:100vw;height:100vh;z-index:10}
+.slide{position:absolute;inset:0;width:100vw;height:100vh;padding:clamp(2rem,4.5vw,5rem) clamp(2rem,6vw,6.5rem) clamp(1.4rem,3vw,2.6rem);display:flex;flex-direction:column;overflow:hidden;visibility:hidden;opacity:0;pointer-events:none;z-index:1;transition:opacity .56s cubic-bezier(.22,1,.36,1),transform .56s cubic-bezier(.22,1,.36,1)}
+.slide.active{visibility:visible;opacity:1;pointer-events:auto;z-index:3}
+.slide.leaving{visibility:visible;opacity:0;pointer-events:none;z-index:2}
+@media (prefers-reduced-motion:reduce){.slide{transition-duration:.15s}}
+.slide.dark{background:var(--ink);color:var(--paper)}
+.slide.light{background:var(--paper);color:var(--ink)}
+.slide.bare .chrome{display:none}
+.slide.bare .foot{opacity:.32}
+.display-zh{font-family:var(--serif-zh);font-weight:900;font-size:clamp(3rem,6.5vw,6.4rem);line-height:1.1}
+.h1-zh{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.85rem,3.9vw,3.5rem);line-height:1.2}
+.h2-zh{font-family:var(--serif-zh);font-weight:600;font-size:clamp(1.5rem,2.7vw,2.4rem);line-height:1.3}
+.lead-zh{font-family:var(--serif-zh);font-weight:400;font-size:clamp(1.3rem,1.8vw,1.88rem);line-height:1.5}
+.body-zh{font-family:var(--sans-zh);font-weight:400;font-size:clamp(1.12rem,1.32vw,1.52rem);line-height:1.6}
+.kicker{font-family:var(--mono);font-size:clamp(.74rem,.86vw,1rem);text-transform:uppercase;letter-spacing:.14em;opacity:.55;margin-bottom:.6vh}
+.meta{font-family:var(--mono);font-size:clamp(.74rem,.82vw,.92rem);letter-spacing:.1em;opacity:.6}
+.slide-body{flex:1;min-height:0;display:flex;flex-direction:column;justify-content:center}
+.w-quote{width:var(--w-quote);margin:0 auto}
+.w-statement{width:var(--w-statement);margin:0 auto}
+.w-note{width:var(--w-note);margin:0 auto}
+.w-default{width:var(--w-default);margin:0 auto}
+.w-wide{width:var(--w-wide);margin:0 auto}
+.chrome{display:flex;justify-content:space-between;font-family:var(--mono);font-size:clamp(.74rem,.8vw,.9rem);letter-spacing:.1em;text-transform:uppercase;opacity:.45;margin-bottom:1.6vh}
+.foot{display:flex;justify-content:space-between;font-family:var(--mono);font-size:clamp(.72rem,.78vw,.88rem);letter-spacing:.1em;text-transform:uppercase;opacity:.4;margin-top:auto;padding-top:1.6vh}
+.grid-2-7-5{display:grid;grid-template-columns:7fr 5fr;gap:clamp(1.4rem,3.5vw,4rem);flex:1;min-height:0}
+.vis-center{display:flex;justify-content:center;align-items:center}
+.vis-left{display:flex;justify-content:flex-start}
+.formula{font-family:var(--serif-zh);font-size:clamp(1.32rem,2.1vw,2rem);line-height:1.5;color:var(--accent);text-align:center;letter-spacing:.01em}
+.formula-sm{font-size:clamp(1.12rem,1.75vw,1.6rem)}
+sup{font-size:.66em;vertical-align:super;line-height:0}
+sub{font-size:.66em;vertical-align:sub;line-height:0}
+.ttable{border-collapse:separate;border-spacing:0;font-family:var(--mono);font-size:clamp(.92rem,1.15vw,1.4rem);margin:0 auto}
+.ttable th{font-family:var(--mono);padding:.5em .95em;color:var(--accent);border-bottom:2px solid rgba(var(--accent-rgb),.35);font-weight:600;text-align:center}
+.ttable td{padding:.42em .95em;text-align:center}
+.ttable .vT{color:var(--accent);font-weight:700}
+.ttable .vF{opacity:.38}
+.slide.light .ttable tbody tr:nth-child(even){background:rgba(var(--ink-rgb),.04)}
+.slide.dark .ttable tbody tr:nth-child(even){background:rgba(var(--paper-rgb),.06)}
+.proof{display:grid;grid-template-columns:auto 1fr auto;gap:clamp(.4rem,1vh,.7rem) clamp(1rem,2vw,2rem);font-family:var(--mono);font-size:clamp(.95rem,1.18vw,1.4rem);align-items:baseline}
+.proof .pn{color:var(--accent);font-weight:600}
+.proof .pf{text-align:left}
+.proof .pr{opacity:.55;font-size:.82em;white-space:nowrap}
+.laws-grid{display:grid;gap:clamp(.9rem,2vh,1.6rem) clamp(2rem,4vw,4rem)}
+.law-card{display:flex;flex-direction:column;gap:.4vh;border-left:3px solid rgba(var(--accent-rgb),.55);padding-left:clamp(.9rem,1.5vw,1.3rem)}
+.law-name{font-family:var(--mono);font-size:clamp(.76rem,.86vw,.98rem);letter-spacing:.05em;color:var(--accent)}
+.law-formula{font-family:var(--serif-zh);font-size:clamp(1.05rem,1.35vw,1.5rem);line-height:1.4}
+.example{border-left:3px solid var(--accent);padding-left:clamp(1rem,1.6vw,1.4rem)}
+.example .body-zh{opacity:.92}
+.code-pane{min-width:0}
+pre.code{font-family:var(--mono);background:rgba(var(--ink-rgb),.93);color:#e9f1ea;border-radius:8px;padding:clamp(1rem,1.8vw,1.6rem) clamp(1.1rem,2vw,1.7rem);overflow:auto;text-align:left;line-height:1.55;box-shadow:0 1.2rem 3rem rgba(0,0,0,.22);border:1px solid rgba(var(--paper-rgb),.08);max-height:80vh}
+.slide.dark pre.code{background:rgba(0,0,0,.3);border-color:rgba(var(--paper-rgb),.1)}
+pre.code code{white-space:pre;display:block}
+pre.code-normal{font-size:clamp(.92rem,1.05vw,1.28rem)}
+pre.code-small{font-size:clamp(.8rem,.9vw,1.06rem)}
+pre.code-tiny{font-size:clamp(.68rem,.78vw,.92rem);line-height:1.42}
+.listrow{display:grid;grid-template-columns:auto 1fr;gap:clamp(.9rem,1.6vw,1.4rem);align-items:start}
+.ldot{width:.6rem;height:.6rem;border-radius:50%;background:var(--accent);opacity:.7;margin-top:.85em}
+ol.biglist{list-style:none;counter-reset:bl;display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)}
+ol.biglist.twocol{display:grid;grid-template-columns:1fr 1fr;gap:clamp(.7rem,1.4vh,1.1rem) clamp(2rem,4vw,4rem)}
+ol.biglist li{counter-increment:bl;position:relative;padding-left:2.6em;font-family:var(--sans-zh);font-size:clamp(.98rem,1.18vw,1.38rem);line-height:1.5}
+ol.biglist li::before{content:counter(bl,decimal-leading-zero);position:absolute;left:0;top:0;font-family:var(--mono);font-size:.92em;color:var(--accent);opacity:.85}
+ol.steps{list-style:none;counter-reset:st;display:flex;flex-direction:column;gap:.7vh}
+ol.steps li{counter-increment:st;position:relative;padding-left:2.1em;font-family:var(--sans-zh);font-size:clamp(1rem,1.18vw,1.36rem);line-height:1.45}
+ol.steps li::before{content:counter(st);position:absolute;left:0;top:0;font-family:var(--mono);color:var(--accent);font-weight:600}
+.timeline-row{position:relative}
+.timeline-row::before{content:"";position:absolute;top:clamp(.8rem,1.5vh,1.3rem);left:5%;right:5%;height:1px;background:rgba(var(--ink-rgb),.12);z-index:0}
+.slide.dark .timeline-row::before{background:rgba(var(--paper-rgb),.14)}
+.timeline-node{position:relative;z-index:1}
+.timeline-node .meta{display:inline-block;padding-right:.6em}
+.slide.light .timeline-node .meta{background:var(--paper)}
+.slide.dark .timeline-node .meta{background:var(--ink)}
+.summary-num{font-family:var(--serif-zh);font-size:clamp(2.6rem,5.5vw,5rem);font-weight:600;color:var(--accent);opacity:.85;line-height:.95}
+.guest-mark{display:flex;flex-direction:column;align-items:center}
+.guest-mark::before{content:"";display:block;width:clamp(2.4rem,4em,4.8rem);height:1px;background:currentColor;opacity:.35;margin-bottom:clamp(1.4rem,3vh,2.4rem)}
+.table-wrap{width:var(--w-wide);margin:0 auto;display:flex;flex-direction:column;gap:clamp(1.4rem,3.5vh,2.6rem)}
+.data-table{width:100%;border-collapse:separate;border-spacing:0 clamp(.45rem,1vh,.8rem);font-family:var(--sans-zh);font-size:clamp(1rem,1.18vw,1.38rem);line-height:1.45}
+.data-table th,.data-table td{padding:clamp(.75rem,1.25vw,1.15rem) clamp(.9rem,1.5vw,1.4rem);text-align:left;vertical-align:middle}
+.data-table th{font-family:var(--mono);font-size:clamp(.74rem,.8vw,.92rem);letter-spacing:.1em;text-transform:uppercase;color:var(--accent);background:rgba(var(--accent-rgb),.1)}
+.data-table td{background:rgba(var(--ink-rgb),.05)}
+.slide.dark .data-table td{background:rgba(var(--paper-rgb),.08)}
+.data-table.keyed td:first-child{font-weight:600}
+.data-table tr>*:first-child{border-radius:6px 0 0 6px}
+.data-table tr>*:last-child{border-radius:0 6px 6px 0}
+#nav{position:fixed;left:50%;bottom:1.4vh;transform:translateX(-50%);z-index:30;display:flex;gap:4px;padding:6px 10px;border-radius:999px;background:rgba(0,0,0,.2);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);max-width:94vw;overflow-x:auto}
+#nav .dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.3);border:none;padding:0;cursor:pointer;transition:all .3s ease;flex:0 0 auto}
+#nav .dot.active{background:rgba(255,255,255,.95);width:15px;border-radius:999px}
+.anim-item{opacity:0;transform:translateY(16px);transition:opacity .5s ease,transform .5s ease}
+.slide.active .anim-item{opacity:1;transform:translateY(0)}
+.slide.active .anim-item:nth-child(1){transition-delay:.05s}
+.slide.active .anim-item:nth-child(2){transition-delay:.13s}
+.slide.active .anim-item:nth-child(3){transition-delay:.21s}
+.slide.active .anim-item:nth-child(4){transition-delay:.29s}
+.slide.active .anim-item:nth-child(5){transition-delay:.37s}
+.slide.active .anim-item:nth-child(n+6){transition-delay:.45s}
+</style>
+<style id="tb-style">
+/*TB-CSS-START*/
+/* ===== 离散数学数字教材 · 增强层 ===== */
+#tb-bar{position:fixed;top:0;left:0;height:3px;width:0;background:var(--accent);z-index:9100;transition:width .45s cubic-bezier(.16,1,.3,1);box-shadow:0 0 10px rgba(var(--accent-rgb),.7);pointer-events:none}
+#tb-dock{position:fixed;right:clamp(.6rem,1.2vw,1.25rem);top:50%;transform:translateY(-50%);z-index:9000;display:flex;flex-direction:column;gap:.5rem}
+.tb-ctl{position:relative;width:2.7rem;height:2.7rem;border-radius:50%;border:1px solid rgba(var(--accent-rgb),.28);cursor:pointer;display:flex;align-items:center;justify-content:center;background:rgba(var(--paper-rgb),.62);color:var(--accent);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);transition:transform .2s,background .2s,color .2s;padding:0;font-family:var(--serif-zh);font-weight:700;font-size:.95rem}
+body[data-tb-theme="dark"] .tb-ctl{background:rgba(var(--ink-rgb),.5);border-color:rgba(var(--paper-rgb),.2);color:#9db4e0}
+.tb-ctl:hover{transform:scale(1.1);background:var(--accent);color:#fff;border-color:transparent}
+.tb-ctl.tb-on{background:var(--accent);color:#fff;border-color:transparent}
+.tb-ctl svg{width:1.24rem;height:1.24rem;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+.tb-ctl[data-tip]::after{content:attr(data-tip);position:absolute;right:122%;top:50%;transform:translateY(-50%);white-space:nowrap;font-family:var(--mono);font-size:.7rem;padding:.34em .62em;border-radius:6px;background:rgba(15,20,30,.9);color:#fff;opacity:0;pointer-events:none;transition:opacity .2s;letter-spacing:.04em}
+.tb-ctl:hover::after{opacity:1}
+/* 浮层通用 */
+.tb-overlay{position:fixed;inset:0;z-index:9200;display:none;background:rgba(10,14,22,.5);backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px)}
+.tb-overlay.tb-show{display:block;animation:tbfade .22s ease}
+@keyframes tbfade{from{opacity:0}to{opacity:1}}
+.tb-panel{position:absolute;background:var(--paper);color:var(--ink);box-shadow:0 1.6rem 4.4rem rgba(0,0,0,.45);display:flex;flex-direction:column;font-family:var(--sans-zh)}
+.tb-phead{padding:clamp(1.2rem,3vh,1.9rem) clamp(1.3rem,3vw,2rem) .9rem;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid rgba(var(--ink-rgb),.1);gap:1rem}
+.tb-ptitle{font-family:var(--serif-zh);font-weight:700;font-size:clamp(1.15rem,2vw,1.5rem);display:flex;align-items:baseline;gap:.6rem}
+.tb-ptitle small{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;color:var(--accent);font-weight:400}
+.tb-pbody{flex:1;overflow-y:auto;padding:.5rem 0 2.4rem}
+.tb-close{background:none;border:none;cursor:pointer;color:var(--muted);font-size:1.5rem;line-height:1;padding:.1em .3em;border-radius:6px;transition:background .15s}
+.tb-close:hover{background:rgba(var(--ink-rgb),.08)}
+/* 目录 */
+#tb-toc .tb-panel{top:0;left:0;height:100%;width:min(93vw,31rem);animation:tbslideL .32s cubic-bezier(.16,1,.3,1)}
+@keyframes tbslideL{from{transform:translateX(-100%)}to{transform:translateX(0)}}
+.tb-grp{font-family:var(--mono);font-size:.72rem;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:1.15rem 1.6rem .35rem;font-weight:600}
+.tb-item{display:flex;gap:.7rem;align-items:center;padding:.5rem 1.6rem;cursor:pointer;font-size:.95rem;line-height:1.4;border-left:3px solid transparent;transition:background .15s}
+.tb-item:hover{background:rgba(var(--accent-rgb),.09)}
+.tb-item.tb-cur{border-left-color:var(--accent);background:rgba(var(--accent-rgb),.12);font-weight:600}
+.tb-idx{font-family:var(--mono);font-size:.74rem;color:var(--muted);min-width:2.3em;flex:0 0 auto}
+.tb-item .tb-rdot{width:.5rem;height:.5rem;border-radius:50%;background:rgba(var(--ink-rgb),.16);flex:0 0 auto}
+.tb-item.tb-isread .tb-rdot{background:var(--accent)}
+.tb-it-txt{flex:1;min-width:0}
+.tb-star{color:#e0a93a;flex:0 0 auto;opacity:0;font-size:.85rem}
+.tb-item.tb-mark .tb-star{opacity:1}
+/* 总览网格 */
+#tb-grid .tb-panel{inset:clamp(1rem,3vh,2.4rem);border-radius:14px}
+.tb-gwrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(13rem,1fr));gap:.9rem;padding:1.3rem clamp(1.2rem,2.5vw,2rem) 2rem}
+.tb-card{position:relative;border:1px solid rgba(var(--ink-rgb),.12);border-radius:10px;padding:.85rem .95rem;cursor:pointer;background:rgba(var(--ink-rgb),.03);transition:transform .18s,box-shadow .18s,border-color .18s;min-height:5.4rem;display:flex;flex-direction:column;gap:.35rem;overflow:hidden}
+.tb-card:hover{transform:translateY(-3px);box-shadow:0 .7rem 1.6rem rgba(0,0,0,.16);border-color:var(--accent)}
+.tb-card.tb-cur{border-color:var(--accent);box-shadow:0 0 0 2px rgba(var(--accent-rgb),.35)}
+.tb-card .tb-cnum{font-family:var(--mono);font-size:.7rem;color:var(--accent);letter-spacing:.06em}
+.tb-card .tb-clab{font-family:var(--mono);font-size:.6rem;text-transform:uppercase;letter-spacing:.1em;color:var(--muted);background:rgba(var(--accent-rgb),.1);padding:.1em .5em;border-radius:99px;align-self:flex-start}
+.tb-card .tb-ctxt{font-size:.9rem;line-height:1.35;font-weight:600;color:var(--ink)}
+.tb-card .tb-crd{position:absolute;top:.6rem;right:.7rem;width:.55rem;height:.55rem;border-radius:50%;background:rgba(var(--ink-rgb),.15)}
+.tb-card.tb-isread .tb-crd{background:var(--accent)}
+/* 搜索 */
+#tb-search .tb-panel{top:clamp(2.5rem,8vh,6rem);left:50%;transform:translateX(-50%);width:min(94vw,46rem);max-height:80vh;border-radius:14px}
+.tb-sinput{width:100%;border:none;outline:none;background:transparent;font-family:var(--serif-zh);font-size:clamp(1.1rem,2.4vw,1.6rem);color:var(--ink);padding:.2em 0}
+.tb-sinput::placeholder{color:var(--muted);opacity:.6}
+.tb-sres{flex:1;overflow-y:auto;padding:.4rem 0 1.4rem}
+.tb-sr{padding:.7rem 1.6rem;cursor:pointer;border-left:3px solid transparent;transition:background .15s}
+.tb-sr:hover{background:rgba(var(--accent-rgb),.09);border-left-color:var(--accent)}
+.tb-sr .tb-sr-t{font-weight:600;font-size:.95rem;display:flex;gap:.6rem;align-items:baseline}
+.tb-sr .tb-sr-t .tb-idx{min-width:auto}
+.tb-sr .tb-sr-s{font-size:.82rem;color:var(--muted);line-height:1.4;margin-top:.2rem}
+.tb-sr mark{background:rgba(var(--accent-rgb),.28);color:inherit;border-radius:3px;padding:0 .12em}
+.tb-snone{padding:1.4rem 1.6rem;color:var(--muted);font-size:.9rem}
+/* 帮助 */
+#tb-help .tb-panel{top:50%;left:50%;transform:translate(-50%,-50%);width:min(94vw,34rem);border-radius:14px}
+.tb-help-body{padding:1.2rem clamp(1.3rem,3vw,2rem) 1.8rem;display:flex;flex-direction:column;gap:.55rem}
+.tb-krow{display:flex;justify-content:space-between;align-items:center;gap:1rem;font-size:.92rem;padding:.3rem 0;border-bottom:1px dashed rgba(var(--ink-rgb),.1)}
+.tb-krow:last-child{border-bottom:none}
+.tb-keys{display:flex;gap:.35rem;flex:0 0 auto}
+.tb-key{font-family:var(--mono);font-size:.78rem;background:rgba(var(--ink-rgb),.08);border:1px solid rgba(var(--ink-rgb),.14);border-radius:5px;padding:.16em .5em;min-width:1.6em;text-align:center}
+.tb-help-foot{display:flex;gap:.7rem;flex-wrap:wrap;margin-top:1rem}
+.tb-fbtn{font-family:var(--sans-zh);font-size:.86rem;border:1px solid var(--accent);color:var(--accent);background:transparent;border-radius:8px;padding:.5em 1em;cursor:pointer;transition:all .18s;text-decoration:none;display:inline-flex;align-items:center;gap:.4em}
+.tb-fbtn:hover{background:var(--accent);color:#fff}
+.tb-fbtn[disabled]{opacity:.35;pointer-events:none}
+/* 习题自测：隐藏答案 */
+.tb-ans-x{filter:blur(5.5px);cursor:pointer;transition:filter .25s,background .25s;background:rgba(var(--accent-rgb),.14);border-radius:4px;padding:0 .22em;-webkit-user-select:none;user-select:none}
+.tb-ans.tb-revealed .tb-ans-x{filter:none;background:rgba(var(--accent-rgb),.16)}
+/* 提示气泡 */
+#tb-toast{position:fixed;left:50%;bottom:4.2vh;transform:translateX(-50%) translateY(1.4rem);z-index:9300;background:rgba(15,20,30,.92);color:#fff;font-family:var(--sans-zh);font-size:.86rem;line-height:1.5;padding:.7em 1.2em;border-radius:10px;box-shadow:0 .8rem 2rem rgba(0,0,0,.35);max-width:min(90vw,30rem);opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;text-align:center}
+#tb-toast.tb-show{opacity:1;transform:translateX(-50%) translateY(0)}
+#tb-toast b{color:#9db4e0}
+/* 专注模式 */
+body.tb-focus .chrome,body.tb-focus .foot{opacity:0 !important;transition:opacity .3s}
+body.tb-focus #nav{opacity:.25;transition:opacity .3s}
+body.tb-focus #nav:hover{opacity:1}
+@media print{#tb-dock,#tb-bar,.tb-overlay,#tb-toast,.tb-copy{display:none !important}}
+/* 代码一键复制 */
+.tb-codewrap{position:relative}
+.tb-copy{position:absolute;top:.55rem;right:.55rem;z-index:6;font-family:var(--mono);font-size:.72rem;letter-spacing:.04em;color:#d4ddee;background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.18);border-radius:7px;padding:.36em .7em;cursor:pointer;opacity:0;transition:opacity .2s,background .2s,color .2s,border-color .2s;backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);display:inline-flex;align-items:center;gap:.34em}
+.tb-codewrap:hover .tb-copy,.tb-copy:focus-visible{opacity:1}
+.tb-copy:hover{background:var(--accent);color:#fff;border-color:transparent}
+.tb-copy.tb-copied{background:#2f8a5c;color:#fff;border-color:transparent;opacity:1}
+.tb-copy svg{width:.86rem;height:.86rem;stroke:currentColor;fill:none;stroke-width:1.9;stroke-linecap:round;stroke-linejoin:round}
+@media (hover:none){.tb-copy{opacity:.5}}
+/* ===== 视觉增强：门面页纹理 + 大数光晕 ===== */
+.slide.bare.dark{position:absolute}
+.slide.bare.dark::before{
+  content:"";position:absolute;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(125% 85% at 50% -12%, rgba(var(--accent-rgb),.20), transparent 60%),
+    radial-gradient(85% 62% at 102% 112%, rgba(var(--accent-rgb),.12), transparent 55%),
+    repeating-linear-gradient(0deg, rgba(var(--paper-rgb),.030) 0 1px, transparent 1px 66px),
+    repeating-linear-gradient(90deg, rgba(var(--paper-rgb),.030) 0 1px, transparent 1px 66px);
+  -webkit-mask-image:radial-gradient(120% 100% at 50% 30%, #000 55%, transparent 100%);
+  mask-image:radial-gradient(120% 100% at 50% 30%, #000 55%, transparent 100%);
+}
+.slide.bare.dark > *{position:relative;z-index:1}
+.slide[data-screen-label="Section"] .w-statement > .kicker{position:relative}
+.slide[data-screen-label="Section"] .w-statement > .kicker::before{
+  content:"";position:absolute;left:-.85em;top:.05em;width:.26em;height:1.45em;border-radius:2px;
+  background:var(--accent);box-shadow:0 0 18px rgba(var(--accent-rgb),.7);
+}
+.stat-num{text-shadow:0 .02em .9em rgba(var(--accent-rgb),.38)}
+.slide.light .stat-num{text-shadow:0 .02em .7em rgba(var(--accent-rgb),.28)}
+.formula{padding:.1em 0}
+/* ===== 美学精修层 ===== */
+::selection{background:rgba(var(--accent-rgb),.26);color:inherit}
+.display-zh,.h1-zh,.h2-zh{letter-spacing:-.012em}
+.stat-num{letter-spacing:-.02em}
+.data-table tbody tr td{transition:background .18s ease}
+.data-table tbody tr:hover td{background:rgba(var(--accent-rgb),.15)}
+.slide.dark .data-table tbody tr:hover td{background:rgba(var(--accent-rgb),.24)}
+.example{transition:border-color .2s ease}
+.law-card{transition:transform .18s ease,box-shadow .18s ease,border-color .18s ease}
+.law-card:hover{transform:translateY(-3px);box-shadow:0 .6rem 1.5rem rgba(0,0,0,.16)}
+.tb-card:focus-visible,a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+pre.code{scrollbar-width:thin;scrollbar-color:rgba(var(--paper-rgb),.25) transparent}
+pre.code::-webkit-scrollbar{height:8px;width:8px}
+pre.code::-webkit-scrollbar-thumb{background:rgba(var(--paper-rgb),.22);border-radius:99px}
+pre.code::-webkit-scrollbar-track{background:transparent}
+/*TB-CSS-END*/
+</style>
+<style id="cartesian-override">
+
+/* ===========================================
+   CARTESIAN / 笛卡尔 · DISCRETE MATHEMATICS EDITION
+   Museum-catalog editorial system adapted from the official template.
+   =========================================== */
+:root {
+  --ink:#1A1A1A !important;
+  --ink-rgb:26,26,26 !important;
+  --paper:#EDE8E0 !important;
+  --paper-rgb:237,232,224 !important;
+  --accent:#8A8178 !important;
+  --accent-rgb:138,129,120 !important;
+  --accent-2:#5A5A5A !important;
+  --muted:#5A5A5A !important;
+  --stone:#E2DBD1 !important;
+  --line:#B8B0A4 !important;
+  --serif-zh:"Playfair Display","Noto Serif SC",serif !important;
+  --sans-zh:"Inter","Noto Serif SC",sans-serif !important;
+  --mono:"Inter","Noto Serif SC",sans-serif !important;
+}
+
+/* === STONE CANVAS === */
+html,body{background:var(--paper)!important;color:var(--ink)!important}
+.slide,.slide.dark,.slide.light{
+  background:var(--paper)!important;color:var(--ink)!important;isolation:isolate;
+  padding:72px 84px 60px!important;
+}
+.slide::before,.slide::after{content:"";position:absolute;pointer-events:none;border-radius:50%;z-index:0}
+.slide::before{width:640px;height:640px;right:24px;top:24px;transform:none;border:1px solid var(--line);opacity:.42}
+.slide::after{width:500px;height:500px;right:94px;top:94px;transform:none;border:1px dashed var(--line);opacity:.30}
+.slide:nth-child(even)::before{right:auto;left:24px;top:auto;bottom:24px;transform:none;width:640px;height:640px}
+.slide:nth-child(even)::after{right:auto;left:94px;top:auto;bottom:94px;transform:none;width:500px;height:500px}
+.slide>*{position:relative;z-index:2}
+
+/* === EDITORIAL TYPOGRAPHY === */
+.display-zh,.h1-zh,.h2-zh,.lead-zh,.summary-num,.stat-num,.sec-h,.ch-name,.htitle,
+.formula,.formula-sm{
+  font-family:"Playfair Display","Noto Serif SC",serif!important;
+  color:var(--ink)!important;font-weight:400!important;letter-spacing:0!important;
+}
+.display-zh,.h1-zh,.h2-zh{line-height:1.18!important}
+.body-zh,p,li,.tb-panel,.data-table,button,input{
+  font-family:"Inter","Noto Serif SC",sans-serif!important;color:var(--muted)!important;
+  line-height:1.72!important;
+}
+.kicker,.meta,.chrome,.foot,.ch-no,.ch-pages,.ch-prog-txt{
+  font-family:"Inter","Noto Serif SC",sans-serif!important;color:var(--accent)!important;
+  font-weight:500!important;letter-spacing:.08em!important;text-transform:none!important;
+}
+.chrome{opacity:.88!important;border:0!important;padding:0!important;margin-bottom:26px!important}
+.foot{opacity:.78!important;border:0!important;padding-top:12px!important;margin-top:auto!important}
+strong{color:var(--ink)!important;font-weight:600!important}
+
+/* === ONE-PIXEL STRUCTURAL LANGUAGE === */
+.example,.code-pane,.stat-card,.card,.panel,.callout,.note,.definition,.theorem{
+  background:rgba(255,255,255,.30)!important;border:1px solid var(--line)!important;
+  border-radius:0!important;box-shadow:none!important;
+}
+.example{border-left:1px solid var(--line)!important;padding:18px 22px!important}
+.ldot{width:10px!important;height:10px!important;border:1px solid var(--line)!important;border-radius:50%!important;background:transparent!important}
+pre.code,.slide.dark pre.code{
+  background:rgba(255,255,255,.30)!important;color:var(--ink)!important;
+  border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;
+}
+pre.code code{color:var(--ink)!important;font-family:"DM Mono",monospace!important}
+.data-table{border-collapse:collapse!important;border-spacing:0!important}
+.data-table th,.data-table td,.slide.dark .data-table td{
+  color:var(--muted)!important;background:transparent!important;
+  border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;
+}
+.data-table th{color:var(--ink)!important;font-family:"Playfair Display","Noto Serif SC",serif!important;font-weight:400!important;background:rgba(255,255,255,.24)!important}
+.timeline-row::before{height:1px!important;background:var(--line)!important}
+.slide.light .timeline-node .meta,.slide.dark .timeline-node .meta{background:var(--paper)!important}
+.summary-num,.stat-num{color:var(--accent)!important;font-weight:400!important}
+
+/* === COVER / SECTION GEOMETRY === */
+.slide.bare::before{width:820px;height:820px;right:40px;top:130px;left:auto;bottom:auto;transform:none;opacity:.55}
+.slide.bare::after{width:620px;height:620px;right:20px;top:230px;left:auto;bottom:auto;transform:none;opacity:.38}
+.slide.bare .slide-body::after{content:none!important}
+.slide.bare .w-statement{align-items:flex-start!important;margin-left:84px!important;margin-right:auto!important;text-align:left!important;max-width:1120px}
+
+/* === STUDY TOOLS AND NAVIGATION === */
+#nav{background:rgba(237,232,224,.95)!important;border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important;backdrop-filter:none!important}
+#nav .dot{width:8px!important;height:8px!important;background:var(--line)!important;border-radius:50%!important}
+#nav .dot.active{background:var(--ink)!important;transform:scale(1.3)}
+#tb-bar{background:var(--ink)!important;box-shadow:none!important}
+.tb-ctl,.tb-ctl.tb-on{
+  border:1px solid var(--line)!important;border-radius:0!important;background:var(--paper)!important;color:var(--accent)!important;box-shadow:none!important;backdrop-filter:none!important;
+}
+.tb-ctl:hover{background:var(--ink)!important;color:var(--paper)!important}
+.tb-panel{background:var(--paper)!important;color:var(--muted)!important;border:1px solid var(--line)!important;box-shadow:none!important;border-radius:0!important}
+.tb-overlay{background:rgba(26,26,26,.14)!important;backdrop-filter:none!important}
+.tb-phead,.tb-item,.tb-card,.tb-krow{border-color:var(--line)!important}
+.tb-item:hover,.tb-item.tb-cur,.tb-card:hover,.tb-card.tb-cur{background:rgba(255,255,255,.35)!important}
+.tb-copy,.tb-copy.tb-copied{border:1px solid var(--line)!important;border-radius:0!important;background:transparent!important;color:var(--ink)!important}
+#tb-toast{background:var(--ink)!important;color:var(--paper)!important;border:1px solid var(--line)!important;border-radius:0!important;box-shadow:none!important}
+#tb-toast b{color:var(--paper)!important}
+mark{background:var(--stone)!important;color:var(--ink)!important}
+
+/* === QUIET EDITORIAL MOTION === */
+.anim-item{transform:translateY(10px);transition:opacity .55s ease,transform .55s ease}
+@media (prefers-reduced-motion:reduce){.anim-item{transform:none!important}}
+
+</style>
+<style id="mathjax-review">
+
+/* === MATHJAX / NUMERIC TYPOGRAPHY REVIEW === */
+html,body{font-variant-numeric:lining-nums tabular-nums;font-kerning:normal}
+.formula,.formula-sm,.math-inline-source,sup,sub{
+  font-family:"MathJax_Newcm","Cambria Math","STIX Two Math","Noto Serif SC",serif;
+  font-synthesis:none;font-variant-numeric:lining-nums tabular-nums;
+}
+.formula,.formula-sm{min-width:0;max-width:100%;overflow:visible;line-height:1.25!important;letter-spacing:0!important}
+.formula mjx-container[display="true"],.formula-sm mjx-container[display="true"]{
+  margin:.12em 0!important;max-width:100%;overflow-x:auto;overflow-y:hidden;padding:.12em .16em;
+}
+.math-inline-source{white-space:nowrap;display:inline-block;max-width:100%;vertical-align:-.08em}
+.math-inline-source mjx-container{margin:0 .04em!important}
+mjx-container{color:inherit!important;outline-offset:3px}
+sup,sub{font-size:.7em;line-height:0;position:relative;vertical-align:baseline;font-feature-settings:"lnum" 1,"tnum" 1}
+sup{top:-.58em}sub{bottom:-.18em}
+.frac{white-space:nowrap}
+@media (prefers-reduced-motion:reduce){mjx-container{transition:none!important}}
+
+
+
+
+/* Dedicated full-page application video stage — forced 16:9, never collapse */
+.app-video-stage-page .slide-body{
+  display:flex!important;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:clamp(0.55rem,1.2vh,1.1rem);
+  padding:clamp(0.3rem,1vh,0.9rem) clamp(2vw,3.5vw,4.5vw);
+  box-sizing:border-box;
+  min-height:0;
+}
+.app-video-stage-page .app-video-kicker{
+  font:500 14px/1.2 "Inter","Noto Serif SC",sans-serif;
+  letter-spacing:.08em;
+  color:var(--accent);
+  opacity:.95;
+  flex:0 0 auto;
+}
+.app-video-stage-page .app-video-title{
+  margin:0;
+  text-align:center;
+  max-width:22em;
+  font-size:clamp(1.25rem,2.2vw,1.75rem);
+  line-height:1.35;
+  flex:0 0 auto;
+}
+.app-video-stage-page .app-video-stage{
+  width:min(92%, 1280px);
+  aspect-ratio:16 / 9;
+  max-height:min(62vh, 640px);
+  border-radius:16px;
+  overflow:hidden;
+  border:1px solid var(--line);
+  box-shadow:0 16px 40px rgba(0,0,0,.16);
+  background:#111;
+  position:relative;
+  flex:0 1 auto;
+}
+.slide.dark .app-video-stage-page .app-video-stage{
+  border-color:rgba(255,255,255,.14);
+  box-shadow:0 16px 40px rgba(0,0,0,.4);
+}
+.app-video-stage-page .app-video-stage video{
+  position:absolute;
+  inset:0;
+  display:block;
+  width:100%!important;
+  height:100%!important;
+  max-width:none!important;
+  max-height:none!important;
+  object-fit:contain;
+  background:#111;
+  border:0;
+  outline:none;
+}
+.app-video-stage-page .app-video-foot-hint{
+  margin:0;
+  font:400 13px/1.4 "Noto Serif SC",serif;
+  color:var(--ink);
+  opacity:.5;
+  text-align:center;
+  flex:0 0 auto;
+}
+.slide.dark .app-video-stage-page .app-video-foot-hint{
+  color:rgba(255,255,255,.55);
+}
+
+
+/* Keep legacy card styles harmless if residual */
+.app-video-card{display:flex;flex-direction:column;gap:.7rem;min-width:0;width:100%;max-width:100%}
+.app-video-label{font:500 14px/1.2 "Inter","Noto Serif SC",sans-serif;letter-spacing:.06em;color:var(--accent);opacity:.95}
+.app-video-card video{width:100%;max-height:min(52vh,560px);border-radius:14px;background:#1a1a1a;border:1px solid var(--line)}
+.app-video-hint{font:400 13px/1.4 "Noto Serif SC",serif;color:var(--ink);opacity:.55}
+.app-video-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:clamp(1.2rem,2.5vw,2.4rem);align-items:center;width:100%;height:100%;min-height:0}
+
+</style>
+<script id="mathjax-config">
+window.MathJax={
+  loader:{paths:{fonts:'assets/@mathjax'}},
+  tex:{
+    inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],
+    processEscapes:true,packages:{'[+]':['ams']}
+  },
+  output:{
+    displayOverflow:'linebreak',
+    linebreaks:{inline:true,width:'100%',lineleading:.18}
+  },
+  options:{enableMenu:true,enableExplorer:true},
+  startup:{
+    ready:function(){
+      MathJax.startup.defaultReady();
+      MathJax.startup.promise.then(function(){
+        document.documentElement.classList.add('mathjax-ready');
+      });
+    }
+  }
+};
+</script>
+<script defer="" src="assets/mathjax/tex-chtml.js"></script>
+</head>
+<body>
+<div id="deck">
+<section class="slide dark active bare" data-screen-label="Cover" data-source="第6章 标题页" data-theme="dark">
+<div class="slide-body" style="align-items:center">
+<div class="w-statement" style="display:flex;flex-direction:column;align-items:center;gap:clamp(1.4rem,3vh,2.4rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">离散数学 · 第 6 章</div>
+<h1 class="display-zh anim-item" style="max-width:10em">谓词逻辑</h1>
+<p class="lead-zh anim-item" style="max-width:26em;opacity:.62">从个体词、谓词与量词到谓词公式、前束范式与演算推证，谓词逻辑如何用 ∀ 和 ∃ 把命题逻辑扩展为可量化的一阶形式系统</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>1 / 63</div></div></section>
+<section class="slide light" data-screen-label="Map" data-source="本章思维导图" data-theme="light"><div class="chrome"><div>本章地图</div><div>2 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">Chapter Map</div><h2 class="h1-zh anim-item" style="max-width:18em">三条主线，从符号化走到一阶推理</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">6.1 自然语言的谓词符号化：个体词、谓词、量词 ∀ 与 ∃</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">6.2 谓词公式：公式与解释、辖域与约束变元、等价与蕴含、前束范式</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">6.3 谓词逻辑推理：US/ES/EG/UG 演算推证、可靠一致完备性；6.4 两个应用案例</p></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>2 / 63</div></div></section>
+<section class="slide dark" data-screen-label="History" data-source="章首 · 谓词逻辑发展史" data-theme="dark"><div class="chrome"><div>谓词逻辑发展史</div><div>3 / 63</div></div>
+<div class="slide-body">
+<div class="w-wide">
+<h2 class="h1-zh anim-item" style="text-align:center;max-width:17em;margin:0 auto clamp(2rem,5vh,3.6rem)">谓词逻辑：从概念文字到一阶逻辑</h2>
+<div class="timeline-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.9rem,2vw,2rem)">
+<div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">1879 年</div><p class="body-zh" style="margin-top:1.2vh">弗雷格在概念文字中区分一阶与高阶逻辑，引入量化，现代谓词逻辑诞生</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">20 世纪初</div><p class="body-zh" style="margin-top:1.2vh">罗素与怀特海在数学原理中进一步巩固发展这一体系</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">20 世纪</div><p class="body-zh" style="margin-top:1.2vh">扩展出逻辑程序设计、模型论与证明论等领域</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">相对命题逻辑</div><p class="body-zh" style="margin-top:1.2vh">增加量词所有与存在以及描述属性关系的谓词，表达更精确的逻辑</p></div>
+</div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>3 / 63</div></div></section>
+<section class="slide light" data-screen-label="Compare" data-source="章首 · 命题逻辑与谓词逻辑" data-theme="light"><div class="chrome"><div>命题逻辑 vs 谓词逻辑</div><div>4 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">为何需要谓词逻辑</div><h2 class="h1-zh anim-item" style="max-width:17em">命题逻辑无法刻画对象与属性</h2><p class="lead-zh anim-item" style="max-width:27em">命题逻辑把声明当作整体的真或假，如今天是星期一，表达能力有限。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">谓词逻辑也称一阶逻辑，通过引入量词与谓词，能构建如所有鸟都会飞这样涉及特定对象与属性的复杂声明。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>4 / 63</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="6.1 自然语言的谓词符号化" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">6.1</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">谓词符号化</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">个体词、谓词与量词，把自然语言中涉及对象与属性的陈述转换为一阶逻辑公式</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>5 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.1.1 至 6.1.3 · 个体词" data-theme="light"><div class="chrome"><div>6.1.1 个体词</div><div>6 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.1.1 至 6.1.3</div><h2 class="h1-zh anim-item" style="max-width:17em">个体常元、个体变元与个体域</h2><p class="lead-zh anim-item" style="max-width:27em">个体词引用世界中的具体对象。个体常元值不变，用 a, b, c 表示特定对象，如 a 代表王五；个体变元可变，用 x, y, z 表示。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">个体域是个体变元的取值范围；全总个体域是所讨论的所有个体的集合，个体域通常是它的子集。如讨论实数时全总个体域是所有实数，讨论某校学生时是该校全体学生。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>6 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.1.4 / 6.1.5 · 谓词" data-theme="light"><div class="chrome"><div>6.1.2 谓词</div><div>7 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.1.4 与 6.1.5</div><h2 class="h1-zh anim-item" style="max-width:17em">谓词描述对象的属性与关系</h2><p class="lead-zh anim-item" style="max-width:27em">谓词接受一个或多个参数并返回真值。设 <span aria-label="P(x₁,…,xₙ)" class="math-inline-source" data-tex="P(x_{1},\ldots ,x_{n})">\(P(x_{1},\ldots ,x_{n})\)</span> 是 <span aria-label="Dⁿ" class="math-inline-source" data-tex="D^{n}">\(D^{n}\)</span> 上值域为 {0,1} 的函数，则称 n 元谓词；<span aria-label="n=1" class="math-inline-source" data-tex="n=1">\(n=1\)</span> 时为一元谓词。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 6.1.1 与 6.1.2</div><p class="body-zh" style="margin-top:.8vh">例 6.1.1：是一个人 <span aria-label="P(x)" class="math-inline-source" data-tex="P(x)">\(P(x)\)</span> 是一元谓词；比……大 R(x,y) 是二元；给……送了…… S(x,y,z) 是三元。例 6.1.2：用 <span aria-label="C(ZW,LN)" class="math-inline-source" data-tex="C(ZW,LN)">\(C(ZW,LN)\)</span> 表示张伟和李娜共同参与项目。</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>7 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.1.6 至 6.1.8 · 量词" data-theme="light"><div class="chrome"><div>6.1.3 量词</div><div>8 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.1.6 至 6.1.8 · 全称与存在量词</div><h2 class="h1-zh anim-item" style="max-width:17em">全称量词 ∀ 与存在量词 ∃</h2><div aria-label="∀xP(x) = P(a₁)∧…∧P(aₙ)　　∃xP(x) = P(a₁)∨…∨P(aₙ)" class="formula anim-item mathjax-display-source" data-tex="\forall xP(x) = P(a_{1})\land \ldots \land P(a_{n}) \exists xP(x) = P(a_{1})\lor \ldots \lor P(a_{n})">\[\displaystyle \forall xP(x) = P(a_{1})\land \ldots \land P(a_{n}) \exists xP(x) = P(a_{1})\lor \ldots \lor P(a_{n})\]</div><p class="body-zh anim-item" style="max-width:29em;opacity:.7"><span aria-label="∀xP(x)" class="math-inline-source" data-tex="\forall xP(x)">\(\forall xP(x)\)</span> 为真当且仅当个体域中每个 x 都使 <span aria-label="P(x)" class="math-inline-source" data-tex="P(x)">\(P(x)\)</span> 真；<span aria-label="∃xP(x)" class="math-inline-source" data-tex="\exists xP(x)">\(\exists xP(x)\)</span> 为真当且仅当至少存在一个 x 使 <span aria-label="P(x)" class="math-inline-source" data-tex="P(x)">\(P(x)\)</span> 真。量词限定变量是对所有个体还是某些个体。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>8 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 6.1.3 / 6.1.4 · 符号化" data-theme="dark"><div class="chrome"><div>例 6.1.3 与 6.1.4</div><div>9 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">例 6.1.3 与 6.1.4 · 量词符号化</div><h2 class="h1-zh anim-item" style="max-width:17em">所有用蕴含，存在用合取</h2><p class="lead-zh anim-item" style="max-width:27em">所有学生都应努力学习：<span aria-label="∀x(S(x)→E(x))" class="math-inline-source" data-tex="\forall x(S(x)\to E(x))">\(\forall x(S(x)\to E(x))\)</span>。有些人对环保有贡献：<span aria-label="∃x(P(x)∧C(x))" class="math-inline-source" data-tex="\exists x(P(x)\land C(x))">\(\exists x(P(x)\land C(x))\)</span>。全称句常配 →，存在句常配 ∧。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">例 6.1.4：所有学生需参加体育或文化活动：<span aria-label="∀x(S(x)→(∃yT(x,y)∨∃zC(x,z)))" class="math-inline-source" data-tex="\forall x(S(x)\to (\exists yT(x,y)\lor \exists zC(x,z)))">\(\forall x(S(x)\to (\exists yT(x,y)\lor \exists zC(x,z)))\)</span>；课程对培养思维至关重要则应被所有学生选修：<span aria-label="∀x(C(x)∧I(x)→∀y(S(y)→T(y,x)))" class="math-inline-source" data-tex="\forall x(C(x)\land I(x)\to \forall y(S(y)\to T(y,x)))">\(\forall x(C(x)\land I(x)\to \forall y(S(y)\to T(y,x)))\)</span>。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>9 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 符号化" data-theme="dark"><div class="chrome"><div>应用示例 · 个体词谓词量词</div><div>10 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">符号化在计算机科学中的作用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">个体词表示数据记录、变量、实体，构建结构化知识表示与数据存储</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">谓词在逻辑编程中表示条件与规则，在硬件设计中表示电路逻辑行为</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">量词在程序验证中描述对所有输入或存在某输入成立的性质，在数据查询中表达约束</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>10 / 63</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 个体词谓词量词" data-theme="dark"><div class="chrome"><div>应用动画 · 个体词谓词量词</div><div>11 / 63</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">个体词谓词量词</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch6/ch6_01_app_cf1f35b2.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_01_app_cf1f35b2.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>11 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="6.1.4 小结" data-theme="dark"><div class="chrome"><div>6.1.4 小结</div><div>12 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">个体词是具体对象，分个体常元与个体变元，取值范围是个体域</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">谓词描述个体的属性或个体之间的关系，是构建复杂逻辑表达式的基础</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">量词分全称量词 ∀ 与存在量词 ∃，分别表达普遍性与存在性</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">通过个体词谓词量词的符号化，可把自然语言复杂陈述转为形式化逻辑公式</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 63</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="6.1 习题" data-theme="light"><div class="chrome"><div>6.1 习题</div><div>13 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 6.1</div><h2 class="h1-zh anim-item" style="max-width:18em">谓词符号化练习</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li>所有猫都喜欢鱼 的符号化（答案 B：<span aria-label="∀x(C(x)→LF(x))" class="math-inline-source" data-tex="\forall x(C(x)\to LF(x))">\(\forall x(C(x)\to LF(x))\)</span>）</li><li>有些学生喜欢每一本书（答案 B：<span aria-label="∃x∀y(S(x)∧L(x,y)∧B(y))" class="math-inline-source" data-tex="\exists x\forall y(S(x)\land L(x,y)\land B(y))">\(\exists x\forall y(S(x)\land L(x,y)\land B(y))\)</span>）</li><li>有些医生治疗所有病人（答案 A：<span aria-label="∃x∀y(D(x)∧P(y)→T(x,y))" class="math-inline-source" data-tex="\exists x\forall y(D(x)\land P(y)\to T(x,y))">\(\exists x\forall y(D(x)\land P(y)\to T(x,y))\)</span>）</li><li>每个学生至少选一门课且每门课至少一人选（答案 A）</li><li>比较全称量词与存在量词的不同并各举例符号化</li><li>谓词逻辑在数据库查询中的应用并举例</li><li>解释谓词逻辑在人工智能推理系统中的应用</li><li>解释 <span aria-label="∃x∀y(P(x)→Q(y))" class="math-inline-source" data-tex="\exists x\forall y(P(x)\to Q(y))">\(\exists x\forall y(P(x)\to Q(y))\)</span> 的含义并举例</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 63</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="6.1 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 6.1</div><div>14 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:18em">把谓词符号化推向更深的六个问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist anim-item"><li>理论：如何把个体词谓词量词准确符号化，在形式逻辑中如何应用</li><li>实践：机器翻译中如何用符号化提高翻译质量与准确性</li><li>工程：智能助手开发中如何用符号化实现更智能的用户交互</li><li>科研：如何把谓词符号化应用于认知科学语言学等跨学科研究</li><li>习题：习题 6 和 7 的求解过程</li><li>代码：如何用 Python 表示谓词逻辑符号化公式并分析</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 63</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="6.2 谓词公式" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">6.2</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">谓词公式</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">谓词公式与解释、辖域与约束变元、谓词公式之间的等价与蕴含，以及前束范式</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.2.1 · 谓词公式" data-theme="light"><div class="chrome"><div>6.2.1 谓词公式与解释</div><div>16 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.2.1 · 谓词公式</div><h2 class="h1-zh anim-item" style="max-width:17em">原子公式加递归规则</h2><p class="lead-zh anim-item" style="max-width:27em">若 P 是 n 元谓词、<span aria-label="t₁,…,tₙ" class="math-inline-source" data-tex="t_{1},\ldots ,t_{n}">\(t_{1},\ldots ,t_{n}\)</span> 是项（个体常量、变量或函数表达式），则 <span aria-label="P(t₁,…,tₙ)" class="math-inline-source" data-tex="P(t_{1},\ldots ,t_{n})">\(P(t_{1},\ldots ,t_{n})\)</span> 是原子公式。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">递归规则：原子公式是谓词公式；若 φ 是公式则 <span aria-label="¬φ" class="math-inline-source" data-tex="\neg φ">\(\neg φ\)</span> 是公式；<span aria-label="φ∧ψ" class="math-inline-source" data-tex="φ\land ψ">\(φ\land ψ\)</span>、<span aria-label="φ∨ψ" class="math-inline-source" data-tex="φ\lor ψ">\(φ\lor ψ\)</span>、<span aria-label="φ→ψ" class="math-inline-source" data-tex="φ\to ψ">\(φ\to ψ\)</span>、<span aria-label="φ↔ψ" class="math-inline-source" data-tex="φ\leftrightarrow ψ">\(φ\leftrightarrow ψ\)</span> 都是公式；若 φ 是公式且 x 是变量则 <span aria-label="∀x(φ)" class="math-inline-source" data-tex="\forall x(φ)">\(\forall x(φ)\)</span>、<span aria-label="∃x(φ)" class="math-inline-source" data-tex="\exists x(φ)">\(\exists x(φ)\)</span> 也是公式；有限次应用上述规则所得即谓词公式。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.2.2 · 辖域与约束变元" data-theme="light"><div class="chrome"><div>6.2.1 辖域与约束变元</div><div>17 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.2.2 · 辖域、约束与自由变元</div><h2 class="h1-zh anim-item" style="max-width:17em">量词的辖域决定约束的有效范围</h2><p class="lead-zh anim-item" style="max-width:27em"><span aria-label="∀xB(x)" class="math-inline-source" data-tex="\forall xB(x)">\(\forall xB(x)\)</span> 或 <span aria-label="∃xB(x)" class="math-inline-source" data-tex="\exists xB(x)">\(\exists xB(x)\)</span> 中 B(x) 是量词的辖域。辖域中的 x 是约束出现（约束变元），B 中其他变元的出现是自由出现（自由变元）。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 6.2.1 与 6.2.2</div><p class="body-zh" style="margin-top:.8vh">例 6.2.1：<span aria-label="∀x((S(x)∧M(x))→∃y(P(y)∧K(x,y)))" class="math-inline-source" data-tex="\forall x((S(x)\land M(x))\to \exists y(P(y)\land K(x,y)))">\(\forall x((S(x)\land M(x))\to \exists y(P(y)\land K(x,y)))\)</span> 中 <span aria-label="∀x" class="math-inline-source" data-tex="\forall x">\(\forall x\)</span> 辖域是整个蕴含式，<span aria-label="∃y" class="math-inline-source" data-tex="\exists y">\(\exists y\)</span> 辖域是 <span aria-label="P(y)∧K(x,y)" class="math-inline-source" data-tex="P(y)\land K(x,y)">\(P(y)\land K(x,y)\)</span>，x、y 都是约束变元。例 6.2.2：所有的猫都怕水 <span aria-label="∀x(C(x)→F(x))" class="math-inline-source" data-tex="\forall x(C(x)\to F(x))">\(\forall x(C(x)\to F(x))\)</span>（全称量词配蕴含，用合取会错误地断言"万物皆猫且怕水"）。</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 6.2.3 至 6.2.5 · 闭式与换名代入" data-theme="dark"><div class="chrome"><div>6.2.1 闭式、换名与代入</div><div>18 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.2.3 至 6.2.5</div><h2 class="h1-zh anim-item" style="max-width:17em">闭式、约束变元换名与自由变元代入</h2><p class="lead-zh anim-item" style="max-width:27em">无自由出现个体变元的公式称为闭式。例 6.2.3：<span aria-label="∀x(P(x)→Q(x))" class="math-inline-source" data-tex="\forall x(P(x)\to Q(x))">\(\forall x(P(x)\to Q(x))\)</span> 是闭式，<span aria-label="∀x(P(x)→Q(x,y))" class="math-inline-source" data-tex="\forall x(P(x)\to Q(x,y))">\(\forall x(P(x)\to Q(x,y))\)</span> 因 y 自由而不是闭式。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">约束变元换名：把约束变元改成辖域中未出现的新变元，如 <span aria-label="∀x∃y(S(x)→L(x,y))" class="math-inline-source" data-tex="\forall x\exists y(S(x)\to L(x,y))">\(\forall x\exists y(S(x)\to L(x,y))\)</span> 换为 <span aria-label="∀z∃w(S(z)→L(z,w))" class="math-inline-source" data-tex="\forall z\exists w(S(z)\to L(z,w))">\(\forall z\exists w(S(z)\to L(z,w))\)</span>。自由变元代入：把自由变元 x 替换为项 t，记 F[t/x]。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>18 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.2.6 · 解释" data-theme="light"><div class="chrome"><div>6.2.1 谓词公式的解释</div><div>19 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.2.6 · 解释的四要素</div><h2 class="h1-zh anim-item" style="max-width:17em">解释给公式赋予具体意义</h2><p class="lead-zh anim-item" style="max-width:27em">谓词公式的解释包括四要素：个体域 <span aria-label="D_I" class="math-inline-source" data-tex="D_{I}">\(D_{I}\)</span>（非空集合）、变元赋值（把变元映射到个体域元素）、函数解释、谓词解释。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">例 6.2.7、6.2.8：给同一公式 <span aria-label="∀x(C(x)→∃y(P(y)∧R(x,y)))" class="math-inline-source" data-tex="\forall x(C(x)\to \exists y(P(y)\land R(x,y)))">\(\forall x(C(x)\to \exists y(P(y)\land R(x,y)))\)</span> 可给出人、师生、城市市长等多种解释，得到不同的真值。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>19 / 63</div></div></section>
+<section class="slide light" data-screen-label="Example+Code" data-source="例 6.2.9 · 求公式真值" data-theme="light"><div class="chrome"><div>例 6.2.9</div><div>20 / 63</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 6.2.9 · 在解释 I 下求真值</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">解释 I 下三个公式的真值</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)"><span aria-label="D_I={3,6}" class="math-inline-source" data-tex="D_{I}=\{3,6\}">\(D_{I}=\{3,6\}\)</span>，<span aria-label="a=3" class="math-inline-source" data-tex="a=3">\(a=3\)</span>，<span aria-label="f(3)=6,f(6)=3" class="math-inline-source" data-tex="f(3)=6,f(6)=3">\(f(3)=6,f(6)=3\)</span>，<span aria-label="P(3)=0,P(6)=1" class="math-inline-source" data-tex="P(3)=0,P(6)=1">\(P(3)=0,P(6)=1\)</span>，Q 对任意 i,j 取 1，<span aria-label="R(3,3)=R(6,6)=1" class="math-inline-source" data-tex="R(3,3)=R(6,6)=1">\(R(3,3)=R(6,6)=1\)</span>。则 <span aria-label="∀x(P(x)∧Q(x,a))=0" class="math-inline-source" data-tex="\forall x(P(x)\land Q(x,a))=0">\(\forall x(P(x)\land Q(x,a))=0\)</span>；<span aria-label="∃x(P(f(x))∧Q(x,f(x)))=1" class="math-inline-source" data-tex="\exists x(P(f(x))\land Q(x,f(x)))=1">\(\exists x(P(f(x))\land Q(x,f(x)))=1\)</span>；<span aria-label="∀x∃yR(x,y)=1" class="math-inline-source" data-tex="\forall x\exists yR(x,y)=1">\(\forall x\exists yR(x,y)=1\)</span>。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>D = [3, 6]                          # 个体域 D_I
+a = 3                               # 特定元素
+def f(x): return 6 if x == 3 else 3 # f(3)=6, f(6)=3
+def P(x): return x == 6             # P(3)=0, P(6)=1
+def Q(x, y): return True            # Q(i,j)=1, 对所有 i,j∈D
+def R(x, y): return x == y          # R(3,3)=R(6,6)=1, 其余 0
+
+print(all(P(x) and Q(x, a) for x in D))            # ∀x(P(x)∧Q(x,a)) -&gt; False
+print(any(P(f(x)) and Q(x, f(x)) for x in D))      # ∃x(...) -&gt; True
+print(all(any(R(x, y) for y in D) for x in D))     # ∀x∃yR(x,y) -&gt; True</code></pre></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>20 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 6.2.7 · 公式类型" data-theme="dark"><div class="chrome"><div>6.2.1 公式类型</div><div>21 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.2.7 · 三种公式</div><h2 class="h1-zh anim-item" style="max-width:17em">逻辑有效式、矛盾式与可满足式</h2><p class="lead-zh anim-item" style="max-width:27em">在任何解释下都为真的公式是逻辑有效式（永真式）；都为假的是矛盾式（永假式）；至少有一个解释为真的是可满足式。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">例 6.2.10：<span aria-label="∀xP(x)→∃xP(x)" class="math-inline-source" data-tex="\forall xP(x)\to \exists xP(x)">\(\forall xP(x)\to \exists xP(x)\)</span> 是永真式；<span aria-label="∀x∃yP(x,y)→∃x∀yP(x,y)" class="math-inline-source" data-tex="\forall x\exists yP(x,y)\to \exists x\forall yP(x,y)">\(\forall x\exists yP(x,y)\to \exists x\forall yP(x,y)\)</span> 在 P 为 <span aria-label="x=y" class="math-inline-source" data-tex="x=y">\(x=y\)</span> 时后件假而前件真，是可满足式而非永真。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>21 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 谓词公式与解释" data-theme="dark"><div class="chrome"><div>应用示例 · 谓词公式与解释</div><div>22 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">谓词公式与解释的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">程序验证中用谓词公式描述不变量等总为真的程序属性</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">硬件设计验证中用永真式证明电路属性在所有情况下都为真</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">人工智能与知识表示中用可满足性检查知识库是否含矛盾</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>22 / 63</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 谓词公式与解释" data-theme="dark"><div class="chrome"><div>应用动画 · 谓词公式与解释</div><div>23 / 63</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">谓词公式与解释</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch6/ch6_02_app_547f76ef.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_02_app_547f76ef.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>23 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.2.8 / 定理 6.2.1 · 等价" data-theme="light"><div class="chrome"><div>6.2.2 谓词公式之间的关系</div><div>24 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.2.8 与 定理 6.2.1</div><h2 class="h1-zh anim-item" style="max-width:17em">谓词逻辑等价与命题等价式的推广</h2><p class="lead-zh anim-item" style="max-width:27em">若 <span aria-label="A↔B" class="math-inline-source" data-tex="A\leftrightarrow B">\(A\leftrightarrow B\)</span> 逻辑有效，则 A 与 B 是等价式，记 <span aria-label="A⇔B" class="math-inline-source" data-tex="A\Leftrightarrow B">\(A\Leftrightarrow B\)</span>。命题逻辑的基本等价式都可推广到谓词逻辑。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">如分配律 <span aria-label="∀x(P(x)∧(Q(x)∨R(x)))⇔∀x((P(x)∧Q(x))∨(P(x)∧R(x)))" class="math-inline-source" data-tex="\forall x(P(x)\land (Q(x)\lor R(x)))\Leftrightarrow \forall x((P(x)\land Q(x))\lor (P(x)\land R(x)))">\(\forall x(P(x)\land (Q(x)\lor R(x)))\Leftrightarrow \forall x((P(x)\land Q(x))\lor (P(x)\land R(x)))\)</span>（分配仅在同一量词辖域内进行，∀ 不能拆到 ∨ 两支上）；蕴含律与双重否定律也可推广。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 63</div></div></section>
+<section class="slide light" data-screen-label="Laws" data-source="定理 6.2.2 至 6.2.5 · 量词等值式" data-theme="light"><div class="chrome"><div>6.2.2 量词等值式</div><div>25 / 63</div></div>
+<div class="slide-body">
+<div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.3rem)">
+<h2 class="h1-zh anim-item" style="max-width:18em">量词否定、分配与交换</h2>
+<div class="laws-grid" style="grid-template-columns:repeat(2,1fr)"><div class="law-card anim-item"><div class="law-name">量词否定 (定理 6.2.2)</div><div class="law-formula"><span aria-label="¬∀xP(x) ⇔ ∃x¬P(x)" class="math-inline-source" data-tex="\neg \forall xP(x) \Leftrightarrow \exists x\neg P(x)">\(\neg \forall xP(x) \Leftrightarrow \exists x\neg P(x)\)</span></div></div><div class="law-card anim-item"><div class="law-name">量词否定 (定理 6.2.2)</div><div class="law-formula"><span aria-label="¬∃xP(x) ⇔ ∀x¬P(x)" class="math-inline-source" data-tex="\neg \exists xP(x) \Leftrightarrow \forall x\neg P(x)">\(\neg \exists xP(x) \Leftrightarrow \forall x\neg P(x)\)</span></div></div><div class="law-card anim-item"><div class="law-name">∀ 对 ∧ 分配 (定理 6.2.4)</div><div class="law-formula"><span aria-label="∀x(A(x)∧B(x)) ⇔ ∀xA(x)∧∀xB(x)" class="math-inline-source" data-tex="\forall x(A(x)\land B(x)) \Leftrightarrow \forall xA(x)\land \forall xB(x)">\(\forall x(A(x)\land B(x)) \Leftrightarrow \forall xA(x)\land \forall xB(x)\)</span></div></div><div class="law-card anim-item"><div class="law-name">∃ 对 ∨ 分配 (定理 6.2.4)</div><div class="law-formula"><span aria-label="∃x(A(x)∨B(x)) ⇔ ∃xA(x)∨∃xB(x)" class="math-inline-source" data-tex="\exists x(A(x)\lor B(x)) \Leftrightarrow \exists xA(x)\lor \exists xB(x)">\(\exists x(A(x)\lor B(x)) \Leftrightarrow \exists xA(x)\lor \exists xB(x)\)</span></div></div><div class="law-card anim-item"><div class="law-name">同类量词交换 (定理 6.2.5)</div><div class="law-formula"><span aria-label="∀x∀yA(x,y) ⇔ ∀y∀xA(x,y)" class="math-inline-source" data-tex="\forall x\forall yA(x,y) \Leftrightarrow \forall y\forall xA(x,y)">\(\forall x\forall yA(x,y) \Leftrightarrow \forall y\forall xA(x,y)\)</span></div></div><div class="law-card anim-item"><div class="law-name">同类量词交换 (定理 6.2.5)</div><div class="law-formula"><span aria-label="∃x∃yA(x,y) ⇔ ∃y∃xA(x,y)" class="math-inline-source" data-tex="\exists x\exists yA(x,y) \Leftrightarrow \exists y\exists xA(x,y)">\(\exists x\exists yA(x,y) \Leftrightarrow \exists y\exists xA(x,y)\)</span></div></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Laws" data-source="定理 6.2.3 · 辖域收缩与扩张" data-theme="dark"><div class="chrome"><div>6.2.2 辖域收缩与扩张</div><div>26 / 63</div></div>
+<div class="slide-body">
+<div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.3rem)">
+<h2 class="h1-zh anim-item" style="max-width:18em">辖域收缩与扩张等值式（B 不含 x 自由出现）</h2>
+<div class="laws-grid" style="grid-template-columns:repeat(2,1fr)"><div class="law-card anim-item"><div class="law-name">∀ 与 ∧</div><div class="law-formula"><span aria-label="∀x(A(x)∧B) ⇔ ∀xA(x)∧B" class="math-inline-source" data-tex="\forall x(A(x)\land B) \Leftrightarrow \forall xA(x)\land B">\(\forall x(A(x)\land B) \Leftrightarrow \forall xA(x)\land B\)</span></div></div><div class="law-card anim-item"><div class="law-name">∀ 与 ∨</div><div class="law-formula"><span aria-label="∀x(A(x)∨B) ⇔ ∀xA(x)∨B" class="math-inline-source" data-tex="\forall x(A(x)\lor B) \Leftrightarrow \forall xA(x)\lor B">\(\forall x(A(x)\lor B) \Leftrightarrow \forall xA(x)\lor B\)</span></div></div><div class="law-card anim-item"><div class="law-name">∃ 与 ∧</div><div class="law-formula"><span aria-label="∃x(A(x)∧B) ⇔ ∃xA(x)∧B" class="math-inline-source" data-tex="\exists x(A(x)\land B) \Leftrightarrow \exists xA(x)\land B">\(\exists x(A(x)\land B) \Leftrightarrow \exists xA(x)\land B\)</span></div></div><div class="law-card anim-item"><div class="law-name">∃ 与 ∨</div><div class="law-formula"><span aria-label="∃x(A(x)∨B) ⇔ ∃xA(x)∨B" class="math-inline-source" data-tex="\exists x(A(x)\lor B) \Leftrightarrow \exists xA(x)\lor B">\(\exists x(A(x)\lor B) \Leftrightarrow \exists xA(x)\lor B\)</span></div></div><div class="law-card anim-item"><div class="law-name">B 作前件</div><div class="law-formula"><span aria-label="∀x(B→A(x)) ⇔ B→∀xA(x)" class="math-inline-source" data-tex="\forall x(B\to A(x)) \Leftrightarrow B\to \forall xA(x)">\(\forall x(B\to A(x)) \Leftrightarrow B\to \forall xA(x)\)</span></div></div><div class="law-card anim-item"><div class="law-name">B 作前件</div><div class="law-formula"><span aria-label="∃x(B→A(x)) ⇔ B→∃xA(x)" class="math-inline-source" data-tex="\exists x(B\to A(x)) \Leftrightarrow B\to \exists xA(x)">\(\exists x(B\to A(x)) \Leftrightarrow B\to \exists xA(x)\)</span></div></div><div class="law-card anim-item"><div class="law-name">A 作前件 (∀↔∃)</div><div class="law-formula"><span aria-label="∀x(A(x)→B) ⇔ ∃xA(x)→B" class="math-inline-source" data-tex="\forall x(A(x)\to B) \Leftrightarrow \exists xA(x)\to B">\(\forall x(A(x)\to B) \Leftrightarrow \exists xA(x)\to B\)</span></div></div><div class="law-card anim-item"><div class="law-name">A 作前件 (∃↔∀)</div><div class="law-formula"><span aria-label="∃x(A(x)→B) ⇔ ∀xA(x)→B" class="math-inline-source" data-tex="\exists x(A(x)\to B) \Leftrightarrow \forall xA(x)\to B">\(\exists x(A(x)\to B) \Leftrightarrow \forall xA(x)\to B\)</span></div></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>26 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.2.9 / 例 6.2.12 至 6.2.14 · 蕴含" data-theme="light"><div class="chrome"><div>6.2.2 谓词逻辑蕴含</div><div>27 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.2.9 与 例 6.2.12 至 6.2.14</div><h2 class="h1-zh anim-item" style="max-width:17em">谓词逻辑的基本蕴含式</h2><p class="lead-zh anim-item" style="max-width:27em"><span aria-label="A⇒B" class="math-inline-source" data-tex="A\Rightarrow B">\(A\Rightarrow B\)</span> 当且仅当 <span aria-label="A→B" class="math-inline-source" data-tex="A\to B">\(A\to B\)</span> 逻辑有效。单变元蕴含式如 <span aria-label="∀xA(x)∨∀xB(x) ⇒ ∀x(A(x)∨B(x))" class="math-inline-source" data-tex="\forall xA(x)\lor \forall xB(x) \Rightarrow \forall x(A(x)\lor B(x))">\(\forall xA(x)\lor \forall xB(x) \Rightarrow \forall x(A(x)\lor B(x))\)</span>；<span aria-label="∃x(A(x)∧B(x)) ⇒ ∃xA(x)∧∃xB(x)" class="math-inline-source" data-tex="\exists x(A(x)\land B(x)) \Rightarrow \exists xA(x)\land \exists xB(x)">\(\exists x(A(x)\land B(x)) \Rightarrow \exists xA(x)\land \exists xB(x)\)</span>；<span aria-label="∀x(A(x)→B(x)) ⇒ ∀xA(x)→∀xB(x)" class="math-inline-source" data-tex="\forall x(A(x)\to B(x)) \Rightarrow \forall xA(x)\to \forall xB(x)">\(\forall x(A(x)\to B(x)) \Rightarrow \forall xA(x)\to \forall xB(x)\)</span>。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">二元蕴含式如 <span aria-label="∀x∀yA(x,y) ⇒ ∀xA(x,x)" class="math-inline-source" data-tex="\forall x\forall yA(x,y) \Rightarrow \forall xA(x,x)">\(\forall x\forall yA(x,y) \Rightarrow \forall xA(x,x)\)</span>；<span aria-label="∃xA(x,x) ⇒ ∃x∃yA(x,y)" class="math-inline-source" data-tex="\exists xA(x,x) \Rightarrow \exists x\exists yA(x,y)">\(\exists xA(x,x) \Rightarrow \exists x\exists yA(x,y)\)</span>；<span aria-label="∀x∃yA(x,y) ⇒ ∃y∃xA(x,y)" class="math-inline-source" data-tex="\forall x\exists yA(x,y) \Rightarrow \exists y\exists xA(x,y)">\(\forall x\exists yA(x,y) \Rightarrow \exists y\exists xA(x,y)\)</span>。例 6.2.14 证 <span aria-label="∀x∀y(P(x)↔Q(y)) ⇒ ∀xP(x)↔∀xQ(x)" class="math-inline-source" data-tex="\forall x\forall y(P(x)\leftrightarrow Q(y)) \Rightarrow \forall xP(x)\leftrightarrow \forall xQ(x)">\(\forall x\forall y(P(x)\leftrightarrow Q(y)) \Rightarrow \forall xP(x)\leftrightarrow \forall xQ(x)\)</span>。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>27 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 等价与蕴含" data-theme="dark"><div class="chrome"><div>应用示例 · 谓词等价与蕴含</div><div>28 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">谓词逻辑等价与蕴含的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">数据库查询优化与代码优化中用逻辑等价简化条件、减少冗余</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">数据库系统与编译器自动识别等价表达式并重写以提高性能</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">程序验证与专家系统、自动定理证明中用蕴含关系推导并验证结论</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>28 / 63</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 谓词等价与蕴含" data-theme="dark"><div class="chrome"><div>应用动画 · 谓词等价与蕴含</div><div>29 / 63</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">谓词等价与蕴含</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch6/ch6_03_app_3d12b6a5.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_03_app_3d12b6a5.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>29 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.2.10 · 前束范式" data-theme="light"><div class="chrome"><div>6.2.3 前束范式</div><div>30 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.2.10 · 前束范式</div><h2 class="h1-zh anim-item" style="max-width:17em">所有量词都提到公式最前面</h2><div aria-label="Q₁x₁Q₂x₂…QₙxₙM　（M 不含量词）" class="formula anim-item mathjax-display-source" data-tex="Q_{1}x_{1}Q_{2}x_{2}\ldots Q_{n}x_{n}M （M \text{不含量词}）">\[\displaystyle Q_{1}x_{1}Q_{2}x_{2}\ldots Q_{n}x_{n}M （M \text{不含量词}）\]</div><p class="body-zh anim-item" style="max-width:29em;opacity:.7">所有量词排成连续序列在前，其后是无量词的谓词公式 M。例 6.2.15：<span aria-label="∀x∃y(P(x)∧Q(y))" class="math-inline-source" data-tex="\forall x\exists y(P(x)\land Q(y))">\(\forall x\exists y(P(x)\land Q(y))\)</span> 是前束范式；<span aria-label="∃xP(x)→∀yQ(y)" class="math-inline-source" data-tex="\exists xP(x)\to \forall yQ(y)">\(\exists xP(x)\to \forall yQ(y)\)</span>、<span aria-label="∀x(P(x)→∃yQ(y))" class="math-inline-source" data-tex="\forall x(P(x)\to \exists yQ(y))">\(\forall x(P(x)\to \exists yQ(y))\)</span> 不是。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>30 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定理 6.2.6 / 例 6.2.16 · 求前束范式" data-theme="dark"><div class="chrome"><div>6.2.3 前束范式转换</div><div>31 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定理 6.2.6 · 转换步骤</div><h2 class="h1-zh anim-item" style="max-width:17em">任意公式都有等价的前束范式</h2><p class="lead-zh anim-item" style="max-width:27em">步骤：换名消去冗余量词，使变元不同名；用 ¬∧∨ 消去 → 与 ↔；用德摩根律与双重否定律把 ¬ 内移到原子谓词；用辖域扩张收缩与量词分配把所有量词前移。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">例 6.2.16：<span aria-label="(P(x)→∀yQ(y))∧∃zR(z) ⇔ ∀y∃z((¬P(x)∨Q(y))∧R(z))" class="math-inline-source" data-tex="(P(x)\to \forall yQ(y))\land \exists zR(z) \Leftrightarrow \forall y\exists z((\neg P(x)\lor Q(y))\land R(z))">\((P(x)\to \forall yQ(y))\land \exists zR(z) \Leftrightarrow \forall y\exists z((\neg P(x)\lor Q(y))\land R(z))\)</span>。前束范式一般不唯一，量词前移顺序不同得到不同但等价的前束范式。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.2.11 / 例 6.2.17 / 6.2.18 · 前束合取析取范式" data-theme="light"><div class="chrome"><div>6.2.3 前束合取与析取范式</div><div>32 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.2.11</div><h2 class="h1-zh anim-item" style="max-width:17em">前束合取范式与前束析取范式</h2><p class="lead-zh anim-item" style="max-width:27em">前束范式 <span aria-label="Q₁x₁…QₙxₙM" class="math-inline-source" data-tex="Q_{1}x_{1}\ldots Q_{n}x_{n}M">\(Q_{1}x_{1}\ldots Q_{n}x_{n}M\)</span> 中，若 M 是简单析取式的合取（<span aria-label="C₁∧…∧Cₘ" class="math-inline-source" data-tex="C_{1}\land \ldots \land C_{m}">\(C_{1}\land \ldots \land C_{m}\)</span>）则为前束合取范式；若 M 是简单合取式的析取则为前束析取范式。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 6.2.17 与 6.2.18</div><p class="body-zh" style="margin-top:.8vh">例 6.2.17：<span aria-label="∃x∀y(P(x)∧(Q(y)→R(x))) ⇔ ∃x∀y((P(x)∧¬Q(y))∨(P(x)∧R(x)))" class="math-inline-source" data-tex="\exists x\forall y(P(x)\land (Q(y)\to R(x))) \Leftrightarrow \exists x\forall y((P(x)\land \neg Q(y))\lor (P(x)\land R(x)))">\(\exists x\forall y(P(x)\land (Q(y)\to R(x))) \Leftrightarrow \exists x\forall y((P(x)\land \neg Q(y))\lor (P(x)\land R(x)))\)</span>。例 6.2.18：<span aria-label="∀xP(x)∨∃yQ(y)→∀xR(x) ⇔ ∃x∀y∀z(P(x)∨Q(y)→R(z))" class="math-inline-source" data-tex="\forall xP(x)\lor \exists yQ(y)\to \forall xR(x) \Leftrightarrow \exists x\forall y\forall z(P(x)\lor Q(y)\to R(z))">\(\forall xP(x)\lor \exists yQ(y)\to \forall xR(x) \Leftrightarrow \exists x\forall y\forall z(P(x)\lor Q(y)\to R(z))\)</span>。</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>32 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 前束范式" data-theme="dark"><div class="chrome"><div>应用示例 · 前束范式</div><div>33 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">前束范式的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">自然语言处理中分析句子结构，帮助理解量词的辖域与作用</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">数据集成与清洗中检查复杂逻辑关系数据的一致性</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">软硬件模型检测中分析系统模型的性质，确保行为符合预期</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>33 / 63</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 前束范式" data-theme="dark"><div class="chrome"><div>应用动画 · 前束范式</div><div>34 / 63</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">前束范式</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch6/ch6_04_app_ff5a8176.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_04_app_ff5a8176.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="6.2.4 小结" data-theme="dark"><div class="chrome"><div>6.2.4 小结</div><div>35 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">谓词公式由个体词谓词量词按规则组成，解释通过赋值与谓词真值评估其真值</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">量词辖域决定约束变元的有效范围，可对约束变元换名、对自由变元代入</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">逻辑等价两边在所有解释下真值相同，蕴含表示前真则后真，量词有否定分配交换等等值式</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">前束范式把所有量词提到最前，是谓词公式的标准化形式，一般不唯一</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>35 / 63</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="6.2 习题" data-theme="light"><div class="chrome"><div>6.2 习题</div><div>36 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 6.2</div><h2 class="h1-zh anim-item" style="max-width:18em">谓词公式练习</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li><span aria-label="∀x(P(x)∨∃yR(y))→Q(x)" class="math-inline-source" data-tex="\forall x(P(x)\lor \exists yR(y))\to Q(x)">\(\forall x(P(x)\lor \exists yR(y))\to Q(x)\)</span> 中 <span aria-label="∀x" class="math-inline-source" data-tex="\forall x">\(\forall x\)</span> 的辖域（答案 C）</li><li>该式中 x 是（答案 D：既自由又约束出现）</li><li>论域为整数时哪个为真（答案 A：<span aria-label="∀x∃y(x+y=0)" class="math-inline-source" data-tex="\forall x\exists y(x+y=0)">\(\forall x\exists y(x+y=0)\)</span>）</li><li>指出约束变元自由变元与量词辖域</li><li>对约束变元换名、对自由变元代入</li><li>在给定解释 I 下求公式真值</li><li>在自然数解释下判断各式真假</li><li>在 <span aria-label="D={a,b,c}" class="math-inline-source" data-tex="D=\{a,b,c\}">\(D=\{a,b,c\}\)</span> 上消去量词</li><li>在 <span aria-label="D={−2,3,6}" class="math-inline-source" data-tex="D=\{-2,3,6\}">\(D=\{-2,3,6\}\)</span> 上求各式真值</li><li>把各谓词公式转换为前束范式</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>36 / 63</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="6.2 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 6.2</div><div>37 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:18em">把谓词公式推向更深的六个问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist anim-item"><li>理论：谓词公式如何被赋予具体意义，解释有什么作用</li><li>实践：信息检索系统中如何用谓词公式之间的关系做高级查询与排序优化</li><li>工程：软件验证项目中如何用前束范式转换提高验证准确性与效率</li><li>科研：如何把前束范式应用于知识表示与推理等跨学科研究</li><li>习题：习题 6 和 10 的求解过程</li><li>代码：示例 6.2.1 的详细解释与分析</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>37 / 63</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="6.3 谓词逻辑推理" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">6.3</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">谓词逻辑推理</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">量词消去与产生 US/ES/EG/UG 四规则的演算推证，以及推理系统的可靠一致完备性</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>38 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.3.1 · 有效推理" data-theme="light"><div class="chrome"><div>6.3.1 谓词演算推证</div><div>39 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.3.1 · 有效推理</div><h2 class="h1-zh anim-item" style="max-width:17em">量词约束下的前提与结论</h2><p class="lead-zh anim-item" style="max-width:27em">从前提 <span aria-label="P₁,…,Pₙ" class="math-inline-source" data-tex="P_{1},\ldots ,P_{n}">\(P_{1},\ldots ,P_{n}\)</span> 出发依谓词逻辑规则得结论 C，若每个解释下所有前提为真则 C 也为真。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">谓词逻辑推理是命题逻辑推理的深化。由于前提结论受量词约束，需要消去量词建立内部联系，再添加量词得到结论，因此量词规则是关键。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>39 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Laws" data-source="定理 6.3.1 至 6.3.4 · 四条量词规则" data-theme="dark"><div class="chrome"><div>6.3.1 四条量词规则</div><div>40 / 63</div></div>
+<div class="slide-body">
+<div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.3rem)">
+<h2 class="h1-zh anim-item" style="max-width:18em">量词消去与产生四规则</h2>
+<div class="laws-grid" style="grid-template-columns:repeat(2,1fr)"><div class="law-card anim-item"><div class="law-name">全称量词消去 US</div><div class="law-formula"><span aria-label="∀xA(x) ⇒ A(c)" class="math-inline-source" data-tex="\forall xA(x) \Rightarrow A(c)">\(\forall xA(x) \Rightarrow A(c)\)</span>，c 为任意个体常元</div></div><div class="law-card anim-item"><div class="law-name">存在量词消去 ES</div><div class="law-formula"><span aria-label="∃xA(x) ⇒ A(c)" class="math-inline-source" data-tex="\exists xA(x) \Rightarrow A(c)">\(\exists xA(x) \Rightarrow A(c)\)</span>，c 为新的特定个体常元</div></div><div class="law-card anim-item"><div class="law-name">存在量词产生 EG</div><div class="law-formula"><span aria-label="A(c) ⇒ ∃yA(y)" class="math-inline-source" data-tex="A(c) \Rightarrow \exists yA(y)">\(A(c) \Rightarrow \exists yA(y)\)</span>，c 为特定个体常元</div></div><div class="law-card anim-item"><div class="law-name">全称量词产生 UG</div><div class="law-formula"><span aria-label="A(x) ⇒ ∀yA(y)" class="math-inline-source" data-tex="A(x) \Rightarrow \forall yA(y)">\(A(x) \Rightarrow \forall yA(y)\)</span>，x 在推理中自由</div></div></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>40 / 63</div></div></section>
+<section class="slide light" data-screen-label="Proof" data-source="例 6.3.1 · 量词推证" data-theme="light"><div class="chrome"><div>例 6.3.1</div><div>41 / 63</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 <span aria-label="6.3.1 · ∃xH(x)" class="math-inline-source" data-tex="6.3.1 \cdot \exists xH(x)">\(6.3.1 \cdot \exists xH(x)\)</span> 的推证</div>
+<h2 class="h2-zh" style="max-width:14em;margin-top:1vh">前提 <span aria-label="∀x(M(x)→H(x)), ∃xM(x)" class="math-inline-source" data-tex="\forall x(M(x)\to H(x)), \exists xM(x)">\(\forall x(M(x)\to H(x)), \exists xM(x)\)</span> 推出 <span aria-label="∃xH(x)" class="math-inline-source" data-tex="\exists xH(x)">\(\exists xH(x)\)</span></h2>
+<p class="body-zh" style="max-width:24em">先用 ES 取特定 c 使 M(c)，再用 US 得 <span aria-label="M(c)→H(c)" class="math-inline-source" data-tex="M(c)\to H(c)">\(M(c)\to H(c)\)</span>，蕴含消去得 H(c)，最后 EG 得 <span aria-label="∃xH(x)" class="math-inline-source" data-tex="\exists xH(x)">\(\exists xH(x)\)</span>。</p>
+</div>
+<div class="anim-item"><div class="proof"><div class="pn">①</div><div class="pf">M(c)</div><div class="pr">存在量词消去 ES</div><div class="pn">②</div><div class="pf"><span aria-label="M(c)→H(c)" class="math-inline-source" data-tex="M(c)\to H(c)">\(M(c)\to H(c)\)</span></div><div class="pr">全称量词消去 US</div><div class="pn">③</div><div class="pf">H(c)</div><div class="pr">蕴含消去</div><div class="pn">④</div><div class="pf"><span aria-label="∃xH(x)" class="math-inline-source" data-tex="\exists xH(x)">\(\exists xH(x)\)</span></div><div class="pr">存在量词产生 EG</div></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>41 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Proof" data-source="例 6.3.2 · 苏格拉底论证" data-theme="dark"><div class="chrome"><div>例 6.3.2</div><div>42 / 63</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 6.3.2 · 苏格拉底论证</div>
+<h2 class="h2-zh" style="max-width:14em;margin-top:1vh">所有人都会死，苏格拉底是人，故苏格拉底会死</h2>
+<p class="body-zh" style="max-width:24em">M(x) 表示 x 是人，D(x) 表示 x 会死，s 表示苏格拉底。</p>
+</div>
+<div class="anim-item"><div class="proof"><div class="pn">①</div><div class="pf"><span aria-label="∀x(M(x)→D(x))" class="math-inline-source" data-tex="\forall x(M(x)\to D(x))">\(\forall x(M(x)\to D(x))\)</span></div><div class="pr">前提 P</div><div class="pn">②</div><div class="pf"><span aria-label="M(s)→D(s)" class="math-inline-source" data-tex="M(s)\to D(s)">\(M(s)\to D(s)\)</span></div><div class="pr">全称量词消去 US</div><div class="pn">③</div><div class="pf">M(s)</div><div class="pr">前提 P</div><div class="pn">④</div><div class="pf">D(s)</div><div class="pr">蕴含消去 T</div></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>42 / 63</div></div></section>
+<section class="slide light" data-screen-label="Proof" data-source="例 6.3.4 · 子路论证" data-theme="light"><div class="chrome"><div>例 6.3.4</div><div>43 / 63</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 6.3.4 · 推出矛盾</div>
+<h2 class="h2-zh" style="max-width:14em;margin-top:1vh">子路论证导出矛盾</h2>
+<p class="body-zh" style="max-width:24em">所有孔子的学生都尊礼 <span aria-label="∀x(S(x)→R(x))" class="math-inline-source" data-tex="\forall x(S(x)\to R(x))">\(\forall x(S(x)\to R(x))\)</span>；尊礼者不侮君 <span aria-label="∀x(R(x)→¬I(x))" class="math-inline-source" data-tex="\forall x(R(x)\to \neg I(x))">\(\forall x(R(x)\to \neg I(x))\)</span>；子路是学生 S(z) 且侮君 I(z)。推理得 <span aria-label="¬I(z)" class="math-inline-source" data-tex="\neg I(z)">\(\neg I(z)\)</span>，与 I(z) 矛盾，说明前提不可同时成立。</p>
+</div>
+<div class="anim-item"><div class="proof"><div class="pn">①</div><div class="pf"><span aria-label="∀x(S(x)→R(x))" class="math-inline-source" data-tex="\forall x(S(x)\to R(x))">\(\forall x(S(x)\to R(x))\)</span></div><div class="pr">前提</div><div class="pn">②</div><div class="pf"><span aria-label="∀x(R(x)→¬I(x))" class="math-inline-source" data-tex="\forall x(R(x)\to \neg I(x))">\(\forall x(R(x)\to \neg I(x))\)</span></div><div class="pr">前提</div><div class="pn">③</div><div class="pf">S(z)</div><div class="pr">前提</div><div class="pn">④</div><div class="pf">I(z)</div><div class="pr">前提</div><div class="pn">⑤</div><div class="pf"><span aria-label="S(z)→R(z)" class="math-inline-source" data-tex="S(z)\to R(z)">\(S(z)\to R(z)\)</span></div><div class="pr">US</div><div class="pn">⑥</div><div class="pf">R(z)</div><div class="pr">③⑤蕴含消去</div><div class="pn">⑦</div><div class="pf"><span aria-label="R(z)→¬I(z)" class="math-inline-source" data-tex="R(z)\to \neg I(z)">\(R(z)\to \neg I(z)\)</span></div><div class="pr">US</div><div class="pn">⑧</div><div class="pf"><span aria-label="¬I(z)" class="math-inline-source" data-tex="\neg I(z)">\(\neg I(z)\)</span></div><div class="pr">⑥⑦蕴含消去</div><div class="pn">⑨</div><div class="pf"><span aria-label="I(z)∧¬I(z)" class="math-inline-source" data-tex="I(z)\land \neg I(z)">\(I(z)\land \neg I(z)\)</span></div><div class="pr">④⑧矛盾</div></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>43 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Proof" data-source="例 6.3.5 · 书法家论证" data-theme="dark"><div class="chrome"><div>例 6.3.5</div><div>44 / 63</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item">
+<div class="kicker" style="color:var(--accent);opacity:1">例 6.3.5 · ES 与 EG 综合</div>
+<h2 class="h2-zh" style="max-width:14em;margin-top:1vh">有书法家是有良好审美的年轻艺术家</h2>
+<p class="body-zh" style="max-width:24em">所有书法家是艺术家且有良好审美 <span aria-label="∀x(F(x)→(A(x)∧B(x)))" class="math-inline-source" data-tex="\forall x(F(x)\to (A(x)\land B(x)))">\(\forall x(F(x)\to (A(x)\land B(x)))\)</span>；有些书法家是年轻人 <span aria-label="∃x(F(x)∧Y(x))" class="math-inline-source" data-tex="\exists x(F(x)\land Y(x))">\(\exists x(F(x)\land Y(x))\)</span>。结论 <span aria-label="∃x(F(x)∧Y(x)∧A(x)∧B(x))" class="math-inline-source" data-tex="\exists x(F(x)\land Y(x)\land A(x)\land B(x))">\(\exists x(F(x)\land Y(x)\land A(x)\land B(x))\)</span>。</p>
+</div>
+<div class="anim-item"><div class="proof"><div class="pn">③</div><div class="pf"><span aria-label="F(c)∧Y(c)" class="math-inline-source" data-tex="F(c)\land Y(c)">\(F(c)\land Y(c)\)</span></div><div class="pr">ES</div><div class="pn">④</div><div class="pf">F(c)</div><div class="pr">合取消去</div><div class="pn">⑤</div><div class="pf">Y(c)</div><div class="pr">合取消去</div><div class="pn">⑥</div><div class="pf"><span aria-label="F(c)→(A(c)∧B(c))" class="math-inline-source" data-tex="F(c)\to (A(c)\land B(c))">\(F(c)\to (A(c)\land B(c))\)</span></div><div class="pr">US</div><div class="pn">⑦</div><div class="pf"><span aria-label="A(c)∧B(c)" class="math-inline-source" data-tex="A(c)\land B(c)">\(A(c)\land B(c)\)</span></div><div class="pr">④⑥蕴含消去</div><div class="pn">⑧</div><div class="pf">A(c), B(c)</div><div class="pr">合取消去</div><div class="pn">⑨</div><div class="pf"><span aria-label="F(c)∧Y(c)∧A(c)∧B(c)" class="math-inline-source" data-tex="F(c)\land Y(c)\land A(c)\land B(c)">\(F(c)\land Y(c)\land A(c)\land B(c)\)</span></div><div class="pr">合取引入</div><div class="pn">⑩</div><div class="pf"><span aria-label="∃x(F(x)∧Y(x)∧A(x)∧B(x))" class="math-inline-source" data-tex="\exists x(F(x)\land Y(x)\land A(x)\land B(x))">\(\exists x(F(x)\land Y(x)\land A(x)\land B(x))\)</span></div><div class="pr">EG</div></div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>44 / 63</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 6.3.3 · 一题多形式化" data-theme="light"><div class="chrome"><div>例 6.3.3</div><div>45 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">例 6.3.3 · 社会和谐</div><h2 class="h1-zh anim-item" style="max-width:17em">同一论证可有不同的形式化</h2><p class="lead-zh anim-item" style="max-width:27em">人们彼此关心互助则社会和谐 <span aria-label="∀x(C(x)→H(x))" class="math-inline-source" data-tex="\forall x(C(x)\to H(x))">\(\forall x(C(x)\to H(x))\)</span>，社会 A 中人们彼此关心互助 <span aria-label="C(A)" class="math-inline-source" data-tex="C(A)">\(C(A)\)</span>，故 H(A)，用 US 与蕴含消去即得。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">证明 2 把社会视为个体集合，用 <span aria-label="P(x)" class="math-inline-source" data-tex="P(x)">\(P(x)\)</span>、Q(x,y)、R(x,y) 等刻画个体行为。抽象层次与谓词定义不同，形式化结构也不同，但都合理。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>45 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 谓词演算" data-theme="dark"><div class="chrome"><div>应用示例 · 谓词演算</div><div>46 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">谓词演算的应用</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">用谓词演算定义类型系统，在编译时捕获类型错误，确保类型安全</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">形式化软件规范，确保软件行为符合预期，避免逻辑错误与安全漏洞</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">实现复杂决策逻辑，支持智能家居与工业自动化等智能控制系统</p></div></div>
+</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>46 / 63</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 谓词演算" data-theme="dark"><div class="chrome"><div>应用动画 · 谓词演算</div><div>47 / 63</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">谓词演算</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch6/ch6_05_app_030e51b3.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_05_app_030e51b3.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>47 / 63</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 6.3.2 至 6.3.4 · 系统性质" data-theme="light"><div class="chrome"><div>6.3.2 推理系统及性质</div><div>48 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.3.2 至 6.3.4</div><h2 class="h1-zh anim-item" style="max-width:17em">可靠性、一致性与完备性</h2><p class="lead-zh anim-item" style="max-width:27em">可靠性：真前提经推理得到的结论也为真，只保证形式正确而非现实真实。一致性：规则成对对应、互不矛盾，不产生矛盾结论。完备性：所有在语言框架内为真的命题都能被证明。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">一阶谓词逻辑是完备的，但不可判定。即没有通用算法对任意公式判定其是否永真。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>48 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="6.3.2 哥德尔不完全定理" data-theme="dark"><div class="chrome"><div>6.3.2 哥德尔不完全定理</div><div>49 / 63</div></div>
+<div class="slide-body">
+<div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">哥德尔不完全定理的影响</div><h2 class="h1-zh anim-item" style="max-width:17em">哥德尔定理对谓词逻辑的影响</h2><p class="lead-zh anim-item" style="max-width:27em">哥德尔不完全定理表明即使谓词逻辑这样强大的系统也存在无法解决的问题，对其在数学与逻辑中的应用构成限制。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">它强调选择合适公理系统的重要性：无论选何公理总有真理无法证明；在计算机科学中暗示某些程序行为无法完全由逻辑推理预测。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>49 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="6.3.3 小结" data-theme="dark"><div class="chrome"><div>6.3.3 小结</div><div>50 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">谓词演算推证用全称与存在量词的引入消除规则，从已知公式推导新公式</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">US 消全称、ES 消存在、EG 产生存在、UG 产生全称，是谓词推理的核心规则</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">推理系统追求可靠完备一致，一阶逻辑完备但不可判定</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">哥德尔不完全定理指出含基本算术的自洽系统总有既不能证真也不能证伪的命题</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 63</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="6.3 习题" data-theme="light"><div class="chrome"><div>6.3 习题</div><div>51 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 6.3</div><h2 class="h1-zh anim-item" style="max-width:18em">谓词逻辑推理练习</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li>关于谓词演算推证哪个正确（答案 D：某些情况下前提真而结论假）</li><li>哪个是永真式（答案 A：<span aria-label="∀x(P(x)→P(x))" class="math-inline-source" data-tex="\forall x(P(x)\to P(x))">\(\forall x(P(x)\to P(x))\)</span>）</li><li>关于一致性哪个正确（答案 A：推理规则使用时无冲突）</li><li>哥德尔不完全性定理表明（答案 A：存在某些真命题不可证明）</li><li>证明 <span aria-label="∀x(P(x)→Q(x))→(∀xP(x)→∀xQ(x))" class="math-inline-source" data-tex="\forall x(P(x)\to Q(x))\to (\forall xP(x)\to \forall xQ(x))">\(\forall x(P(x)\to Q(x))\to (\forall xP(x)\to \forall xQ(x))\)</span></li><li>证明若 <span aria-label="∃xP(x)" class="math-inline-source" data-tex="\exists xP(x)">\(\exists xP(x)\)</span> 真则 <span aria-label="¬∀x¬P(x)" class="math-inline-source" data-tex="\neg \forall x\neg P(x)">\(\neg \forall x\neg P(x)\)</span> 真</li><li>阐述推理规则如何保证推理可靠性</li><li>构造两组推理的证明</li><li>有理数都是实数等三组论证的推理证明</li><li>符号化并证明自然数奇偶等多组命题</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>51 / 63</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="6.3 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 6.3</div><div>52 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:18em">把谓词逻辑推理推向更深的六个问题</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist anim-item"><li>理论：哥德尔不完全定理对形式系统与数学基础研究有何影响</li><li>实践：自动定理证明系统中如何实现谓词演算推证，给出算法与实现</li><li>工程：自动驾驶系统中如何用谓词逻辑推理进行环境感知与决策</li><li>科研：哥德尔不完全定理领域有哪些前沿研究方向与挑战</li><li>习题：习题 11 和 12 的求解过程</li><li>代码：如何用 Python 表示谓词前束范式并分析</li></ol></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>52 / 63</div></div></section>
+<section class="slide dark bare" data-screen-label="Section" data-source="6.4 应用案例和 Python 实现" data-theme="dark">
+<div class="slide-body" style="align-items:flex-start">
+<div class="w-statement">
+<div class="kicker anim-item" style="margin-bottom:clamp(1.6rem,4vh,3rem);color:var(--accent);opacity:1">6.4</div>
+<h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">应用案例与 Python 实现</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">个人进步与国家发展的智能推荐系统、国家历史文化遗产保护两个谓词逻辑案例</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>53 / 63</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="6.4.1 个人进步和国家发展" data-theme="light"><div class="chrome"><div>6.4.1 智能推荐系统</div><div>54 / 63</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例一 · 智能推荐</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">谓词规则匹配学生与国家需求</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">定义谓词 MajorIn、InterestIn、AbleIn、NationNeed、Match、Recommend，构建规则 <span aria-label="∀x,y,z,w,p(MajorIn(x,y)∧InterestIn(x,z)∧AbleIn(x,w)∧NationNeed(y)∧Match(y,z,w,p)→Recommend(x,p))" class="math-inline-source" data-tex="\forall x,y,z,w,p(MajorIn(x,y)\land InterestIn(x,z)\land AbleIn(x,w)\land NationNeed(y)\land Match(y,z,w,p)\to Recommend(x,p))">\(\forall x,y,z,w,p(MajorIn(x,y)\land InterestIn(x,z)\land AbleIn(x,w)\land NationNeed(y)\land Match(y,z,w,p)\to Recommend(x,p))\)</span>，把学生专业兴趣能力与国家需求匹配到职业路径。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-tiny"><code>students = [
+    {"name": "李明", "major": "计算机科学",
+     "interests": ["人工智能", "数据科学"], "abilities": ["编码", "数学"]},
+    {"name": "张梅梅", "major": "电气工程",
+     "interests": ["机器人", "可再生能源"], "abilities": ["集成电路设计", "数学"]},
+]
+nation_needs = ["计算机科学", "电气工程", "可再生能源"]
+career_paths = {
+    ("计算机科学", "人工智能", "编码"): "人工智能研究员",
+    ("电气工程", "机器人", "集成电路设计"): "机器人研发工程师",
+}
+
+def match(major, interests, abilities):     # 专业∧兴趣∧能力∧国家需求→职业
+    if major not in nation_needs:
+        return None
+    for i in interests:
+        for a in abilities:
+            if (major, i, a) in career_paths:
+                return career_paths[(major, i, a)]
+    return None
+
+for s in students:
+    path = match(s["major"], s["interests"], s["abilities"])
+    if path:
+        print(f"{s['name']}，建议从事的职业: {path}")</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>54 / 63</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 6.4.1 智能推荐系统" data-theme="light"><div class="chrome"><div>应用动画 · 6.4.1 智能推荐系统</div><div>55 / 63</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">6.4.1 智能推荐系统</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch6/ch6_06_case_6_4_1_f6507ed5.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_06_case_6_4_1_f6507ed5.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>55 / 63</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="6.4.2 国家历史文化遗产保护" data-theme="light"><div class="chrome"><div>6.4.2 历史文化遗产保护</div><div>56 / 63</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 遗产保护</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">谓词规则推荐优先保护遗迹</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">定义谓词 Unique、InDanger、UNESCOHeritage、PriorityForProtection，构建规则 <span aria-label="∀x(Unique(x)∧InDanger(x)→优先保护)、∀x(UNESCOHeritage(x)→优先保护)" class="math-inline-source" data-tex="\forall x(Unique(x)\land InDanger(x)\to \text{优先保护})、\forall x(UNESCOHeritage(x)\to \text{优先保护})">\(\forall x(Unique(x)\land InDanger(x)\to \text{优先保护})、\forall x(UNESCOHeritage(x)\to \text{优先保护})\)</span>。独一无二且危险，或被列为世界遗产的遗迹应优先保护。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>heritages = {
+    '长城':   {'unique': True,  'in_danger': True,  'unesco_heritage': True},
+    '兵马俑': {'unique': True,  'in_danger': False, 'unesco_heritage': True},
+    '紫禁城': {'unique': False, 'in_danger': False, 'unesco_heritage': True},
+}
+
+def should_protect(p):                      # 独特且危险 或 世界遗产
+    if p['unique'] and p['in_danger']:
+        return True
+    return p['unesco_heritage']
+
+for name, p in heritages.items():
+    if should_protect(p):
+        print(f"{name}应该优先保护")</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 63</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 6.4.2 历史文化遗产保护" data-theme="light"><div class="chrome"><div>应用动画 · 6.4.2 历史文化遗产保护</div><div>57 / 63</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">6.4.2 历史文化遗产保护</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch6/ch6_07_case_6_4_2_b8082bee.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_07_case_6_4_2_b8082bee.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>57 / 63</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="6.4.2 多维度评估扩展" data-theme="light"><div class="chrome"><div>6.4.2 多维度评估</div><div>58 / 63</div></div>
+<div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 综合评估</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">扩展为多维度保护决策</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">进一步考虑历史价值、文化影响力、经济条件、保护成本与潜在效益等多维因素，构建综合规则：独特且危险，或高价值且高影响力，或经济好且成本低且效益高，则推荐优先保护。</p></div>
+<div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def recommend(p):
+    unique_danger = p['unique'] and p['in_danger']
+    value_influence = (p['historical_value'] == 'high'
+                       and p['cultural_influence'] == 'high')
+    cost_benefit = (p['economic_condition'] == 'good'
+                    and p['protection_cost'] == 'low'
+                    and p['potential_benefit'] == 'high')
+    return unique_danger or value_influence or cost_benefit
+
+for name, p in heritages.items():
+    if recommend(p):
+        print(f"{name} 建议优先保护")</code></pre></div>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>58 / 63</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 6.4.2 多维度评估" data-theme="light"><div class="chrome"><div>应用动画 · 6.4.2 多维度评估</div><div>59 / 63</div></div>
+<div class="slide-body">
+<div class="app-video-kicker anim-item">应用动画</div>
+<h2 class="h2-zh app-video-title anim-item">6.4.2 多维度评估</h2>
+<div class="app-video-stage anim-item">
+<video data-app-video="assets/app-videos-ch6/ch6_08_case_6_4_2_076667b1.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_08_case_6_4_2_076667b1.mp4" type="video/mp4"></video>
+</div>
+<p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
+</div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 63</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="6.4.3 小结" data-theme="dark"><div class="chrome"><div>6.4.3 小结</div><div>60 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">智能推荐系统用谓词规则把学生的专业兴趣能力与国家需求匹配到职业路径</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">历史文化遗产保护用谓词规则判断独特危险与世界遗产，推荐优先保护</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">多维度评估再加入历史价值、文化影响、经济成本与效益，做更精准的保护决策</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 63</div></div></section>
+<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 1 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>61 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">谓词逻辑用个体词、谓词与量词 ∀∃，把命题逻辑扩展为可刻画对象与属性的一阶逻辑</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">谓词公式由原子公式经联结词与量词递归构造，解释赋予其个体域、函数与谓词的具体含义</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">量词辖域决定约束变元范围，量词有否定、分配、辖域收缩扩张等等值式</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 63</div></div></section>
+<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 2 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>62 / 63</div></div>
+<div class="slide-body">
+<div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">前束范式把所有量词提到公式最前，是谓词公式的标准化形式，一般不唯一</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">05</div><p class="body-zh">谓词演算推证用 US、ES、EG、UG 四条量词规则，结合命题推理规则完成证明</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">06</div><p class="body-zh">一阶逻辑完备但不可判定，哥德尔不完全定理揭示含算术的自洽系统必不完备</p></div>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>62 / 63</div></div></section>
+<section class="slide dark bare" data-screen-label="Closing" data-source="本章收束" data-theme="dark">
+<div class="slide-body" style="align-items:center;text-align:center">
+<div class="w-quote guest-mark">
+<div class="kicker anim-item" style="margin-bottom:clamp(1rem,2vh,1.6rem)">第 6 章 · 完</div>
+<h2 class="h1-zh anim-item" style="max-width:15em">谓词逻辑用量词与谓词，把对象、属性与关系纳入可推理的一阶形式系统</h2>
+<p class="body-zh anim-item" style="max-width:25em;margin:clamp(1.6rem,3.5vh,2.6rem) auto 0;opacity:.62">本章 Python 程序源码与学习指南均提供二维码下载。命题逻辑与谓词逻辑共同构成数理逻辑与人工智能推理的语言基础。</p>
+</div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>63 / 63</div></div></section>
+</div>
+<div id="nav"></div>
+<script>
+(function(){
+  const deck=document.getElementById('deck');
+  const slides=Array.from(deck.querySelectorAll('.slide'));
+  const total=slides.length;let current=0;
+  const nav=document.getElementById('nav');
+  const DUR=560,OFF=64;
+  function renderNav(){
+    if(nav.children.length!==total){
+      nav.innerHTML='';
+      slides.forEach((s,i)=>{const d=document.createElement('button');
+        d.className='dot';d.onclick=()=>goTo(i);nav.appendChild(d);});
+    }
+    const t=slides[current].dataset.theme;
+    nav.style.background=t==='light'?'rgba(0,0,0,.12)':'rgba(255,255,255,.15)';
+    Array.from(nav.children).forEach((d,i)=>{
+      d.classList.toggle('active',i===current);
+      d.style.background=i===current
+        ?(t==='light'?'rgba(0,0,0,.7)':'rgba(255,255,255,.95)')
+        :(t==='light'?'rgba(0,0,0,.18)':'rgba(255,255,255,.3)');});
+    if(nav.scrollWidth>nav.clientWidth){
+      const d=nav.children[current];
+      if(d){try{nav.scrollTo({left:d.offsetLeft-nav.clientWidth/2,behavior:'smooth'});}catch(e){}}
+    }
+  }
+  function goTo(idx){
+    if(idx<0||idx>=total||idx===current)return;
+    const dir=idx>current?1:-1;
+    const prev=slides[current],next=slides[idx];
+    current=idx;
+    slides.forEach(s=>{if(s!==prev&&s!==next){s.classList.remove('active','leaving');s.style.transform='';if(s.__lt){clearTimeout(s.__lt);s.__lt=null;}}});
+    prev.classList.remove('active');
+    prev.classList.add('leaving');
+    prev.style.transform='translateX('+(-dir*OFF)+'px)';
+    if(prev.__lt)clearTimeout(prev.__lt);
+    prev.__lt=setTimeout(()=>{prev.classList.remove('leaving');prev.style.transform='';prev.__lt=null;},DUR);
+    if(next.__lt){clearTimeout(next.__lt);next.__lt=null;}
+    next.classList.remove('leaving');
+    next.style.transition='none';
+    next.style.transform='translateX('+(dir*OFF)+'px)';
+    void next.offsetWidth;
+    next.style.transition='';
+    next.classList.add('active');
+    next.style.transform='';
+    renderNav();save();
+  }
+  window.__deckGoTo=goTo;
+  document.addEventListener('keydown',e=>{
+    if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();goTo(current+1);}
+    if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goTo(current-1);}
+    if(e.key==='Home'){e.preventDefault();goTo(0);}
+    if(e.key==='End'){e.preventDefault();goTo(total-1);}});
+  let acc=0,lastNav=0,lastDir=0;
+  document.addEventListener('wheel',e=>{
+    const now=performance.now();
+    const d=e.deltaY;
+    if(now-lastNav<420){acc=0;return;}
+    const dir=d>0?1:-1;
+    if(dir!==lastDir){acc=0;lastDir=dir;}
+    acc+=d;
+    if(Math.abs(acc)>=60){acc=0;lastNav=now;goTo(current+dir);}
+  },{passive:true});
+  let tx=0,ty=0;
+  document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
+  document.addEventListener('touchend',e=>{
+    const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
+    if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy))return;
+    if(dx>0)goTo(current+1);else goTo(current-1);},{passive:true});
+  const KEY='discrete-ch06-progress';
+  function save(){try{localStorage.setItem(KEY,current);}catch(e){}}
+  function load(){try{const p=parseInt(localStorage.getItem(KEY),10);
+    if(!isNaN(p)&&p>=0&&p<total){current=p;}}catch(e){}}
+  load();
+  slides.forEach(s=>s.classList.remove('active','leaving'));
+  slides[current].classList.add('active');
+  renderNav();
+})();
+</script>
+<!--TB-ENHANCE-START-->
+<div id="tb-bar"></div>
+<div id="tb-toast"></div>
+<div id="tb-dock"></div>
+<script id="tb-enhance">
+(function(){
+  if(window.__tbInit) return; window.__tbInit=true;
+  var CH=6;
+  var FILES=["离散数学_第1章_计数和数论基础.html", "离散数学_第2章_集合及其运算.html", "离散数学_第3章_二元关系.html", "离散数学_第4章_特殊关系.html", "离散数学_第5章_命题逻辑.html", "离散数学_第6章_谓词逻辑.html", "离散数学_第7章_图论基础.html", "离散数学_第8章_特殊图.html", "离散数学_第9章_代数系统.html", "离散数学_第10章_群论基础.html", "离散数学_第11章_环域格和布尔代数.html"];
+  var ICON={
+    toc:'<svg viewBox="0 0 24 24"><path d="M8 6h12M8 12h12M8 18h12"/><circle cx="4" cy="6" r="1"/><circle cx="4" cy="12" r="1"/><circle cx="4" cy="18" r="1"/></svg>',
+    grid:'<svg viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>',
+    search:'<svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/></svg>',
+    mark:'<svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg>',
+    home:'<svg viewBox="0 0 24 24"><path d="M3 11l9-8 9 8"/><path d="M5 9.5V21h14V9.5"/></svg>'
+  };
+  function pad(n){return (n<10?'0':'')+n;}
+  var deck=document.getElementById('deck'); if(!deck) return;
+  var slides=Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+  var total=slides.length;
+  function dots(){return document.querySelectorAll('#nav .dot');}
+  function curIdx(){for(var i=0;i<slides.length;i++){if(slides[i].classList.contains('active'))return i;}return 0;}
+  function jump(i){if(i<0||i>=total)return;if(window.__deckGoTo){window.__deckGoTo(i);}else{var d=dots();if(d[i])d[i].click();}closeAll();}
+
+  /* ---------- 持久化：已读 / 书签 ---------- */
+  var RKEY='discrete-ch'+pad(CH)+'-read', BKEY='discrete-ch'+pad(CH)+'-marks';
+  function loadSet(k){try{var v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+  function saveSet(k,o){try{localStorage.setItem(k,JSON.stringify(o));}catch(e){}}
+  var readSet=loadSet(RKEY), markSet=loadSet(BKEY);
+  function readCount(){var n=0;for(var k in readSet)if(readSet[k])n++;return n;}
+
+  /* ---------- 幻灯片元数据 ---------- */
+  var meta=slides.map(function(s,i){
+    var src=s.getAttribute('data-source')||'';
+    var lab=s.getAttribute('data-screen-label')||'';
+    var h=s.querySelector('.display-zh,.h1-zh,.h2-zh');
+    var title=src||(h?h.textContent.trim():'')||('第 '+(i+1)+' 页');
+    return {i:i,src:src,lab:lab,title:title};
+  });
+
+  /* ---------- 控制坞 ---------- */
+  var dock=document.getElementById('tb-dock');
+  function ctl(tip,icon,fn,id){var b=document.createElement('button');b.className='tb-ctl';b.setAttribute('data-tip',tip);b.innerHTML=icon;if(id)b.id=id;b.onclick=function(e){e.stopPropagation();fn();};dock.appendChild(b);return b;}
+  ctl('目录  (M)',ICON.toc,toggleTOC);
+  ctl('总览  (G)',ICON.grid,toggleGrid);
+  ctl('搜索  (/)',ICON.search,openSearch);
+  var bmBtn=ctl('收藏本页  (B)',ICON.mark,toggleMark);
+  ctl('字号  (T)','Aa',cycleFont);
+  ctl('帮助  (?)','?',toggleHelp);
+  ctl('返回书目',ICON.home,function(){parent.location.href='index.html';});
+
+  /* ---------- 浮层骨架 ---------- */
+  function overlay(id,inner){var o=document.createElement('div');o.id=id;o.className='tb-overlay';o.innerHTML=inner;document.body.appendChild(o);o.addEventListener('click',function(e){if(e.target===o)closeAll();});o.addEventListener('wheel',function(e){e.stopPropagation();},{passive:true});return o;}
+  var tocEl=overlay('tb-toc','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">目录 <small id="tb-toc-pct"></small></div><button class="tb-close" data-close>&times;</button></div><div class="tb-pbody" id="tb-toc-body"></div></div>');
+  var gridEl=overlay('tb-grid','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">幻灯片总览 <small id="tb-grid-pct"></small></div><button class="tb-close" data-close>&times;</button></div><div class="tb-pbody"><div class="tb-gwrap" id="tb-grid-body"></div></div></div>');
+  var searchEl=overlay('tb-search','<div class="tb-panel"><div class="tb-phead"><input class="tb-sinput" id="tb-sin" placeholder="搜索本章内容…" autocomplete="off"><button class="tb-close" data-close>&times;</button></div><div class="tb-sres" id="tb-sres"></div></div>');
+  var helpEl=overlay('tb-help','<div class="tb-panel"><div class="tb-phead"><div class="tb-ptitle">使用说明</div><button class="tb-close" data-close>&times;</button></div><div class="tb-help-body" id="tb-help-body"></div></div>');
+  Array.prototype.forEach.call(document.querySelectorAll('[data-close]'),function(b){b.onclick=closeAll;});
+
+  /* ---------- 目录构建 ---------- */
+  (function buildTOC(){
+    var body=document.getElementById('tb-toc-body');
+    var html='', grpTitle='本章导览', opened=false;
+    function grp(t){return '<div class="tb-grp">'+esc(t)+'</div>';}
+    html+=grp('本章导览');
+    meta.forEach(function(m){
+      if(m.lab==='Section'){html+=grp(m.src||'章节');}
+      html+='<div class="tb-item" data-j="'+m.i+'"><span class="tb-idx">'+pad(m.i+1)+'</span><span class="tb-rdot"></span><span class="tb-it-txt">'+esc(m.title)+'</span><span class="tb-star">&#9733;</span></div>';
+    });
+    body.innerHTML=html;
+    body.addEventListener('click',function(e){var it=e.target.closest('.tb-item');if(it)jump(+it.getAttribute('data-j'));});
+  })();
+
+  /* ---------- 总览构建 ---------- */
+  (function buildGrid(){
+    var w=document.getElementById('tb-grid-body'),html='';
+    meta.forEach(function(m){
+      html+='<div class="tb-card" data-j="'+m.i+'"><span class="tb-crd"></span><span class="tb-cnum">'+pad(m.i+1)+' / '+total+'</span>'+(m.lab?'<span class="tb-clab">'+esc(m.lab)+'</span>':'')+'<span class="tb-ctxt">'+esc(m.title)+'</span></div>';
+    });
+    w.innerHTML=html;
+    w.addEventListener('click',function(e){var c=e.target.closest('.tb-card');if(c)jump(+c.getAttribute('data-j'));});
+  })();
+
+  /* ---------- 帮助构建 ---------- */
+  (function buildHelp(){
+    var rows=[['下一页','→ / ↓ / 空格'],['上一页','← / ↑'],['目录','M'],['总览','G'],['搜索','/ 或 Ctrl/⌘ K'],['收藏本页','B'],['字号','T'],['专注模式','F'],['复制代码','悬停代码块点「复制」'],['本章首/末页','Home / End'],['关闭浮层','Esc']];
+    var h='';rows.forEach(function(r){h+='<div class="tb-krow"><span>'+r[0]+'</span><span class="tb-keys"><span class="tb-key">'+r[1]+'</span></span></div>';});
+    var prev=CH>1?FILES[CH-2]:null, next=CH<FILES.length?FILES[CH]:null;
+    h+='<div class="tb-help-foot">';
+    h+='<a class="tb-fbtn"'+(prev?' href="'+encodeURI(prev)+'"':' disabled')+'>&larr; 上一章</a>';
+    h+='<a class="tb-fbtn" href="index.html">全书目录</a>';
+    h+='<a class="tb-fbtn"'+(next?' href="'+encodeURI(next)+'"':' disabled')+'>下一章 &rarr;</a>';
+    h+='</div>';
+    document.getElementById('tb-help-body').innerHTML=h;
+  })();
+
+  /* ---------- 搜索 ---------- */
+  var sin=document.getElementById('tb-sin'), sres=document.getElementById('tb-sres'), stext=[];
+  function slideText(i){if(stext[i]==null){stext[i]=(slides[i].textContent||'').replace(/\s+/g,' ').trim();}return stext[i];}
+  function doSearch(){
+    var q=sin.value.trim();
+    if(!q){sres.innerHTML='<div class="tb-snone">输入关键词以检索本章全部 '+total+' 页内容。</div>';return;}
+    var ql=q.toLowerCase(),out='',n=0;
+    for(var i=0;i<total;i++){
+      var t=slideText(i),tl=t.toLowerCase(),p=tl.indexOf(ql);
+      if(p<0)continue;n++;
+      var s=Math.max(0,p-26);
+      var pre=t.slice(s,p), hit=t.slice(p,p+q.length), post=t.slice(p+q.length,p+q.length+60);
+      var snip=(s>0?'…':'')+esc(pre)+'<mark>'+esc(hit)+'</mark>'+esc(post)+'…';
+      out+='<div class="tb-sr" data-j="'+i+'"><div class="tb-sr-t"><span class="tb-idx">'+pad(i+1)+'</span>'+esc(meta[i].title)+'</div><div class="tb-sr-s">'+snip+'</div></div>';
+      if(n>=60)break;
+    }
+    sres.innerHTML=out||'<div class="tb-snone">未找到「'+esc(q)+'」。</div>';
+  }
+  sin.addEventListener('input',doSearch);
+  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
+  sres.addEventListener('click',function(e){var r=e.target.closest('.tb-sr');if(r)jump(+r.getAttribute('data-j'));});
+
+  /* ---------- 习题自测：隐藏答案 ---------- */
+  (function exercises(){
+    slides.forEach(function(s){
+      var lab=(s.getAttribute('data-screen-label')||'').toLowerCase();
+      var src=s.getAttribute('data-source')||'';
+      if(lab.indexOf('exercise')<0 && src.indexOf('习题')<0) return;
+      var lis=s.querySelectorAll('ol.biglist li, ol.steps li, .biglist li');
+      Array.prototype.forEach.call(lis,function(li){
+        if(li.getAttribute('data-tb-ex'))return;
+        var html=li.innerHTML,mathKeep=[];
+        html=html.replace(/<span[^>]*math-inline-source[^>]*>[\s\S]*?<\/span>/g,function(m){
+          var token='@@TBMATH'+mathKeep.length+'@@'; mathKeep.push(m); return token;
+        });
+        if(/[（(]/.test(html)){
+          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner){
+            return '<span class="tb-ans" title="点击查看答案">（<span class="tb-ans-x">'+inner+'</span>）</span>';
+          });
+          html=html.replace(/@@TBMATH(\d+)@@/g,function(m,i){return mathKeep[+i];});
+          li.innerHTML=html; li.setAttribute('data-tb-ex','1');
+        }
+      });
+    });
+    document.addEventListener('click',function(e){
+      var a=e.target.closest?e.target.closest('.tb-ans'):null;
+      if(a){a.classList.toggle('tb-revealed');e.stopPropagation();}
+    });
+  })();
+
+  /* ---------- 代码一键复制 ---------- */
+  (function copyButtons(){
+    var COPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
+    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);return true;}catch(e){return false;}}
+    Array.prototype.forEach.call(document.querySelectorAll('pre.code'),function(pre){
+      if(pre.__tbCopy)return; pre.__tbCopy=1;
+      var wrap=document.createElement('div'); wrap.className='tb-codewrap';
+      pre.parentNode.insertBefore(wrap,pre); wrap.appendChild(pre);
+      var btn=document.createElement('button'); btn.className='tb-copy'; btn.type='button';
+      btn.setAttribute('aria-label','复制代码'); btn.innerHTML=COPY+'<span>复制</span>';
+      var label=btn.querySelector('span');
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        var code=pre.querySelector('code'); var text=(code?code.innerText:pre.innerText).replace(/\u00a0/g,' ');
+        function done(){btn.classList.add('tb-copied');label.textContent='已复制';toast('代码已复制到剪贴板');clearTimeout(btn.__t);btn.__t=setTimeout(function(){btn.classList.remove('tb-copied');label.textContent='复制';},1600);}
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallbackCopy(text);done();});}
+        else{fallbackCopy(text);done();}
+      });
+      wrap.appendChild(btn);
+    });
+  })();
+
+  /* ---------- 字号 ---------- */
+  var fonts=['100%','112%','124%','90%'],fi=0;
+  try{var fs=+localStorage.getItem('tb-font');if(fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
+  function applyFont(){document.documentElement.style.fontSize=fonts[fi];}
+  function cycleFont(){fi=(fi+1)%fonts.length;applyFont();try{localStorage.setItem('tb-font',fi);}catch(e){}toast('字号：<b>'+fonts[fi]+'</b>');}
+
+  /* ---------- 专注模式 ---------- */
+  function toggleFocus(){document.body.classList.toggle('tb-focus');toast(document.body.classList.contains('tb-focus')?'已进入<b>专注模式</b>（按 F 退出）':'已退出专注模式');}
+
+  /* ---------- 浮层开关 ---------- */
+  function anyOpen(){return document.querySelector('.tb-overlay.tb-show');}
+  function closeAll(){Array.prototype.forEach.call(document.querySelectorAll('.tb-overlay.tb-show'),function(o){o.classList.remove('tb-show');});}
+  function toggleO(el,after){var was=el.classList.contains('tb-show');closeAll();if(!was){el.classList.add('tb-show');if(after)after();}}
+  function toggleTOC(){toggleO(tocEl,function(){updateTOCcur(curIdx());var cur=tocEl.querySelector('.tb-cur');if(cur)cur.scrollIntoView({block:'center'});});}
+  function toggleGrid(){toggleO(gridEl,function(){updateGridCur(curIdx());});}
+  function openSearch(){toggleO(searchEl,function(){doSearch();setTimeout(function(){sin.focus();sin.select();},60);});}
+  function toggleHelp(){toggleO(helpEl);}
+
+  /* ---------- 书签 ---------- */
+  function toggleMark(){var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
+  function updateMarkUI(i){bmBtn.classList.toggle('tb-on',!!markSet[i]);var it=tocEl.querySelector('.tb-item[data-j="'+i+'"]');if(it)it.classList.toggle('tb-mark',!!markSet[i]);}
+
+  /* ---------- 状态同步 ---------- */
+  function updateTOCcur(i){
+    Array.prototype.forEach.call(tocEl.querySelectorAll('.tb-item'),function(it){
+      var j=+it.getAttribute('data-j');
+      it.classList.toggle('tb-cur',j===i);
+      it.classList.toggle('tb-isread',!!readSet[j]);
+      it.classList.toggle('tb-mark',!!markSet[j]);
+    });
+    var pct=Math.round(readCount()/total*100);
+    var el=document.getElementById('tb-toc-pct');if(el)el.textContent='已读 '+pct+'%';
+  }
+  function updateGridCur(i){
+    Array.prototype.forEach.call(gridEl.querySelectorAll('.tb-card'),function(c){
+      var j=+c.getAttribute('data-j');
+      c.classList.toggle('tb-cur',j===i);
+      c.classList.toggle('tb-isread',!!readSet[j]);
+    });
+    var pct=Math.round(readCount()/total*100);
+    var el=document.getElementById('tb-grid-pct');if(el)el.textContent='已读 '+readCount()+' / '+total+'（'+pct+'%）';
+  }
+  function updateBar(i){var b=document.getElementById('tb-bar');if(b)b.style.width=((i+1)/total*100)+'%';}
+  function updateTheme(i){document.body.setAttribute('data-tb-theme',slides[i].getAttribute('data-theme')||'dark');}
+
+  var raf=null;
+  function onChange(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;
+    var i=curIdx();
+    if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}
+    updateBar(i);updateTheme(i);updateMarkUI(i);
+    if(tocEl.classList.contains('tb-show'))updateTOCcur(i);
+    if(gridEl.classList.contains('tb-show'))updateGridCur(i);
+    var s=slides[i];
+    if(!s.__tbHinted && s.querySelector('.tb-ans')){s.__tbHinted=1;toast('本页为<b>习题</b>：答案已隐藏，点击模糊处逐题查看');}
+  });}
+  new MutationObserver(onChange).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});
+
+  /* ---------- 提示气泡 ---------- */
+  var toastT=null;
+  function toast(html){var t=document.getElementById('tb-toast');t.innerHTML=html;t.classList.add('tb-show');clearTimeout(toastT);toastT=setTimeout(function(){t.classList.remove('tb-show');},2600);}
+
+  /* ---------- 键盘（捕获阶段，先于原导航） ---------- */
+  document.addEventListener('keydown',function(e){
+    if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){if(!searchEl.classList.contains('tb-show'))openSearch();e.preventDefault();e.stopPropagation();return;}
+    if(anyOpen()){
+      if(e.key==='Escape'){closeAll();e.stopPropagation();e.preventDefault();return;}
+      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].indexOf(e.key)>-1){e.stopPropagation();}
+      return;
+    }
+    var tn=(e.target.tagName||'');
+    if(tn==='INPUT'||tn==='TEXTAREA')return;
+    var k=e.key;
+    if(k==='m'||k==='M'){toggleTOC();e.stopPropagation();}
+    else if(k==='g'||k==='G'){toggleGrid();e.stopPropagation();}
+    else if(k==='/'){openSearch();e.preventDefault();e.stopPropagation();}
+    else if(k==='?'){toggleHelp();e.stopPropagation();}
+    else if(k==='b'||k==='B'){toggleMark();e.stopPropagation();}
+    else if(k==='t'||k==='T'){cycleFont();e.stopPropagation();}
+    else if(k==='f'||k==='F'){toggleFocus();e.stopPropagation();}
+  },true);
+
+  /* ---------- 初始化 ---------- */
+  var i0=curIdx();updateBar(i0);updateTheme(i0);updateMarkUI(i0);if(!readSet[i0]){readSet[i0]=1;saveSet(RKEY,readSet);}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  try{if(!localStorage.getItem('tb-hint-seen')){localStorage.setItem('tb-hint-seen','1');setTimeout(function(){toast('数字教材模式已启用 · <b>M</b> 目录 · <b>G</b> 总览 · <b>/</b> 搜索 · <b>?</b> 帮助');},900);}}catch(e){}
+})();
+</script>
+<!--TB-ENHANCE-END-->
+
+
+
+
+<script>
+(function(){
+  if(window.__appVideoRuntimeV3) return; window.__appVideoRuntimeV3=true;
+
+  function absUrl(rel){
+    try{ return new URL(rel, document.baseURI || location.href).href; }
+    catch(e){ return rel; }
+  }
+
+  function fixVideo(v){
+    var rel=v.getAttribute('data-app-video') || v.getAttribute('src');
+    if(!rel) return;
+    // strip query noise
+    var abs=absUrl(rel);
+    var cur=v.currentSrc || v.getAttribute('src') || '';
+    if(cur!==abs){
+      v.setAttribute('src', abs);
+      try{ v.load(); }catch(e){}
+    }
+    // ensure visible box
+    v.setAttribute('playsinline','');
+    v.setAttribute('controls','');
+    v.setAttribute('preload','auto');
+  }
+
+  function fixAll(){
+    document.querySelectorAll('video[data-app-video], .app-video-stage video').forEach(fixVideo);
+  }
+
+  function pauseOthers(except){
+    document.querySelectorAll('video').forEach(function(v){
+      if(except && v===except) return;
+      try{ v.pause(); }catch(e){}
+    });
+  }
+
+  // When a slide becomes active, reload its videos (metadata may not load while hidden)
+  function watchSlides(){
+    var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
+    if(!slides.length) return;
+    var obs=new MutationObserver(function(){
+      slides.forEach(function(s){
+        var active=s.classList.contains('active')||s.classList.contains('visible');
+        s.querySelectorAll('video').forEach(function(v){
+          if(active){
+            fixVideo(v);
+          }else{
+            try{ v.pause(); }catch(e){}
+          }
+        });
+      });
+    });
+    slides.forEach(function(s){ obs.observe(s,{attributes:true,attributeFilter:['class']}); });
+  }
+
+  document.addEventListener('play', function(e){
+    if(e.target && e.target.tagName==='VIDEO') pauseOthers(e.target);
+  }, true);
+
+  document.addEventListener('error', function(e){
+    if(e.target && e.target.tagName==='VIDEO'){
+      console.warn('video error', e.target.getAttribute('src'), e.target.error);
+      // one retry with cache buster
+      var v=e.target;
+      var rel=v.getAttribute('data-app-video');
+      if(rel && !v.__retried){
+        v.__retried=true;
+        v.src=absUrl(rel)+(absUrl(rel).indexOf('?')>-1?'&':'?')+'t='+Date.now();
+        try{ v.load(); }catch(err){}
+      }
+    }
+  }, true);
+
+  if(document.readyState==='loading'){
+    document.addEventListener('DOMContentLoaded', function(){ fixAll(); watchSlides(); });
+  }else{
+    fixAll(); watchSlides();
+  }
+  setTimeout(fixAll, 300);
+  setTimeout(fixAll, 1200);
+})();
+</script>
+
+</body>
+</html>
