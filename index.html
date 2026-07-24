@@ -159,17 +159,54 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
 @media(max-width:760px){.index-key-list{grid-template-columns:1fr}.index-tool-panel{padding:22px 18px}.gcard[role="button"]{min-height:0}}
 
 </style>
+
+<style id="index-mk">
+/* ---------- 数字资源条 ---------- */
+.res-band{margin:0 70px clamp(2rem,5vh,3.2rem);display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:0;border:1px solid var(--line)}
+.res-decl{display:flex;align-items:center;gap:1.2rem;padding:clamp(1.3rem,3vh,2rem) clamp(1.4rem,3vw,2.2rem);
+  border-right:1px solid var(--line)}
+.res-play{width:3.2rem;height:3.2rem;border-radius:50%;border:1px solid var(--line);background:transparent;
+  color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto;
+  padding:0;transition:background .22s,color .22s}
+.res-play:hover,.res-play.on{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.res-play svg{width:34%;height:34%;fill:currentColor}
+.res-play .ic-pause{display:none}
+.res-play.on .ic-play{display:none}
+.res-play.on .ic-pause{display:block}
+.res-decl-b{min-width:0;flex:1 1 auto}
+.res-decl-t{font:400 1.28rem/1.3 var(--serif);color:var(--ink)}
+.res-decl-m{font:400 .84rem/1.6 var(--sans);color:var(--muted);margin-top:.2rem}
+.res-decl-bar{height:1px;background:var(--stone);margin-top:.75rem}
+.res-decl-bar i{display:block;height:1px;width:0;background:var(--ink)}
+.res-stats{display:grid;grid-template-columns:repeat(3,1fr)}
+.res-stat{padding:clamp(1.3rem,3vh,2rem) clamp(1rem,2vw,1.5rem);display:flex;flex-direction:column;gap:.2rem}
+.res-stat+.res-stat{border-left:1px solid var(--line)}
+.res-stat b{font:400 clamp(1.7rem,3vw,2.5rem)/1 var(--serif);color:var(--ink)}
+.res-stat span{font:400 .92rem/1.4 var(--serif);color:var(--ink)}
+.res-stat em{font-style:normal;font:400 .74rem/1.4 var(--sans);letter-spacing:.06em;color:var(--accent)}
+/* ---------- 章节卡资源徽标 ---------- */
+.ch-res{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1rem}
+.ch-res li{list-style:none;font:500 .67rem/1 var(--sans);letter-spacing:.02em;color:var(--accent);
+  border:1px solid var(--line);padding:.34em .66em;white-space:nowrap}
+.ch-card:hover .ch-res li{border-color:var(--accent)}
+@media(max-width:900px){.res-band{grid-template-columns:1fr;margin-left:18px;margin-right:18px}
+  .res-decl{border-right:0;border-bottom:1px solid var(--line)}}
+@media(max-width:620px){.res-stats{grid-template-columns:1fr}
+  .res-stat+.res-stat{border-left:0;border-top:1px solid var(--line)}}
+</style>
+<!--MK-INDEX-V1-->
 </head>
 <body>
 <header class="hero">
   <div class="kicker">Discrete Mathematics · 数字教材</div>
   <h1 class="htitle">离散数学</h1>
-  <p class="hsub">从计数、集合、关系、逻辑到图论与代数结构 —— 十一章交互式数字教材，每个概念都配有 Python 实现、可视化与自测习题。</p>
+  <p class="hsub">从计数、集合、关系、逻辑到图论与代数结构 —— 十一章交互式数字教材。每一小节均嵌入微课视频、播客音频与可运行的 Python 配套源码，看、听、读、练四条学习路径合而为一。</p>
   <div class="hstats">
     <div class="hstat"><div class="n">11</div><div class="l">章</div></div>
-    <div class="hstat"><div class="n">773</div><div class="l">知识页</div></div>
-    <div class="hstat"><div class="n">Python</div><div class="l">代码实现</div></div>
-    <div class="hstat" id="visitStat" style="display:none"><div class="n"><span id="busuanzi_value_site_pv"></span></div><div class="l">累计访问</div></div>
+    <div class="hstat"><div class="n">996</div><div class="l">知识页</div></div>
+    <div class="hstat"><div class="n">611</div><div class="l">分钟音视频</div></div>
+    <div class="hstat"><div class="n">3792</div><div class="l">行配套源码</div></div>
   </div>
   <div class="overall">
     <div class="obar"><div class="ofill" id="ofill"></div></div>
@@ -177,128 +214,156 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     <button class="reset" id="reset">清除全部阅读记录</button>
   </div>
 </header>
+
+<section class="res-band">
+  <div class="res-decl">
+    <button class="res-play" id="declPlay" type="button" aria-label="播放作者声明"><svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="ic-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button>
+    <div class="res-decl-b">
+      <div class="res-decl-t">作者声明</div>
+      <div class="res-decl-m">音频 · 00:10 · 关于本教材的编写、使用与版权说明</div>
+      <div class="res-decl-bar"><i></i></div>
+    </div>
+    <audio id="declAudio" preload="none" src="assets/podcasts/0-author-statement.mp3"></audio>
+  </div>
+  <div class="res-stats">
+    <div class="res-stat"><b>36</b><span>讲微课视频</span><em>约 293 分钟 · 逐节导学</em></div>
+    <div class="res-stat"><b>36</b><span>期播客音频</span><em>约 318 分钟 · 可后台收听</em></div>
+    <div class="res-stat"><b>253</b><span>段配套源码</span><em>共 3792 行 · 可复制下载</em></div>
+  </div>
+</section>
 <main>
   <h2 class="sec-h">目录</h2>
-  <p class="sec-sub">点击任意章节进入。学习进度、书签与自测记录会保存在浏览器本地；建议从第 1 章按序学习，亦可按需跳转。</p>
+  <p class="sec-sub">点击任意章节进入。每章章首设有「本章数字资源」总览页，每个小节按<strong>微课视频 → 正文 → 配套源码 → 播客音频 → 习题</strong>的动线编排；章内按 <span class="kbd">V</span> 打开资源面板、<span class="kbd">A</span> 收听本节播客、<span class="kbd">C</span> 浏览配套源码。学习进度、书签与自测记录保存在浏览器本地。</p>
   <div class="grid">
-      <a class="ch-card" href="离散数学_第1章_计数和数论基础.html" data-ch="1" data-exercise="22">
+      <a class="ch-card" href="离散数学_第1章_计数和数论基础.html" data-ch="1" data-exercise="22" data-hub="4">
         <div class="ch-top">
           <span class="ch-no">第 1 章</span>
-          <span class="ch-pages" data-pages="70">70 页</span>
+          <span class="ch-pages" data-pages="92">92 页</span>
         </div>
         <h3 class="ch-name">计数和数论基础</h3>
         <p class="ch-sub">从加法乘法法则到 RSA 加密，计数与数论如何构成离散世界的底层语言，并用 Python 逐一实现</p>
         <ul class="ch-secs"><li>1.1 计数基础</li><li>1.2 数论基础</li><li>1.3 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 3 讲</li><li>播客 3 期</li><li>源码 24 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="1"></div></div>
         <div class="ch-prog-txt" data-ch="1">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第2章_集合及其运算.html" data-ch="2" data-exercise="27">
+      <a class="ch-card" href="离散数学_第2章_集合及其运算.html" data-ch="2" data-exercise="27" data-hub="4">
         <div class="ch-top">
           <span class="ch-no">第 2 章</span>
-          <span class="ch-pages" data-pages="76">76 页</span>
+          <span class="ch-pages" data-pages="97">97 页</span>
         </div>
         <h3 class="ch-name">集合及其运算</h3>
         <p class="ch-sub">从康托尔的集合论到交并补差与容斥原理，集合如何成为现代数学的通用语言，并用 Python 逐一实现</p>
         <ul class="ch-secs"><li>2.1 集合概述</li><li>2.2 集合运算和性质</li><li>2.3 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 3 讲</li><li>播客 3 期</li><li>源码 22 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="2"></div></div>
         <div class="ch-prog-txt" data-ch="2">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第3章_二元关系.html" data-ch="3" data-exercise="30">
+      <a class="ch-card" href="离散数学_第3章_二元关系.html" data-ch="3" data-exercise="30" data-hub="3">
         <div class="ch-top">
           <span class="ch-no">第 3 章</span>
-          <span class="ch-pages" data-pages="86">86 页</span>
+          <span class="ch-pages" data-pages="109">109 页</span>
         </div>
         <h3 class="ch-name">二元关系</h3>
         <p class="ch-sub">从有序对与笛卡儿积到关系的运算、性质与闭包，二元关系如何用矩阵和有向图刻画元素之间的联系，并用 Python 逐一实现</p>
         <ul class="ch-secs"><li>3.1 二元关系概述</li><li>3.2 二元关系的运算和性质</li><li>3.3 二元关系的闭包</li><li>3.4 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 4 讲</li><li>播客 4 期</li><li>源码 25 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="3"></div></div>
         <div class="ch-prog-txt" data-ch="3">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第4章_特殊关系.html" data-ch="4" data-exercise="29">
+      <a class="ch-card" href="离散数学_第4章_特殊关系.html" data-ch="4" data-exercise="29" data-hub="3">
         <div class="ch-top">
           <span class="ch-no">第 4 章</span>
-          <span class="ch-pages" data-pages="81">81 页</span>
+          <span class="ch-pages" data-pages="105">105 页</span>
         </div>
         <h3 class="ch-name">特殊关系</h3>
         <p class="ch-sub">相容、等价、偏序、全序与函数，再到无限集合的基数，特殊关系如何用分类、秩序与映射组织世界，并用 Python 逐一实现</p>
         <ul class="ch-secs"><li>4.1 几种特殊关系</li><li>4.2 函数关系</li><li>4.3 无限集合</li><li>4.4 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 4 讲</li><li>播客 4 期</li><li>源码 23 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="4"></div></div>
         <div class="ch-prog-txt" data-ch="4">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第5章_命题逻辑.html" data-ch="5" data-exercise="14">
+      <a class="ch-card" href="离散数学_第5章_命题逻辑.html" data-ch="5" data-exercise="14" data-hub="3">
         <div class="ch-top">
           <span class="ch-no">第 5 章</span>
-          <span class="ch-pages" data-pages="72">72 页</span>
+          <span class="ch-pages" data-pages="91">91 页</span>
         </div>
         <h3 class="ch-name">命题逻辑</h3>
         <p class="ch-sub">从命题与联结词到真值表、范式与推理，命题逻辑如何把真与假的判断变成可计算的形式系统，并用 Python 逐一实现</p>
         <ul class="ch-secs"><li>5.1 命题与联结词</li><li>5.2 命题公式</li><li>5.3 命题逻辑推理</li><li>5.4 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 4 讲</li><li>播客 4 期</li><li>源码 27 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="5"></div></div>
         <div class="ch-prog-txt" data-ch="5">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第6章_谓词逻辑.html" data-ch="6" data-exercise="11">
+      <a class="ch-card" href="离散数学_第6章_谓词逻辑.html" data-ch="6" data-exercise="11" data-hub="4">
         <div class="ch-top">
           <span class="ch-no">第 6 章</span>
-          <span class="ch-pages" data-pages="55">55 页</span>
+          <span class="ch-pages" data-pages="74">74 页</span>
         </div>
         <h3 class="ch-name">谓词逻辑</h3>
         <p class="ch-sub">从个体词、谓词与量词到谓词公式、前束范式与演算推证，谓词逻辑如何用 ∀ 和 ∃ 把命题逻辑扩展为可量化的一阶形式系统</p>
         <ul class="ch-secs"><li>6.1 自然语言的谓词符号化</li><li>6.2 谓词公式</li><li>6.3 谓词逻辑推理</li><li>6.4 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 4 讲</li><li>播客 4 期</li><li>源码 4 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="6"></div></div>
         <div class="ch-prog-txt" data-ch="6">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第7章_图论基础.html" data-ch="7" data-exercise="20">
+      <a class="ch-card" href="离散数学_第7章_图论基础.html" data-ch="7" data-exercise="20" data-hub="3">
         <div class="ch-top">
           <span class="ch-no">第 7 章</span>
-          <span class="ch-pages" data-pages="52">52 页</span>
+          <span class="ch-pages" data-pages="71">71 页</span>
         </div>
         <h3 class="ch-name">图论基础</h3>
         <p class="ch-sub">从哥尼斯堡七桥到顶点与边、连通性、矩阵表示与最短路径，图论如何把复杂系统的关系抽象成可计算的网络，并用 Python 逐一实现</p>
         <ul class="ch-secs"><li>7.1 图概述</li><li>7.2 图的连通</li><li>7.3 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 3 讲</li><li>播客 3 期</li><li>源码 30 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="7"></div></div>
         <div class="ch-prog-txt" data-ch="7">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第8章_特殊图.html" data-ch="8" data-exercise="53">
+      <a class="ch-card" href="离散数学_第8章_特殊图.html" data-ch="8" data-exercise="53" data-hub="3">
         <div class="ch-top">
           <span class="ch-no">第 8 章</span>
-          <span class="ch-pages" data-pages="104">104 页</span>
+          <span class="ch-pages" data-pages="126">126 页</span>
         </div>
         <h3 class="ch-name">特殊图</h3>
         <p class="ch-sub">从欧拉回路到哈密顿圈、从二部图匹配到平面图与对偶、再到树与最小生成树和哈夫曼编码，本章把图论提升为面向应用的强大建模工具，并逐一用 Python 实现</p>
         <ul class="ch-secs"><li>8.1 多类型的图</li><li>8.2 多类型的树</li><li>8.3 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 3 讲</li><li>播客 3 期</li><li>源码 16 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="8"></div></div>
         <div class="ch-prog-txt" data-ch="8">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第9章_代数系统.html" data-ch="9" data-exercise="30">
+      <a class="ch-card" href="离散数学_第9章_代数系统.html" data-ch="9" data-exercise="30" data-hub="3">
         <div class="ch-top">
           <span class="ch-no">第 9 章</span>
-          <span class="ch-pages" data-pages="61">61 页</span>
+          <span class="ch-pages" data-pages="79">79 页</span>
         </div>
         <h3 class="ch-name">代数系统</h3>
         <p class="ch-sub">从一元、二元到 n 元运算，从结合律、单位元到子代数、积代数、同态与同构，代数系统为数学提供统一的语言，并在密码学、编码理论与计算机科学中广泛应用</p>
         <ul class="ch-secs"><li>9.1 代数系统运算</li><li>9.2 多类型代数系统</li><li>9.3 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 3 讲</li><li>播客 3 期</li><li>源码 21 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="9"></div></div>
         <div class="ch-prog-txt" data-ch="9">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第10章_群论基础.html" data-ch="10" data-exercise="51">
+      <a class="ch-card" href="离散数学_第10章_群论基础.html" data-ch="10" data-exercise="51" data-hub="3">
         <div class="ch-top">
           <span class="ch-no">第 10 章</span>
-          <span class="ch-pages" data-pages="58">58 页</span>
+          <span class="ch-pages" data-pages="73">73 页</span>
         </div>
         <h3 class="ch-name">群论基础</h3>
         <p class="ch-sub">从半群、独异点到群，从子群、循环群、置换群到陪集、拉格朗日定理与商群，群论用代数语言刻画对称与结构，是密码学与编码理论的数学根基</p>
         <ul class="ch-secs"><li>10.1 群</li><li>10.2 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 2 讲</li><li>播客 2 期</li><li>源码 40 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="10"></div></div>
         <div class="ch-prog-txt" data-ch="10">未开始</div>
       </a>
-      <a class="ch-card" href="离散数学_第11章_环域格和布尔代数.html" data-ch="11" data-exercise="26">
+      <a class="ch-card" href="离散数学_第11章_环域格和布尔代数.html" data-ch="11" data-exercise="26" data-hub="3">
         <div class="ch-top">
           <span class="ch-no">第 11 章</span>
-          <span class="ch-pages" data-pages="58">58 页</span>
+          <span class="ch-pages" data-pages="79">79 页</span>
         </div>
         <h3 class="ch-name">环、域、格和布尔代数</h3>
         <p class="ch-sub">从带两种运算的环与域，到由偏序生成的格，再到具有补元的布尔代数，本章把代数结构推向更丰富的层次，奠定编码理论与数字逻辑的数学根基</p>
         <ul class="ch-secs"><li>11.1 环和域</li><li>11.2 格和布尔代数</li><li>11.3 应用案例和 Python 实现</li></ul>
+        <ul class="ch-res"><li>微课 3 讲</li><li>播客 3 期</li><li>源码 21 段</li></ul>
         <div class="ch-prog"><div class="ch-prog-bar" data-ch="11"></div></div>
         <div class="ch-prog-txt" data-ch="11">未开始</div>
       </a></div>
@@ -307,10 +372,11 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     <div class="gcard"><h4><span class="ic">⌨</span> 翻页与导航</h4><p>方向键 / 空格翻页；按 <span class="kbd">M</span> 打开目录、<span class="kbd">G</span> 缩略总览、<span class="kbd">/</span> 全文搜索、<span class="kbd">?</span> 查看全部快捷键。</p></div>
     <div class="gcard"><h4><span class="ic">✎</span> 习题自测</h4><p>习题页的答案默认<strong>模糊隐藏</strong>，先独立思考，再点击模糊处逐题揭晓，符合主动回忆的认知规律。</p></div>
     <div class="gcard"><h4><span class="ic">★</span> 书签与进度</h4><p>按 <span class="kbd">B</span> 收藏重点页；每页阅读自动记录，目录与本页可随时查看已读百分比。</p></div>
+    <div class="gcard"><h4><span class="ic">▶</span> 数字资源</h4><p>每节配有<strong>微课视频</strong>与<strong>播客音频</strong>，播客支持后台收听与倍速；<strong>配套源码</strong>可在线阅读、一键复制或下载。章内按 <span class="kbd">V</span> 打开资源面板。</p></div>
     <div class="gcard"><h4><span class="ic">◑</span> 专注与字号</h4><p>按 <span class="kbd">F</span> 进入专注模式隐藏页眉页脚，按 <span class="kbd">T</span> 循环切换字号，适配不同屏幕与阅读习惯。</p></div>
   </div>
 </main>
-<footer>离散数学 · 基于 Python 语言的实现 &nbsp;|&nbsp; 数字教材增强版 &nbsp;|&nbsp; 进度数据存储于浏览器本地<div style="margin-top:.7rem">离散数学数字化教材©2026 湖南信息学院 ｜ 作者：谢鑫</div></footer>
+<footer>离散数学 · 基于 Python 语言的实现 &nbsp;|&nbsp; 数字教材发布版 · 微课 36 讲 / 播客 36 期 / 源码 253 段 &nbsp;|&nbsp; 进度数据存储于浏览器本地<div style="margin-top:.7rem">离散数学数字化教材©2026 湖南信息学院 ｜ 作者：谢鑫</div></footer>
 <script>
 (function(){
   var FILES=["离散数学_第1章_计数和数论基础.html", "离散数学_第2章_集合及其运算.html", "离散数学_第3章_二元关系.html", "离散数学_第4章_特殊关系.html", "离散数学_第5章_命题逻辑.html", "离散数学_第6章_谓词逻辑.html", "离散数学_第7章_图论基础.html", "离散数学_第8章_特殊图.html", "离散数学_第9章_代数系统.html", "离散数学_第10章_群论基础.html", "离散数学_第11章_环域格和布尔代数.html"], N=FILES.length;
@@ -403,6 +469,16 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     var html='<h3>阅读进度</h3>'+(progress.length?'<div class="index-tool-grid">'+progress.join('')+'</div>':'<div class="index-tool-empty">尚无阅读记录。</div>')+'<h3 style="margin-top:24px">收藏书签</h3>'+(marks.length?'<div class="index-tool-grid">'+marks.join('')+'</div>':'<div class="index-tool-empty">尚未收藏页面。进入章节后按 B 即可收藏。</div>');
     openPanel('书签与进度',html);
   }
+  function showResources(){
+    var html='<div class="index-tool-grid">'+cards.map(function(card,i){
+      var res=Array.prototype.map.call(card.querySelectorAll('.ch-res li'),function(li){return li.textContent.trim();}).join('　·　');
+      return '<button class="index-tool-item" data-index-nav data-card="'+i+'" data-slide="'+(card.getAttribute('data-hub')||0)+'">'
+        +'<b>'+esc(card.querySelector('.ch-name').textContent.trim())+'</b>'
+        +'<small>'+esc(res)+'</small></button>';
+    }).join('')+'</div>';
+    openPanel('各章数字资源总览','<div class="index-tool-empty">点击任意章节，直接进入该章的「本章数字资源」总览页；'
+      +'章内按 V 打开资源面板、A 收听本节播客、C 浏览配套源码。</div>'+html);
+  }
   function showHelp(){
     var rows=[['方向键 / 空格','章节翻页；目录页用方向键选择章节'],['M','定位全书目录'],['G','打开章节缩略总览'],['/ 或 Ctrl/⌘ + K','搜索目录；章节内搜索全文'],['?','打开快捷键说明'],['B','查看目录书签；章节内收藏当前页'],['F','切换专注模式'],['T','循环切换字号'],['Esc','关闭当前面板']];
     openPanel('快捷键与导航','<div class="index-key-list">'+rows.map(function(r){return '<div class="index-key-row"><span>'+esc(r[0])+'</span><kbd>'+esc(r[1])+'</kbd></div>';}).join('')+'</div><div class="index-tool-actions"><button class="index-tool-btn" data-index-setting="focus">切换专注模式</button><button class="index-tool-btn" data-index-setting="font">增大字号</button></div>');
@@ -415,7 +491,7 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
   function cycleFont(){fontIndex=(fontIndex+1)%fontSizes.length;applyFont();try{localStorage.setItem('index-font',String(fontIndex));}catch(e){}toast('目录字号：'+fontSizes[fontIndex]);}
   function resetFont(){fontIndex=0;applyFont();try{localStorage.setItem('index-font','0');}catch(e){}toast('已恢复默认字号');}
   try{var fi=+localStorage.getItem('index-font');if(fi>=0&&fi<fontSizes.length){fontIndex=fi;applyFont();}if(localStorage.getItem('index-focus')==='1')document.body.classList.add('index-focus');}catch(e){}
-  var actions=[showHelp,startExercise,showBookmarks,showSettings],labels=['打开快捷键','开始自测','查看书签与进度','打开阅读设置'];
+  var actions=[showHelp,startExercise,showBookmarks,showResources,showSettings],labels=['打开快捷键','开始自测','查看书签与进度','查看各章资源','打开阅读设置'];
   guides.forEach(function(card,i){card.setAttribute('role','button');card.setAttribute('tabindex','0');card.setAttribute('data-action-label',labels[i]);card.addEventListener('click',actions[i]);card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();actions[i]();}});});
   document.addEventListener('keydown',function(e){
     var tag=(e.target.tagName||'').toUpperCase(),typing=tag==='INPUT'||tag==='TEXTAREA'||e.target.isContentEditable;
@@ -436,19 +512,20 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
 })();
 </script>
 
-<script defer src="https://cn.vercount.one/js"></script>
-<script id="visit-counter-v1">
+
+<script id="index-mk-audio">
 (function(){
-  /* 全局访问计数：不蒜子加载成功并填入数字后再显示，离线时保持隐藏 */
-  var tries=0;
-  var t=setInterval(function(){
-    tries++;
-    var v=document.getElementById('busuanzi_value_site_pv');
-    var box=document.getElementById('visitStat');
-    if(v&&box&&v.textContent&&v.textContent.replace(/\s/g,'')!==''){
-      box.style.display='';clearInterval(t);
-    }else if(tries>40){clearInterval(t);}
-  },250);
+  var a=document.getElementById('declAudio'), b=document.getElementById('declPlay');
+  if(!a||!b) return;
+  var bar=document.querySelector('.res-decl-bar i');
+  b.onclick=function(){ if(a.paused){ a.play(); } else { a.pause(); } };
+  function sync(){ b.classList.toggle('on', !a.paused && !a.ended);
+    if(bar) bar.style.width=(a.duration?(a.currentTime/a.duration*100):0).toFixed(1)+'%'; }
+  ['play','pause','ended','timeupdate'].forEach(function(e){ a.addEventListener(e,sync); });
+  a.addEventListener('error',function(){
+    var m=document.querySelector('.res-decl-m');
+    if(m) m.textContent='音频文件读取失败，请确认 assets/podcasts 目录完整';
+  });
 })();
 </script>
 </body>

@@ -485,6 +485,220 @@ window.MathJax={
 };
 </script>
 <script defer="" src="assets/mathjax/tex-chtml.js"></script>
+<style id="mk-style">
+/* ===================================================================
+   数字资源层 · 微课视频 / 播客音频 / 配套源码
+   =================================================================== */
+
+/* ---------- 通用 ---------- */
+.mk-page .slide-body{display:flex;flex-direction:column;justify-content:center;gap:clamp(.7rem,1.7vh,1.4rem);min-height:0}
+.mk-w{width:var(--w-wide);margin:0 auto;display:flex;flex-direction:column;gap:clamp(.7rem,1.7vh,1.4rem);min-height:0}
+.mk-tag{display:inline-block;font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:clamp(.68rem,.78vw,.86rem);font-weight:500;letter-spacing:.1em;
+  color:var(--accent)!important;border:1px solid var(--line);border-radius:0;
+  padding:.34em .9em;white-space:nowrap;line-height:1.2!important}
+.mk-head{display:flex;align-items:center;gap:clamp(.8rem,1.6vw,1.3rem);flex-wrap:wrap;flex:0 0 auto}
+.mk-metaline{font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:clamp(.7rem,.82vw,.92rem);letter-spacing:.08em;color:var(--accent)!important;font-weight:500}
+.mk-title{margin:0;font-size:clamp(1.6rem,2.8vw,2.5rem)!important;line-height:1.2!important;flex:0 0 auto}
+.mk-foot-hint{margin:0;font-size:clamp(.78rem,.9vw,1rem)!important;line-height:1.6!important;
+  color:var(--accent)!important;flex:0 0 auto;padding-top:.2rem}
+.mk-foot-hint b{color:var(--ink)!important;font-weight:500!important;border-bottom:1px solid var(--line);padding:0 .18em}
+
+/* ---------- 微课视频页 ---------- */
+.mk-video-page .slide-body{align-items:center;text-align:center}
+.mk-video-page .mk-head{justify-content:center}
+.mk-video-page .mk-title{text-align:center;max-width:26em}
+.mk-stage{position:relative;width:min(92%,1280px);aspect-ratio:16/9;max-height:min(58vh,620px);
+  overflow:hidden;background:#111;border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 16px 40px rgba(0,0,0,.16);flex:0 1 auto}
+.mk-stage video{position:absolute;inset:0;width:100%!important;height:100%!important;
+  max-width:none!important;max-height:none!important;object-fit:contain;background:#111;border:0;outline:none;display:block}
+.mk-cover{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(.7rem,1.6vh,1.2rem);border:0;cursor:pointer;padding:0;
+  color:#EDE8E0!important;background:linear-gradient(165deg,#26241f,#131211 72%);transition:background .3s}
+.mk-cover:hover{background:linear-gradient(165deg,#33302a,#181614 72%)}
+.mk-cover .mk-play{width:clamp(3.6rem,5.8vw,4.8rem);height:clamp(3.6rem,5.8vw,4.8rem);border-radius:50%;
+  border:1px solid rgba(237,232,224,.62);display:flex;align-items:center;justify-content:center;
+  background:transparent;transition:transform .24s,background .24s}
+.mk-cover:hover .mk-play{transform:scale(1.08);background:rgba(237,232,224,.14)}
+.mk-cover .mk-play svg{width:34%;height:34%;fill:currentColor;stroke:none;margin-left:9%}
+.mk-cover .mk-cover-t{font-family:"Playfair Display","Noto Serif SC",serif!important;
+  font-size:clamp(1.05rem,1.6vw,1.5rem);font-weight:400;letter-spacing:.02em;line-height:1.3!important}
+.mk-cover .mk-cover-m{font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:clamp(.68rem,.78vw,.88rem);letter-spacing:.12em;opacity:.66;line-height:1.4!important}
+.mk-stage.mk-live .mk-cover{display:none}
+
+/* ---------- 播客音频页 ---------- */
+.mk-audio-card{display:grid;grid-template-columns:auto 1fr;gap:clamp(1.6rem,3.2vw,2.8rem);align-items:center;
+  padding:clamp(2rem,4.4vh,3.2rem) clamp(1.8rem,3.2vw,2.8rem);
+  border:1px solid var(--line);background:rgba(255,255,255,.30);flex:0 0 auto}
+.mk-abtn{width:clamp(4.4rem,7vw,6.4rem);height:clamp(4.4rem,7vw,6.4rem);border-radius:50%;
+  border:1px solid var(--line)!important;background:transparent!important;color:var(--ink)!important;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto;padding:0;
+  transition:background .22s,color .22s}
+.mk-abtn:hover,.mk-abtn.mk-playing{background:var(--ink)!important;color:var(--paper)!important;border-color:var(--ink)!important}
+.mk-abtn svg{width:32%;height:32%;fill:currentColor;stroke:none}
+.mk-abtn .mk-i-pause{display:none}
+.mk-abtn.mk-playing .mk-i-play{display:none}
+.mk-abtn.mk-playing .mk-i-pause{display:block}
+.mk-audio-main{min-width:0;display:flex;flex-direction:column;gap:clamp(.5rem,1.2vh,.9rem)}
+.mk-audio-main h2{margin:0;font-size:clamp(1.5rem,2.5vw,2.1rem)!important;line-height:1.2!important}
+.mk-audio-desc{margin:0;font-size:clamp(.9rem,1.05vw,1.18rem)!important;line-height:1.7!important;color:var(--muted)!important}
+.mk-wave{display:flex;align-items:center;gap:2px;height:clamp(3.4rem,7.5vh,5.2rem);cursor:pointer;margin-top:.2rem}
+.mk-wave i{flex:1 1 0;min-width:1px;background:var(--line);transition:background .18s}
+.mk-wave i.mk-on{background:var(--ink)}
+.mk-wave:hover i{opacity:.82}
+.mk-atime{display:flex;justify-content:space-between;font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:clamp(.7rem,.82vw,.9rem);letter-spacing:.08em;color:var(--accent)!important;font-weight:500}
+.mk-audio-tips{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(.8rem,1.8vw,1.6rem);margin:0;padding:0;flex:0 0 auto}
+.mk-audio-tips li{font-size:clamp(.82rem,.95vw,1.05rem)!important;line-height:1.6!important;
+  color:var(--muted)!important;padding-left:2.2em;position:relative;border-top:1px solid var(--line);padding-top:.95rem}
+.mk-audio-tips li::before{content:attr(data-n);position:absolute;left:0;top:.7rem;
+  font-family:"Inter","Noto Serif SC",sans-serif;font-size:.85em;color:var(--accent);letter-spacing:.08em}
+
+/* ---------- 配套源码页 ---------- */
+.mk-code-grid{display:grid;gap:clamp(.6rem,1.2vw,1rem);width:100%;flex:0 1 auto;min-height:0;overflow:hidden}
+.mk-code-grid.mk-rich{grid-template-columns:repeat(4,minmax(0,1fr))}
+.mk-code-grid.mk-chips{grid-template-columns:repeat(auto-fill,minmax(10.2rem,1fr))}
+.mk-cc{text-align:left;border:1px solid var(--line);border-radius:0;background:rgba(255,255,255,.30);
+  cursor:pointer;padding:clamp(.7rem,1.2vw,1rem);display:flex;flex-direction:column;gap:.42rem;
+  overflow:hidden;min-width:0;transition:background .18s,border-color .18s}
+.mk-cc:hover{background:rgba(255,255,255,.62);border-color:var(--ink)}
+.mk-cc-name{font-family:"DM Mono","Inter",monospace!important;font-size:clamp(.82rem,.97vw,1.05rem);
+  font-weight:500;color:var(--ink)!important;letter-spacing:.01em;line-height:1.3!important}
+.mk-cc-meta{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:clamp(.64rem,.74vw,.8rem);
+  letter-spacing:.08em;color:var(--accent)!important;line-height:1.3!important;white-space:nowrap}
+.mk-cc-prev{font-family:"DM Mono","Inter",monospace!important;font-size:clamp(.6rem,.7vw,.76rem);
+  line-height:1.6!important;color:var(--muted)!important;opacity:.62;white-space:pre;overflow:hidden;
+  margin:0;height:8em;border-top:1px solid var(--line);padding-top:.5rem;
+  -webkit-mask-image:linear-gradient(90deg,#000 76%,transparent 100%),linear-gradient(180deg,#000 74%,transparent 100%);
+  -webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,#000 76%,transparent 100%),linear-gradient(180deg,#000 74%,transparent 100%);mask-composite:intersect}
+.mk-chips .mk-cc{flex-direction:row;align-items:baseline;justify-content:space-between;gap:.6rem;padding:.55rem .8rem}
+
+/* ---------- 章首资源总览页 ---------- */
+.mk-hub-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.9rem,1.9vw,1.6rem);width:100%;flex:0 0 auto}
+.mk-hub-stat{border:1px solid var(--line);background:rgba(255,255,255,.30);
+  padding:clamp(1rem,2vh,1.5rem) clamp(1.1rem,2vw,1.6rem);display:flex;flex-direction:column;gap:.4rem}
+.mk-hub-stat .mk-hs-n{font-family:"Playfair Display","Noto Serif SC",serif!important;font-weight:400;
+  font-size:clamp(2rem,3.8vw,3.3rem);line-height:1!important;color:var(--ink)!important}
+.mk-hub-stat .mk-hs-l{font-family:"Playfair Display","Noto Serif SC",serif!important;
+  font-size:clamp(.92rem,1.1vw,1.24rem);color:var(--ink)!important;line-height:1.35!important}
+.mk-hub-stat .mk-hs-m{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:clamp(.68rem,.78vw,.86rem);
+  letter-spacing:.07em;color:var(--accent)!important;line-height:1.45!important}
+.mk-path{display:flex;align-items:center;gap:clamp(.5rem,1.1vw,1rem);flex-wrap:wrap;width:100%;flex:0 0 auto;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:.7rem 0}
+.mk-path span{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:clamp(.8rem,.95vw,1.04rem);
+  color:var(--muted)!important;white-space:nowrap;line-height:1.4!important}
+.mk-path span b{font-weight:500!important;color:var(--accent)!important;letter-spacing:.08em;margin-right:.45em}
+.mk-path i{width:clamp(1rem,2.2vw,2rem);height:1px;background:var(--line);flex:0 0 auto}
+.mk-hub-table{width:100%;border-collapse:collapse;flex:0 1 auto}
+.mk-hub-table th{font-family:"Playfair Display","Noto Serif SC",serif!important;font-weight:400;
+  font-size:clamp(.8rem,.95vw,1.05rem);color:var(--ink)!important;text-align:left;
+  padding:.5rem .9rem;border-bottom:1px solid var(--line);background:rgba(255,255,255,.24)}
+.mk-hub-table td{padding:clamp(.5rem,1.1vh,.85rem) .9rem;font-size:clamp(.84rem,1vw,1.1rem)!important;
+  color:var(--muted)!important;border-bottom:1px solid var(--line);vertical-align:middle;line-height:1.45!important}
+.mk-hub-table td:first-child{color:var(--ink)!important}
+.mk-jump{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:clamp(.7rem,.82vw,.9rem);
+  font-weight:500!important;letter-spacing:.05em;border:1px solid var(--line);border-radius:0;
+  background:transparent;color:var(--accent)!important;cursor:pointer;padding:.32em .9em;
+  transition:background .18s,color .18s;line-height:1.3!important;white-space:nowrap}
+.mk-jump:hover{background:var(--ink);color:var(--paper)!important;border-color:var(--ink)}
+.mk-jump[disabled]{opacity:.4;cursor:default;border-style:dashed}
+.mk-jump[disabled]:hover{background:transparent;color:var(--accent)!important;border-color:var(--line)}
+
+/* ---------- 常驻播客迷你播放器 ---------- */
+#mk-mini{position:fixed;left:clamp(.8rem,1.5vw,1.5rem);bottom:clamp(1rem,2.2vh,1.8rem);z-index:9050;
+  display:none;align-items:center;gap:.8rem;padding:.55rem .9rem .55rem .6rem;
+  background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:0;
+  font-family:"Inter","Noto Serif SC",sans-serif;max-width:min(32rem,44vw)}
+#mk-mini.mk-show{display:flex}
+#mk-mini button{border:none;background:none;color:inherit;cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;font-family:inherit}
+#mk-mini .mk-m-play{width:2.3rem;height:2.3rem;border-radius:50%;border:1px solid var(--line)!important;
+  color:var(--ink)!important;flex:0 0 auto;transition:background .2s,color .2s}
+#mk-mini .mk-m-play:hover,#mk-mini.mk-on .mk-m-play{background:var(--ink)!important;color:var(--paper)!important;border-color:var(--ink)!important}
+#mk-mini .mk-m-play svg{width:36%;height:36%;fill:currentColor;stroke:none}
+#mk-mini .mk-i-pause{display:none}
+#mk-mini.mk-on .mk-i-play{display:none}
+#mk-mini.mk-on .mk-i-pause{display:block}
+#mk-mini .mk-m-info{min-width:0;display:flex;flex-direction:column;gap:.3rem;flex:1 1 auto}
+#mk-mini .mk-m-t{font-size:.78rem;font-weight:500;color:var(--ink)!important;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;line-height:1.2!important}
+#mk-mini .mk-m-bar{height:2px;background:var(--line);cursor:pointer}
+#mk-mini .mk-m-fill{display:block;height:100%;width:0;background:var(--ink)}
+#mk-mini .mk-m-time{font-size:.66rem;letter-spacing:.06em;color:var(--accent)!important;white-space:nowrap;flex:0 0 auto}
+#mk-mini .mk-m-rate{font-size:.68rem;letter-spacing:.04em;border:1px solid var(--line)!important;
+  color:var(--accent)!important;padding:.2em .55em;flex:0 0 auto}
+#mk-mini .mk-m-rate:hover{background:var(--ink)!important;color:var(--paper)!important}
+#mk-mini .mk-m-x{font-size:1.1rem;color:var(--accent)!important;flex:0 0 auto;width:1.4rem;height:1.4rem;line-height:1}
+#mk-mini .mk-m-x:hover{color:var(--ink)!important}
+body.tb-focus #mk-mini{display:none!important}
+
+/* ---------- 数字资源面板 ---------- */
+#mk-panel .tb-panel{inset:clamp(1rem,3vh,2.4rem)}
+.mk-tabs{display:flex;gap:.5rem;padding:0 clamp(1.3rem,3vw,2rem) 1rem;border-bottom:1px solid var(--line);flex:0 0 auto}
+.mk-tab{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:.88rem;font-weight:500!important;
+  border:1px solid var(--line);border-radius:0;background:transparent;color:var(--accent)!important;
+  padding:.45em 1.15em;cursor:pointer;transition:background .18s,color .18s;line-height:1.3!important}
+.mk-tab:hover{background:rgba(255,255,255,.5);color:var(--ink)!important}
+.mk-tab.mk-cur{background:var(--ink);border-color:var(--ink);color:var(--paper)!important}
+.mk-tab small{font-size:.78em;margin-left:.4em;opacity:.75}
+.mk-pane{display:none;padding:1.2rem clamp(1.3rem,3vw,2rem) 2rem}
+.mk-pane.mk-cur{display:block}
+.mk-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(20rem,1fr));gap:.7rem}
+.mk-li{display:flex;align-items:center;gap:.9rem;border:1px solid var(--line);border-radius:0;
+  padding:.75rem .95rem;background:rgba(255,255,255,.30);cursor:pointer;text-align:left;
+  font-family:"Inter","Noto Serif SC",sans-serif!important;min-width:0;transition:background .16s,border-color .16s}
+.mk-li:hover{background:rgba(255,255,255,.68);border-color:var(--ink)}
+.mk-li .mk-li-ic{width:2.3rem;height:2.3rem;border:1px solid var(--line);display:flex;align-items:center;
+  justify-content:center;flex:0 0 auto;font-size:.72rem;font-weight:500;color:var(--accent);letter-spacing:.02em}
+.mk-li.a .mk-li-ic{border-radius:50%;color:var(--ink)}
+.mk-li.a .mk-li-ic svg{width:40%;height:40%;fill:currentColor;stroke:none}
+.mk-li.a .mk-i-pause{display:none}
+.mk-li.a.mk-playing .mk-li-ic{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.mk-li.a.mk-playing .mk-i-play{display:none}
+.mk-li.a.mk-playing .mk-i-pause{display:block}
+.mk-li .mk-li-b{display:block;min-width:0;flex:1 1 auto}
+.mk-li .mk-li-t{display:block;font-size:.9rem;font-weight:500;color:var(--ink)!important;line-height:1.35!important;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mk-li .mk-li-m{display:block;font-size:.7rem;letter-spacing:.06em;color:var(--accent)!important;margin-top:.22rem;line-height:1.3!important}
+.mk-li .mk-li-go{font-size:.7rem;letter-spacing:.06em;color:var(--accent)!important;flex:0 0 auto}
+/* 源码浏览器 */
+#mk-pane-c.mk-cur{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+.mk-src{display:grid;grid-template-columns:minmax(0,16rem) minmax(0,1fr);gap:1.2rem;flex:1;min-height:0}
+.mk-src-side{overflow-y:auto;border-right:1px solid var(--line);padding-right:.8rem}
+.mk-src-grp{font-family:"Playfair Display","Noto Serif SC",serif!important;font-size:.86rem;
+  color:var(--ink)!important;padding:.95rem .3rem .35rem;border-bottom:1px solid var(--line);margin-bottom:.3rem}
+.mk-src-f{display:flex;justify-content:space-between;gap:.6rem;align-items:baseline;width:100%;
+  border:none;background:none;text-align:left;font-family:"DM Mono","Inter",monospace!important;
+  font-size:.82rem;color:var(--muted)!important;padding:.42rem .55rem;cursor:pointer;
+  transition:background .15s,color .15s;line-height:1.3!important}
+.mk-src-f:hover{background:rgba(255,255,255,.55);color:var(--ink)!important}
+.mk-src-f.mk-cur{background:var(--ink);color:var(--paper)!important}
+.mk-src-f span{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:.7rem;opacity:.7}
+.mk-src-main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.mk-src-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding-bottom:.8rem;flex:0 0 auto}
+.mk-src-name{font-family:"DM Mono","Inter",monospace!important;font-size:1rem;font-weight:500;
+  color:var(--ink)!important;margin-right:auto;line-height:1.3!important}
+.mk-src-name em{font-style:normal;font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:.76rem;color:var(--accent)!important;margin-left:.8em;letter-spacing:.06em}
+.mk-btn{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:.78rem;font-weight:500!important;
+  border:1px solid var(--line);border-radius:0;background:transparent;color:var(--accent)!important;
+  padding:.45em 1em;cursor:pointer;transition:background .16s,color .16s;white-space:nowrap;line-height:1.3!important}
+.mk-btn:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)!important}
+.mk-src-code{flex:1;min-height:0;overflow:auto;background:rgba(255,255,255,.42);border:1px solid var(--line)}
+.mk-src-code pre{margin:0;font-family:"DM Mono","Inter",monospace!important;font-size:.85rem;
+  line-height:1.7!important;color:var(--ink)!important;padding:1.1rem 1.3rem;white-space:pre;tab-size:4}
+.mk-src-code .k{color:#1A1A1A;font-weight:600}
+.mk-src-code .s{color:#7A6A55}
+.mk-src-code .c{color:#A79E92;font-style:italic}
+.mk-src-code .n{color:#7A6A55}
+.mk-src-code .b{color:#4A4A4A}
+.mk-src-empty{color:var(--accent);font-family:"Inter","Noto Serif SC",sans-serif;font-size:.86rem;padding:1rem .3rem}
+@media (max-width:900px){.mk-src{grid-template-columns:1fr}.mk-src-side{border-right:0;border-bottom:1px solid var(--line);max-height:9rem}}
+</style>
 </head>
 <body>
 <div id="deck">
@@ -495,15 +709,15 @@ window.MathJax={
 <h1 class="display-zh anim-item" style="max-width:10em">群论基础</h1>
 <p class="lead-zh anim-item" style="max-width:26em;opacity:.62">从半群、独异点到群，从子群、循环群、置换群到陪集、拉格朗日定理与商群，群论用代数语言刻画对称与结构，是密码学与编码理论的数学根基</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>1 / 66</div></div></section>
-<section class="slide light" data-screen-label="Map" data-source="本章思维导图" data-theme="light"><div class="chrome"><div>本章地图</div><div>2 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>1 / 73</div></div></section>
+<section class="slide light" data-screen-label="Map" data-source="本章思维导图" data-theme="light"><div class="chrome"><div>本章地图</div><div>2 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">Chapter Map</div><h2 class="h1-zh anim-item" style="max-width:18em">一条主线贯穿群的结构，一组案例落到密码</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">10.1 群：半群与独异点、群的定义性质、阶与子群、同态同构、特殊类型群、陪集与拉格朗日定理、正规子群与商群</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">10.2 应用案例：密钥生成方案、北斗导航加密、密码学中对称群的应用</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">核心工具：运算表、生成元、陪集划分、拉格朗日定理与同态基本定理</p></div></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>2 / 66</div></div></section>
-<section class="slide dark" data-screen-label="History" data-source="章首 · 群论的源流" data-theme="dark"><div class="chrome"><div>群论的历史脉络</div><div>3 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>2 / 73</div></div></section>
+<section class="slide dark" data-screen-label="History" data-source="章首 · 群论的源流" data-theme="dark"><div class="chrome"><div>群论的历史脉络</div><div>3 / 73</div></div>
 <div class="slide-body">
 <div class="w-wide">
 <h2 class="h1-zh anim-item" style="text-align:center;max-width:17em;margin:0 auto clamp(2rem,5vh,3.6rem)">从拉格朗日到有限单群分类</h2>
@@ -511,7 +725,8 @@ window.MathJax={
 <div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">1770 年代</div><p class="body-zh" style="margin-top:1.2vh">拉格朗日研究多项式方程根的排列，被视为群论的早期雏形</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">1832 年</div><p class="body-zh" style="margin-top:1.2vh">伽罗瓦引入伽罗瓦群，解释方程可解性，奠定现代群论基础</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">19 世纪</div><p class="body-zh" style="margin-top:1.2vh">柯西研究置换群，凯莱提出群的抽象定义，冯戴克引入生成元与关系</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">20 世纪</div><p class="body-zh" style="margin-top:1.2vh">表示论与有限群理论深入发展，戈伦斯坦等完成有限单群分类定理</p></div>
 </div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>3 / 66</div></div></section>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>3 / 73</div></div></section>
+<section class="slide light mk-page mk-hub-page" data-screen-label="Resources" data-source="本章数字资源 · 微课 / 播客 / 源码" data-theme="light"><div class="chrome"><div>本章数字资源</div><div>4 / 73</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">数字资源</span><span class="mk-metaline">微课视频 · 播客音频 · 配套源码 · 全部离线可用</span></div><h2 class="h2-zh mk-title anim-item">本章配套 2 讲微课、2 期播客与 40 个 Python 源码文件</h2><div class="mk-hub-stats anim-item"><div class="mk-hub-stat v"><span class="mk-hs-n">2</span><span class="mk-hs-l">讲微课视频</span><span class="mk-hs-m">总时长约 17 分钟 · 逐节导学</span></div><div class="mk-hub-stat a"><span class="mk-hs-n">2</span><span class="mk-hs-l">期播客音频</span><span class="mk-hs-m">总时长约 17 分钟 · 可后台收听</span></div><div class="mk-hub-stat c"><span class="mk-hs-n">40</span><span class="mk-hs-l">个配套源码</span><span class="mk-hs-m">共 599 行 · 复制即可运行</span></div></div><div class="mk-path anim-item"><span><b>01</b>看微课</span><i></i><span><b>02</b>读正文</span><i></i><span><b>03</b>跑代码</span><i></i><span><b>04</b>听播客</span><i></i><span><b>05</b>做习题</span></div><table class="mk-hub-table anim-item"><thead><tr><th>小节</th><th>微课视频</th><th>播客音频</th><th>配套源码</th></tr></thead><tbody><tr><td>10.1 群</td><td><button class="mk-jump v" type="button" data-mk-go="5">微课 07:54</button></td><td><button class="mk-jump a" type="button" data-mk-go="58">播客 08:26</button></td><td><button class="mk-jump c" type="button" data-mk-go="59">源码 37 个</button></td></tr><tr><td>10.2 应用案例和 Python 实现</td><td><button class="mk-jump v" type="button" data-mk-go="62">微课 08:43</button></td><td><button class="mk-jump a" type="button" data-mk-go="70">播客 08:47</button></td><td><button class="mk-jump c" type="button" data-mk-go="71">源码 3 个</button></td></tr></tbody></table><p class="mk-foot-hint anim-item">点击上表任意资源可直接跳转对应页面；按 <b>V</b> 打开资源面板、<b>A</b> 收听本节播客、<b>C</b> 浏览本章源码</p></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>4 / 73</div></div></section>
 <section class="slide dark bare" data-screen-label="Section" data-source="10.1 群" data-theme="dark">
 <div class="slide-body" style="align-items:flex-start">
 <div class="w-statement">
@@ -519,54 +734,56 @@ window.MathJax={
 <h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">群</h2>
 <p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">从半群、独异点到群，逐层叠加封闭、结合、单位元与逆元四条公理</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>4 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.1 与 10.1.2 · 半群" data-theme="light"><div class="chrome"><div>10.1.1 群定义及性质</div><div>5 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>5 / 73</div></div></section>
+<section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 10.1 群" data-theme="dark" data-mk-sec="10.1"><div class="chrome"><div>微课视频 · 10.1 群</div><div>6 / 73</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">07:54 · 15.2 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">10.1 群</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/10.1-groups.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 10.1 群"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">群</span><span class="mk-cover-m">微课视频 · 07:54 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>6 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.1 与 10.1.2 · 半群" data-theme="light"><div class="chrome"><div>10.1.1 群定义及性质</div><div>7 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.1 / 10.1.2</div><h2 class="h1-zh anim-item" style="max-width:16em">半群：封闭加结合</h2><div aria-label="(a ☉ b) ☉ c = a ☉ (b ☉ c)" class="formula anim-item mathjax-display-source" data-tex="(a \odot b) \odot c = a \odot (b \odot c)">\[\displaystyle (a \odot b) \odot c = a \odot (b \odot c)\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若运算 ☉ 在集合上封闭且满足结合律，则 <span aria-label="⟨S,☉⟩" class="math-inline-source" data-tex="\langle S,\odot \rangle">\(\langle S,\odot \rangle\)</span> 是半群。若 T 是半群 S 的非空子集且在同一运算下也构成半群，则 <span aria-label="⟨T,☉⟩" class="math-inline-source" data-tex="\langle T,\odot \rangle">\(\langle T,\odot \rangle\)</span> 是 <span aria-label="⟨S,☉⟩" class="math-inline-source" data-tex="\langle S,\odot \rangle">\(\langle S,\odot \rangle\)</span> 的子半群。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>5 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 10.1.1 · 半群判定" data-theme="dark"><div class="chrome"><div>例 10.1.1</div><div>6 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>7 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 10.1.1 · 半群判定" data-theme="dark"><div class="chrome"><div>例 10.1.1</div><div>8 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">封闭且结合才是半群</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">加法、乘法、串接是半群</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">整数加法、正整数乘法、字符串串接都封闭且结合，是半群。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">反例</div><p class="body-zh" style="margin-top:.6vh">整数减法不结合（<span aria-label="(1−2)−3 ≠ 1−(2−3)" class="math-inline-source" data-tex="(1-2)-3 \ne 1-(2-3)">\((1-2)-3 \ne 1-(2-3)\)</span>）、取模运算不结合，因此都不是半群。</p></div></div>
 <div class="anim-item"><div class="vis-center"></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>6 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.3 与例 10.1.3 · 独异点" data-theme="light"><div class="chrome"><div>独异点</div><div>7 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>8 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.3 与例 10.1.3 · 独异点" data-theme="light"><div class="chrome"><div>独异点</div><div>9 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.3</div><h2 class="h1-zh anim-item" style="max-width:16em">独异点：带单位元的半群</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若半群 <span aria-label="⟨M,☉⟩" class="math-inline-source" data-tex="\langle M,\odot \rangle">\(\langle M,\odot \rangle\)</span> 的运算存在单位元，则称其为独异点。整数加法（单位元 0）、字符串串接（单位元空串）、矩阵乘法（单位元单位矩阵）都是独异点；正整数除法既无单位元又不封闭，不是独异点。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>7 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Concept" data-source="定义 10.1.4 · 群" data-theme="dark"><div class="chrome"><div>群的定义</div><div>8 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>9 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 10.1.4 · 群" data-theme="dark"><div class="chrome"><div>群的定义</div><div>10 / 73</div></div>
 <div class="slide-body">
 <div class="w-statement" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.4</div><h2 class="h1-zh anim-item" style="max-width:16em">群：每个元素都可逆的独异点</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7"><span aria-label="⟨G,☉⟩" class="math-inline-source" data-tex="\langle G,\odot \rangle">\(\langle G,\odot \rangle\)</span> 是群当且仅当满足四条公理：封闭性（<span aria-label="a☉b ∈ G" class="math-inline-source" data-tex="a\odot b \in G">\(a\odot b \in G\)</span>）、结合律、存在单位元 e（<span aria-label="e☉a = a☉e = a" class="math-inline-source" data-tex="e\odot a = a\odot e = a">\(e\odot a = a\odot e = a\)</span>）、每个 a 都有逆元 <span aria-label="a⁻¹" class="math-inline-source" data-tex="a^{-1}">\(a^{-1}\)</span>（<span aria-label="a☉a⁻¹ = a⁻¹☉a = e" class="math-inline-source" data-tex="a\odot a^{-1} = a^{-1}\odot a = e">\(a\odot a^{-1} = a^{-1}\odot a = e\)</span>）。半群、独异点、群构成逐层加强的结构链。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>8 / 66</div></div></section>
-<section class="slide light" data-screen-label="Example" data-source="例 10.1.5 · 群判定" data-theme="light"><div class="chrome"><div>例 10.1.5</div><div>9 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>10 / 73</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 10.1.5 · 群判定" data-theme="light"><div class="chrome"><div>例 10.1.5</div><div>11 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">四条公理缺一不可</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">整数加法群与非零有理数乘法群</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">整数加法（单位元 0、逆元 −a）、非零有理数乘法（单位元 1、逆元 1/q）都是群。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">反例</div><p class="body-zh" style="margin-top:.6vh">正整数加法没有逆元（−a 不是正整数），正整数除法不封闭也无逆元，因此都不是群。</p></div></div>
 <div class="anim-item"><div class="vis-center"></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>9 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.1 · 群的基本性质" data-theme="dark"><div class="chrome"><div>定理 10.1.1</div><div>10 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>11 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.1 · 群的基本性质" data-theme="dark"><div class="chrome"><div>定理 10.1.1</div><div>12 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">群的基本性质</div><h2 class="h1-zh anim-item" style="max-width:16em">群的四条结构性质</h2><div aria-label="(a ☉ b) −1 = b −1 ☉ a −1" class="formula anim-item mathjax-display-source" data-tex="(a \odot b)^{-1}= b^{-1}\odot a^{-1}">\[\displaystyle (a \odot b)^{-1}= b^{-1}\odot a^{-1}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">当 |G| &gt; 1 时群无零元；群中唯一的幂等元是单位元；群满足消去律（<span aria-label="a☉b = a☉c ⟹ b = c" class="math-inline-source" data-tex="a\odot b = a\odot c \Longrightarrow b = c">\(a\odot b = a\odot c \Longrightarrow b = c\)</span>）；乘积的逆等于逆的反序乘积。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>10 / 66</div></div></section>
-<section class="slide light" data-screen-label="Theorem" data-source="定理 10.1.2 与例 10.1.6 · 唯一性与幂律" data-theme="light"><div class="chrome"><div>定理 10.1.2</div><div>11 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 73</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 10.1.2 与例 10.1.6 · 唯一性与幂律" data-theme="light"><div class="chrome"><div>定理 10.1.2</div><div>13 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">唯一性与幂运算</div><h2 class="h1-zh anim-item" style="max-width:16em">单位元与逆元唯一，幂运算守律</h2><div aria-label="a m+n = a m ☉ a n ， (a m ) n = a mn" class="formula anim-item mathjax-display-source" data-tex="a^{m+n}= a^{m}\odot a^{n}\text{，} (a^{m})^{n}= a^{mn}">\[\displaystyle a^{m+n}= a^{m}\odot a^{n}\text{，} (a^{m})^{n}= a^{mn}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">群中单位元唯一、每个元素的逆元唯一、满足消去律；对任意整数 m,n 有幂的加法律、乘法律以及 <span aria-label="(a⁻¹)ⁿ = (aⁿ)⁻¹" class="math-inline-source" data-tex="(a^{-1})^{n} = (a^{n})^{-1}">\((a^{-1})^{n} = (a^{n})^{-1}\)</span>。可在整数加法群上逐条验证。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>11 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Application" data-source="10.1.1 应用示例" data-theme="dark"><div class="chrome"><div>应用示例</div><div>12 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="10.1.1 应用示例" data-theme="dark"><div class="chrome"><div>应用示例</div><div>14 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">半群独异点群的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">从任务调度到一般线性群</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">并行计算：任务集合与调度操作构成封闭且结合的半群，保证任务高效分配</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">文件系统：路径合并构成独异点，根目录是单位元，简化路径处理</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">数学计算：所有 n 阶可逆矩阵在乘法下构成一般线性群，单位元为单位矩阵</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 66</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>13 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 73</div></div></section>
+<section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>15 / 73</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
@@ -575,60 +792,61 @@ window.MathJax={
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.5 · 群的阶" data-theme="light"><div class="chrome"><div>10.1.2 群的阶和子群</div><div>14 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.5 · 群的阶" data-theme="light"><div class="chrome"><div>10.1.2 群的阶和子群</div><div>16 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.5</div><h2 class="h1-zh anim-item" style="max-width:16em">群的阶就是元素个数</h2><div aria-label="|G| = 群中元素的基数" class="formula anim-item mathjax-display-source" data-tex="|G| = \text{群中元素的基数}">\[\displaystyle |G| = \text{群中元素的基数}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">集合 G 的基数称为群 <span aria-label="⟨G,☉⟩" class="math-inline-source" data-tex="\langle G,\odot \rangle">\(\langle G,\odot \rangle\)</span> 的阶，记为 |G|。阶有限则为有限群，否则为无限群。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 10.1.7 · 克莱因四元群" data-theme="dark"><div class="chrome"><div>例 10.1.7</div><div>15 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 10.1.7 · 克莱因四元群" data-theme="dark"><div class="chrome"><div>例 10.1.7</div><div>17 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">读运算表验证群</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">克莱因四元群 K4</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)"><span aria-label="K4 = {e,a,b,c}" class="math-inline-source" data-tex="K4 = \{e,a,b,c\}">\(K4 = \{e,a,b,c\}\)</span> 关于运算 ∗ 满足封闭性与结合律，存在单位元 e，且每个元素都是自身的逆元，因此构成群。</p></div>
 <div class="anim-item"><div class="vis-center"><div class="optable" style="grid-template-columns:repeat(5,auto)"><div class="oth corner">∗</div><div class="oth">e</div><div class="oth">a</div><div class="oth">b</div><div class="oth">c</div><div class="oth rh">e</div><div class="otc">e</div><div class="otc">a</div><div class="otc">b</div><div class="otc">c</div><div class="oth rh">a</div><div class="otc">a</div><div class="otc">e</div><div class="otc">c</div><div class="otc">b</div><div class="oth rh">b</div><div class="otc">b</div><div class="otc">c</div><div class="otc">e</div><div class="otc">a</div><div class="oth rh">c</div><div class="otc">c</div><div class="otc">b</div><div class="otc">a</div><div class="otc">e</div></div></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.6 与例 10.1.8 · 元素的阶" data-theme="light"><div class="chrome"><div>元素的阶</div><div>16 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.6 与例 10.1.8 · 元素的阶" data-theme="light"><div class="chrome"><div>元素的阶</div><div>18 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.6</div><h2 class="h1-zh anim-item" style="max-width:16em">元素的阶：使 <span aria-label="gⁿ" class="math-inline-source" data-tex="g^{n}">\(g^{n}\)</span> 回到单位元的最小 n</h2><div aria-label="ord(g) = min{ n &gt; 0 : g n = e }" class="formula anim-item mathjax-display-source" data-tex="\operatorname{ord}(g) = \operatorname{min}\{ n &gt; 0 : g^{n}= e \}">\[\displaystyle \operatorname{ord}(g) = \operatorname{min}\{ n &gt; 0 : g^{n}= e \}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">元素 g 的阶是使 <span aria-label="gⁿ = e" class="math-inline-source" data-tex="g^{n} = e">\(g^{n} = e\)</span> 的最小正整数 n，不存在则为无穷大。在模 6 加法群中元素 2 的阶为 3；在模 7 加法群中元素 3 的阶为 7。实数加法群中除 0 外各元素的阶都是无穷大。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.3 · 阶与整除" data-theme="dark"><div class="chrome"><div>定理 10.1.3</div><div>17 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>18 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.3 · 阶与整除" data-theme="dark"><div class="chrome"><div>定理 10.1.3</div><div>19 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">阶与整除</div><h2 class="h1-zh anim-item" style="max-width:16em"><span aria-label="gᵏ" class="math-inline-source" data-tex="g^{k}">\(g^{k}\)</span> 回到单位元当且仅当阶整除 k</h2><div aria-label="g k = e  ⟺  ord(g) | k" class="formula anim-item mathjax-display-source" data-tex="g^{k}= e \Longleftrightarrow \operatorname{ord}(g) | k">\[\displaystyle g^{k}= e \Longleftrightarrow \operatorname{ord}(g) | k\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设 g 的阶为 n。写 <span aria-label="k = qn + r" class="math-inline-source" data-tex="k = qn + r">\(k = qn + r\)</span>（<span aria-label="0 ≤ r &lt; n" class="math-inline-source" data-tex="0 \le r &lt; n">\(0 \le r &lt; n\)</span>），则 <span aria-label="gᵏ = (gⁿ)q ☉ gʳ = gʳ" class="math-inline-source" data-tex="g^{k} = (g^{n})q \odot g^{r} = g^{r}">\(g^{k} = (g^{n})q \odot g^{r} = g^{r}\)</span>；由 n 的最小性知 <span aria-label="gʳ = e" class="math-inline-source" data-tex="g^{r} = e">\(g^{r} = e\)</span> 仅当 <span aria-label="r = 0" class="math-inline-source" data-tex="r = 0">\(r = 0\)</span>，故 n 整除 k。反向显然。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.7 · 子群" data-theme="light"><div class="chrome"><div>子群</div><div>18 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>19 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.7 · 子群" data-theme="light"><div class="chrome"><div>子群</div><div>20 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.7</div><h2 class="h1-zh anim-item" style="max-width:16em">子群：本身成群的子集</h2><div aria-label="H ⊆ G ， ⟨H,☉⟩ 是群  ⟹  H ≤ G" class="formula anim-item mathjax-display-source" data-tex="H \subseteq G \text{，} \langle H,\odot \rangle \text{是群} \Longrightarrow H \le G">\[\displaystyle H \subseteq G \text{，} \langle H,\odot \rangle \text{是群} \Longrightarrow H \le G\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若非空子集 H 在同一运算下也是群，则 H 是 G 的子群。{e} 与 G 自身是平凡子群，其余称为真子群，记作 H &lt; G。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>18 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 10.1.10 与 10.1.11 · 子群判定" data-theme="dark"><div class="chrome"><div>例 10.1.10 / 10.1.11</div><div>19 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>20 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 10.1.10 与 10.1.11 · 子群判定" data-theme="dark"><div class="chrome"><div>例 10.1.10 / 10.1.11</div><div>21 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">封闭含单位含逆</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">偶数集与 6Z 都是整数加法群的子群</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">偶数集 2Z 对加法封闭、含 0、每元素有逆元，是 Z 的真子群；<span aria-label="H = {6n : n ∈ Z}" class="math-inline-source" data-tex="H = \{6n : n \in Z\}">\(H = \{6n : n \in Z\}\)</span> 同理是 Z 的子群。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">例 10.1.11</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="H = {0,3,6,9}" class="math-inline-source" data-tex="H = \{0,3,6,9\}">\(H = \{0,3,6,9\}\)</span> 是模 12 加法群 <span aria-label="Z₁₂" class="math-inline-source" data-tex="Z_{12}">\(Z_{12}\)</span> 的子群：模 12 加法封闭，含单位元 0，每元素逆元也在 H 中。</p></div></div>
 <div class="anim-item"><div class="vis-center"></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>19 / 66</div></div></section>
-<section class="slide light" data-screen-label="Theorem" data-source="定理 10.1.4 与 10.1.5 · 子群判定" data-theme="light"><div class="chrome"><div>定理 10.1.4 / 10.1.5</div><div>20 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>21 / 73</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 10.1.4 与 10.1.5 · 子群判定" data-theme="light"><div class="chrome"><div>定理 10.1.4 / 10.1.5</div><div>22 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">子群判定定理</div><h2 class="h1-zh anim-item" style="max-width:16em">判定子群的两条捷径</h2><div aria-label="∀ a,b ∈ H : a ☉ b −1 ∈ H" class="formula anim-item mathjax-display-source" data-tex="\forall a,b \in H : a \odot b^{-1}\in H">\[\displaystyle \forall a,b \in H : a \odot b^{-1}\in H\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 10.1.4：非空 H 是子群当且仅当对任意 <span aria-label="a,b ∈ H" class="math-inline-source" data-tex="a,b \in H">\(a,b \in H\)</span> 有 <span aria-label="a☉b⁻¹ ∈ H" class="math-inline-source" data-tex="a\odot b^{-1} \in H">\(a\odot b^{-1} \in H\)</span>。定理 10.1.5：若 G 是有限群且非空子集 H 对运算封闭，则 H 即为子群，封闭性自动蕴含单位元与逆元。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>20 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.6 · 子群的交与并" data-theme="dark"><div class="chrome"><div>定理 10.1.6</div><div>21 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>22 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.6 · 子群的交与并" data-theme="dark"><div class="chrome"><div>定理 10.1.6</div><div>23 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">交与并</div><h2 class="h1-zh anim-item" style="max-width:16em">子群的交恒为子群，并需含于关系</h2><div aria-label="H₁ ∪ H₂ 是子群  ⟺  H₁ ⊆ H₂ 或 H₂ ⊆ H₁" class="formula anim-item mathjax-display-source" data-tex="H_{1} \cup H_{2} \text{是子群} \Longleftrightarrow H_{1} \subseteq H_{2} \text{或} H_{2} \subseteq H_{1}">\[\displaystyle H_{1} \cup H_{2} \text{是子群} \Longleftrightarrow H_{1} \subseteq H_{2} \text{或} H_{2} \subseteq H_{1}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">两个子群的交 <span aria-label="H₁ ∩ H₂" class="math-inline-source" data-tex="H_{1} \cap H_{2}">\(H_{1} \cap H_{2}\)</span> 总是子群（封闭、含单位元、含逆元）；而并 <span aria-label="H₁ ∪ H₂" class="math-inline-source" data-tex="H_{1} \cup H_{2}">\(H_{1} \cup H_{2}\)</span> 是子群当且仅当其中一个包含另一个，否则并不封闭。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>21 / 66</div></div></section>
-<section class="slide light" data-screen-label="Application" data-source="10.1.2 应用示例" data-theme="light"><div class="chrome"><div>应用示例</div><div>22 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>23 / 73</div></div></section>
+<section class="slide light" data-screen-label="Application" data-source="10.1.2 应用示例" data-theme="light"><div class="chrome"><div>应用示例</div><div>24 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">阶与子群的类比应用</div><h2 class="h1-zh anim-item" style="max-width:18em">对称性与组合规则的建模</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">权限管理系统可建模为幺半群或布尔代数结构</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">强化学习策略空间中的变换可抽象为函数空间或拓扑结构</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">神经网络的参数对称性（权重共享、卷积平移不变性）可用群作用描述</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>22 / 66</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="light"><div class="chrome"><div>应用动画</div><div>23 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 73</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="light"><div class="chrome"><div>应用动画</div><div>25 / 73</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
@@ -637,37 +855,38 @@ window.MathJax={
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>23 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Concept" data-source="定义 10.1.8 · 群同态" data-theme="dark"><div class="chrome"><div>10.1.3 群同态和同构</div><div>24 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 10.1.8 · 群同态" data-theme="dark"><div class="chrome"><div>10.1.3 群同态和同构</div><div>26 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.8</div><h2 class="h1-zh anim-item" style="max-width:16em">群同态保持群运算</h2><div aria-label="f(a ☉ b) = f(a) ∗ f(b)" class="formula anim-item mathjax-display-source" data-tex="f(a \odot b) = f(a) \ast f(b)">\[\displaystyle f(a \odot b) = f(a) \ast f(b)\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">函数 <span aria-label="f : G → H" class="math-inline-source" data-tex="f : G \to H">\(f : G \to H\)</span> 若对任意 a,b 都保持运算，则是群同态。f 为单射、满射、双射时分别称单群同态、满群同态、群同构。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 66</div></div></section>
-<section class="slide light" data-screen-label="Example" data-source="例 10.1.13 · 群同态判定" data-theme="light"><div class="chrome"><div>例 10.1.13</div><div>25 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>26 / 73</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 10.1.13 · 群同态判定" data-theme="light"><div class="chrome"><div>例 10.1.13</div><div>27 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">取模满同态、指数同构</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">取模映射是满同态，指数映射是同构</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)"><span aria-label="f : Z → Zₙ" class="math-inline-source" data-tex="f : Z \to Z_{n}">\(f : Z \to Z_{n}\)</span>，<span aria-label="f(x) = x mod n" class="math-inline-source" data-tex="f(x) = x \operatorname{mod} n">\(f(x) = x \operatorname{mod} n\)</span> 保持加法且是满射，是满群同态但不同构。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">同构</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="f : ⟨R,+⟩ → ⟨R⁺,×⟩" class="math-inline-source" data-tex="f : \langle R,+\rangle \to \langle R^{+},\times \rangle">\(f : \langle R,+\rangle \to \langle R^{+},\times \rangle\)</span>，<span aria-label="f(x) = eˣ" class="math-inline-source" data-tex="f(x) = e^{x}">\(f(x) = e^{x}\)</span> 把加法变为乘法，是到正实数乘法群的同构（其像只含正数，故并非到 R* 的满射）。</p></div></div>
 <div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 300 320"><defs><marker id="ma" markerheight="9" markerunits="strokeWidth" markerwidth="9" orient="auto" refx="7.5" refy="3"><path d="M0,0 L7.5,3 L0,6 Z" fill="var(--accent)"></path></marker></defs><line marker-end="url(#ma)" opacity="0.75" stroke="var(--accent)" stroke-width="2" x1="97.0" x2="203.0" y1="56.0" y2="56.0"></line><line marker-end="url(#ma)" opacity="0.75" stroke="var(--accent)" stroke-width="2" x1="95.3" x2="204.7" y1="107.5" y2="157.1"></line><line marker-end="url(#ma)" opacity="0.75" stroke="var(--accent)" stroke-width="2" x1="92.1" x2="207.9" y1="156.0" y2="261.2"></line><line marker-end="url(#ma)" opacity="0.75" stroke="var(--accent)" stroke-width="2" x1="92.1" x2="207.9" y1="174.0" y2="68.8"></line><line marker-end="url(#ma)" opacity="0.75" stroke="var(--accent)" stroke-width="2" x1="95.3" x2="204.7" y1="222.5" y2="172.9"></line><line marker-end="url(#ma)" opacity="0.75" stroke="var(--accent)" stroke-width="2" x1="97.0" x2="203.0" y1="274.0" y2="274.0"></line><text class="gcap" x="78" y="28"><span aria-label="Z₆" class="math-inline-source" data-tex="Z_{6}">\(Z_{6}\)</span></text><text class="gcap" x="222" y="28"><span aria-label="Z₃" class="math-inline-source" data-tex="Z_{3}">\(Z_{3}\)</span></text><circle cx="78" cy="56.0" fill="var(--paper)" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="78" y="61.0">0</text><circle cx="78" cy="99.6" fill="var(--paper)" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="78" y="104.6">1</text><circle cx="78" cy="143.2" fill="var(--paper)" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="78" y="148.2">2</text><circle cx="78" cy="186.8" fill="var(--paper)" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="78" y="191.8">3</text><circle cx="78" cy="230.4" fill="var(--paper)" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="78" y="235.4">4</text><circle cx="78" cy="274.0" fill="var(--paper)" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="78" y="279.0">5</text><circle cx="222" cy="56.0" fill="var(--accent)" fill-opacity="0.16" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="222" y="61.0">0</text><circle cx="222" cy="165.0" fill="var(--accent)" fill-opacity="0.16" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="222" y="170.0">1</text><circle cx="222" cy="274.0" fill="var(--accent)" fill-opacity="0.16" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="222" y="279.0">2</text></svg></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.7 · 同态的保持性" data-theme="dark"><div class="chrome"><div>定理 10.1.7</div><div>26 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>27 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.7 · 同态的保持性" data-theme="dark"><div class="chrome"><div>定理 10.1.7</div><div>28 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">同态保持单位与逆</div><h2 class="h1-zh anim-item" style="max-width:16em">同态把单位元映到单位元、逆映到逆</h2><div aria-label="f(e_G) = e_H ， f(a −1 ) = f(a) −1" class="formula anim-item mathjax-display-source" data-tex="f(e_{G}) = e_{H} \text{，} f(a^{-1}) = f(a)^{-1}">\[\displaystyle f(e_{G}) = e_{H} \text{，} f(a^{-1}) = f(a)^{-1}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">由 <span aria-label="f(e☉e) = f(e)" class="math-inline-source" data-tex="f(e\odot e) = f(e)">\(f(e\odot e) = f(e)\)</span> 知 f(e) 是幂等元，群中唯一幂等元是单位元，故 <span aria-label="f(e_G) = e_H" class="math-inline-source" data-tex="f(e_{G}) = e_{H}">\(f(e_{G}) = e_{H}\)</span>；进而逆映到逆；且子群在同态下的像仍是子群。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>26 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.9 与例 10.1.14 · 同态核" data-theme="light"><div class="chrome"><div>同态核</div><div>27 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>28 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.9 与例 10.1.14 · 同态核" data-theme="light"><div class="chrome"><div>同态核</div><div>29 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.9</div><h2 class="h1-zh anim-item" style="max-width:16em">同态核：被映到单位元的元素集合</h2><div aria-label="Ker(f) = { g ∈ G : f(g) = e_H }" class="formula anim-item mathjax-display-source" data-tex="\operatorname{Ker}(f) = \{ g \in G : f(g) = e_{H} \}">\[\displaystyle \operatorname{Ker}(f) = \{ g \in G : f(g) = e_{H} \}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">核是 G 中所有被 f 映到 H 单位元的元素集合。映射 <span aria-label="φ : Z → Zₙ" class="math-inline-source" data-tex="φ : Z \to Z_{n}">\(φ : Z \to Z_{n}\)</span>，<span aria-label="φ(a) = a mod n" class="math-inline-source" data-tex="φ(a) = a \operatorname{mod} n">\(φ(a) = a \operatorname{mod} n\)</span> 的核是 nZ（所有 n 的整数倍）；对称群到符号群的同态核是交替群 <span aria-label="Aₙ" class="math-inline-source" data-tex="A_{n}">\(A_{n}\)</span>（全体偶排列）。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>27 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Application" data-source="10.1.3 应用示例" data-theme="dark"><div class="chrome"><div>应用示例</div><div>28 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>29 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="10.1.3 应用示例" data-theme="dark"><div class="chrome"><div>应用示例</div><div>30 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">群同态同构的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">结构保持映射的工程价值</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">分布式数据库分片：同态映射保证分片后组合操作仍然有效</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">神经网络等效层：同构映射表明两个卷积层在数学上等价</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">特征工程：同态映射把原始特征空间映到新空间且保持组合关系</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>28 / 66</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>29 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>30 / 73</div></div></section>
+<section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>31 / 73</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
@@ -676,77 +895,78 @@ window.MathJax={
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>29 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.10 与例 10.1.15 · 交换群" data-theme="light"><div class="chrome"><div>10.1.4 特殊类型群</div><div>30 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.10 与例 10.1.15 · 交换群" data-theme="light"><div class="chrome"><div>10.1.4 特殊类型群</div><div>32 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.10</div><h2 class="h1-zh anim-item" style="max-width:16em">交换群又称阿贝尔群</h2><div aria-label="a ☉ b = b ☉ a" class="formula anim-item mathjax-display-source" data-tex="a \odot b = b \odot a">\[\displaystyle a \odot b = b \odot a\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若运算满足交换律则 <span aria-label="⟨G,☉⟩" class="math-inline-source" data-tex="\langle G,\odot \rangle">\(\langle G,\odot \rangle\)</span> 是交换群或阿贝尔群。整数加法群、模 n 加法群、模 n 乘法群、二元组加法群都是交换群。实数上形如 <span aria-label="f(x)=kx" class="math-inline-source" data-tex="f(x)=kx">\(f(x)=kx\)</span> 的线性函数在复合下也构成交换群。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>30 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.8 · 交换群的判定" data-theme="dark"><div class="chrome"><div>定理 10.1.8</div><div>31 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>32 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.8 · 交换群的判定" data-theme="dark"><div class="chrome"><div>定理 10.1.8</div><div>33 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">平方判据</div><h2 class="h1-zh anim-item" style="max-width:16em">交换群当且仅当乘积的平方等于平方的乘积</h2><div aria-label="G 交换  ⟺  (a ☉ b) 2 = a 2 ☉ b 2" class="formula anim-item mathjax-display-source" data-tex="G \text{交换} \Longleftrightarrow (a \odot b)^{2}= a^{2}\odot b^{2}">\[\displaystyle G \text{交换} \Longleftrightarrow (a \odot b)^{2}= a^{2}\odot b^{2}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">正向展开 <span aria-label="(a☉b)²" class="math-inline-source" data-tex="(a\odot b)^{2}">\((a\odot b)^{2}\)</span> 并用交换律重排即得；反向由 <span aria-label="a☉b☉a☉b = a☉a☉b☉b" class="math-inline-source" data-tex="a\odot b\odot a\odot b = a\odot a\odot b\odot b">\(a\odot b\odot a\odot b = a\odot a\odot b\odot b\)</span>，两边借助逆元与消去律得到 <span aria-label="b☉a = a☉b" class="math-inline-source" data-tex="b\odot a = a\odot b">\(b\odot a = a\odot b\)</span>。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.11 · 循环群" data-theme="light"><div class="chrome"><div>循环群</div><div>32 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>33 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.11 · 循环群" data-theme="light"><div class="chrome"><div>循环群</div><div>34 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.11</div><h2 class="h1-zh anim-item" style="max-width:16em">循环群由单个元素的幂生成</h2><div aria-label="G = ⟨g⟩ = { g n : n ∈ Z }" class="formula anim-item mathjax-display-source" data-tex="G = \langle g\rangle = \{ g^{n}: n \in Z \}">\[\displaystyle G = \langle g\rangle = \{ g^{n}: n \in Z \}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">由生成元 g 的所有幂构成的群是循环群。判定步骤：选元素 g，构造 ⟨g⟩，若 <span aria-label="⟨g⟩ = G" class="math-inline-source" data-tex="\langle g\rangle = G">\(\langle g\rangle = G\)</span> 则 G 是由 g 生成的循环群。由任意元素 a 生成的 ⟨a⟩ 是循环子群。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>32 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 10.1.17 · 循环群判定" data-theme="dark"><div class="chrome"><div>例 10.1.17</div><div>33 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 10.1.17 · 循环群判定" data-theme="dark"><div class="chrome"><div>例 10.1.17</div><div>35 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">找生成元</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">四阶群由 c 或 d 生成</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">整数加法群由 <span aria-label="±1" class="math-inline-source" data-tex="\pm 1">\(\pm 1\)</span> 生成，是无限循环群；模 n 加法群由 1 生成。下表四阶群中 c 与 d 都能生成全部元素，故是循环群。</p></div>
 <div class="anim-item"><div class="vis-center"><div class="optable" style="grid-template-columns:repeat(5,auto)"><div class="oth corner">☉</div><div class="oth">a</div><div class="oth">b</div><div class="oth">c</div><div class="oth">d</div><div class="oth rh">a</div><div class="otc">a</div><div class="otc">b</div><div class="otc">c</div><div class="otc">d</div><div class="oth rh">b</div><div class="otc">b</div><div class="otc">a</div><div class="otc">d</div><div class="otc">c</div><div class="oth rh">c</div><div class="otc">c</div><div class="otc">d</div><div class="otc">b</div><div class="otc">a</div><div class="oth rh">d</div><div class="otc">d</div><div class="otc">c</div><div class="otc">a</div><div class="otc">b</div></div></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>33 / 66</div></div></section>
-<section class="slide light" data-screen-label="Example" data-source="例 10.1.18 · Z30 的所有子群" data-theme="light"><div class="chrome"><div>例 10.1.18</div><div>34 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>35 / 73</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 10.1.18 · Z30 的所有子群" data-theme="light"><div class="chrome"><div>例 10.1.18</div><div>36 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">子群阶必整除群阶</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh"><span aria-label="Z₃₀" class="math-inline-source" data-tex="Z_{30}">\(Z_{30}\)</span> 的子群与生成元</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)"><span aria-label="Z₃₀" class="math-inline-source" data-tex="Z_{30}">\(Z_{30}\)</span> 子群的阶必是 30 的约数（1,2,3,5,6,10,15,30），每个约数对应一个由相应元素生成的循环子群。</p><ol class="steps" style="margin-top:clamp(.9rem,2vh,1.6rem)"><li>阶 1 由 0 生成、阶 2 由 15 生成、阶 3 由 10 生成</li><li>阶 5 由 6 生成、阶 6 由 5 生成、阶 10 由 3 生成</li><li>阶 15 由 2 生成、阶 30 由 1 生成即整个 <span aria-label="Z₃₀" class="math-inline-source" data-tex="Z_{30}">\(Z_{30}\)</span></li></ol></div>
 <div class="anim-item"><div class="vis-center"></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.9 至 10.1.11 · 循环群性质" data-theme="dark"><div class="chrome"><div>定理 10.1.9 ~ 10.1.11</div><div>35 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>36 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.9 至 10.1.11 · 循环群性质" data-theme="dark"><div class="chrome"><div>定理 10.1.9 ~ 10.1.11</div><div>37 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">循环群三定理</div><h2 class="h1-zh anim-item" style="max-width:16em">循环群必交换，子群也循环</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 10.1.9：循环群一定是交换群（<span aria-label="gᵐ☉gⁿ = gⁿ☉gᵐ" class="math-inline-source" data-tex="g^{m}\odot g^{n} = g^{n}\odot g^{m}">\(g^{m}\odot g^{n} = g^{n}\odot g^{m}\)</span>）。定理 10.1.10：有限群是循环群当且仅当存在阶等于群阶的元素。定理 10.1.11：循环群的任何子群也是循环群，由最小正指数幂生成。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>35 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.12 · 置换群" data-theme="light"><div class="chrome"><div>置换群</div><div>36 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>37 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.12 · 置换群" data-theme="light"><div class="chrome"><div>置换群</div><div>38 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.12</div><h2 class="h1-zh anim-item" style="max-width:16em">置换群：集合到自身的双射在复合下成群</h2><div aria-label="Sym(X) ， 单位元 id ， 逆元 σ −1" class="formula anim-item mathjax-display-source" data-tex="Sym(X) \text{，} \text{单位元} id \text{，} \text{逆元} σ^{-1}">\[\displaystyle Sym(X) \text{，} \text{单位元} id \text{，} \text{逆元} σ^{-1}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">置换是集合 X 到自身的双射 σ。X 上所有置换在复合运算下构成群 Sym(X)（X 上的对称群），满足复合封闭、结合、恒等置换为单位元、每个置换有逆置换。若 <span aria-label="|X|=n" class="math-inline-source" data-tex="|X|=n">\(|X|=n\)</span>，则 Sym(X) 的阶为 <span aria-label="n!" class="math-inline-source" data-tex="n!">\(n!\)</span>（而单个置换 σ 的阶是使 <span aria-label="σ^{m}=id" class="math-inline-source" data-tex="σ^{m}=id">\(σ^{m}=id\)</span> 的最小正整数 m）。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>36 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 10.1.21 · 置换的阶与复合" data-theme="dark"><div class="chrome"><div>例 10.1.21</div><div>37 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>38 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 10.1.21 · 置换的阶与复合" data-theme="dark"><div class="chrome"><div>例 10.1.21</div><div>39 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">阶、复合与逆</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">置换的阶、复合与逆</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)"><span aria-label="σ = (123)(45)" class="math-inline-source" data-tex="σ = (123)(45)">\(σ = (123)(45)\)</span> 由不相交循环组成，阶为各循环长度的最小公倍数 <span aria-label="lcm(3,2) = 6" class="math-inline-source" data-tex="\operatorname{lcm}(3,2) = 6">\(\operatorname{lcm}(3,2) = 6\)</span>。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">复合与逆</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="σ = (123)" class="math-inline-source" data-tex="σ = (123)">\(σ = (123)\)</span>、<span aria-label="τ = (23)" class="math-inline-source" data-tex="τ = (23)">\(τ = (23)\)</span> 的复合 <span aria-label="σ∘τ" class="math-inline-source" data-tex="σ\circ τ">\(σ\circ τ\)</span> 与 <span aria-label="τ∘σ" class="math-inline-source" data-tex="τ\circ σ">\(τ\circ σ\)</span> 一般不同；(1234) 的逆是 (1432)。</p></div></div>
 <div class="anim-item"><div class="vis-center"></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>37 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.13 与 10.1.14 · 轮换与对换" data-theme="light"><div class="chrome"><div>轮换与对换</div><div>38 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>39 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.13 与 10.1.14 · 轮换与对换" data-theme="light"><div class="chrome"><div>轮换与对换</div><div>40 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.13 / 10.1.14</div><h2 class="h1-zh anim-item" style="max-width:16em">轮换循环移动一组元素，对换只换两个</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">轮换把一组元素按顺序循环移动、其余不变；对换是只交换两个元素的特殊轮换。例如在 {1,2,3,4} 上，<span aria-label="G = {e,(12),(34),(12)(34)}" class="math-inline-source" data-tex="G = \{e,(12),(34),(12)(34)\}">\(G = \{e,(12),(34),(12)(34)\}\)</span> 是由对换构成的对换群。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>38 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.12 与例 10.1.25 · 置换分解" data-theme="dark"><div class="chrome"><div>定理 10.1.12</div><div>39 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>40 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.12 与例 10.1.25 · 置换分解" data-theme="dark"><div class="chrome"><div>定理 10.1.12</div><div>41 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">置换分解</div><h2 class="h1-zh anim-item" style="max-width:16em">任意置换可分解为轮换乃至对换的乘积</h2><div aria-label="(a₁a₂…aₖ) = (a₁a₂)(a₁a₃)…(a₁aₖ)" class="formula anim-item mathjax-display-source" data-tex="(a_{1}a_{2}\ldots a_{k}) = (a_{1}a_{2})(a_{1}a_{3})\ldots (a_{1}a_{k})">\[\displaystyle (a_{1}a_{2}\ldots a_{k}) = (a_{1}a_{2})(a_{1}a_{3})\ldots (a_{1}a_{k})\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">任意置换可写成不相交轮换的乘积，每个 k 轮换又可写成 k−1 个对换的乘积，因此任意置换都能表示为若干对换的乘积。例如 <span aria-label="(1234) = (12)(13)(14)" class="math-inline-source" data-tex="(1234) = (12)(13)(14)">\((1234) = (12)(13)(14)\)</span>。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>39 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.15 至 10.1.17 · 不动点、奇偶与类型" data-theme="light"><div class="chrome"><div>不动点 / 奇偶 / 类型</div><div>40 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>41 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.15 至 10.1.17 · 不动点、奇偶与类型" data-theme="light"><div class="chrome"><div>不动点 / 奇偶 / 类型</div><div>42 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.15 ~ 10.1.17</div><h2 class="h1-zh anim-item" style="max-width:16em">不动点、奇偶性与置换类型</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">满足 <span aria-label="σ(x) = x" class="math-inline-source" data-tex="σ(x) = x">\(σ(x) = x\)</span> 的元素是不动点；能写成偶数个对换则为偶置换、奇数个则为奇置换；置换分解为不相交轮换后，各轮换长度组成的分区即置换类型。例如 (12345) 类型为 [5]，(12)(34)(56) 类型为 [2,2,2]。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>40 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Application" data-source="10.1.4 应用示例" data-theme="dark"><div class="chrome"><div>应用示例</div><div>41 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>42 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="10.1.4 应用示例" data-theme="dark"><div class="chrome"><div>应用示例</div><div>43 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">循环群与置换群的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">从循环缓冲到像素置换</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">循环缓冲区：固定大小的环形缓冲可看作循环群，移动操作是生成元</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">图像加密：像素置换操作构成置换群，用于图像加密与特效</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">任务调度与排序：循环群表示周期任务顺序，置换群优化排序算法</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>41 / 66</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>42 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>43 / 73</div></div></section>
+<section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>44 / 73</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
@@ -755,43 +975,44 @@ window.MathJax={
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>42 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.18 · 陪集" data-theme="light"><div class="chrome"><div>10.1.5 陪集和拉格朗日定理</div><div>43 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>44 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.18 · 陪集" data-theme="light"><div class="chrome"><div>10.1.5 陪集和拉格朗日定理</div><div>45 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.18</div><h2 class="h1-zh anim-item" style="max-width:16em">陪集：用元素平移子群</h2><div aria-label="gH = { gh : h ∈ H } ， Hg = { hg : h ∈ H }" class="formula anim-item mathjax-display-source" data-tex="gH = \{ gh : h \in H \} \text{，} Hg = \{ hg : h \in H \}">\[\displaystyle gH = \{ gh : h \in H \} \text{，} Hg = \{ hg : h \in H \}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设 H 是群 G 的子群、<span aria-label="g ∈ G" class="math-inline-source" data-tex="g \in G">\(g \in G\)</span>，则 gH 是左陪集、Hg 是右陪集，g 称为代表元。陪集把群划分为大小相等、互不相交的等价类。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>43 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 10.1.30 · 计算陪集" data-theme="dark"><div class="chrome"><div>例 10.1.30</div><div>44 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>45 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 10.1.30 · 计算陪集" data-theme="dark"><div class="chrome"><div>例 10.1.30</div><div>46 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">平移得到陪集</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Z 对 4Z 的陪集与 <span aria-label="S₃" class="math-inline-source" data-tex="S_{3}">\(S_{3}\)</span> 的陪集</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">整数加法群 Z 对子群 4Z 的陪集为 <span aria-label="0+H" class="math-inline-source" data-tex="0+H">\(0+H\)</span>、<span aria-label="1+H" class="math-inline-source" data-tex="1+H">\(1+H\)</span>、<span aria-label="2+H" class="math-inline-source" data-tex="2+H">\(2+H\)</span>、<span aria-label="3+H" class="math-inline-source" data-tex="3+H">\(3+H\)</span> 共 4 个，对应 a mod 4。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1"><span aria-label="S₃" class="math-inline-source" data-tex="S_{3}">\(S_{3}\)</span></div><p class="body-zh" style="margin-top:.6vh">在 <span aria-label="S₃" class="math-inline-source" data-tex="S_{3}">\(S_{3}\)</span> 中取 <span aria-label="H = {e,(12)}" class="math-inline-source" data-tex="H = \{e,(12)\}">\(H = \{e,(12)\}\)</span>，左陪集为 {e,(12)}、{(13),(123)}、{(23),(132)}；因 H 不是正规子群，其右陪集与左陪集并不完全重合（只有正规子群才满足左右陪集相同）。</p></div></div>
 <div class="anim-item"><div class="vis-center"></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>44 / 66</div></div></section>
-<section class="slide light" data-screen-label="Theorem" data-source="定理 10.1.13 · 陪集等势" data-theme="light"><div class="chrome"><div>定理 10.1.13</div><div>45 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>46 / 73</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 10.1.13 · 陪集等势" data-theme="light"><div class="chrome"><div>定理 10.1.13</div><div>47 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">陪集与子群等势</div><h2 class="h1-zh anim-item" style="max-width:16em">左右陪集与子群基数相等</h2><div aria-label="|aH| = |Ha| = |H|" class="formula anim-item mathjax-display-source" data-tex="|aH| = |Ha| = |H|">\[\displaystyle |aH| = |Ha| = |H|\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">映射 <span aria-label="φ(ah) = ha" class="math-inline-source" data-tex="φ(ah) = ha">\(φ(ah) = ha\)</span> 是左陪集到右陪集的双射，因此任意陪集的基数都等于子群 H 的基数。这是拉格朗日定理的关键引理。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>45 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.14 · 拉格朗日定理" data-theme="dark"><div class="chrome"><div>定理 10.1.14 · 拉格朗日定理</div><div>46 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>47 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.14 · 拉格朗日定理" data-theme="dark"><div class="chrome"><div>定理 10.1.14 · 拉格朗日定理</div><div>48 / 73</div></div>
 <div class="slide-body" style="align-items:center;text-align:center">
 <div class="stat-num anim-item"><span aria-label="|G| = |H| · [G:H]" class="math-inline-source" data-tex="|G| = |H| \cdot [G:H]">\(|G| = |H| \cdot [G:H]\)</span></div>
 <h2 class="h2-zh anim-item" style="max-width:18em;margin-top:clamp(1rem,2vh,2rem)">子群的阶一定整除群的阶</h2>
 <p class="body-zh anim-item" style="max-width:28em;margin-top:clamp(.8rem,1.5vh,1.5rem);opacity:.62">有限群 G 被子群 H 的陪集划分为 [G:H] 个等价类，每个大小都是 |H|，故 <span aria-label="|G| = |H| · [G:H]" class="math-inline-source" data-tex="|G| = |H| \cdot [G:H]">\(|G| = |H| \cdot [G:H]\)</span>，其中 [G:H] 是 G 对 H 的指数。因此 |H| 整除 |G|。</p>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>46 / 66</div></div></section>
-<section class="slide light" data-screen-label="Theorem" data-source="推论 10.1.1 至 10.1.3 与例 · 拉格朗日推论" data-theme="light"><div class="chrome"><div>拉格朗日定理推论</div><div>47 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>48 / 73</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="推论 10.1.1 至 10.1.3 与例 · 拉格朗日推论" data-theme="light"><div class="chrome"><div>拉格朗日定理推论</div><div>49 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">推论 10.1.1 ~ 10.1.3</div><h2 class="h1-zh anim-item" style="max-width:16em">拉格朗日定理的三条推论</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">推论 1：有限群中任意元素的阶整除群的阶。推论 2：素数阶群必是循环群（取非单位元生成）。推论 3：有限群子群的阶必是群阶的约数。例如阶为 7 的群必循环；阶为 20 的群其子群阶只能是 1,2,4,5,10,20。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>47 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Application" data-source="10.1.5 应用示例" data-theme="dark"><div class="chrome"><div>应用示例</div><div>48 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>49 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="10.1.5 应用示例" data-theme="dark"><div class="chrome"><div>应用示例</div><div>50 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">陪集与拉格朗日的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">从分组密码到群结构建模</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">分组密码：用置换群与陪集分析揭示密码结构中的对称性，辅助安全性分析</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">编码理论：拉格朗日定理用于分析循环码生成多项式的因式分解与周期</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">机器学习：引入对称群作用提升模型对结构变换的泛化能力</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>48 / 66</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>49 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 73</div></div></section>
+<section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="dark"><div class="chrome"><div>应用动画</div><div>51 / 73</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
@@ -800,55 +1021,57 @@ window.MathJax={
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>49 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.19 与例 10.1.35 · 正规子群" data-theme="light"><div class="chrome"><div>10.1.6 正规子群和商群</div><div>50 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>51 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.19 与例 10.1.35 · 正规子群" data-theme="light"><div class="chrome"><div>10.1.6 正规子群和商群</div><div>52 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.19</div><h2 class="h1-zh anim-item" style="max-width:16em">正规子群：对共轭封闭</h2><div aria-label="∀ g ∈ G, h ∈ H : g h g −1 ∈ H  ⟹  H ◁ G" class="formula anim-item mathjax-display-source" data-tex="\forall g \in G, h \in H : g h g^{-1}\in H \Longrightarrow H \triangleleft G">\[\displaystyle \forall g \in G, h \in H : g h g^{-1}\in H \Longrightarrow H \triangleleft G\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若对任意 g 都有 <span aria-label="gHg⁻¹ ⊆ H" class="math-inline-source" data-tex="gHg^{-1} \subseteq H">\(gHg^{-1} \subseteq H\)</span>，则 H 是 G 的正规子群，记作 <span aria-label="H ◁ G" class="math-inline-source" data-tex="H \triangleleft G">\(H \triangleleft G\)</span>。例如交替群 <span aria-label="A₃" class="math-inline-source" data-tex="A_{3}">\(A_{3}\)</span> 是对称群 <span aria-label="S₃" class="math-inline-source" data-tex="S_{3}">\(S_{3}\)</span> 的正规子群，任意 g 对 <span aria-label="A₃" class="math-inline-source" data-tex="A_{3}">\(A_{3}\)</span> 元素的共轭仍在 <span aria-label="A₃" class="math-inline-source" data-tex="A_{3}">\(A_{3}\)</span> 内。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.15 与 10.1.16 · 正规子群性质" data-theme="dark"><div class="chrome"><div>定理 10.1.15 / 10.1.16</div><div>51 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>52 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.15 与 10.1.16 · 正规子群性质" data-theme="dark"><div class="chrome"><div>定理 10.1.15 / 10.1.16</div><div>53 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">左右陪集相等</div><h2 class="h1-zh anim-item" style="max-width:16em">正规子群的左右陪集重合</h2><div aria-label="H ◁ G  ⟺  ∀ g : gH = Hg" class="formula anim-item mathjax-display-source" data-tex="H \triangleleft G \Longleftrightarrow \forall g : gH = Hg">\[\displaystyle H \triangleleft G \Longleftrightarrow \forall g : gH = Hg\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">正规子群的左陪集与右陪集相等（由 <span aria-label="ghg⁻¹ ∈ H" class="math-inline-source" data-tex="ghg^{-1} \in H">\(ghg^{-1} \in H\)</span> 推出 <span aria-label="gH ⊆ Hg" class="math-inline-source" data-tex="gH \subseteq Hg">\(gH \subseteq Hg\)</span>，反向同理）。两个正规子群的交仍是正规子群。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>51 / 66</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.20 · 商群" data-theme="light"><div class="chrome"><div>商群</div><div>52 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>53 / 73</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 10.1.20 · 商群" data-theme="light"><div class="chrome"><div>商群</div><div>54 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 10.1.20</div><h2 class="h1-zh anim-item" style="max-width:16em">商群：以陪集为元素的群</h2><div aria-label="(gH) · (kH) = (gk)H" class="formula anim-item mathjax-display-source" data-tex="(gH) \cdot (kH) = (gk)H">\[\displaystyle (gH) \cdot (kH) = (gk)H\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设 H 是 G 的正规子群，商群 G/H 的元素是各左陪集 gH，运算定义为 <span aria-label="(gH)·(kH) = (gk)H" class="math-inline-source" data-tex="(gH)\cdot (kH) = (gk)H">\((gH)\cdot (kH) = (gk)H\)</span>。正规性保证该运算良定义。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>52 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 10.1.38 · 商群" data-theme="dark"><div class="chrome"><div>例 10.1.38</div><div>53 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>54 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 10.1.38 · 商群" data-theme="dark"><div class="chrome"><div>例 10.1.38</div><div>55 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">陪集做元素</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Z/4Z 与 <span aria-label="S₃/A₃" class="math-inline-source" data-tex="S_{3}/A_{3}">\(S_{3}/A_{3}\)</span></h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">Z/4Z 的元素是 4 个陪集 {0,1,2,3}+4Z，运算为模 4 加法。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1"><span aria-label="S₃/A₃" class="math-inline-source" data-tex="S_{3}/A_{3}">\(S_{3}/A_{3}\)</span></div><p class="body-zh" style="margin-top:.6vh"><span aria-label="S₃/A₃" class="math-inline-source" data-tex="S_{3}/A_{3}">\(S_{3}/A_{3}\)</span> 只有两个陪集 <span aria-label="A₃" class="math-inline-source" data-tex="A_{3}">\(A_{3}\)</span> 与 <span aria-label="(12)A₃" class="math-inline-source" data-tex="(12)A_{3}">\((12)A_{3}\)</span>，阶为 2，同构于 <span aria-label="Z₂" class="math-inline-source" data-tex="Z_{2}">\(Z_{2}\)</span>。</p></div></div>
 <div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 310 240"><defs><marker id="ma" markerheight="9" markerunits="strokeWidth" markerwidth="9" orient="auto" refx="7.5" refy="3"><path d="M0,0 L7.5,3 L0,6 Z" fill="var(--accent)"></path></marker></defs><line marker-end="url(#ma)" opacity="0.75" stroke="var(--accent)" stroke-width="2" x1="97.0" x2="213.0" y1="56.0" y2="56.0"></line><line marker-end="url(#ma)" opacity="0.75" stroke="var(--accent)" stroke-width="2" x1="97.0" x2="213.0" y1="194.0" y2="194.0"></line><text class="gcap" x="78" y="28"><span aria-label="S₃/A₃" class="math-inline-source" data-tex="S_{3}/A_{3}">\(S_{3}/A_{3}\)</span></text><text class="gcap" x="232" y="28"><span aria-label="Z₂" class="math-inline-source" data-tex="Z_{2}">\(Z_{2}\)</span></text><circle cx="78" cy="56.0" fill="var(--paper)" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="78" y="61.0"><span aria-label="A₃" class="math-inline-source" data-tex="A_{3}">\(A_{3}\)</span></text><circle cx="78" cy="194.0" fill="var(--paper)" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="78" y="199.0"><span aria-label="(12)A₃" class="math-inline-source" data-tex="(12)A_{3}">\((12)A_{3}\)</span></text><circle cx="232" cy="56.0" fill="var(--accent)" fill-opacity="0.16" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="232" y="61.0">0</text><circle cx="232" cy="194.0" fill="var(--accent)" fill-opacity="0.16" r="19" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="232" y="199.0">1</text></svg></div></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>53 / 66</div></div></section>
-<section class="slide light" data-screen-label="Theorem" data-source="定理 10.1.17 · 商群成群" data-theme="light"><div class="chrome"><div>定理 10.1.17</div><div>54 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>55 / 73</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 10.1.17 · 商群成群" data-theme="light"><div class="chrome"><div>定理 10.1.17</div><div>56 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">商群是群</div><h2 class="h1-zh anim-item" style="max-width:16em">正规子群的商集构成群</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">G/H 在陪集运算下封闭、结合，H 本身是单位元，<span aria-label="g⁻¹H" class="math-inline-source" data-tex="g^{-1}H">\(g^{-1}H\)</span> 是 gH 的逆元，因此商群 G/H 满足全部群公理，构成群。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>54 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.18 与例 10.1.39 · 同态基本定理" data-theme="dark"><div class="chrome"><div>定理 10.1.18</div><div>55 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 10.1.18 与例 10.1.39 · 同态基本定理" data-theme="dark"><div class="chrome"><div>定理 10.1.18</div><div>57 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">同态基本定理</div><h2 class="h1-zh anim-item" style="max-width:16em">同态基本定理</h2><div aria-label="G / Ker(φ) ≅ φ(G)" class="formula anim-item mathjax-display-source" data-tex="G / \operatorname{Ker}(φ) \cong φ(G)">\[\displaystyle G / \operatorname{Ker}(φ) \cong φ(G)\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">同态 <span aria-label="φ : G → G′" class="math-inline-source" data-tex="φ : G \to G'">\(φ : G \to G'\)</span> 的核 <span aria-label="Ker(φ)" class="math-inline-source" data-tex="\operatorname{Ker}(φ)">\(\operatorname{Ker}(φ)\)</span> 是 G 的正规子群，且商群 <span aria-label="G/Ker(φ)" class="math-inline-source" data-tex="G/\operatorname{Ker}(φ)">\(G/\operatorname{Ker}(φ)\)</span> 同构于像 φ(G)。例如 <span aria-label="φ : Z → Z₆" class="math-inline-source" data-tex="φ : Z \to Z_{6}">\(φ : Z \to Z_{6}\)</span>，<span aria-label="φ(n) = n mod 6" class="math-inline-source" data-tex="φ(n) = n \operatorname{mod} 6">\(φ(n) = n \operatorname{mod} 6\)</span> 的核是 6Z，于是 Z/6Z 同构于 <span aria-label="Z₆" class="math-inline-source" data-tex="Z_{6}">\(Z_{6}\)</span>。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>55 / 66</div></div></section>
-<section class="slide light" data-screen-label="Summary" data-source="10.1.7 小结 · 群论基础" data-theme="light"><div class="chrome"><div>10.1 小结</div><div>56 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>57 / 73</div></div></section>
+<section class="slide light" data-screen-label="Summary" data-source="10.1.7 小结 · 群论基础" data-theme="light"><div class="chrome"><div>10.1 小结</div><div>58 / 73</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
 <div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">群是满足封闭、结合、单位元、逆元四条公理的代数系统，半群与独异点是其弱化形式</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">群的阶是元素个数，子群是本身成群的子集，循环群由单个生成元的幂构成且必交换</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">陪集把群划分为等势的等价类，拉格朗日定理给出子群阶整除群阶的根本约束</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">正规子群对共轭封闭，由它构造商群，同态基本定理把核、商群与像联系起来</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Exercise" data-source="10.1 习题与 AI 提问" data-theme="dark"><div class="chrome"><div>10.1 习题 / AI 提问</div><div>57 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>58 / 73</div></div></section>
+<section class="slide light mk-page mk-audio-page" data-screen-label="Podcast" data-source="播客音频 · 10.1 群" data-theme="light" data-mk-sec="10.1"><div class="chrome"><div>播客音频 · 10.1 群</div><div>59 / 73</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">播客音频</span><span class="mk-metaline">08:26 · 2.4 MB · 讲解音频版</span></div><div class="mk-audio-card anim-item"><button class="mk-abtn" type="button" data-mk-sec="10.1" aria-label="播放本节播客"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><div class="mk-audio-main"><h2 class="h2-zh">10.1 群</h2><p class="mk-audio-desc">本节内容的播客讲解版，适合课后复盘、通勤复习与考前串讲；点击波形任意位置可跳转收听。</p><div class="mk-wave" data-mk-sec="10.1" role="slider" aria-label="音频进度"><i style="height:61%"></i><i style="height:57%"></i><i style="height:80%"></i><i style="height:95%"></i><i style="height:70%"></i><i style="height:60%"></i><i style="height:63%"></i><i style="height:37%"></i><i style="height:27%"></i><i style="height:53%"></i><i style="height:57%"></i><i style="height:52%"></i><i style="height:74%"></i><i style="height:73%"></i><i style="height:43%"></i><i style="height:41%"></i><i style="height:44%"></i><i style="height:24%"></i><i style="height:34%"></i><i style="height:67%"></i><i style="height:67%"></i><i style="height:69%"></i><i style="height:90%"></i><i style="height:76%"></i><i style="height:48%"></i><i style="height:53%"></i><i style="height:52%"></i><i style="height:35%"></i><i style="height:55%"></i><i style="height:78%"></i><i style="height:67%"></i><i style="height:66%"></i><i style="height:75%"></i><i style="height:47%"></i><i style="height:25%"></i><i style="height:38%"></i><i style="height:35%"></i><i style="height:29%"></i><i style="height:61%"></i><i style="height:78%"></i><i style="height:64%"></i><i style="height:70%"></i><i style="height:73%"></i><i style="height:44%"></i><i style="height:37%"></i><i style="height:56%"></i><i style="height:52%"></i><i style="height:56%"></i><i style="height:86%"></i><i style="height:86%"></i><i style="height:64%"></i><i style="height:67%"></i><i style="height:57%"></i><i style="height:25%"></i><i style="height:29%"></i><i style="height:48%"></i><i style="height:41%"></i><i style="height:53%"></i><i style="height:79%"></i><i style="height:67%"></i><i style="height:49%"></i><i style="height:57%"></i><i style="height:44%"></i><i style="height:25%"></i></div><div class="mk-atime"><span data-mk-cur>0:00</span><span>08:26</span></div></div></div><ul class="mk-audio-tips anim-item"><li data-n="01">支持后台收听：翻页、查阅源码时音频不中断</li><li data-n="02">迷你播放器可调 1× / 1.25× / 1.5× / 2× 倍速</li><li data-n="03">进度自动记忆，下次从上次听到的位置继续</li></ul></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 73</div></div></section>
+<section class="slide dark mk-page mk-code-page" data-screen-label="SourceCode" data-source="配套源码 · 10.1 群" data-theme="dark" data-mk-sec="10.1"><div class="chrome"><div>配套源码 · 10.1 群</div><div>60 / 73</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">配套源码</span><span class="mk-metaline">37 个文件 · 共 509 行 · 可查看 / 复制 / 下载</span></div><h2 class="h2-zh mk-title anim-item">10.1 群 · Python 配套源码</h2><div class="mk-code-grid mk-chips anim-item"><button class="mk-cc" type="button" data-mk-code="10.1.1.py"><span class="mk-cc-name">10.1.1.py</span><span class="mk-cc-meta">28 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.2.py"><span class="mk-cc-name">10.1.2.py</span><span class="mk-cc-meta">25 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.3.py"><span class="mk-cc-name">10.1.3.py</span><span class="mk-cc-meta">29 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.4.py"><span class="mk-cc-name">10.1.4.py</span><span class="mk-cc-meta">12 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.5.py"><span class="mk-cc-name">10.1.5.py</span><span class="mk-cc-meta">8 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.6.py"><span class="mk-cc-name">10.1.6.py</span><span class="mk-cc-meta">8 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.7.py"><span class="mk-cc-name">10.1.7.py</span><span class="mk-cc-meta">17 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.8.py"><span class="mk-cc-name">10.1.8.py</span><span class="mk-cc-meta">7 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.9.py"><span class="mk-cc-name">10.1.9.py</span><span class="mk-cc-meta">14 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.10.py"><span class="mk-cc-name">10.1.10.py</span><span class="mk-cc-meta">7 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.11.py"><span class="mk-cc-name">10.1.11.py</span><span class="mk-cc-meta">6 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.12.py"><span class="mk-cc-name">10.1.12.py</span><span class="mk-cc-meta">5 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.13.py"><span class="mk-cc-name">10.1.13.py</span><span class="mk-cc-meta">8 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.14.py"><span class="mk-cc-name">10.1.14.py</span><span class="mk-cc-meta">5 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.15.py"><span class="mk-cc-name">10.1.15.py</span><span class="mk-cc-meta">6 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.16.py"><span class="mk-cc-name">10.1.16.py</span><span class="mk-cc-meta">23 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.17.py"><span class="mk-cc-name">10.1.17.py</span><span class="mk-cc-meta">19 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.18.py"><span class="mk-cc-name">10.1.18.py</span><span class="mk-cc-meta">13 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.19.py"><span class="mk-cc-name">10.1.19.py</span><span class="mk-cc-meta">21 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.20.py"><span class="mk-cc-name">10.1.20.py</span><span class="mk-cc-meta">10 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.21.py"><span class="mk-cc-name">10.1.21.py</span><span class="mk-cc-meta">21 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.22.py"><span class="mk-cc-name">10.1.22.py</span><span class="mk-cc-meta">6 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.23.py"><span class="mk-cc-name">10.1.23.py</span><span class="mk-cc-meta">20 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.24.py"><span class="mk-cc-name">10.1.24.py</span><span class="mk-cc-meta">5 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.25.py"><span class="mk-cc-name">10.1.25.py</span><span class="mk-cc-meta">8 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.26.py"><span class="mk-cc-name">10.1.26.py</span><span class="mk-cc-meta">16 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.27.py"><span class="mk-cc-name">10.1.27.py</span><span class="mk-cc-meta">10 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.28.py"><span class="mk-cc-name">10.1.28.py</span><span class="mk-cc-meta">15 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.29.py"><span class="mk-cc-name">10.1.29.py</span><span class="mk-cc-meta">13 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.30.py"><span class="mk-cc-name">10.1.30.py</span><span class="mk-cc-meta">18 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.31.py"><span class="mk-cc-name">10.1.31.py</span><span class="mk-cc-meta">34 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.32.py"><span class="mk-cc-name">10.1.32.py</span><span class="mk-cc-meta">6 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.33.py"><span class="mk-cc-name">10.1.33.py</span><span class="mk-cc-meta">10 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.34.py"><span class="mk-cc-name">10.1.34.py</span><span class="mk-cc-meta">8 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.35.py"><span class="mk-cc-name">10.1.35.py</span><span class="mk-cc-meta">4 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.36.py"><span class="mk-cc-name">10.1.36.py</span><span class="mk-cc-meta">20 行</span></button><button class="mk-cc" type="button" data-mk-code="10.1.37.py"><span class="mk-cc-name">10.1.37.py</span><span class="mk-cc-meta">24 行</span></button></div><p class="mk-foot-hint anim-item">点击任一文件查看完整高亮源码，支持一键复制与下载；按 <b>C</b> 打开本章源码浏览器</p></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Exercise" data-source="10.1 习题与 AI 提问" data-theme="dark"><div class="chrome"><div>10.1 习题 / AI 提问</div><div>61 / 73</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">巩固与延伸</div><h2 class="h1-zh anim-item" style="max-width:18em">自测要点与向大模型探索的问题</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">群的四条公理判定、子群判定、拉格朗日定理、正规子群与商群构造、同态核</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">验证 <span aria-label="H={0,4,8,12}" class="math-inline-source" data-tex="H=\{0,4,8,12\}">\(H=\{0,4,8,12\}\)</span> 是 <span aria-label="Z₁₆" class="math-inline-source" data-tex="Z_{16}">\(Z_{16}\)</span> 的子群、计算置换的阶与积、求同态核、构造商群运算表</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">向大模型可探索：密码学中用群性质设计加密、用陪集与拉格朗日定理解决跨学科问题</p></div></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>57 / 66</div></div></section>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 73</div></div></section>
 <section class="slide dark bare" data-screen-label="Section" data-source="10.2 应用案例和 Python 实现" data-theme="dark">
 <div class="slide-body" style="align-items:flex-start">
 <div class="w-statement">
@@ -856,8 +1079,9 @@ window.MathJax={
 <h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">应用案例和 Python 实现</h2>
 <p class="body-zh anim-item" style="max-width:25em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">三个把群论落到密码学与编码的工程案例，每例配可运行的 Python 代码</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>58 / 66</div></div></section>
-<section class="slide light" data-screen-label="Case" data-source="10.2.1 密钥生成方案" data-theme="light"><div class="chrome"><div>案例 10.2.1</div><div>59 / 66</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>62 / 73</div></div></section>
+<section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 10.2 应用案例和 Python 实现" data-theme="dark" data-mk-sec="10.2"><div class="chrome"><div>微课视频 · 10.2 应用案例和 Python 实现</div><div>63 / 73</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">08:43 · 16.5 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">10.2 应用案例和 Python 实现</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/10.2-applications.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 10.2 应用案例和 Python 实现"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">应用案例和 Python 实现</span><span class="mk-cover-m">微课视频 · 08:43 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>63 / 73</div></div></section>
+<section class="slide light" data-screen-label="Case" data-source="10.2.1 密钥生成方案" data-theme="light"><div class="chrome"><div>案例 10.2.1</div><div>64 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">循环群 · 密钥生成</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">基于循环群的密钥生成</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">选素数 p，在模 p 非零剩余类乘法群 <span aria-label="F_p*" class="math-inline-source" data-tex="F_{p}*">\(F_{p}*\)</span>（阶为 p−1）中找生成元（原根）g，用随机指数 k 计算 <span aria-label="gᵏ mod p" class="math-inline-source" data-tex="g^{k} \operatorname{mod} p">\(g^{k} \operatorname{mod} p\)</span> 得到密钥。循环群的性质保证密钥复杂、随机且不易预测，记录已生成密钥以避免重复。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import secrets
@@ -880,7 +1104,8 @@ class CyclicGroup:
             if key not in self.used:
                 self.used.add(key); return key</code></pre></div>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 66</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 10.2.1" data-theme="light"><div class="chrome"><div>应用动画 · 案例 10.2.1</div><div>60 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>64 / 73</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 10.2.1" data-theme="light"><div class="chrome"><div>应用动画 · 案例 10.2.1</div><div>65 / 73</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">案例 10.2.1</h2>
@@ -889,8 +1114,8 @@ class CyclicGroup:
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Case" data-source="10.2.2 北斗导航加密算法" data-theme="dark"><div class="chrome"><div>案例 10.2.2</div><div>61 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>65 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Case" data-source="10.2.2 北斗导航加密算法" data-theme="dark"><div class="chrome"><div>案例 10.2.2</div><div>66 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">有限域乘法群 · Reed-Solomon</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">北斗导航的纠错编码</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">在有限域 <span aria-label="GF(2⁸)" class="math-inline-source" data-tex="GF(2^{8})">\(GF(2^{8})\)</span> 上，所有非零元素构成乘法循环群。利用该群性质做多项式运算，构建 Reed-Solomon 码：信息多项式除以生成多项式得带校验的码字，接收端检错纠错，提升北斗卫星通信可靠性。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh"><span aria-label="GF(2⁸)" class="math-inline-source" data-tex="GF(2^{8})">\(GF(2^{8})\)</span> 核心结构 · 非完整编码器</div><pre class="code code-small"><code>PRIM = 0x11D
@@ -917,7 +1142,8 @@ def generator_poly(nsym):
     for i in range(nsym): g = poly_mul(g, [1, gf_pow(2, i)])
     return g</code></pre></div>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 66</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 10.2.2" data-theme="dark"><div class="chrome"><div>应用动画 · 案例 10.2.2</div><div>62 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>66 / 73</div></div></section>
+<section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 10.2.2" data-theme="dark"><div class="chrome"><div>应用动画 · 案例 10.2.2</div><div>67 / 73</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">案例 10.2.2</h2>
@@ -926,8 +1152,8 @@ def generator_poly(nsym):
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>62 / 66</div></div></section>
-<section class="slide light" data-screen-label="Case" data-source="10.2.3 密码学中对称群的应用" data-theme="light"><div class="chrome"><div>案例 10.2.3</div><div>63 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>67 / 73</div></div></section>
+<section class="slide light" data-screen-label="Case" data-source="10.2.3 密码学中对称群的应用" data-theme="light"><div class="chrome"><div>案例 10.2.3</div><div>68 / 73</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">陪集 · 对称群加密</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">基于陪集的对称群加密</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">取对称群 <span aria-label="S₃" class="math-inline-source" data-tex="S_{3}">\(S_{3}\)</span> 为 G、二阶子群为 H。由拉格朗日定理 G 被划分为 3 个陪集。加密把消息映射到陪集，解密通过识别消息所属陪集还原原文，体现陪集划分在密码设计中的结构价值。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy.combinatorics import Permutation, PermutationGroup
@@ -945,7 +1171,8 @@ def encrypt(m): return cosets[m % len(cosets)][0]
 def decrypt(c):
     return next(i for i,ct in enumerate(cosets) if c in ct)</code></pre></div>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>63 / 66</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 10.2.3" data-theme="light"><div class="chrome"><div>应用动画 · 案例 10.2.3</div><div>64 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>68 / 73</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 10.2.3" data-theme="light"><div class="chrome"><div>应用动画 · 案例 10.2.3</div><div>69 / 73</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">案例 10.2.3</h2>
@@ -954,13 +1181,27 @@ def decrypt(c):
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>64 / 66</div></div></section>
-<section class="slide dark" data-screen-label="Summary" data-source="10.2.4 小结 · 应用案例" data-theme="dark"><div class="chrome"><div>10.2 小结</div><div>65 / 66</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>69 / 73</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="10.2.4 小结 · 应用案例" data-theme="dark"><div class="chrome"><div>10.2 小结</div><div>70 / 73</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
 <div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">密钥生成方案用循环群的生成元与随机指数产生高安全性密钥</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">北斗导航加密用有限域乘法群构建 Reed-Solomon 纠错码提升通信可靠性</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">对称群加密用拉格朗日定理与陪集划分实现消息的加密与解密</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">三个案例展示群论从抽象结构到密码学与编码理论的现实价值</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>65 / 66</div></div></section>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>70 / 73</div></div></section>
+<section class="slide light mk-page mk-audio-page" data-screen-label="Podcast" data-source="播客音频 · 10.2 应用案例和 Python 实现" data-theme="light" data-mk-sec="10.2"><div class="chrome"><div>播客音频 · 10.2 应用案例和 Python 实现</div><div>71 / 73</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">播客音频</span><span class="mk-metaline">08:47 · 2.5 MB · 讲解音频版</span></div><div class="mk-audio-card anim-item"><button class="mk-abtn" type="button" data-mk-sec="10.2" aria-label="播放本节播客"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><div class="mk-audio-main"><h2 class="h2-zh">10.2 应用案例和 Python 实现</h2><p class="mk-audio-desc">本节内容的播客讲解版，适合课后复盘、通勤复习与考前串讲；点击波形任意位置可跳转收听。</p><div class="mk-wave" data-mk-sec="10.2" role="slider" aria-label="音频进度"><i style="height:73%"></i><i style="height:92%"></i><i style="height:75%"></i><i style="height:46%"></i><i style="height:50%"></i><i style="height:46%"></i><i style="height:28%"></i><i style="height:48%"></i><i style="height:71%"></i><i style="height:60%"></i><i style="height:62%"></i><i style="height:72%"></i><i style="height:45%"></i><i style="height:26%"></i><i style="height:41%"></i><i style="height:38%"></i><i style="height:35%"></i><i style="height:68%"></i><i style="height:84%"></i><i style="height:70%"></i><i style="height:77%"></i><i style="height:78%"></i><i style="height:46%"></i><i style="height:39%"></i><i style="height:55%"></i><i style="height:48%"></i><i style="height:51%"></i><i style="height:80%"></i><i style="height:78%"></i><i style="height:57%"></i><i style="height:61%"></i><i style="height:50%"></i><i style="height:20%"></i><i style="height:27%"></i><i style="height:47%"></i><i style="height:42%"></i><i style="height:56%"></i><i style="height:84%"></i><i style="height:72%"></i><i style="height:56%"></i><i style="height:65%"></i><i style="height:51%"></i><i style="height:31%"></i><i style="height:52%"></i><i style="height:69%"></i><i style="height:62%"></i><i style="height:79%"></i><i style="height:91%"></i><i style="height:64%"></i><i style="height:48%"></i><i style="height:52%"></i><i style="height:31%"></i><i style="height:22%"></i><i style="height:50%"></i><i style="height:59%"></i><i style="height:53%"></i><i style="height:72%"></i><i style="height:74%"></i><i style="height:44%"></i><i style="height:41%"></i><i style="height:49%"></i><i style="height:34%"></i><i style="height:43%"></i><i style="height:77%"></i></div><div class="mk-atime"><span data-mk-cur>0:00</span><span>08:47</span></div></div></div><ul class="mk-audio-tips anim-item"><li data-n="01">支持后台收听：翻页、查阅源码时音频不中断</li><li data-n="02">迷你播放器可调 1× / 1.25× / 1.5× / 2× 倍速</li><li data-n="03">进度自动记忆，下次从上次听到的位置继续</li></ul></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>71 / 73</div></div></section>
+<section class="slide dark mk-page mk-code-page" data-screen-label="SourceCode" data-source="配套源码 · 10.2 应用案例和 Python 实现" data-theme="dark" data-mk-sec="10.2"><div class="chrome"><div>配套源码 · 10.2 应用案例和 Python 实现</div><div>72 / 73</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">配套源码</span><span class="mk-metaline">3 个文件 · 共 90 行 · 可查看 / 复制 / 下载</span></div><h2 class="h2-zh mk-title anim-item">10.2 应用案例和 Python 实现 · Python 配套源码</h2><div class="mk-code-grid mk-rich anim-item"><button class="mk-cc" type="button" data-mk-code="10.2.1.py"><span class="mk-cc-name">10.2.1.py</span><span class="mk-cc-meta">31 行</span><pre class="mk-cc-prev">import random
+class CyclicGroup:
+    def __init__(self, p):
+        self.p = p                        #群的阶
+        self.generator = self.find_generator()</pre></button><button class="mk-cc" type="button" data-mk-code="10.2.2.py"><span class="mk-cc-name">10.2.2.py</span><span class="mk-cc-meta">35 行</span><pre class="mk-cc-prev">import numpy as np
+class ReedSolomon:
+    def __init__(self, n, k):
+        self.n = n                     #码字长度
+        self.k = k                     #信息长度</pre></button><button class="mk-cc" type="button" data-mk-code="10.2.3.py"><span class="mk-cc-name">10.2.3.py</span><span class="mk-cc-meta">24 行</span><pre class="mk-cc-prev">from sympy.combinatorics import Permutation, P
+G = PermutationGroup([Permutation([1, 0, 2]), 
+H = PermutationGroup([Permutation([1, 0, 2])])
+def left_coset(group, subgroup):              
+    cosets = []</pre></button></div><p class="mk-foot-hint anim-item">点击任一文件查看完整高亮源码，支持一键复制与下载；按 <b>C</b> 打开本章源码浏览器</p></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>72 / 73</div></div></section>
 <section class="slide dark bare" data-screen-label="Closing" data-source="本章收束" data-theme="dark">
 <div class="slide-body" style="align-items:center;text-align:center">
 <div class="w-quote guest-mark">
@@ -968,7 +1209,7 @@ def decrypt(c):
 <h2 class="h1-zh anim-item" style="max-width:15em">群论用四条公理刻画对称与结构，让抽象代数成为密码与编码的根基</h2>
 <p class="body-zh anim-item" style="max-width:25em;margin:clamp(1.6rem,3.5vh,2.6rem) auto 0;opacity:.62">本章 Python 程序源码与学习指南均提供二维码下载。从半群到商群，从拉格朗日定理到同态基本定理，群论为理解结构与对称提供了统一而强大的语言。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>66 / 66</div></div></section>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>73 / 73</div></div></section>
 </div>
 <div id="nav"></div>
 <script>
@@ -1272,7 +1513,7 @@ def decrypt(c):
     var s=slides[i];
     if(!s.__tbHinted && s.querySelector('.tb-ans')){s.__tbHinted=1;toast('本页为<b>习题</b>：答案已隐藏，点击模糊处逐题查看');}
   });}
-  new MutationObserver(onChange).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});
+  try{new MutationObserver(onChange).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});}catch(e){}
 
   /* ---------- 提示气泡 ---------- */
   var toastT=null;
@@ -1361,7 +1602,7 @@ def decrypt(c):
         });
       });
     });
-    slides.forEach(function(s){ obs.observe(s,{attributes:true,attributeFilter:['class']}); });
+    slides.forEach(function(s){try{obs.observe(s,{attributes:true,attributeFilter:['class']});}catch(e){}});
   }
 
   document.addEventListener('play', function(e){
@@ -1392,5 +1633,312 @@ def decrypt(c):
 })();
 </script>
 
+
+<!--MK-ASSETS-V1-->
+<audio id="mk-audio" preload="none"></audio>
+<div id="mk-mini" aria-label="播客迷你播放器"><button class="mk-m-play" type="button" aria-label="播放 / 暂停"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><span class="mk-m-info"><span class="mk-m-t"></span><span class="mk-m-bar"><span class="mk-m-fill"></span></span></span><span class="mk-m-time">0:00 / 0:00</span><button class="mk-m-rate" type="button" aria-label="倍速">1×</button><button class="mk-m-x" type="button" aria-label="关闭播放器">&times;</button></div>
+<script type="application/json" id="mk-data">{"ch":10,"sections":[{"k":"10.1","title":"群","full":"10.1 群","start":5,"v":{"path":"assets/micro-lectures/10.1-groups.mp4","sec":474.5,"mb":15.2,"slide":5},"a":{"path":"assets/podcasts/10.1-groups.mp3","sec":506.4,"mb":2.4,"slide":58},"c":{"slide":59,"files":["10.1.1.py","10.1.2.py","10.1.3.py","10.1.4.py","10.1.5.py","10.1.6.py","10.1.7.py","10.1.8.py","10.1.9.py","10.1.10.py","10.1.11.py","10.1.12.py","10.1.13.py","10.1.14.py","10.1.15.py","10.1.16.py","10.1.17.py","10.1.18.py","10.1.19.py","10.1.20.py","10.1.21.py","10.1.22.py","10.1.23.py","10.1.24.py","10.1.25.py","10.1.26.py","10.1.27.py","10.1.28.py","10.1.29.py","10.1.30.py","10.1.31.py","10.1.32.py","10.1.33.py","10.1.34.py","10.1.35.py","10.1.36.py","10.1.37.py"]}},{"k":"10.2","title":"应用案例和 Python 实现","full":"10.2 应用案例和 Python 实现","start":62,"v":{"path":"assets/micro-lectures/10.2-applications.mp4","sec":523.4,"mb":16.5,"slide":62},"a":{"path":"assets/podcasts/10.2-applications.mp3","sec":527,"mb":2.5,"slide":70},"c":{"slide":71,"files":["10.2.1.py","10.2.2.py","10.2.3.py"]}}],"files":{"10.1.1.py":{"lines":28,"dir":"CH10","sec":"10.1","src":"import itertools\nS = {1, 2, 3}          #定义集合S\ndef operation(a, b):     #定义二元运算⊙为模4的乘法\n    return (a * b) % 4\ndef is_closed(S):      #验证封闭性\n    for a in S:\n        for b in S:\n            if operation(a, b) not in S:\n                return False\n    return True\ndef is_associative(S):    #验证结合性\n    for a, b, c in itertools.product(S, repeat=3):\n        if operation(operation(a, b), c) != operation(a, operation(b, c)):\n            return False\n    return True\ndef find_identity(S):    #验证单位元\n    for e in S:\n        if all(operation(e, a) == a and operation(a, e) == a for a in S):\n            return e\n    return None\nis_semigroup = is_closed(S) and is_associative(S)    #检查S是否构成半群\n#查找单位元并检查是否构成独异点\nidentity_element = find_identity(S)\nis_monoid = is_semigroup and identity_element is not None\nprint(\"S是否构成半群:\", is_semigroup)\nprint(\"S是否构成独异点:\", is_monoid)\nif is_monoid:\n    print(\"单位元为:\", identity_element)\n"},"10.1.2.py":{"lines":25,"dir":"CH10","sec":"10.1","src":"def check_properties():\n    def check_identity():                          #(1)\n        a = 5\n        return (0 + a == a) and (a + 0 == a)\n    def check_inverse(a):                          #(2)\n        return a + (-a) == 0\n    def check_cancellation(a, b, c):                  #(3)\n        return (a + b == a + c) and (b + a == c + a)\n    def check_exponentiation_distributive(a, m, n):      #(4)\n        return a * (m + n) == a * m + a * n\n    def check_exponentiation_associative(a, m, n):      #(5)\n        return (a * m) * n == a * (m * n)\n    def check_inverse_exponentiation(a, n):            #(6)\n        return (-a) * n == -(a * n)\n    results = {\n        \"identity\": check_identity(),\n        \"inverse_of_5\": check_inverse(5),\n        \"cancellation\": check_cancellation(3, 1, 1),  # Example: 3 + b = 3 + c\n        \"exponentiation_distributive\": check_exponentiation_distributive(2, 3, 4),\n        \"exponentiation_associative\": check_exponentiation_associative(3, 2, 3),\n        \"inverse_exponentiation\": check_inverse_exponentiation(4, 2)}\n    return results\nproperties_results = check_properties()\nfor prop, result in properties_results.items():\n    print(f\"{prop}: {result}\")\n"},"10.1.3.py":{"lines":29,"dir":"CH10","sec":"10.1","src":"class KleinGroup:\n    def __init__(self):\n        self.elements = ['e', 'a', 'b', 'c']\n        self.operation_table = {\n            ('e', 'e'): 'e', ('e', 'a'): 'a', ('e', 'b'): 'b', ('e', 'c'): 'c',\n            ('a', 'e'): 'a', ('a', 'a'): 'e', ('a', 'b'): 'c', ('a', 'c'): 'b',\n            ('b', 'e'): 'b', ('b', 'a'): 'c', ('b', 'b'): 'e', ('b', 'c'): 'a',\n            ('c', 'e'): 'c', ('c', 'a'): 'b', ('c', 'b'): 'a', ('c', 'c'): 'e'}\n    def operate(self, x, y):\n        return self.operation_table[(x, y)]\n    def is_group(self):\n        for x in self.elements:             #检查封闭性\n            for y in self.elements:\n                if self.operate(x, y) not in self.elements:\n                    return False\n        for x in self.elements:             #检查结合律\n            for y in self.elements:\n                for z in self.elements:\n                    if self.operate(self.operate(x, y), z) != self.operate(x, self.operate(y, z)):\n                        return False\n        for x in self.elements:             #检查单位元\n            if self.operate('e', x) != x or self.operate(x, 'e') != x:\n                return False\n        for x in self.elements:             #检查可逆元\n            if self.operate(x, x) != 'e':\n                return False\n        return True\nklein_group = KleinGroup()\nprint(\"Klein对于*运算是群吗?\", klein_group.is_group())\n"},"10.1.4.py":{"lines":12,"dir":"CH10","sec":"10.1","src":"def calculate_order(n, element):\n    sum = 0\n    for i in range(1, n + 1):\n        sum = (sum + element) % n\n        if sum == 0:\n            return i\n    return None\ngroup_order_6 = 6    #整数模6加法群\nelement_order_2 = calculate_order(group_order_6, 2)\ngroup_order_7 = 7    #整数模7加法群\nelement_order_3 = calculate_order(group_order_7, 3)\nprint(group_order_6, element_order_2, group_order_7, element_order_3)\n"},"10.1.5.py":{"lines":8,"dir":"CH10","sec":"10.1","src":"def is_subgroup_h1():\n    H = {0, 3, 6, 9}\n    Z12 = 12\n    closure = all(((x + y) % Z12) in H for x in H for y in H)    #检查封闭性\n    identity = 0 in H                                   #检查单位元\n    inverse = all(((Z12 - x) % Z12) in H for x in H)          #检查可逆元\n    return closure and identity and inverse\nprint(is_subgroup_h1())\n"},"10.1.6.py":{"lines":8,"dir":"CH10","sec":"10.1","src":"def is_subgroup_h2():\n    H = {0, 5, 10}\n    Z15 = 15\n    closure = all(((x + y) % Z15) in H for x in H for y in H)    #检查封闭性\n    identity = 0 in H    #检查单位元\n    inverse = all(((Z15 - x) % Z15) in H for x in H)           #检查逆元\n    return closure and identity and inverse\nprint(is_subgroup_h2())\n"},"10.1.7.py":{"lines":17,"dir":"CH10","sec":"10.1","src":"import numpy as np\ndef is_subgroup_h():\n    def in_H(matrix):\n        a = matrix[0, 0]\n        b = matrix[0, 1]\n        return matrix[1, 0] == 0 and matrix[1, 1] == 1 / a and a != 0\n    identity_matrix = np.array([[1, 0], [0, 1]])                #定义单位矩阵\n    identity = in_H(identity_matrix)                        #检查单位元\n    # 定义H中的矩阵\n    a_values = [1, 2, 0.5, -1]                              #任意非零值\n    b_values = [0, 1, -1, 2]\n    H = [np.array([[a, b], [0, 1 / a]]) for a in a_values for b in b_values]\n    closure = all(in_H(np.dot(x, y)) for x in H for y in H)       #检查封闭性\n    inverse = all(in_H(np.linalg.inv(matrix)) for matrix in H)    #检查逆元\n    return closure, identity, inverse\nclosure, identity, inverse = is_subgroup_h()\nprint(f\"封闭性: {closure}\",f\"单位元: {identity}\",f\"逆元: {inverse}\")\n"},"10.1.8.py":{"lines":7,"dir":"CH10","sec":"10.1","src":"def homomorphism_kernel_Z_to_Zn(n):\n    def phi(a):\n        return a % n\n    kernel = [a for a in range(-n * 2, n * 2 + 1) if phi(a) == 0]    #核\n    return kernel\nkernel_Z_to_Z5 = homomorphism_kernel_Z_to_Zn(5)    #验证从Z到Z5的同态核\nprint(f\"从Z到Z_5的同态核: {kernel_Z_to_Z5}\")\n"},"10.1.9.py":{"lines":14,"dir":"CH10","sec":"10.1","src":"from itertools import permutations\ndef sign_of_permutation(perm):\n    inversions = 0\n    for i in range(len(perm)):\n        for j in range(i + 1, len(perm)):\n            if perm[i] > perm[j]:\n                inversions += 1\n    return 1 if inversions % 2 == 0 else -1\ndef homomorphism_kernel_Sn_to_sign(n):\n    elements = list(permutations(range(1, n + 1)))\n    kernel = [perm for perm in elements if sign_of_permutation(perm) == 1]\n    return kernel\nkernel_S3_to_sign = homomorphism_kernel_Sn_to_sign(3)    #S3到群的同态核\nprint(f\"从S_3到符号群的同态核: {kernel_S3_to_sign}\")\n"},"10.1.10.py":{"lines":7,"dir":"CH10","sec":"10.1","src":"def homomorphism_kernel_Z_to_Z3():\n    def phi(a):\n        return a % 3\n    kernel = [a for a in range(-10, 11) if phi(a) == 0]    #核\n    return kernel\nkernel_Z_to_Z3 = homomorphism_kernel_Z_to_Z3()\nprint(f\"从Z到Z_3的同态核: {kernel_Z_to_Z3}\")\n"},"10.1.11.py":{"lines":6,"dir":"CH10","sec":"10.1","src":"def check_commutative_Z(a, b):\n    return a + b == b + a\n#验证整数加法群是否是交换群\na, b = 5, 3\nis_commutative = check_commutative_Z(a, b)\nprint(f\"整数加法群: a + b = b + a -> {a} + {b} = {b} + {a} -> {is_commutative}\")\n"},"10.1.12.py":{"lines":5,"dir":"CH10","sec":"10.1","src":"def check_commutative_Zn(a, b, n):\n    return (a + b) % n == (b + a) % n\na, b, n = 5, 3, 7    #验证模n整数加法群是否是交换群\nis_commutative = check_commutative_Zn(a, b, n)\nprint(f\"模 {n} 整数加法群: (a + b) % n = (b + a) % n -> ({a} + {b}) % {n} = ({b} + {a}) % {n} -> {is_commutative}\")\n"},"10.1.13.py":{"lines":8,"dir":"CH10","sec":"10.1","src":"from math import gcd\ndef check_commutative_Zn_star(a, b, n):\n    if gcd(a, n) != 1 or gcd(b, n) != 1:\n        return False\n    return (a * b) % n == (b * a) % n\na, b, n = 3, 5, 7           #验证模n整数乘法群是否是交换群\nis_commutative = check_commutative_Zn_star(a, b, n)\nprint(f\"模 {n} 整数乘法群: (a * b) % n = (b * a) % n -> ({a} * {b}) % {n} = ({b} * {a}) % {n} -> {is_commutative}\")\n"},"10.1.14.py":{"lines":5,"dir":"CH10","sec":"10.1","src":"def check_commutative_Z2(a1, b1, a2, b2):\n    return (a1 + a2, b1 + b2) == (a2 + a1, b2 + b1)\na1, b1, a2, b2 = 1, 2, 3, 4    #验证二元组加法群是否是交换群\nis_commutative = check_commutative_Z2(a1, b1, a2, b2)\nprint(f\"二元组加法群: (a1, b1) + (a2, b2) = (a2, b2) + (a1, b1) -> ({a1}, {b1}) + ({a2}, {b2}) = ({a2}, {b2}) + ({a1}, {b1}) -> {is_commutative}\")\n"},"10.1.15.py":{"lines":6,"dir":"CH10","sec":"10.1","src":"def is_cyclic_z_n(n):\n    return any(all((k * g) % n in range(n) for k in range(n)) for g in range(n))\n#验证模n整数加法群Zn是否为循环群\nn_values = [2, 3, 4, 5, 6]    #检查不同的n值\nresults = {n: is_cyclic_z_n(n) for n in n_values}\nprint(results)\n"},"10.1.16.py":{"lines":23,"dir":"CH10","sec":"10.1","src":"import numpy as np\noperation_table = {                                     #运算表\n    'a': {'a': 'a', 'b': 'b', 'c': 'c', 'd': 'd'},\n    'b': {'a': 'b', 'b': 'a', 'c': 'd', 'd': 'c'},\n    'c': {'a': 'c', 'b': 'd', 'c': 'b', 'd': 'a'},\n    'd': {'a': 'd', 'b': 'c', 'c': 'a', 'd': 'b'}}\ndef is_cyclic_group(group_elements, operation_table):         #是否为循环群\n    def generate_from(element):\n        generated = {element}\n        current = element\n        while True:\n            current = operation_table[current][element]\n            if current in generated:\n                break\n            generated.add(current)\n        return generated\n    for element in group_elements:\n        if len(generate_from(element)) == len(group_elements):\n            return True\n    return False\ngroup_elements = ['a', 'b', 'c', 'd']                            #群元素\nis_cyclic = is_cyclic_group(group_elements, operation_table)    #是否为循环群\nprint(is_cyclic)\n"},"10.1.17.py":{"lines":19,"dir":"CH10","sec":"10.1","src":"def find_order(g, n):           #计算元素g在群Zn中的阶\n    for k in range(1, n + 1):\n        if (g * k) % n == 0:\n            return k\n    return n\ndef generate_subgroup(g, n):    #生成元素g在群Zn中的子群\n    order = find_order(g, n)\n    subgroup = set((g * i) % n for i in range(order))\n    return subgroup\ndef main():\n    n = 30    #群Z30\n    subgroups = {}\n    for g in range(n):          #遍历每个可能的元素来找到所有子群\n        subgroup = generate_subgroup(g, n)\n        subgroups[frozenset(subgroup)] = g\n    for subgroup, generator in subgroups.items():    #输出\n        print(f\"Subgroup generated by {generator}: {sorted(subgroup)}\")\nif __name__ == \"__main__\":\n    main()\n"},"10.1.18.py":{"lines":13,"dir":"CH10","sec":"10.1","src":"def check_commutative(group, operation):\n    for a in group:\n        for b in group:\n            if operation(a, b) != operation(b, a):\n                return False\n    return True\ndef generate_cyclic_group(g, n):\n    return [g * i % n for i in range(n)]\nn = 8                        #验证一个阶为8的循环群是否是交换群\nG = generate_cyclic_group(1, n)\noperation = lambda x, y: (x + y) % n\nis_commutative = check_commutative(G, operation)\nprint(f\"模 {n} 整数加法群是否是交换群: {is_commutative}\")\n"},"10.1.19.py":{"lines":21,"dir":"CH10","sec":"10.1","src":"def generate_cyclic_group(g, n):\n    return [g * i % n for i in range(n)]\ndef find_subgroups(n):\n    subgroups = []\n    for d in range(1, n + 1):\n        if n % d == 0:\n            subgroups.append(generate_cyclic_group(d, n))\n    return subgroups\ndef is_cyclic_subgroup(subgroup):\n    g = subgroup[1]                #除了0以外的第一个元素\n    n = len(subgroup)\n    return sorted(subgroup) == sorted(generate_cyclic_group(g, n))\n#验证一个阶为12的循环群的子群是否也是循环群\nn = 12\nG = generate_cyclic_group(1, n)\nsubgroups = find_subgroups(n)\nfor subgroup in subgroups:\n    print(f\"子群: {subgroup}\")\n    is_cyclic = is_cyclic_subgroup(subgroup)\n    generator = subgroup[1] if is_cyclic else None\n    print(f\"是否是循环群: {is_cyclic}, 生成元: {generator}\")\n"},"10.1.20.py":{"lines":10,"dir":"CH10","sec":"10.1","src":"def permutation_order(cycles, n):\n    from math import lcm\n    orders = []\n    for cycle in cycles:\n        orders.append(len(cycle))    #循环的长度即为它的阶\n    return lcm(*orders)\ncycles = [(1, 2, 3), (4, 5)]\nn = 5    #元素总数\norder = permutation_order(cycles, n)\nprint(f\"The order of the permutation is {order}\")\n"},"10.1.21.py":{"lines":21,"dir":"CH10","sec":"10.1","src":"def apply_permutation(perm, x):\n    if x in perm:\n        return perm[x]\n    return x\ndef compose_permutations(sigma, tau, n):    #计算两个置换的复合\n    sigma_map = {sigma[i]: sigma[(i + 1) % len(sigma)] for i in range(len(sigma))}\n    tau_map = {tau[i]: tau[(i + 1) % len(tau)] for i in range(len(tau))}\n    composition = {}\n    for x in range(1, n + 1):\n        moved = apply_permutation(tau_map, x)\n        final_position = apply_permutation(sigma_map, moved)\n        if final_position != x:\n            composition[x] = final_position\n    return composition\nsigma = [1, 2, 3]\ntau = [2, 3]\nn = 3\ncomposed = compose_permutations(sigma, tau, n)\ncomposed2 = compose_permutations(tau, sigma, n)\nprint(f\"The composition of tau and sigma is: {composed}\")\nprint(f\"The composition of sigma and tau is: {composed2}\")\n"},"10.1.22.py":{"lines":6,"dir":"CH10","sec":"10.1","src":"def inverse_permutation(perm):       #求置换的逆\n    inv_perm = {perm[i]: perm[i - 1] for i in range(len(perm))}\n    return inv_perm\nperm = [1, 2, 3, 4]\ninverse = inverse_permutation(perm)\nprint(f\"The inverse of the permutation is: {inverse}\")\n"},"10.1.23.py":{"lines":20,"dir":"CH10","sec":"10.1","src":"def apply_permutation(permutation, element):\n    for cycle in permutation:\n        if element in cycle:\n            idx = cycle.index(element)\n            return cycle[(idx + 1) % len(cycle)]\n    return element\ndef compose_permutations(sigma, tau, elements):\n    result = {}\n    for element in elements:\n        after_tau = apply_permutation(tau, element)\n        after_sigma = apply_permutation(sigma, after_tau)\n        result[element] = after_sigma\n    return result\nsigma = [(1, 2, 3)]       #定义轮换\ntau = [(2, 3, 4)]\nelements = [1, 2, 3, 4]    #群的元素\nsigma_tau = compose_permutations(sigma, tau, elements)\ntau_sigma = compose_permutations(tau, sigma, elements)\nprint(sigma_tau)\nprint(tau_sigma)\n"},"10.1.24.py":{"lines":5,"dir":"CH10","sec":"10.1","src":"def permutation_order(permutation):\n    return max(len(cycle) for cycle in permutation)\nrho = [(1, 2, 3, 4, 5)]                 #轮换\norder_rho = permutation_order(rho)    #求轮换的阶\nprint(order_rho)\n"},"10.1.25.py":{"lines":8,"dir":"CH10","sec":"10.1","src":"def invert_permutation(permutation):\n    inverse = []\n    for cycle in permutation:\n        inverse.append(tuple(reversed(cycle)))\n    return inverse\nsigma = [(1, 2, 3, 4)]                       #定义轮换\ninverse_sigma = invert_permutation(sigma)    #求轮换的逆\nprint(inverse_sigma)\n"},"10.1.26.py":{"lines":16,"dir":"CH10","sec":"10.1","src":"def cycle_to_transpositions(cycle):               #轮换转换成一系列对换乘积\n    transpositions = []\n    first_element = cycle[0]\n    for i in range(len(cycle) - 1, 0, -1):\n        transpositions.append((first_element, cycle[i]))\n    return transpositions\ndef decompose_permutation_to_transpositions(cycles):    #将多个轮换分解成对换\n    all_transpositions = []\n    for cycle in cycles:\n        transpositions = cycle_to_transpositions(cycle)\n        all_transpositions.extend(transpositions)\n        print(f\"Cycle {cycle} decomposes to transpositions: {transpositions}\")\n    return all_transpositions\ncycles = [(1, 4, 7), (2, 6), (3, 5, 8, 9)]              #置换轮换\nall_transpositions = decompose_permutation_to_transpositions(cycles)\nprint(\"All transpositions from the given permutation:\", all_transpositions)\n"},"10.1.27.py":{"lines":10,"dir":"CH10","sec":"10.1","src":"from sympy.combinatorics import Permutation\ncycle = Permutation([1, 2, 3, 0])\ntranspositions_cycle = [(1, 2), (1, 3), (1, 4)]\nprint(\"轮换 (1, 2, 3, 4) 可以表示为对换的乘积:\", transpositions_cycle)\nsigma_1 = Permutation([1, 0, 3, 2])\ntranspositions_sigma_1 = [(1, 2), (3, 4)]\nprint(\"置换 σ 可以表示为对换的乘积:\", transpositions_sigma_1)\nsigma_2 = Permutation([1, 2, 0, 4, 3])\ndisjoint_cycles = sigma_2.cyclic_form\nprint(\"置换 σ 可以表示为不相交轮换的乘积:\", disjoint_cycles)\n"},"10.1.28.py":{"lines":15,"dir":"CH10","sec":"10.1","src":"def find_fixed_points(permutation):\n    fixed_points = []\n    for i, value in enumerate(permutation, start=1):\n        if value == i:\n            fixed_points.append(i)\n    return fixed_points\nperm1 = [3, 1, 2]\nperm2 = [2, 1, 4, 3]\nperm3 = [2, 1, 3, 4]\nfixed_points1 = find_fixed_points(perm1)          #找出置换的所有不动点\nfixed_points2 = find_fixed_points(perm2)\nfixed_points3 = find_fixed_points(perm3)\nprint(f\"置换 {perm1} 的不动点: {fixed_points1}\")\nprint(f\"置换 {perm2} 的不动点: {fixed_points2}\")\nprint(f\"置换 {perm3} 的不动点: {fixed_points3}\")\n"},"10.1.29.py":{"lines":13,"dir":"CH10","sec":"10.1","src":"from sympy.combinatorics import Permutation\nsigma = Permutation([1, 2, 0, 4, 5, 3, 7, 8, 6, 9])    #定义置换σ\ncycles_sigma = sigma.cyclic_form               #获取σ的不相交轮换形式\ntype_sigma = [len(cycle) for cycle in cycles_sigma]\nprint(f\"置换 σ: {sigma}\")\nprint(f\"σ 的不相交轮换形式: {cycles_sigma}\")\nprint(f\"σ 的类型: {type_sigma}\")\ntau = Permutation([9, 8, 7, 6, 5, 4, 3, 2, 1, 0])       #定义置换τ\ncycles_tau = tau.cyclic_form                    #获取τ的不相交轮换形式\ntype_tau = [len(cycle) for cycle in cycles_tau]\nprint(f\"置换 τ: {tau}\")\nprint(f\"τ 的不相交轮换形式: {cycles_tau}\")\nprint(f\"τ 的类型: {type_tau}\")\n"},"10.1.30.py":{"lines":18,"dir":"CH10","sec":"10.1","src":"G = set(range(20))               #使用有限的整数集合来表示G(有限集合示例)\nH = {4 * k for k in range(-5, 6)}    #H是所有4的倍数的集合\ndef left_cosets(G, H):             #计算左陪集\n    cosets = []\n    for a in G:\n        coset = {a + h for h in H}\n        if coset not in cosets:\n            cosets.append(coset)\n    return cosets\ndef right_cosets(G, H):    #计算右陪集\n    return left_cosets(G, H)\nleft_cosets_result = left_cosets(G, H)     #输出左陪集和右陪集\nright_cosets_result = right_cosets(G, H)\nprint(\"整数加法群的左陪集和右陪集:\")\nfor i, coset in enumerate(left_cosets_result):\n    print(f\"左陪集 {i}: {sorted(coset)}\")\nfor i, coset in enumerate(right_cosets_result):\n    print(f\"右陪集 {i}: {sorted(coset)}\")\n"},"10.1.31.py":{"lines":34,"dir":"CH10","sec":"10.1","src":"S3 = ['e', '(1 2)', '(1 3)', '(2 3)', '(1 2 3)', '(1 3 2)']    #置换群S3的元素\nH = ['e', '(1 2)']                              #子群H\nmultiplication_table = {                       #置换乘法规则\n    'e': {'e': 'e', '(1 2)': '(1 2)', '(1 3)': '(1 3)', '(2 3)': '(2 3)', '(1 2 3)': '(1 2 3)', '(1 3 2)': '(1 3 2)'},\n    '(1 2)': {'e': '(1 2)', '(1 2)': 'e', '(1 3)': '(1 2 3)', '(2 3)': '(1 3 2)', '(1 2 3)': '(1 3)', '(1 3 2)': '(2 3)'},\n    '(1 3)': {'e': '(1 3)', '(1 2)': '(2 3)', '(1 3)': 'e', '(2 3)': '(1 3 2)', '(1 2 3)': '(2 3)', '(1 3 2)': '(1 2)'},\n    '(2 3)': {'e': '(2 3)', '(1 2)': '(1 3 2)', '(1 3)': '(1 2)', '(2 3)': 'e', '(1 2 3)': '(1 3)', '(1 3 2)': '(1 2 3)'},\n    '(1 2 3)': {'e': '(1 2 3)', '(1 2)': '(1 3)', '(1 3)': '(2 3)', '(2 3)': '(1 2)', '(1 2 3)': 'e', '(1 3 2)': '(1 3 2)'},\n    '(1 3 2)': {'e': '(1 3 2)', '(1 2)': '(2 3)', '(1 3)': '(1 2 3)', '(2 3)': '(1 3)', '(1 2 3)': '(1 2)', '(1 3 2)': 'e'}\n}\ndef multiply(p1, p2):\n    return multiplication_table[p1][p2]\ndef left_cosets(G, H):                           #计算左陪集\n    cosets = []\n    for g in G:\n        coset = {multiply(g, h) for h in H}\n        if coset not in cosets:\n            cosets.append(coset)\n    return cosets\ndef right_cosets(G, H):                            #计算右陪集\n    cosets = []\n    for g in G:\n        coset = {multiply(h, g) for h in H}\n        if coset not in cosets:\n            cosets.append(coset)\n    return cosets\nleft_cosets_result = left_cosets(S3, H)                #输出左陪集和右陪集\nright_cosets_result = right_cosets(S3, H)\nprint(\"置换群 S3 的左陪集:\")\nfor i, coset in enumerate(left_cosets_result):\n    print(f\"左陪集 {i}: {sorted(coset)}\")\nprint(\"\\n置换群 S3 的右陪集:\")\nfor i, coset in enumerate(right_cosets_result):\n    print(f\"右陪集 {i}: {sorted(coset)}\")\n"},"10.1.32.py":{"lines":6,"dir":"CH10","sec":"10.1","src":"G = [(),(1, 2),(1, 3),(2, 3),(1, 2, 3),(1, 3, 2)]    #定义群元素\nH = [(),(1, 2)]\norder_G = len(G)                        #计算群的阶和子群的阶\norder_H = len(H)\nnumber_of_cosets = order_G // order_H      #计算陪集的个数\nprint(f\"陪集的个数: {number_of_cosets}\")\n"},"10.1.33.py":{"lines":10,"dir":"CH10","sec":"10.1","src":"def find_factors(n):\n    factors = []\n    for i in range(1, n + 1):\n        if n % i == 0:\n            factors.append(i)\n    return factors\n#群的阶\norder_G = 20\nsubgroup_orders = find_factors(order_G)      #找出所有可能的子群的阶\nprint(f\"阶为{order_G}的群的所有可能子群的阶: {subgroup_orders}\")\n"},"10.1.34.py":{"lines":8,"dir":"CH10","sec":"10.1","src":"Z6 = {0, 1, 2, 3, 4, 5}\nH = {0, 3}\nK = {0, 2, 4}\nH_inter_K = H.intersection(K)\n#验证H∩K是否为正规子群\nis_normal_subgroup = all((g + h - g) % 6 in H_inter_K for g in Z6 for h in H_inter_K)\nprint(\"H ∩ K =\", H_inter_K)\nprint(\"H ∩ K is a normal subgroup of Z6:\", is_normal_subgroup)\n"},"10.1.35.py":{"lines":4,"dir":"CH10","sec":"10.1","src":"Z = list(range(-10, 11))       #整数加法群Z和子群4Z，取一部分整数进行展示\nH = {4 * i for i in range(-10, 11)}\ncosets = {i % 4 for i in Z}     #计算Z/4Z\nprint(\"商群 Z/4Z 的陪集表示为:\", cosets)\n"},"10.1.36.py":{"lines":20,"dir":"CH10","sec":"10.1","src":"from sympy.combinatorics import Permutation, PermutationGroup\ne = Permutation([0, 1, 2])             #定义对称群S3和子群A3\np12 = Permutation([1, 0, 2])\np13 = Permutation([2, 1, 0])\np23 = Permutation([0, 2, 1])\np123 = Permutation([1, 2, 0])\np132 = Permutation([2, 0, 1])\nS3 = PermutationGroup([e, p12, p13, p23, p123, p132])\nA3 = PermutationGroup([e, p123, p132])\nleft_cosets = []                      #计算S3/A3的左陪集\nrepresentatives = []\nfor g in S3.generate():\n    if not any(g in coset for coset in left_cosets):\n        coset = {g * h for h in A3.generate()}\n        left_cosets.append(coset)\n        representatives.append(g)\nprint(\"商群 S3/A3 的左陪集表示为:\")\nfor idx, coset in enumerate(left_cosets):\n    print(f\"左陪集 {idx + 1}: {coset}\")\n    print(f\"代表元: {representatives[idx]}\")\n"},"10.1.37.py":{"lines":24,"dir":"CH10","sec":"10.1","src":"def phi(n):                     #定义同态映射φ:Z→Z6\n    return n % 6\ndef kernel_phi():                 #计算同态映射φ的核\n    kernel = [n for n in range(-100, 101) if phi(n) == 0]\n    return kernel\nZ = list(range(-100, 101))         #定义Z和Z6\nZ6 = list(range(6))\nimage_phi = {phi(n) for n in Z}    #计算同态映射的像\nkernel = kernel_phi()    #输出同态映射的核和像\nprint(f\"同态映射 φ 的核: {kernel[:10]}...\")     #仅显示前10个元素\nprint(f\"同态映射 φ 的像: {image_phi}\")\ndef coset_representatives(n):          #验证同态基本定理：Z/6Z是否同构于Z6\n    return [i for i in range(n)]\ncosets = [coset_representatives(6)]\nprint(\"\\n商群 Z/6Z 的陪集:\")\nfor i in range(6):\n    coset = [(i + 6 * k) for k in range(-3, 4)]\n    print(f\"{i} + 6Z: {coset}\")\nZ6 = list(range(6))                    #验证Z/6Z与Z6是否同构\nZ_mod_6 = [n % 6 for n in range(-18, 19)]\nprint(\"\\nZ/6Z 是否同构于 Z6:\")\nprint(f\"Z6: {Z6}\")\nprint(f\"Z/6Z: {Z_mod_6[:6]}\")          #仅显示前6个元素\nprint(\"同构\" if Z_mod_6[:6] == Z6 else \"不同构\")\n"},"10.2.1.py":{"lines":31,"dir":"CH10","sec":"10.2","src":"import random\nclass CyclicGroup:\n    def __init__(self, p):\n        self.p = p                        #群的阶，即素数\n        self.generator = self.find_generator()\n        self.generated_keys = set()\n    def find_generator(self):\n        for g in range(2, self.p):\n            if self.is_generator(g):\n                return g\n        raise ValueError(\"No generator found\")\n    def is_generator(self, g):\n        elements = set()\n        for i in range(self.p - 1):\n            elements.add(pow(g, i, self.p))\n        return len(elements) == self.p - 1\n    def generate_key(self):\n        while True:\n            k = random.randint(1, self.p - 1)\n            key = pow(self.generator, k, self.p)\n            if key not in self.generated_keys:\n                self.generated_keys.add(key)\n                return key\n#实际应用示例\nif __name__ == \"__main__\":\n    p = 23                                         #选择一个适当的素数\n    cyclic_group = CyclicGroup(p)\n    keys = [cyclic_group.generate_key() for _ in range(10)]\n    print(\"Generated keys:\", keys)\n    assert len(keys) == len(set(keys)), \"Keys are not unique!\"    #验证密钥唯一性\n    print(\"All generated keys are unique.\")\n"},"10.2.2.py":{"lines":35,"dir":"CH10","sec":"10.2","src":"import numpy as np\nclass ReedSolomon:\n    def __init__(self, n, k):\n        self.n = n                     #码字长度\n        self.k = k                     #信息长度\n        self.field = self.generate_galois_field()\n        self.generator_poly = self.generate_generator_poly()\n    def generate_galois_field(self):       #生成有限域GF(28)\n        field_size = 2 ** 8\n        field = np.zeros(field_size, dtype=int)\n        for i in range(field_size):\n            field[i] = i\n        return field\n    def generate_generator_poly(self):\n        #简单的生成多项式生成（这里只是一个示例，实际应用中更复杂）\n        g = np.poly1d([1])\n        for i in range(self.n - self.k):\n            g *= np.poly1d([1, self.field[i]])\n        return g\n    def encode(self, message):\n        data = np.poly1d(message)\n        padded_data = np.poly1d(np.append(message, [0] * (self.n - self.k)))\n        _, remainder = np.polydiv(padded_data, self.generator_poly)\n        codeword = padded_data - remainder\n        return codeword.coefficients.astype(int)\n    def decode(self, codeword):\n        #简单的误差检测和纠正（示例中未实现复杂的纠错算法）\n        return codeword[:self.k]\nif __name__ == \"__main__\":     #使用Reed-Solomon码进行编码和解码\n    rs = ReedSolomon(n=255, k=223)\n    message = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]    #示例消息\n    encoded_message = rs.encode(message)\n    print(f\"Encoded message: {encoded_message}\")\n    decoded_message = rs.decode(encoded_message)\n    print(f\"Decoded message: {decoded_message[:len(message)]}\")\n"},"10.2.3.py":{"lines":24,"dir":"CH10","sec":"10.2","src":"from sympy.combinatorics import Permutation, PermutationGroup\nG = PermutationGroup([Permutation([1, 0, 2]), Permutation([2, 1, 0])])    #对称群S3\nH = PermutationGroup([Permutation([1, 0, 2])])    #子群H\ndef left_coset(group, subgroup):                 #陪集生成函数\n    cosets = []\n    for g in group.generate():\n        coset = [g * h for h in subgroup.generate()]\n        if not any(set(coset) == set(existing) for existing in cosets):\n            cosets.append(coset)\n    return cosets\ncosets = left_coset(G, H)                     #获取G中H的陪集\ndef encrypt(message, cosets):                  #加密函数\n    return cosets[message % len(cosets)][0]     #消息是0到5的整数\ndef decrypt(cipher, cosets):    #解密函数\n    for i, coset in enumerate(cosets):\n        if cipher in coset:\n            return i\n    return None\nmessage = 3                                #示例消息\ncipher = encrypt(message, cosets)               #加密过程\nprint(f\"Original message: {message}\")\nprint(f\"Encrypted message: {cipher}\")\ndecrypted_message = decrypt(cipher, cosets)      #解密过程\nprint(f\"Decrypted message: {decrypted_message}\")\n"}},"nv":2,"na":2,"nc":40}</script>
+<script id="mk-runtime">
+(function(){
+  if(window.__mkInit) return; window.__mkInit=true;
+  var el=document.getElementById('mk-data'); if(!el) return;
+  var D=JSON.parse(el.textContent);
+  var SEC=D.sections, FILES=D.files;
+  var deck=document.getElementById('deck'); if(!deck) return;
+  var slides=Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+
+  function $(s,r){return (r||document).querySelector(s);}
+  function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function abs(p){try{return new URL(p,document.baseURI||location.href).href;}catch(e){return p;}}
+  function fmt(s){s=Math.max(0,Math.round(s||0));return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);}
+  function toast(html){var t=document.getElementById('tb-toast');if(!t)return;t.innerHTML=html;t.classList.add('tb-show');clearTimeout(t.__mk);t.__mk=setTimeout(function(){t.classList.remove('tb-show');},2400);}
+  function curIdx(){for(var i=0;i<slides.length;i++){if(slides[i].classList.contains('active'))return i;}return 0;}
+  function jump(i){closePanel();if(window.__deckGoTo)window.__deckGoTo(+i);}
+  function secOf(k){for(var i=0;i<SEC.length;i++){if(SEC[i].k===k)return SEC[i];}return null;}
+  /* 当前所处小节：取起始页不晚于当前页的最后一节 */
+  function curSec(){var i=curIdx(),best=SEC[0]||null;for(var j=0;j<SEC.length;j++){if(SEC[j].start<=i)best=SEC[j];}return best;}
+
+  /* ============ 微课视频：按需加载，避免预载数 GB ============ */
+  document.addEventListener('click',function(e){
+    var cov=e.target.closest?e.target.closest('.mk-cover'):null; if(!cov)return;
+    var stage=cov.closest('.mk-stage'); var v=stage&&stage.querySelector('video'); if(!v)return;
+    if(!v.getAttribute('src')){
+      v.setAttribute('src',abs(v.getAttribute('data-mk-src')||''));
+      v.setAttribute('preload','auto');
+      try{v.load();}catch(err){}
+    }
+    stage.classList.add('mk-live');
+    try{v.play();}catch(err){}
+  });
+  /* 离开页面暂停视频 */
+  try{new MutationObserver(function(){
+    slides.forEach(function(s){
+      if(s.classList.contains('active'))return;
+      $$('video',s).forEach(function(v){try{v.pause();}catch(e){}});
+    });
+  }).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});}catch(e){}
+
+  /* ============ 播客音频：全局单例播放器 ============ */
+  var AU=document.getElementById('mk-audio');
+  var mini=document.getElementById('mk-mini');
+  var curKey=null, RATES=[1,1.25,1.5,2], ri=0;
+
+  function posKey(k){return 'mk-pos-ch'+D.ch+'-'+k;}
+  function savePos(){if(!curKey||!AU.duration)return;try{
+    if(AU.currentTime>3&&AU.currentTime<AU.duration-3)localStorage.setItem(posKey(curKey),String(Math.floor(AU.currentTime)));
+    else localStorage.removeItem(posKey(curKey));
+  }catch(e){}}
+
+  function loadSec(k){
+    var s=secOf(k); if(!s||!s.a)return null;
+    if(curKey!==k){
+      savePos(); curKey=k;
+      AU.src=abs(s.a.path); AU.playbackRate=RATES[ri];
+      var p=0; try{p=parseInt(localStorage.getItem(posKey(k))||'0',10)||0;}catch(e){}
+      if(p>0){AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);try{AU.currentTime=p;}catch(e){}});}
+      $('.mk-m-t',mini).textContent=s.full;
+      mini.classList.add('mk-show');
+    }
+    return s;
+  }
+  function playSec(k){
+    var s=loadSec(k); if(!s)return;
+    $$('video').forEach(function(v){try{v.pause();}catch(e){}});
+    var pr=AU.play();
+    if(pr&&pr.catch)pr.catch(function(){toast('音频加载中，请稍候再试');});
+  }
+  function toggleSec(k){
+    if(curKey===k&&!AU.paused){AU.pause();}else{playSec(k);}
+  }
+  window.__mkPlaySection=playSec;
+
+  AU.addEventListener('play',syncUI);
+  AU.addEventListener('pause',function(){savePos();syncUI();});
+  AU.addEventListener('ended',function(){try{localStorage.removeItem(posKey(curKey));}catch(e){}syncUI();});
+  AU.addEventListener('timeupdate',function(){syncUI();if(!AU.__sv||Date.now()-AU.__sv>4000){AU.__sv=Date.now();savePos();}});
+  AU.addEventListener('error',function(){toast('音频文件读取失败，请确认 assets/podcasts 完整');});
+  document.addEventListener('play',function(e){if(e.target&&e.target.tagName==='VIDEO'){try{AU.pause();}catch(err){}}},true);
+
+  function syncUI(){
+    var playing=!AU.paused&&!AU.ended;
+    var dur=AU.duration||0, cu=AU.currentTime||0, pct=dur?cu/dur:0;
+    mini.classList.toggle('mk-on',playing);
+    $('.mk-m-fill',mini).style.width=(pct*100).toFixed(2)+'%';
+    $('.mk-m-time',mini).textContent=fmt(cu)+' / '+fmt(dur);
+    /* 幻灯片上的音频卡片 */
+    $$('.mk-abtn').forEach(function(b){
+      var on=playing&&b.getAttribute('data-mk-sec')===curKey;
+      b.classList.toggle('mk-playing',on);
+    });
+    $$('.mk-wave').forEach(function(w){
+      var mine=w.getAttribute('data-mk-sec')===curKey;
+      var bars=w.children, n=bars.length, lim=mine?Math.round(pct*n):0;
+      for(var i=0;i<n;i++)bars[i].classList.toggle('mk-on',i<lim);
+      var t=w.parentNode.querySelector('[data-mk-cur]');
+      if(t)t.textContent=mine?fmt(cu):'0:00';
+    });
+    /* 面板列表 */
+    $$('.mk-li.a').forEach(function(li){
+      li.classList.toggle('mk-playing',playing&&li.getAttribute('data-mk-sec')===curKey);
+    });
+  }
+
+  /* 幻灯片音频卡片交互 */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('.mk-abtn'):null;
+    if(b){toggleSec(b.getAttribute('data-mk-sec'));return;}
+    var w=e.target.closest?e.target.closest('.mk-wave'):null;
+    if(w){
+      var k=w.getAttribute('data-mk-sec');
+      var r=w.getBoundingClientRect(), p=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width));
+      if(curKey!==k){
+        loadSec(k);
+        AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);try{AU.currentTime=p*AU.duration;}catch(err){}});
+      }else if(AU.duration){
+        try{AU.currentTime=p*AU.duration;}catch(err){}
+      }
+      playSec(k);
+      return;
+    }
+    var g=e.target.closest?e.target.closest('[data-mk-go]'):null;
+    if(g&&!g.hasAttribute('disabled')){jump(g.getAttribute('data-mk-go'));return;}
+    var c=e.target.closest?e.target.closest('[data-mk-code]'):null;
+    if(c){openPanel('c');showFile(c.getAttribute('data-mk-code'));return;}
+  });
+
+  /* 迷你播放器 */
+  $('.mk-m-play',mini).onclick=function(){if(curKey)toggleSec(curKey);};
+  $('.mk-m-bar',mini).onclick=function(e){
+    if(!AU.duration)return;
+    var r=this.getBoundingClientRect();
+    AU.currentTime=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*AU.duration;
+  };
+  $('.mk-m-rate',mini).onclick=function(){
+    ri=(ri+1)%RATES.length; AU.playbackRate=RATES[ri];
+    this.textContent=RATES[ri]+'×'; toast('播放速度：<b>'+RATES[ri]+'×</b>');
+  };
+  $('.mk-m-x',mini).onclick=function(){
+    try{AU.pause();}catch(e){}
+    savePos(); mini.classList.remove('mk-show');
+  };
+
+  /* ============ 数字资源面板 ============ */
+  var panel=document.createElement('div');
+  panel.id='mk-panel'; panel.className='tb-overlay';
+  panel.innerHTML='<div class="tb-panel">'
+    +'<div class="tb-phead"><div class="tb-ptitle">数字资源 <small>第 '+D.ch+' 章</small></div><button class="tb-close" type="button" aria-label="关闭">&times;</button></div>'
+    +'<div class="mk-tabs">'
+    +'<button class="mk-tab mk-cur" data-mk-tab="v">微课视频 <small>'+D.nv+'</small></button>'
+    +'<button class="mk-tab" data-mk-tab="a">播客音频 <small>'+D.na+'</small></button>'
+    +'<button class="mk-tab" data-mk-tab="c">配套源码 <small>'+D.nc+'</small></button>'
+    +'</div>'
+    +'<div class="tb-pbody" style="padding:0"><div class="mk-pane mk-cur" id="mk-pane-v"></div><div class="mk-pane" id="mk-pane-a"></div><div class="mk-pane" id="mk-pane-c"></div></div>'
+    +'</div>';
+  document.body.appendChild(panel);
+  panel.addEventListener('click',function(e){if(e.target===panel)closePanel();});
+  panel.addEventListener('wheel',function(e){e.stopPropagation();},{passive:true});
+  $('.tb-close',panel).onclick=closePanel;
+
+  function closePanel(){panel.classList.remove('tb-show');}
+  function openPanel(tab){
+    $$('.tb-overlay.tb-show').forEach(function(o){o.classList.remove('tb-show');});
+    panel.classList.add('tb-show');
+    if(tab)setTab(tab);
+  }
+  function setTab(t){
+    $$('.mk-tab',panel).forEach(function(b){b.classList.toggle('mk-cur',b.getAttribute('data-mk-tab')===t);});
+    $$('.mk-pane',panel).forEach(function(p){p.classList.toggle('mk-cur',p.id==='mk-pane-'+t);});
+  }
+  $$('.mk-tab',panel).forEach(function(b){b.onclick=function(){setTab(b.getAttribute('data-mk-tab'));};});
+
+  /* --- 微课 / 播客列表 --- */
+  (function(){
+    var hv='<div class="mk-list">',ha='<div class="mk-list">';
+    SEC.forEach(function(s){
+      if(s.v)hv+='<button class="mk-li v" data-mk-go="'+s.v.slide+'"><span class="mk-li-ic">'+s.k+'</span>'
+        +'<span class="mk-li-b"><span class="mk-li-t">'+esc(s.title)+'</span><span class="mk-li-m">'+fmt(s.v.sec)+' · '+s.v.mb+' MB</span></span>'
+        +'<span class="mk-li-go">前往 →</span></button>';
+      if(s.a)ha+='<button class="mk-li a" data-mk-sec="'+s.k+'" data-mk-play="1"><span class="mk-li-ic">'
+        +'<svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
+        +'<svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></span>'
+        +'<span class="mk-li-b"><span class="mk-li-t">'+s.k+' '+esc(s.title)+'</span><span class="mk-li-m">'+fmt(s.a.sec)+' · '+s.a.mb+' MB</span></span>'
+        +'<span class="mk-li-go">播放</span></button>';
+    });
+    $('#mk-pane-v').innerHTML=hv+'</div>';
+    $('#mk-pane-a').innerHTML=ha+'</div>';
+    $$('.mk-li.a').forEach(function(li){li.onclick=function(){toggleSec(li.getAttribute('data-mk-sec'));};});
+  })();
+
+  /* --- 源码浏览器 --- */
+  function hl(code){
+    var re=/(#[^\n]*)|('{3}[\s\S]*?'{3}|"{3}[\s\S]*?"{3}|'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")|\b(False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)\b|\b(abs|all|any|bin|bool|chr|dict|divmod|enumerate|filter|float|format|frozenset|input|int|isinstance|len|list|map|max|min|open|ord|pow|print|range|repr|reversed|round|set|sorted|str|sum|tuple|type|zip)\b|\b(\d+(?:\.\d+)?)\b/g;
+    var out='',last=0,m;
+    while((m=re.exec(code))!==null){
+      out+=esc(code.slice(last,m.index));
+      var cls=m[1]?'c':m[2]?'s':m[3]?'k':m[4]?'b':'n';
+      out+='<span class="'+cls+'">'+esc(m[0])+'</span>';
+      last=re.lastIndex;
+    }
+    return out+esc(code.slice(last));
+  }
+  (function buildSrc(){
+    var side='';
+    SEC.forEach(function(s){
+      if(!s.c||!s.c.files.length)return;
+      side+='<div class="mk-src-grp">'+s.k+' '+esc(s.title)+'</div>';
+      s.c.files.forEach(function(n){
+        side+='<button class="mk-src-f" data-mk-file="'+n+'">'+n+'<span>'+FILES[n].lines+' 行</span></button>';
+      });
+    });
+    $('#mk-pane-c').innerHTML='<div class="mk-src"><div class="mk-src-side">'+(side||'<div class="mk-src-empty">本章无配套源码</div>')+'</div>'
+      +'<div class="mk-src-main"><div class="mk-src-bar"><div class="mk-src-name" id="mk-src-name">选择左侧文件</div>'
+      +'<button class="mk-btn" id="mk-copy">复制代码</button>'
+      +'<button class="mk-btn" id="mk-dl">下载 .py</button>'
+      +'<button class="mk-btn" id="mk-dl-all">打包下载本章</button></div>'
+      +'<div class="mk-src-code"><pre id="mk-src-pre"><code></code></pre></div></div></div>';
+    $$('.mk-src-f').forEach(function(b){b.onclick=function(){showFile(b.getAttribute('data-mk-file'));};});
+    $('#mk-copy').onclick=function(){copy(cf?FILES[cf].src:'');};
+    $('#mk-dl').onclick=function(){if(cf)dl(cf,FILES[cf].src);};
+    $('#mk-dl-all').onclick=dlAll;
+  })();
+
+  var cf=null;
+  function showFile(n){
+    if(!FILES[n]){toast('未找到源码文件 '+esc(n));return;}
+    cf=n;
+    $$('.mk-src-f').forEach(function(b){b.classList.toggle('mk-cur',b.getAttribute('data-mk-file')===n);});
+    $('#mk-src-name').innerHTML=esc(n)+'<em>'+FILES[n].lines+' 行 · '+esc(FILES[n].dir)+'</em>';
+    $('#mk-src-pre').innerHTML='<code>'+hl(FILES[n].src)+'</code>';
+    $('.mk-src-code').scrollTop=0;
+    var b=$('.mk-src-f.mk-cur');if(b)b.scrollIntoView({block:'nearest'});
+  }
+  function copy(text){
+    if(!text){toast('请先选择一个源码文件');return;}
+    function ok(){toast('源码已复制到剪贴板');}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,function(){fb(text);ok();});}
+    else{fb(text);ok();}
+    function fb(t){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}catch(e){}}
+  }
+  function saveBlob(name,text,mime){
+    try{
+      var b=new Blob(['﻿'+text],{type:(mime||'text/plain')+';charset=utf-8'});
+      var u=URL.createObjectURL(b), a=document.createElement('a');
+      a.href=u;a.download=name;document.body.appendChild(a);a.click();
+      setTimeout(function(){URL.revokeObjectURL(u);a.remove();},600);
+      toast('已下载 <b>'+esc(name)+'</b>');
+    }catch(e){toast('浏览器阻止了下载，请从 assets/source-code 目录直接取用');}
+  }
+  function dl(n,src){saveBlob(n,src,'text/x-python');}
+  function dlAll(){
+    var out='# 离散数学 · 第 '+D.ch+' 章 配套 Python 源码合集\n# 共 '+D.nc+' 个文件，导出自数字教材\n';
+    SEC.forEach(function(s){
+      if(!s.c)return;
+      s.c.files.forEach(function(n){
+        out+='\n\n# '+'='.repeat(64)+'\n# '+n+'  ('+s.k+' '+s.title+')\n# '+'='.repeat(64)+'\n'+FILES[n].src;
+      });
+    });
+    saveBlob('离散数学_第'+D.ch+'章_配套源码合集.py',out,'text/x-python');
+  }
+
+  /* ============ 控制坞按钮 ============ */
+  var dock=document.getElementById('tb-dock');
+  if(dock){
+    var btn=document.createElement('button');
+    btn.className='tb-ctl'; btn.type='button';
+    btn.setAttribute('data-tip','数字资源  (V)');
+    btn.innerHTML='<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M10 8.5l4.5 2.5L10 13.5z" fill="currentColor" stroke="none"/><path d="M7 21h10"/></svg>';
+    btn.onclick=function(e){e.stopPropagation();openPanel('v');};
+    dock.insertBefore(btn,dock.lastElementChild);
+  }
+
+  /* ============ 帮助面板补充快捷键 ============ */
+  (function(){
+    var hb=document.getElementById('tb-help-body'); if(!hb)return;
+    var foot=hb.querySelector('.tb-help-foot');
+    var rows=[['数字资源面板','V'],['播放/暂停本节播客','A'],['本章配套源码','C']];
+    var h='';rows.forEach(function(r){h+='<div class="tb-krow"><span>'+r[0]+'</span><span class="tb-keys"><span class="tb-key">'+r[1]+'</span></span></div>';});
+    var d=document.createElement('div'); d.innerHTML=h;
+    while(d.firstChild){foot?hb.insertBefore(d.firstChild,foot):hb.appendChild(d.firstChild);}
+  })();
+
+  /* ============ 快捷键 ============ */
+  document.addEventListener('keydown',function(e){
+    var tn=(e.target.tagName||'').toUpperCase();
+    if(tn==='INPUT'||tn==='TEXTAREA'||e.target.isContentEditable)return;
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    var k=e.key;
+    if(k==='v'||k==='V'){openPanel('v');e.preventDefault();e.stopPropagation();}
+    else if(k==='c'||k==='C'){openPanel('c');e.preventDefault();e.stopPropagation();}
+    else if(k==='a'||k==='A'){
+      var s=curKey?secOf(curKey):curSec();
+      if(s&&s.a){toggleSec(s.k);toast((AU.paused?'已暂停':'正在收听')+' <b>'+esc(s.full)+'</b>');}
+      e.preventDefault();e.stopPropagation();
+    }
+  },true);
+
+  syncUI();
+})();
+</script>
 </body>
 </html>

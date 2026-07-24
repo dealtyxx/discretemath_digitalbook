@@ -111,15 +111,11 @@ img,video,canvas,svg{max-width:100%;max-height:100%}
       setTimeout(()=>resolveInDoc(doc), 200);
       setTimeout(()=>resolveInDoc(doc), 800);
       setTimeout(()=>resolveInDoc(frame.contentDocument), 2000);
-      if(doc && !frame.__videoObs){
-        frame.__videoObs=new MutationObserver(()=>resolveInDoc(frame.contentDocument));
-        const root=doc.body||doc.documentElement;
-        if(root) frame.__videoObs.observe(root,{subtree:true,attributes:true,attributeFilter:['class','src']});
-      }
+      // Static iframe content is resolved by the load hook and scheduled retries above.
     }catch(e){ console.warn(e); }
 
     const tool=new URLSearchParams(location.search).get('tool');
-    const toolKeys={toc:'m',grid:'g',search:'/',help:'?',bookmark:'b',focus:'f',font:'t'};
+    const toolKeys={toc:'m',grid:'g',search:'/',help:'?',bookmark:'b',focus:'f',font:'t',res:'v',audio:'a',code:'c'};
     if(tool && toolKeys[tool]){
       setTimeout(()=>{
         try{
@@ -135,14 +131,14 @@ img,video,canvas,svg{max-width:100%;max-height:100%}
 
   // Primary: load sibling body.html so relative assets resolve against real file URL
   const bodyName=currentBodyName();
-  frame.src=bodyName;
+  frame.src=bodyName+'?v=20260724c';
 
   // Keyboard proxy to iframe
   addEventListener('keydown',e=>{
     const tag=(e.target&&e.target.tagName||'').toUpperCase();
     if((tag==='A'||tag==='BUTTON')&&e.key==='Enter')return;
     const key=e.key;
-    const plain=['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','PageUp','PageDown','Home','End','Escape','m','M','g','G','/','?','b','B','f','F','t','T'];
+    const plain=['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' ','PageUp','PageDown','Home','End','Escape','m','M','g','G','/','?','b','B','f','F','t','T','v','V','a','A','c','C'];
     const shortcut=plain.indexOf(key)>-1||((e.ctrlKey||e.metaKey)&&(key==='k'||key==='K'));
     if(!shortcut)return;
     try{

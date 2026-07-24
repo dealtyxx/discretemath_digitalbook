@@ -478,6 +478,220 @@ window.MathJax={
 };
 </script>
 <script defer="" src="assets/mathjax/tex-chtml.js"></script>
+<style id="mk-style">
+/* ===================================================================
+   数字资源层 · 微课视频 / 播客音频 / 配套源码
+   =================================================================== */
+
+/* ---------- 通用 ---------- */
+.mk-page .slide-body{display:flex;flex-direction:column;justify-content:center;gap:clamp(.7rem,1.7vh,1.4rem);min-height:0}
+.mk-w{width:var(--w-wide);margin:0 auto;display:flex;flex-direction:column;gap:clamp(.7rem,1.7vh,1.4rem);min-height:0}
+.mk-tag{display:inline-block;font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:clamp(.68rem,.78vw,.86rem);font-weight:500;letter-spacing:.1em;
+  color:var(--accent)!important;border:1px solid var(--line);border-radius:0;
+  padding:.34em .9em;white-space:nowrap;line-height:1.2!important}
+.mk-head{display:flex;align-items:center;gap:clamp(.8rem,1.6vw,1.3rem);flex-wrap:wrap;flex:0 0 auto}
+.mk-metaline{font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:clamp(.7rem,.82vw,.92rem);letter-spacing:.08em;color:var(--accent)!important;font-weight:500}
+.mk-title{margin:0;font-size:clamp(1.6rem,2.8vw,2.5rem)!important;line-height:1.2!important;flex:0 0 auto}
+.mk-foot-hint{margin:0;font-size:clamp(.78rem,.9vw,1rem)!important;line-height:1.6!important;
+  color:var(--accent)!important;flex:0 0 auto;padding-top:.2rem}
+.mk-foot-hint b{color:var(--ink)!important;font-weight:500!important;border-bottom:1px solid var(--line);padding:0 .18em}
+
+/* ---------- 微课视频页 ---------- */
+.mk-video-page .slide-body{align-items:center;text-align:center}
+.mk-video-page .mk-head{justify-content:center}
+.mk-video-page .mk-title{text-align:center;max-width:26em}
+.mk-stage{position:relative;width:min(92%,1280px);aspect-ratio:16/9;max-height:min(58vh,620px);
+  overflow:hidden;background:#111;border:1px solid var(--line);border-radius:16px;
+  box-shadow:0 16px 40px rgba(0,0,0,.16);flex:0 1 auto}
+.mk-stage video{position:absolute;inset:0;width:100%!important;height:100%!important;
+  max-width:none!important;max-height:none!important;object-fit:contain;background:#111;border:0;outline:none;display:block}
+.mk-cover{position:absolute;inset:0;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:clamp(.7rem,1.6vh,1.2rem);border:0;cursor:pointer;padding:0;
+  color:#EDE8E0!important;background:linear-gradient(165deg,#26241f,#131211 72%);transition:background .3s}
+.mk-cover:hover{background:linear-gradient(165deg,#33302a,#181614 72%)}
+.mk-cover .mk-play{width:clamp(3.6rem,5.8vw,4.8rem);height:clamp(3.6rem,5.8vw,4.8rem);border-radius:50%;
+  border:1px solid rgba(237,232,224,.62);display:flex;align-items:center;justify-content:center;
+  background:transparent;transition:transform .24s,background .24s}
+.mk-cover:hover .mk-play{transform:scale(1.08);background:rgba(237,232,224,.14)}
+.mk-cover .mk-play svg{width:34%;height:34%;fill:currentColor;stroke:none;margin-left:9%}
+.mk-cover .mk-cover-t{font-family:"Playfair Display","Noto Serif SC",serif!important;
+  font-size:clamp(1.05rem,1.6vw,1.5rem);font-weight:400;letter-spacing:.02em;line-height:1.3!important}
+.mk-cover .mk-cover-m{font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:clamp(.68rem,.78vw,.88rem);letter-spacing:.12em;opacity:.66;line-height:1.4!important}
+.mk-stage.mk-live .mk-cover{display:none}
+
+/* ---------- 播客音频页 ---------- */
+.mk-audio-card{display:grid;grid-template-columns:auto 1fr;gap:clamp(1.6rem,3.2vw,2.8rem);align-items:center;
+  padding:clamp(2rem,4.4vh,3.2rem) clamp(1.8rem,3.2vw,2.8rem);
+  border:1px solid var(--line);background:rgba(255,255,255,.30);flex:0 0 auto}
+.mk-abtn{width:clamp(4.4rem,7vw,6.4rem);height:clamp(4.4rem,7vw,6.4rem);border-radius:50%;
+  border:1px solid var(--line)!important;background:transparent!important;color:var(--ink)!important;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;flex:0 0 auto;padding:0;
+  transition:background .22s,color .22s}
+.mk-abtn:hover,.mk-abtn.mk-playing{background:var(--ink)!important;color:var(--paper)!important;border-color:var(--ink)!important}
+.mk-abtn svg{width:32%;height:32%;fill:currentColor;stroke:none}
+.mk-abtn .mk-i-pause{display:none}
+.mk-abtn.mk-playing .mk-i-play{display:none}
+.mk-abtn.mk-playing .mk-i-pause{display:block}
+.mk-audio-main{min-width:0;display:flex;flex-direction:column;gap:clamp(.5rem,1.2vh,.9rem)}
+.mk-audio-main h2{margin:0;font-size:clamp(1.5rem,2.5vw,2.1rem)!important;line-height:1.2!important}
+.mk-audio-desc{margin:0;font-size:clamp(.9rem,1.05vw,1.18rem)!important;line-height:1.7!important;color:var(--muted)!important}
+.mk-wave{display:flex;align-items:center;gap:2px;height:clamp(3.4rem,7.5vh,5.2rem);cursor:pointer;margin-top:.2rem}
+.mk-wave i{flex:1 1 0;min-width:1px;background:var(--line);transition:background .18s}
+.mk-wave i.mk-on{background:var(--ink)}
+.mk-wave:hover i{opacity:.82}
+.mk-atime{display:flex;justify-content:space-between;font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:clamp(.7rem,.82vw,.9rem);letter-spacing:.08em;color:var(--accent)!important;font-weight:500}
+.mk-audio-tips{list-style:none;display:grid;grid-template-columns:repeat(3,1fr);
+  gap:clamp(.8rem,1.8vw,1.6rem);margin:0;padding:0;flex:0 0 auto}
+.mk-audio-tips li{font-size:clamp(.82rem,.95vw,1.05rem)!important;line-height:1.6!important;
+  color:var(--muted)!important;padding-left:2.2em;position:relative;border-top:1px solid var(--line);padding-top:.95rem}
+.mk-audio-tips li::before{content:attr(data-n);position:absolute;left:0;top:.7rem;
+  font-family:"Inter","Noto Serif SC",sans-serif;font-size:.85em;color:var(--accent);letter-spacing:.08em}
+
+/* ---------- 配套源码页 ---------- */
+.mk-code-grid{display:grid;gap:clamp(.6rem,1.2vw,1rem);width:100%;flex:0 1 auto;min-height:0;overflow:hidden}
+.mk-code-grid.mk-rich{grid-template-columns:repeat(4,minmax(0,1fr))}
+.mk-code-grid.mk-chips{grid-template-columns:repeat(auto-fill,minmax(10.2rem,1fr))}
+.mk-cc{text-align:left;border:1px solid var(--line);border-radius:0;background:rgba(255,255,255,.30);
+  cursor:pointer;padding:clamp(.7rem,1.2vw,1rem);display:flex;flex-direction:column;gap:.42rem;
+  overflow:hidden;min-width:0;transition:background .18s,border-color .18s}
+.mk-cc:hover{background:rgba(255,255,255,.62);border-color:var(--ink)}
+.mk-cc-name{font-family:"DM Mono","Inter",monospace!important;font-size:clamp(.82rem,.97vw,1.05rem);
+  font-weight:500;color:var(--ink)!important;letter-spacing:.01em;line-height:1.3!important}
+.mk-cc-meta{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:clamp(.64rem,.74vw,.8rem);
+  letter-spacing:.08em;color:var(--accent)!important;line-height:1.3!important;white-space:nowrap}
+.mk-cc-prev{font-family:"DM Mono","Inter",monospace!important;font-size:clamp(.6rem,.7vw,.76rem);
+  line-height:1.6!important;color:var(--muted)!important;opacity:.62;white-space:pre;overflow:hidden;
+  margin:0;height:8em;border-top:1px solid var(--line);padding-top:.5rem;
+  -webkit-mask-image:linear-gradient(90deg,#000 76%,transparent 100%),linear-gradient(180deg,#000 74%,transparent 100%);
+  -webkit-mask-composite:source-in;mask-image:linear-gradient(90deg,#000 76%,transparent 100%),linear-gradient(180deg,#000 74%,transparent 100%);mask-composite:intersect}
+.mk-chips .mk-cc{flex-direction:row;align-items:baseline;justify-content:space-between;gap:.6rem;padding:.55rem .8rem}
+
+/* ---------- 章首资源总览页 ---------- */
+.mk-hub-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(.9rem,1.9vw,1.6rem);width:100%;flex:0 0 auto}
+.mk-hub-stat{border:1px solid var(--line);background:rgba(255,255,255,.30);
+  padding:clamp(1rem,2vh,1.5rem) clamp(1.1rem,2vw,1.6rem);display:flex;flex-direction:column;gap:.4rem}
+.mk-hub-stat .mk-hs-n{font-family:"Playfair Display","Noto Serif SC",serif!important;font-weight:400;
+  font-size:clamp(2rem,3.8vw,3.3rem);line-height:1!important;color:var(--ink)!important}
+.mk-hub-stat .mk-hs-l{font-family:"Playfair Display","Noto Serif SC",serif!important;
+  font-size:clamp(.92rem,1.1vw,1.24rem);color:var(--ink)!important;line-height:1.35!important}
+.mk-hub-stat .mk-hs-m{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:clamp(.68rem,.78vw,.86rem);
+  letter-spacing:.07em;color:var(--accent)!important;line-height:1.45!important}
+.mk-path{display:flex;align-items:center;gap:clamp(.5rem,1.1vw,1rem);flex-wrap:wrap;width:100%;flex:0 0 auto;
+  border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:.7rem 0}
+.mk-path span{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:clamp(.8rem,.95vw,1.04rem);
+  color:var(--muted)!important;white-space:nowrap;line-height:1.4!important}
+.mk-path span b{font-weight:500!important;color:var(--accent)!important;letter-spacing:.08em;margin-right:.45em}
+.mk-path i{width:clamp(1rem,2.2vw,2rem);height:1px;background:var(--line);flex:0 0 auto}
+.mk-hub-table{width:100%;border-collapse:collapse;flex:0 1 auto}
+.mk-hub-table th{font-family:"Playfair Display","Noto Serif SC",serif!important;font-weight:400;
+  font-size:clamp(.8rem,.95vw,1.05rem);color:var(--ink)!important;text-align:left;
+  padding:.5rem .9rem;border-bottom:1px solid var(--line);background:rgba(255,255,255,.24)}
+.mk-hub-table td{padding:clamp(.5rem,1.1vh,.85rem) .9rem;font-size:clamp(.84rem,1vw,1.1rem)!important;
+  color:var(--muted)!important;border-bottom:1px solid var(--line);vertical-align:middle;line-height:1.45!important}
+.mk-hub-table td:first-child{color:var(--ink)!important}
+.mk-jump{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:clamp(.7rem,.82vw,.9rem);
+  font-weight:500!important;letter-spacing:.05em;border:1px solid var(--line);border-radius:0;
+  background:transparent;color:var(--accent)!important;cursor:pointer;padding:.32em .9em;
+  transition:background .18s,color .18s;line-height:1.3!important;white-space:nowrap}
+.mk-jump:hover{background:var(--ink);color:var(--paper)!important;border-color:var(--ink)}
+.mk-jump[disabled]{opacity:.4;cursor:default;border-style:dashed}
+.mk-jump[disabled]:hover{background:transparent;color:var(--accent)!important;border-color:var(--line)}
+
+/* ---------- 常驻播客迷你播放器 ---------- */
+#mk-mini{position:fixed;left:clamp(.8rem,1.5vw,1.5rem);bottom:clamp(1rem,2.2vh,1.8rem);z-index:9050;
+  display:none;align-items:center;gap:.8rem;padding:.55rem .9rem .55rem .6rem;
+  background:var(--paper);color:var(--ink);border:1px solid var(--line);border-radius:0;
+  font-family:"Inter","Noto Serif SC",sans-serif;max-width:min(32rem,44vw)}
+#mk-mini.mk-show{display:flex}
+#mk-mini button{border:none;background:none;color:inherit;cursor:pointer;padding:0;
+  display:flex;align-items:center;justify-content:center;font-family:inherit}
+#mk-mini .mk-m-play{width:2.3rem;height:2.3rem;border-radius:50%;border:1px solid var(--line)!important;
+  color:var(--ink)!important;flex:0 0 auto;transition:background .2s,color .2s}
+#mk-mini .mk-m-play:hover,#mk-mini.mk-on .mk-m-play{background:var(--ink)!important;color:var(--paper)!important;border-color:var(--ink)!important}
+#mk-mini .mk-m-play svg{width:36%;height:36%;fill:currentColor;stroke:none}
+#mk-mini .mk-i-pause{display:none}
+#mk-mini.mk-on .mk-i-play{display:none}
+#mk-mini.mk-on .mk-i-pause{display:block}
+#mk-mini .mk-m-info{min-width:0;display:flex;flex-direction:column;gap:.3rem;flex:1 1 auto}
+#mk-mini .mk-m-t{font-size:.78rem;font-weight:500;color:var(--ink)!important;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;line-height:1.2!important}
+#mk-mini .mk-m-bar{height:2px;background:var(--line);cursor:pointer}
+#mk-mini .mk-m-fill{display:block;height:100%;width:0;background:var(--ink)}
+#mk-mini .mk-m-time{font-size:.66rem;letter-spacing:.06em;color:var(--accent)!important;white-space:nowrap;flex:0 0 auto}
+#mk-mini .mk-m-rate{font-size:.68rem;letter-spacing:.04em;border:1px solid var(--line)!important;
+  color:var(--accent)!important;padding:.2em .55em;flex:0 0 auto}
+#mk-mini .mk-m-rate:hover{background:var(--ink)!important;color:var(--paper)!important}
+#mk-mini .mk-m-x{font-size:1.1rem;color:var(--accent)!important;flex:0 0 auto;width:1.4rem;height:1.4rem;line-height:1}
+#mk-mini .mk-m-x:hover{color:var(--ink)!important}
+body.tb-focus #mk-mini{display:none!important}
+
+/* ---------- 数字资源面板 ---------- */
+#mk-panel .tb-panel{inset:clamp(1rem,3vh,2.4rem)}
+.mk-tabs{display:flex;gap:.5rem;padding:0 clamp(1.3rem,3vw,2rem) 1rem;border-bottom:1px solid var(--line);flex:0 0 auto}
+.mk-tab{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:.88rem;font-weight:500!important;
+  border:1px solid var(--line);border-radius:0;background:transparent;color:var(--accent)!important;
+  padding:.45em 1.15em;cursor:pointer;transition:background .18s,color .18s;line-height:1.3!important}
+.mk-tab:hover{background:rgba(255,255,255,.5);color:var(--ink)!important}
+.mk-tab.mk-cur{background:var(--ink);border-color:var(--ink);color:var(--paper)!important}
+.mk-tab small{font-size:.78em;margin-left:.4em;opacity:.75}
+.mk-pane{display:none;padding:1.2rem clamp(1.3rem,3vw,2rem) 2rem}
+.mk-pane.mk-cur{display:block}
+.mk-list{display:grid;grid-template-columns:repeat(auto-fill,minmax(20rem,1fr));gap:.7rem}
+.mk-li{display:flex;align-items:center;gap:.9rem;border:1px solid var(--line);border-radius:0;
+  padding:.75rem .95rem;background:rgba(255,255,255,.30);cursor:pointer;text-align:left;
+  font-family:"Inter","Noto Serif SC",sans-serif!important;min-width:0;transition:background .16s,border-color .16s}
+.mk-li:hover{background:rgba(255,255,255,.68);border-color:var(--ink)}
+.mk-li .mk-li-ic{width:2.3rem;height:2.3rem;border:1px solid var(--line);display:flex;align-items:center;
+  justify-content:center;flex:0 0 auto;font-size:.72rem;font-weight:500;color:var(--accent);letter-spacing:.02em}
+.mk-li.a .mk-li-ic{border-radius:50%;color:var(--ink)}
+.mk-li.a .mk-li-ic svg{width:40%;height:40%;fill:currentColor;stroke:none}
+.mk-li.a .mk-i-pause{display:none}
+.mk-li.a.mk-playing .mk-li-ic{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.mk-li.a.mk-playing .mk-i-play{display:none}
+.mk-li.a.mk-playing .mk-i-pause{display:block}
+.mk-li .mk-li-b{display:block;min-width:0;flex:1 1 auto}
+.mk-li .mk-li-t{display:block;font-size:.9rem;font-weight:500;color:var(--ink)!important;line-height:1.35!important;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.mk-li .mk-li-m{display:block;font-size:.7rem;letter-spacing:.06em;color:var(--accent)!important;margin-top:.22rem;line-height:1.3!important}
+.mk-li .mk-li-go{font-size:.7rem;letter-spacing:.06em;color:var(--accent)!important;flex:0 0 auto}
+/* 源码浏览器 */
+#mk-pane-c.mk-cur{display:flex;flex-direction:column;flex:1;min-height:0;overflow:hidden}
+.mk-src{display:grid;grid-template-columns:minmax(0,16rem) minmax(0,1fr);gap:1.2rem;flex:1;min-height:0}
+.mk-src-side{overflow-y:auto;border-right:1px solid var(--line);padding-right:.8rem}
+.mk-src-grp{font-family:"Playfair Display","Noto Serif SC",serif!important;font-size:.86rem;
+  color:var(--ink)!important;padding:.95rem .3rem .35rem;border-bottom:1px solid var(--line);margin-bottom:.3rem}
+.mk-src-f{display:flex;justify-content:space-between;gap:.6rem;align-items:baseline;width:100%;
+  border:none;background:none;text-align:left;font-family:"DM Mono","Inter",monospace!important;
+  font-size:.82rem;color:var(--muted)!important;padding:.42rem .55rem;cursor:pointer;
+  transition:background .15s,color .15s;line-height:1.3!important}
+.mk-src-f:hover{background:rgba(255,255,255,.55);color:var(--ink)!important}
+.mk-src-f.mk-cur{background:var(--ink);color:var(--paper)!important}
+.mk-src-f span{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:.7rem;opacity:.7}
+.mk-src-main{display:flex;flex-direction:column;min-width:0;min-height:0}
+.mk-src-bar{display:flex;align-items:center;gap:.6rem;flex-wrap:wrap;padding-bottom:.8rem;flex:0 0 auto}
+.mk-src-name{font-family:"DM Mono","Inter",monospace!important;font-size:1rem;font-weight:500;
+  color:var(--ink)!important;margin-right:auto;line-height:1.3!important}
+.mk-src-name em{font-style:normal;font-family:"Inter","Noto Serif SC",sans-serif!important;
+  font-size:.76rem;color:var(--accent)!important;margin-left:.8em;letter-spacing:.06em}
+.mk-btn{font-family:"Inter","Noto Serif SC",sans-serif!important;font-size:.78rem;font-weight:500!important;
+  border:1px solid var(--line);border-radius:0;background:transparent;color:var(--accent)!important;
+  padding:.45em 1em;cursor:pointer;transition:background .16s,color .16s;white-space:nowrap;line-height:1.3!important}
+.mk-btn:hover{background:var(--ink);border-color:var(--ink);color:var(--paper)!important}
+.mk-src-code{flex:1;min-height:0;overflow:auto;background:rgba(255,255,255,.42);border:1px solid var(--line)}
+.mk-src-code pre{margin:0;font-family:"DM Mono","Inter",monospace!important;font-size:.85rem;
+  line-height:1.7!important;color:var(--ink)!important;padding:1.1rem 1.3rem;white-space:pre;tab-size:4}
+.mk-src-code .k{color:#1A1A1A;font-weight:600}
+.mk-src-code .s{color:#7A6A55}
+.mk-src-code .c{color:#A79E92;font-style:italic}
+.mk-src-code .n{color:#7A6A55}
+.mk-src-code .b{color:#4A4A4A}
+.mk-src-empty{color:var(--accent);font-family:"Inter","Noto Serif SC",sans-serif;font-size:.86rem;padding:1rem .3rem}
+@media (max-width:900px){.mk-src{grid-template-columns:1fr}.mk-src-side{border-right:0;border-bottom:1px solid var(--line);max-height:9rem}}
+</style>
 </head>
 <body>
 <div id="deck">
@@ -488,15 +702,15 @@ window.MathJax={
 <h1 class="display-zh anim-item" style="max-width:10em">计数和数论基础</h1>
 <p class="lead-zh anim-item" style="max-width:26em;opacity:.62">从加法乘法法则到 RSA 加密，计数与数论如何构成离散世界的底层语言，并用 Python 逐一实现</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>1 / 82</div></div></section>
-<section class="slide light" data-screen-label="Map" data-source="本章思维导图" data-theme="light"><div class="chrome"><div>本章地图</div><div>2 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>1 / 92</div></div></section>
+<section class="slide light" data-screen-label="Map" data-source="本章思维导图" data-theme="light"><div class="chrome"><div>本章地图</div><div>2 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">Chapter Map</div><h2 class="h1-zh anim-item" style="max-width:17em">三条主线，从计数原理走到密码学应用</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">1.1 计数基础：加法乘法法则、排列组合、鸽巢原理</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">1.2 数论基础：整除与模运算、素数、最大公因数、同余方程、欧拉函数与费马小定理</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">1.3 应用案例：Hash 函数、伪随机数、校验码、RSA、资源分配</p></div></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>2 / 82</div></div></section>
-<section class="slide dark" data-screen-label="History" data-source="章首 · 计数发展史" data-theme="dark"><div class="chrome"><div>计数发展史</div><div>3 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>2 / 92</div></div></section>
+<section class="slide dark" data-screen-label="History" data-source="章首 · 计数发展史" data-theme="dark"><div class="chrome"><div>计数发展史</div><div>3 / 92</div></div>
 <div class="slide-body">
 <div class="w-wide">
 <h2 class="h1-zh anim-item" style="text-align:center;max-width:16em;margin:0 auto clamp(2rem,5vh,3.6rem)">计数方法的演进：从结绳记事到数字化计算</h2>
@@ -504,8 +718,8 @@ window.MathJax={
 <div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">史前</div><p class="body-zh" style="margin-top:1.2vh">用石头、绳结和手指记录，洞穴壁画与泥板留痕</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">古代文明</div><p class="body-zh" style="margin-top:1.2vh">古埃及十进制，古巴比伦六十进制影响时间与角度，古印度发明零与位置十进制</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">中世纪</div><p class="body-zh" style="margin-top:1.2vh">印度计数经阿拉伯传入欧洲，取代罗马数字</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">17 至 20 世纪</div><p class="body-zh" style="margin-top:1.2vh">数学符号标准化，计算机使大规模数据处理成为可能</p></div>
 </div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>3 / 82</div></div></section>
-<section class="slide light" data-screen-label="History" data-source="章首 · 数论发展史" data-theme="light"><div class="chrome"><div>数论发展史 · 数学的皇后</div><div>4 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>3 / 92</div></div></section>
+<section class="slide light" data-screen-label="History" data-source="章首 · 数论发展史" data-theme="light"><div class="chrome"><div>数论发展史 · 数学的皇后</div><div>4 / 92</div></div>
 <div class="slide-body">
 <div class="w-wide">
 <h2 class="h1-zh anim-item" style="text-align:center;max-width:16em;margin:0 auto clamp(2rem,5vh,3.6rem)">数论被誉为数学的皇后，专注研究整数的性质</h2>
@@ -513,7 +727,8 @@ window.MathJax={
 <div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">古希腊</div><p class="body-zh" style="margin-top:1.2vh">毕达哥拉斯学派发现完全数、友好数；欧几里得在几何原本中系统介绍最大公约数与素数</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">17 世纪</div><p class="body-zh" style="margin-top:1.2vh">费马被视为现代数论奠基人，费马大定理激发后世研究</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">18 至 19 世纪</div><p class="body-zh" style="margin-top:1.2vh">欧拉引入分析方法；高斯、狄利克雷、勒让德推动数论黄金时代</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">20 世纪至今</div><p class="body-zh" style="margin-top:1.2vh">代数数论、解析数论、组合数论涌现，应用于大数素性测试与密码学</p></div>
 </div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>4 / 82</div></div></section>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>4 / 92</div></div></section>
+<section class="slide light mk-page mk-hub-page" data-screen-label="Resources" data-source="本章数字资源 · 微课 / 播客 / 源码" data-theme="light"><div class="chrome"><div>本章数字资源</div><div>5 / 92</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">数字资源</span><span class="mk-metaline">微课视频 · 播客音频 · 配套源码 · 全部离线可用</span></div><h2 class="h2-zh mk-title anim-item">本章配套 3 讲微课、3 期播客与 24 个 Python 源码文件</h2><div class="mk-hub-stats anim-item"><div class="mk-hub-stat v"><span class="mk-hs-n">3</span><span class="mk-hs-l">讲微课视频</span><span class="mk-hs-m">总时长约 23 分钟 · 逐节导学</span></div><div class="mk-hub-stat a"><span class="mk-hs-n">3</span><span class="mk-hs-l">期播客音频</span><span class="mk-hs-m">总时长约 30 分钟 · 可后台收听</span></div><div class="mk-hub-stat c"><span class="mk-hs-n">24</span><span class="mk-hs-l">个配套源码</span><span class="mk-hs-m">共 297 行 · 复制即可运行</span></div></div><div class="mk-path anim-item"><span><b>01</b>看微课</span><i></i><span><b>02</b>读正文</span><i></i><span><b>03</b>跑代码</span><i></i><span><b>04</b>听播客</span><i></i><span><b>05</b>做习题</span></div><table class="mk-hub-table anim-item"><thead><tr><th>小节</th><th>微课视频</th><th>播客音频</th><th>配套源码</th></tr></thead><tbody><tr><td>1.1 计数基础</td><td><button class="mk-jump v" type="button" data-mk-go="6">微课 07:29</button></td><td><button class="mk-jump a" type="button" data-mk-go="27">播客 10:31</button></td><td><button class="mk-jump c" type="button" data-mk-go="28">源码 5 个</button></td></tr><tr><td>1.2 数论基础</td><td><button class="mk-jump v" type="button" data-mk-go="32">微课 06:31</button></td><td><button class="mk-jump a" type="button" data-mk-go="67">播客 10:15</button></td><td><button class="mk-jump c" type="button" data-mk-go="68">源码 14 个</button></td></tr><tr><td>1.3 应用案例和 Python 实现</td><td><button class="mk-jump v" type="button" data-mk-go="72">微课 09:01</button></td><td><button class="mk-jump a" type="button" data-mk-go="87">播客 09:37</button></td><td><button class="mk-jump c" type="button" data-mk-go="88">源码 5 个</button></td></tr></tbody></table><p class="mk-foot-hint anim-item">点击上表任意资源可直接跳转对应页面；按 <b>V</b> 打开资源面板、<b>A</b> 收听本节播客、<b>C</b> 浏览本章源码</p></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>5 / 92</div></div></section>
 <section class="slide dark bare" data-screen-label="Section" data-source="1.1 计数基础" data-theme="dark">
 <div class="slide-body" style="align-items:flex-start">
 <div class="w-statement">
@@ -521,20 +736,21 @@ window.MathJax={
 <h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">计数基础</h2>
 <p class="body-zh anim-item" style="max-width:24em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">加法法则、乘法法则、排列、组合与鸽巢原理，提供处理离散对象计数问题的基础工具</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>5 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 1.1.1 · 加法法则" data-theme="light"><div class="chrome"><div>1.1.1 基本概念</div><div>6 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>6 / 92</div></div></section>
+<section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 1.1 计数基础" data-theme="dark" data-mk-sec="1.1"><div class="chrome"><div>微课视频 · 1.1 计数基础</div><div>7 / 92</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">07:29 · 14.4 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">1.1 计数基础</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/1.1-counting-basics.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 1.1 计数基础"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">计数基础</span><span class="mk-cover-m">微课视频 · 07:29 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>7 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 1.1.1 · 加法法则" data-theme="light"><div class="chrome"><div>1.1.1 基本概念</div><div>8 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 1.1.1 · 加法法则</div><h2 class="h1-zh anim-item" style="max-width:15em">互斥事件的方式相加</h2><p class="lead-zh anim-item" style="max-width:24em">若一个事件可通过 m 种方式发生，另一个不相交的事件可通过 n 种方式发生，则任一个发生的方式总数是 <span aria-label="m + n" class="math-inline-source" data-tex="m + n">\(m + n\)</span>。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 1.1.1 · 饮料</div><p class="body-zh" style="margin-top:.8vh">果汁 3 种，汽水 2 种，二者互斥。可选饮料总数 <span aria-label="3 + 2 = 5" class="math-inline-source" data-tex="3 + 2 = 5">\(3 + 2 = 5\)</span> 种。</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>6 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 1.1.2 · 乘法法则" data-theme="light"><div class="chrome"><div>1.1.1 基本概念</div><div>7 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>8 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 1.1.2 · 乘法法则" data-theme="light"><div class="chrome"><div>1.1.1 基本概念</div><div>9 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 1.1.2 · 乘法法则</div><h2 class="h1-zh anim-item" style="max-width:15em">顺序发生的方式相乘</h2><p class="lead-zh anim-item" style="max-width:24em">若一个事件可通过 m 种方式发生，每种方式之后另一个事件可通过 n 种方式发生，则两事件顺序发生的方式总数是 m × n。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 1.1.2 · 点餐</div><p class="body-zh" style="margin-top:.8vh">主菜 3 种，每种主菜各可搭配 2 种配菜。组合总数 <span aria-label="3 × 2 = 6" class="math-inline-source" data-tex="3 \times 2 = 6">\(3 \times 2 = 6\)</span> 种。</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>7 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Compare" data-source="1.1.1 加法法则 vs 乘法法则" data-theme="dark"><div class="chrome"><div>加法法则 vs 乘法法则</div><div>8 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>9 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Compare" data-source="1.1.1 加法法则 vs 乘法法则" data-theme="dark"><div class="chrome"><div>加法法则 vs 乘法法则</div><div>10 / 92</div></div>
 <div class="slide-body">
 <div class="table-wrap">
 <h2 class="h1-zh anim-item" style="text-align:center;max-width:16em;margin:0 auto">两条法则的分工</h2>
@@ -543,20 +759,20 @@ window.MathJax={
 <tbody><tr><td>加法法则</td><td>互斥事件，二选一</td><td><span aria-label="m + n" class="math-inline-source" data-tex="m + n">\(m + n\)</span></td><td>果汁或汽水 <span aria-label="3 + 2 = 5" class="math-inline-source" data-tex="3 + 2 = 5">\(3 + 2 = 5\)</span></td></tr><tr><td>乘法法则</td><td>顺序或独立事件，逐步发生</td><td>m × n</td><td>主菜配配菜 <span aria-label="3 × 2 = 6" class="math-inline-source" data-tex="3 \times 2 = 6">\(3 \times 2 = 6\)</span></td></tr></tbody>
 </table>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>8 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 1.1.3 · 排列" data-theme="light"><div class="chrome"><div>1.1.1 排列</div><div>9 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>10 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 1.1.3 · 排列" data-theme="light"><div class="chrome"><div>1.1.1 排列</div><div>11 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 1.1.3 · 排列</div><h2 class="h1-zh anim-item" style="max-width:15em">选取并考虑顺序</h2><p class="lead-zh anim-item" style="max-width:24em">从 n 个不同元素中选取 r 个并排序（<span aria-label="r ≤ n" class="math-inline-source" data-tex="r \le n">\(r \le n\)</span>），记为 <span aria-label="P(n, r)" class="math-inline-source" data-tex="P(n, r)">\(P(n, r)\)</span>。本质是乘法法则的应用，强调顺序：a,b 与 b,a 是不同排列；当 <span aria-label="r = n" class="math-inline-source" data-tex="r = n">\(r = n\)</span> 时为全排列。</p><div aria-label="P(n, r) = n! (n − r)!" class="formula anim-item mathjax-display-source" data-tex="P(n, r) =\frac{n!}{(n - r)!}">\[\displaystyle P(n, r) =\frac{n!}{(n - r)!}\]</div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>9 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 1.1.3 · 排列四问" data-theme="dark"><div class="chrome"><div>例 1.1.3</div><div>10 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>11 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 1.1.3 · 排列四问" data-theme="dark"><div class="chrome"><div>例 1.1.3</div><div>12 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">例 1.1.3 · 排列的四种问法</div><h2 class="h1-zh anim-item" style="max-width:15em">同一个公式，四种场景</h2><p class="lead-zh anim-item" style="max-width:24em">(1) 1,2,3,4 中任取 3 个排列：<span aria-label="P(4,3) = 4!/(4−3)! = 24" class="math-inline-source" data-tex="P(4,3) = 4!/(4-3)! = 24">\(P(4,3) = 4!/(4-3)! = 24\)</span>。 (2) 4 名运动员排名：<span aria-label="4! = 24" class="math-inline-source" data-tex="4! = 24">\(4! = 24\)</span>。 (3) 5 把椅子坐 5 人：<span aria-label="5! = 120" class="math-inline-source" data-tex="5! = 120">\(5! = 120\)</span>。 (4) 4 位数字锁，每位 0 至 9：<span aria-label="10⁴" class="math-inline-source" data-tex="10^{4}">\(10^{4}\)</span> 种。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>10 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.1.1" data-theme="dark"><div class="chrome"><div>Python 示例 1.1.1</div><div>11 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.1.1" data-theme="dark"><div class="chrome"><div>Python 示例 1.1.1</div><div>13 / 92</div></div>
 <div class="slide-body">
 <div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1rem,2.2vh,1.8rem)">
 <div class="anim-item">
@@ -588,8 +804,8 @@ print("所有可能的4位数字组合:")
 for c in lock_codes:
     print(''.join(map(str, c)))</code></pre></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>11 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.1.4 · 多重集排列" data-theme="light"><div class="chrome"><div>1.1.1 多重集排列</div><div>12 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.1.4 · 多重集排列" data-theme="light"><div class="chrome"><div>1.1.1 多重集排列</div><div>14 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 1.1.4 · 多重集排列</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">含重复元素的排列</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">集合有 n 个元素，第 i 类重复 <span aria-label="kᵢ" class="math-inline-source" data-tex="k_{i}">\(k_{i}\)</span> 次（<span aria-label="n = k₁ + … + kᵣ" class="math-inline-source" data-tex="n = k_{1} + \ldots + k_{r}">\(n = k_{1} + \ldots + k_{r}\)</span>），排列数需消去重复带来的等价。</p><div aria-label="n! k₁! × k₂! × … × kᵣ!" class="formula formula-sm mathjax-display-source" data-tex="\frac{n!}{k_{1}! \times k_{2}! \times \ldots \times k_{r}!}" style="margin-top:clamp(1rem,2.2vh,1.8rem);text-align:left">\[\displaystyle \frac{n!}{k_{1}! \times k_{2}! \times \ldots \times k_{r}!}\]</div><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 <span aria-label="1.1.4 · S = {2×A, 3×B}" class="math-inline-source" data-tex="1.1.4 \cdot S = \{2\times A, 3\times B\}">\(1.1.4 \cdot S = \{2\times A, 3\times B\}\)</span></div><p class="body-zh" style="margin-top:.6vh"><span aria-label="5!/(2!×3!) = 10" class="math-inline-source" data-tex="5!/(2!\times 3!) = 10">\(5!/(2!\times 3!) = 10\)</span> 种排列。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from itertools import permutations
@@ -603,24 +819,25 @@ multiset = {'A': 2, 'B': 3}           # S={2×A,3×B}
 result = find_permutations(multiset)
 print(f"Number: {len(result)}")
 print("Permutations:", result)</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 密码系统" data-theme="dark"><div class="chrome"><div>应用示例 · 密码系统</div><div>13 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 密码系统" data-theme="dark"><div class="chrome"><div>应用示例 · 密码系统</div><div>15 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:17em">排列与多重集排列提升密码复杂度</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">不允许重复字符时，用排列生成密码，如从 8 个字母中各不相同地生成 8 位密码</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">允许重复字符时，用多重集排列，重复字符增大组合数，提高安全性</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">实际可先用排列生成基础密码，再引入重复字符做多重集排列</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 82</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 密码系统" data-theme="dark"><div class="chrome"><div>应用动画 · 密码系统</div><div>14 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 92</div></div></section>
+<section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 密码系统" data-theme="dark"><div class="chrome"><div>应用动画 · 密码系统</div><div>16 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">密码系统</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/01_password.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/01_password.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/01_password.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/01_password.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.1.5 · 组合" data-theme="light"><div class="chrome"><div>1.1.1 组合</div><div>15 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.1.5 · 组合" data-theme="light"><div class="chrome"><div>1.1.1 组合</div><div>17 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 1.1.5 · 组合</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">选取但不考虑顺序</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">从 n 个不同元素中选 r 个（<span aria-label="r ≤ n" class="math-inline-source" data-tex="r \le n">\(r \le n\)</span>），不计顺序。</p><div aria-label="C(n, r) = n! r!(n − r)!" class="formula formula-sm mathjax-display-source" data-tex="C(n, r) =\frac{n!}{r!(n - r)!}" style="margin-top:clamp(1rem,2.2vh,1.8rem);text-align:left">\[\displaystyle C(n, r) =\frac{n!}{r!(n - r)!}\]</div><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 1.1.5</div><p class="body-zh" style="margin-top:.6vh">(1) 200 人选 30 人获奖：<span aria-label="C(200, 30)" class="math-inline-source" data-tex="C(200, 30)">\(C(200, 30)\)</span>。 (2) 15 人选 5 人成组：<span aria-label="C(15, 5)" class="math-inline-source" data-tex="C(15, 5)">\(C(15, 5)\)</span>。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>import math
@@ -632,8 +849,8 @@ print("获奖组合数:", math.comb(total_people, winners))
 committee = 15
 selected = 5
 print("委员会组合数:", math.comb(committee, selected))</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.1.6 · 多重集组合" data-theme="light"><div class="chrome"><div>1.1.1 多重集组合</div><div>16 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.1.6 · 多重集组合" data-theme="light"><div class="chrome"><div>1.1.1 多重集组合</div><div>18 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 1.1.6 · 多重集组合</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">可重复元素中按次数限制选取</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">在元素可重复的集合中，按出现次数限制选出指定数量，不计顺序。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 1.1.6 · {3×A, 2×B, 1×C} 选 3 个</div><p class="body-zh" style="margin-top:.6vh">共 6 种：AAA, AAB, AAC, ABC, ABB, BBC。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from itertools import combinations
@@ -648,43 +865,44 @@ multiset = {'A': 3, 'B': 2, 'C': 1}
 result = find_combinations(multiset, 3)
 print(f"Number: {len(result)}")
 print("Combinations:", result)</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 数据挖掘" data-theme="dark"><div class="chrome"><div>应用示例 · 数据挖掘</div><div>17 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>18 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 数据挖掘" data-theme="dark"><div class="chrome"><div>应用示例 · 数据挖掘</div><div>19 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:17em">组合与多重集组合揭示数据中的潜在模式</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">客户行为分析：对年龄、性别、收入做不同组合，分析与购买行为的关联</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">医疗数据：患者多次相同治疗，多重集组合帮助发现常见治疗组合</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">电商分析：先选产品类别组合，再分析购买频率，揭示销售趋势</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 82</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 数据挖掘" data-theme="dark"><div class="chrome"><div>应用动画 · 数据挖掘</div><div>18 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>19 / 92</div></div></section>
+<section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 数据挖掘" data-theme="dark"><div class="chrome"><div>应用动画 · 数据挖掘</div><div>20 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">数据挖掘</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/02_datamining.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/02_datamining.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/02_datamining.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/02_datamining.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>18 / 82</div></div></section>
-<section class="slide light" data-screen-label="Theorem" data-source="定理 1.1.1 · 鸽巢原理" data-theme="light"><div class="chrome"><div>1.1.2 鸽巢原理</div><div>19 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>20 / 92</div></div></section>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 1.1.1 · 鸽巢原理" data-theme="light"><div class="chrome"><div>1.1.2 鸽巢原理</div><div>21 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定理 1.1.1 · 鸽巢原理（抽屉原理）</div><h2 class="h1-zh anim-item" style="max-width:15em">1834 年由狄利克雷提出</h2><p class="lead-zh anim-item" style="max-width:24em">设 n 和 m 为正整数，若 n 个物体放入 m 个容器且 n &gt; m，则至少有一个容器包含不止一个物体。</p><p class="body-zh anim-item" style="max-width:26em;opacity:.7">证明（反证法）：设每个容器至多放一个物体，则最多放 m 个；但共有 n &gt; m 个物体，必有物体无处可放，假设矛盾，定理成立。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>19 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 1.1.7 · 袜子" data-theme="dark"><div class="chrome"><div>例 1.1.7 · 鸽巢应用</div><div>20 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>21 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Example" data-source="例 1.1.7 · 袜子" data-theme="dark"><div class="chrome"><div>例 1.1.7 · 鸽巢应用</div><div>22 / 92</div></div>
 <div class="slide-body" style="align-items:center;text-align:center">
 <div class="stat-num anim-item">14</div>
 <h2 class="h2-zh anim-item" style="max-width:18em;margin-top:clamp(1rem,2vh,2rem)">确保凑出同色一双</h2>
 <p class="body-zh anim-item" style="max-width:28em;margin-top:clamp(.8rem,1.5vh,1.5rem);opacity:.62">抽屉里有 13 双不同颜色的袜子。最糟情况下前 13 只各不同色，第 14 只必与已有的某只同色，故至少拿 14 只。</p>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>20 / 82</div></div></section>
-<section class="slide light" data-screen-label="Example" data-source="例 1.1.8 · 湖湘小吃" data-theme="light"><div class="chrome"><div>例 1.1.8 · 鸽巢应用</div><div>21 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>22 / 92</div></div></section>
+<section class="slide light" data-screen-label="Example" data-source="例 1.1.8 · 湖湘小吃" data-theme="light"><div class="chrome"><div>例 1.1.8 · 鸽巢应用</div><div>23 / 92</div></div>
 <div class="slide-body" style="align-items:center;text-align:center">
 <div class="stat-num anim-item">6</div>
 <h2 class="h2-zh anim-item" style="max-width:18em;margin-top:clamp(1rem,2vh,2rem)">尽可能平均分配时，至少 6 个城市分到多于一种小吃</h2>
 <p class="body-zh anim-item" style="max-width:28em;margin-top:clamp(.8rem,1.5vh,1.5rem);opacity:.62">湖南 14 个地级行政区，<strong>尽可能平均地</strong>分配 20 种特色小吃。每城先得 <span aria-label="⌊20/14⌋ = 1" class="math-inline-source" data-tex="\lfloor 20/14\rfloor = 1">\(\lfloor 20/14\rfloor = 1\)</span> 种，余 <span aria-label="20 − 14 = 6" class="math-inline-source" data-tex="20 - 14 = 6">\(20 - 14 = 6\)</span> 种须再各分一种，故恰有 6 个城市获得第二种。</p>
 <p class="body-zh anim-item" style="max-width:30em;margin-top:clamp(.8rem,1.5vh,1.4rem);font-size:clamp(.92rem,1.05vw,1.2rem);opacity:.5">辨析：若不限定「平均分配」，鸽巢原理本身只能保证「<strong>至少 1 个</strong>」城市分到多于一种（因 20 &gt; 14）；「6 个」是平均分配这一附加约束下的更强结论。</p>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>21 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.1.5" data-theme="dark"><div class="chrome"><div>Python 示例 1.1.5</div><div>22 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>23 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.1.5" data-theme="dark"><div class="chrome"><div>Python 示例 1.1.5</div><div>24 / 92</div></div>
 <div class="slide-body">
 <div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1rem,2.2vh,1.8rem)">
 <div class="anim-item">
@@ -704,43 +922,66 @@ print(min_cities_with_extra(num_snacks, num_cities))   # 输出: 6
 
 # 注：若不要求平均分配，鸽巢原理只保证至少 1 个城市分到多于一种。</code></pre></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>22 / 82</div></div></section>
-<section class="slide light" data-screen-label="Application" data-source="应用示例 · 资源分配" data-theme="light"><div class="chrome"><div>应用示例 · 资源分配</div><div>23 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 92</div></div></section>
+<section class="slide light" data-screen-label="Application" data-source="应用示例 · 资源分配" data-theme="light"><div class="chrome"><div>应用示例 · 资源分配</div><div>25 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:17em">鸽巢原理证明资源冲突不可避免</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">m 个资源、n 个请求且 n &gt; m 时，至少有一个资源被多个需求请求</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">10 个进程访问 5 个共享文件，至少一个文件被多个进程同时请求而冲突</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">3 个打印任务争用 1 台打印机，至少 2 个任务必须等待</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>23 / 82</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 资源分配" data-theme="light"><div class="chrome"><div>应用动画 · 资源分配</div><div>24 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 92</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 资源分配" data-theme="light"><div class="chrome"><div>应用动画 · 资源分配</div><div>26 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">资源分配</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/03_pigeonhole_resource.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/03_pigeonhole_resource.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/03_pigeonhole_resource.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/03_pigeonhole_resource.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Summary" data-source="1.1.3 小结" data-theme="dark"><div class="chrome"><div>1.1.3 小结</div><div>25 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>26 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="1.1.3 小结" data-theme="dark"><div class="chrome"><div>1.1.3 小结</div><div>27 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.6rem,4vh,3rem)">
 <div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">加法法则用于互斥事件求和，乘法法则用于独立或顺序事件求积，二者是计数的基本运算</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">排列考虑顺序 <span aria-label="P(n,r)=n!/(n−r)!" class="math-inline-source" data-tex="P(n,r)=n!/(n-r)!">\(P(n,r)=n!/(n-r)!\)</span>，组合不考虑顺序 <span aria-label="C(n,r)=n!/r!(n−r)!" class="math-inline-source" data-tex="C(n,r)=n!/r!(n-r)!">\(C(n,r)=n!/r!(n-r)!\)</span>；多重集版本需消去重复</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">鸽巢原理是一种存在性证明工具，证明在特定条件下某种情况必然发生</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 82</div></div></section>
-<section class="slide light" data-screen-label="Exercise" data-source="1.1 习题" data-theme="light"><div class="chrome"><div>1.1 习题</div><div>26 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>27 / 92</div></div></section>
+<section class="slide light mk-page mk-audio-page" data-screen-label="Podcast" data-source="播客音频 · 1.1 计数基础" data-theme="light" data-mk-sec="1.1"><div class="chrome"><div>播客音频 · 1.1 计数基础</div><div>28 / 92</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">播客音频</span><span class="mk-metaline">10:31 · 3.0 MB · 讲解音频版</span></div><div class="mk-audio-card anim-item"><button class="mk-abtn" type="button" data-mk-sec="1.1" aria-label="播放本节播客"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><div class="mk-audio-main"><h2 class="h2-zh">1.1 计数基础</h2><p class="mk-audio-desc">本节内容的播客讲解版，适合课后复盘、通勤复习与考前串讲；点击波形任意位置可跳转收听。</p><div class="mk-wave" data-mk-sec="1.1" role="slider" aria-label="音频进度"><i style="height:54%"></i><i style="height:62%"></i><i style="height:48%"></i><i style="height:32%"></i><i style="height:57%"></i><i style="height:72%"></i><i style="height:61%"></i><i style="height:73%"></i><i style="height:79%"></i><i style="height:47%"></i><i style="height:33%"></i><i style="height:42%"></i><i style="height:27%"></i><i style="height:26%"></i><i style="height:60%"></i><i style="height:69%"></i><i style="height:61%"></i><i style="height:78%"></i><i style="height:74%"></i><i style="height:43%"></i><i style="height:44%"></i><i style="height:55%"></i><i style="height:43%"></i><i style="height:55%"></i><i style="height:86%"></i><i style="height:80%"></i><i style="height:68%"></i><i style="height:77%"></i><i style="height:57%"></i><i style="height:27%"></i><i style="height:35%"></i><i style="height:43%"></i><i style="height:33%"></i><i style="height:54%"></i><i style="height:78%"></i><i style="height:62%"></i><i style="height:56%"></i><i style="height:64%"></i><i style="height:41%"></i><i style="height:26%"></i><i style="height:49%"></i><i style="height:57%"></i><i style="height:55%"></i><i style="height:83%"></i><i style="height:94%"></i><i style="height:69%"></i><i style="height:64%"></i><i style="height:64%"></i><i style="height:35%"></i><i style="height:31%"></i><i style="height:55%"></i><i style="height:54%"></i><i style="height:53%"></i><i style="height:77%"></i><i style="height:71%"></i><i style="height:43%"></i><i style="height:45%"></i><i style="height:42%"></i><i style="height:21%"></i><i style="height:36%"></i><i style="height:65%"></i><i style="height:63%"></i><i style="height:71%"></i><i style="height:91%"></i></div><div class="mk-atime"><span data-mk-cur>0:00</span><span>10:31</span></div></div></div><ul class="mk-audio-tips anim-item"><li data-n="01">支持后台收听：翻页、查阅源码时音频不中断</li><li data-n="02">迷你播放器可调 1× / 1.25× / 1.5× / 2× 倍速</li><li data-n="03">进度自动记忆，下次从上次听到的位置继续</li></ul></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>28 / 92</div></div></section>
+<section class="slide dark mk-page mk-code-page" data-screen-label="SourceCode" data-source="配套源码 · 1.1 计数基础" data-theme="dark" data-mk-sec="1.1"><div class="chrome"><div>配套源码 · 1.1 计数基础</div><div>29 / 92</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">配套源码</span><span class="mk-metaline">5 个文件 · 共 59 行 · 可查看 / 复制 / 下载</span></div><h2 class="h2-zh mk-title anim-item">1.1 计数基础 · Python 配套源码</h2><div class="mk-code-grid mk-rich anim-item"><button class="mk-cc" type="button" data-mk-code="1.1.1.py"><span class="mk-cc-name">1.1.1.py</span><span class="mk-cc-meta">21 行</span><pre class="mk-cc-prev">import itertools
+from itertools import product
+numbers = [1, 2, 3, 4]
+permutations = itertools.permutations(numbers,
+print(&quot;所有数字排列（选取3个）：&quot;)</pre></button><button class="mk-cc" type="button" data-mk-code="1.1.2.py"><span class="mk-cc-name">1.1.2.py</span><span class="mk-cc-meta">9 行</span><pre class="mk-cc-prev">from itertools import permutations
+def find_permutations(multiset):
+    s = ''.join([char * count for char, count 
+    perms = set(permutations(s))    #找出所有可能的排列
+    return [''.join(p) for p in perms]    #将排列</pre></button><button class="mk-cc" type="button" data-mk-code="1.1.3.py"><span class="mk-cc-name">1.1.3.py</span><span class="mk-cc-meta">9 行</span><pre class="mk-cc-prev">import math
+total_people = 200
+winners = 30
+lottery_combinations = math.comb(total_people,
+print(&quot;抽奖活动的不同获奖组合数：&quot;, lottery_combinations)</pre></button><button class="mk-cc" type="button" data-mk-code="1.1.4.py"><span class="mk-cc-name">1.1.4.py</span><span class="mk-cc-meta">9 行</span><pre class="mk-cc-prev">from itertools import combinations
+def find_combinations(multiset, r):
+    elements = [char for char, count in multis
+    combs = set(combinations(elements, r))    
+    return [''.join(c) for c in combs]    #将组合</pre></button><button class="mk-cc" type="button" data-mk-code="1.1.5.py"><span class="mk-cc-name">1.1.5.py</span><span class="mk-cc-meta">11 行</span><pre class="mk-cc-prev">def calculate_min_cities_with_extra_snacks(num
+    #若小吃的数量不多于城市的数量，则不可能有城市获得超过一种小吃。
+    if num_snacks &lt;= num_cities:
+        return 0
+    #计算至少会有多少个城市获得超过一种小吃。</pre></button></div><p class="mk-foot-hint anim-item">点击任一文件查看完整高亮源码，支持一键复制与下载；按 <b>C</b> 打开本章源码浏览器</p></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>29 / 92</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="1.1 习题" data-theme="light"><div class="chrome"><div>1.1 习题</div><div>30 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 1.1</div><h2 class="h1-zh anim-item" style="max-width:17em">计数基础练习</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><ol class="biglist anim-item"><li>4 种前菜、3 种主菜、2 种甜点，各选一份的组合数（答案 B：24）</li><li>从 6 种颜色中选 2 种的组合数（答案 C：15）</li><li>6 对手套放入 5 个抽屉，某抽屉至少包含几对（答案 B：2）</li><li>3 种借阅计划各含 5 种书籍，选一计划借一本书的组合数（15）</li><li>25 个学生分到 4 个教室，一个教室至少多少人（7）</li><li>证明：将 <span aria-label="n×k+1" class="math-inline-source" data-tex="n\times k+1">\(n\times k+1\)</span> 个物体放入 k 个容器，有一容器至少含 <span aria-label="n+1" class="math-inline-source" data-tex="n+1">\(n+1\)</span> 个物体</li></ol></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>26 / 82</div></div></section>
-<section class="slide dark" data-screen-label="AI Prompts" data-source="1.1 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 1.1</div><div>27 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>30 / 92</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="1.1 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 1.1</div><div>31 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:17em">把计数原理推向更深的六个问题</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><ol class="biglist anim-item"><li>理论：如何将加法与乘法法则推广到矩阵、张量等更高维数据结构</li><li>实践：鸽巢原理在实际问题中有哪些应用</li><li>工程：大规模数据分析中如何用排列组合做特征选择与模式识别</li><li>科研：鸽巢原理在算法设计领域有哪些前沿研究</li><li>习题：习题 6 的形式化证明过程</li><li>代码：示例 1.1.2 与示例 1.1.5 的详细解释与分析</li></ol></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>27 / 82</div></div></section>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 92</div></div></section>
 <section class="slide dark bare" data-screen-label="Section" data-source="1.2 数论基础" data-theme="dark">
 <div class="slide-body" style="align-items:flex-start">
 <div class="w-statement">
@@ -748,8 +989,9 @@ print(min_cities_with_extra(num_snacks, num_cities))   # 输出: 6
 <h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">数论基础</h2>
 <p class="body-zh anim-item" style="max-width:24em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">整除性与模运算、素数、最大公因数、同余方程、欧拉函数与费马小定理</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>28 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.2.1 · 整除性" data-theme="light"><div class="chrome"><div>1.2.1 整除性</div><div>29 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>32 / 92</div></div></section>
+<section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 1.2 数论基础" data-theme="dark" data-mk-sec="1.2"><div class="chrome"><div>微课视频 · 1.2 数论基础</div><div>33 / 92</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">06:31 · 11.8 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">1.2 数论基础</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/1.2-number-theory-basics.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 1.2 数论基础"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">数论基础</span><span class="mk-cover-m">微课视频 · 06:31 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>33 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.2.1 · 整除性" data-theme="light"><div class="chrome"><div>1.2.1 整除性</div><div>34 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 1.2.1 · 整除</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">整除是数论的基础</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">若整数 a, b 存在整数 c 使 <span aria-label="a = bc" class="math-inline-source" data-tex="a = bc">\(a = bc\)</span>，则称 b 整除 a，b 是 a 的因数，记为 b | a。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="a = 12" class="math-inline-source" data-tex="a = 12">\(a = 12\)</span>，<span aria-label="b = 3" class="math-inline-source" data-tex="b = 3">\(b = 3\)</span>，因 <span aria-label="12 = 3×4" class="math-inline-source" data-tex="12 = 3\times 4">\(12 = 3\times 4\)</span>，故 3 | 12。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>a = 12
@@ -758,21 +1000,21 @@ if a % b == 0:          # 用模运算检查b是否整除a
     print(f"{b} 整除 {a}")
 else:
     print(f"{b} 不整除 {a}")</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>29 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Properties" data-source="1.2.1 整除基本性质" data-theme="dark"><div class="chrome"><div>1.2.1 整除基本性质</div><div>30 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Properties" data-source="1.2.1 整除基本性质" data-theme="dark"><div class="chrome"><div>1.2.1 整除基本性质</div><div>35 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">七条基本性质</div><h2 class="h1-zh anim-item" style="max-width:17em">整除关系的代数性质</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><ol class="biglist twocol anim-item"><li>a | a，自反</li><li>若 a|b 且 b|a，则 <span aria-label="a = ±b" class="math-inline-source" data-tex="a = \pm b">\(a = \pm b\)</span></li><li>若 a|b 且 b|c，则 a|c（传递）</li><li>若 a|b，则对任意整数 k，a|kb</li><li>若 a|b 且 a|c，则 <span aria-label="a|(b+c)" class="math-inline-source" data-tex="a|(b+c)">\(a|(b+c)\)</span> 与 a|(b−c)</li><li>若 a|b，则对任意整数 c，a|bc</li><li>若 a|b 且 <span aria-label="b≠0" class="math-inline-source" data-tex="b\ne 0">\(b\ne 0\)</span>，则 <span aria-label="|a| ≤ |b|" class="math-inline-source" data-tex="|a| \le |b|">\(|a| \le |b|\)</span></li></ol></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>30 / 82</div></div></section>
-<section class="slide light" data-screen-label="Proof" data-source="1.2.1 性质证明" data-theme="light"><div class="chrome"><div>1.2.1 性质证明</div><div>31 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>35 / 92</div></div></section>
+<section class="slide light" data-screen-label="Proof" data-source="1.2.1 性质证明" data-theme="light"><div class="chrome"><div>1.2.1 性质证明</div><div>36 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">证明摘要 · 性质 (3)(5)(7)</div><h2 class="h1-zh anim-item" style="max-width:15em">三条性质的证明思路</h2><p class="lead-zh anim-item" style="max-width:24em">(3) 由 a|b 得 <span aria-label="b=ak" class="math-inline-source" data-tex="b=ak">\(b=ak\)</span>，由 b|c 得 <span aria-label="c=bl" class="math-inline-source" data-tex="c=bl">\(c=bl\)</span>，代入 <span aria-label="c=a(kl)" class="math-inline-source" data-tex="c=a(kl)">\(c=a(kl)\)</span>，故 a|c。 <span aria-label="(5) b=am, c=an" class="math-inline-source" data-tex="(5) b=am, c=an">\((5) b=am, c=an\)</span>，则 <span aria-label="b+c=a(m+n)" class="math-inline-source" data-tex="b+c=a(m+n)">\(b+c=a(m+n)\)</span>，<span aria-label="b−c=a(m−n)" class="math-inline-source" data-tex="b-c=a(m-n)">\(b-c=a(m-n)\)</span>，故 <span aria-label="a|(b±c)" class="math-inline-source" data-tex="a|(b\pm c)">\(a|(b\pm c)\)</span>。 <span aria-label="(7) b=ak" class="math-inline-source" data-tex="(7) b=ak">\((7) b=ak\)</span>，若 |a|&gt;|b| 则 |k|&lt;1，但 k 为整数故 <span aria-label="k=0" class="math-inline-source" data-tex="k=0">\(k=0\)</span>，得 <span aria-label="b=0" class="math-inline-source" data-tex="b=0">\(b=0\)</span> 与 <span aria-label="b≠0" class="math-inline-source" data-tex="b\ne 0">\(b\ne 0\)</span> 矛盾，故 <span aria-label="|a|≤|b|" class="math-inline-source" data-tex="|a|\le |b|">\(|a|\le |b|\)</span>。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 82</div></div></section>
-<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.1 · 带余除法" data-theme="light"><div class="chrome"><div>1.2.1 带余除法</div><div>32 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>36 / 92</div></div></section>
+<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.1 · 带余除法" data-theme="light"><div class="chrome"><div>1.2.1 带余除法</div><div>37 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">算法 1.2.1 · 带余除法（欧几里得除法）</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">唯一的商与非负余数</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">给定整数 a 和 <span aria-label="b≠0" class="math-inline-source" data-tex="b\ne 0">\(b\ne 0\)</span>，存在唯一一对整数 q, r 满足 <span aria-label="a = bq + r" class="math-inline-source" data-tex="a = bq + r">\(a = bq + r\)</span>，<span aria-label="0 ≤ r &lt; |b|" class="math-inline-source" data-tex="0 \le r &lt; |b|">\(0 \le r &lt; |b|\)</span>。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 1.2.1</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="a=29, b=5" class="math-inline-source" data-tex="a=29, b=5">\(a=29, b=5\)</span>：<span aria-label="q = ⌊29/5⌋ = 5" class="math-inline-source" data-tex="q = \lfloor 29/5\rfloor = 5">\(q = \lfloor 29/5\rfloor = 5\)</span>，<span aria-label="r = 29 − 5×5 = 4" class="math-inline-source" data-tex="r = 29 - 5\times 5 = 4">\(r = 29 - 5\times 5 = 4\)</span>。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>a = 29
@@ -780,8 +1022,8 @@ b = 5
 q = a // b      # 商
 r = a % b       # 余数
 print(q, r)     # 5 4</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>32 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.2.2 · 模运算" data-theme="light"><div class="chrome"><div>1.2.2 模运算</div><div>33 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>37 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.2.2 · 模运算" data-theme="light"><div class="chrome"><div>1.2.2 模运算</div><div>38 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 1.2.2 · 模运算（同余）</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">同余刻画余数相同</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">给定正整数 n，若<strong>存在</strong>整数 k 使 <span aria-label="a − b = kn" class="math-inline-source" data-tex="a - b = kn">\(a - b = kn\)</span>，则 a 与 b 在模 n 下同余，记 <span aria-label="a ≡ b (mod n)" class="math-inline-source" data-tex="a \equiv b (\operatorname{mod} n)">\(a \equiv b (\operatorname{mod} n)\)</span>。性质：自反、对称、传递，且对加法与乘法封闭。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 1.2.2</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="(1) 2+3 = 5 ≡ 0 (mod 5)" class="math-inline-source" data-tex="(1) 2+3 = 5 \equiv 0 (\operatorname{mod} 5)">\((1) 2+3 = 5 \equiv 0 (\operatorname{mod} 5)\)</span>。 (2) 3 点过 12 小时仍是 3 点：<span aria-label="3+12 ≡ 3 (mod 12)" class="math-inline-source" data-tex="3+12 \equiv 3 (\operatorname{mod} 12)">\(3+12 \equiv 3 (\operatorname{mod} 12)\)</span>。 <span aria-label="(3) 3×4 = 12 ≡ 5 (mod 7)" class="math-inline-source" data-tex="(3) 3\times 4 = 12 \equiv 5 (\operatorname{mod} 7)">\((3) 3\times 4 = 12 \equiv 5 (\operatorname{mod} 7)\)</span>。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>n = 5            # 加法性质
@@ -791,42 +1033,43 @@ print((a + c) % n == 0)
 n = 7            # 乘法性质
 a, c = 3, 4
 print((a * c) % n)   # 5</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>33 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Proof" data-source="1.2.2 模运算性质证明" data-theme="dark"><div class="chrome"><div>1.2.2 性质证明</div><div>34 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>38 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Proof" data-source="1.2.2 模运算性质证明" data-theme="dark"><div class="chrome"><div>1.2.2 性质证明</div><div>39 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">证明摘要 · 加法与乘法性质</div><h2 class="h1-zh anim-item" style="max-width:15em">同余对加法和乘法封闭</h2><p class="lead-zh anim-item" style="max-width:24em">(4) 由 <span aria-label="a−b ≡ 0" class="math-inline-source" data-tex="a-b \equiv 0">\(a-b \equiv 0\)</span> 与 <span aria-label="c−d ≡ 0 (mod n)" class="math-inline-source" data-tex="c-d \equiv 0 (\operatorname{mod} n)">\(c-d \equiv 0 (\operatorname{mod} n)\)</span> 相加，得 <span aria-label="(a+c) − (b+d) ≡ 0" class="math-inline-source" data-tex="(a+c) - (b+d) \equiv 0">\((a+c) - (b+d) \equiv 0\)</span>，即 <span aria-label="a+c ≡ b+d (mod n)" class="math-inline-source" data-tex="a+c \equiv b+d (\operatorname{mod} n)">\(a+c \equiv b+d (\operatorname{mod} n)\)</span>。 (5) 由 <span aria-label="a = b+kn, c = d+ln" class="math-inline-source" data-tex="a = b+kn, c = d+ln">\(a = b+kn, c = d+ln\)</span> 相乘，<span aria-label="ac = bd + n(bl+dk+kln)" class="math-inline-source" data-tex="ac = bd + n(bl+dk+kln)">\(ac = bd + n(bl+dk+kln)\)</span>，故 <span aria-label="ac ≡ bd (mod n)" class="math-inline-source" data-tex="ac \equiv bd (\operatorname{mod} n)">\(ac \equiv bd (\operatorname{mod} n)\)</span>。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 82</div></div></section>
-<section class="slide light" data-screen-label="Application" data-source="应用示例 · 模运算" data-theme="light"><div class="chrome"><div>应用示例 · 模运算编程</div><div>35 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>39 / 92</div></div></section>
+<section class="slide light" data-screen-label="Application" data-source="应用示例 · 模运算" data-theme="light"><div class="chrome"><div>应用示例 · 模运算编程</div><div>40 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:17em">模运算处理周期性与循环</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">处理循环数组时，用模运算确保索引在范围内循环</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">实现环形缓冲区时，模运算处理索引越界</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">计算两个时间点之差，并转换为 24 小时制</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>35 / 82</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 模运算编程" data-theme="light"><div class="chrome"><div>应用动画 · 模运算编程</div><div>36 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>40 / 92</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 模运算编程" data-theme="light"><div class="chrome"><div>应用动画 · 模运算编程</div><div>41 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">模运算编程</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/04_modular_programming.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/04_modular_programming.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/04_modular_programming.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/04_modular_programming.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>36 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 1.2.3 · 素数与合数" data-theme="light"><div class="chrome"><div>1.2.2 素数</div><div>37 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>41 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 1.2.3 · 素数与合数" data-theme="light"><div class="chrome"><div>1.2.2 素数</div><div>42 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 1.2.3 · 素数与合数</div><h2 class="h1-zh anim-item" style="max-width:15em">素数是数的原子</h2><p class="lead-zh anim-item" style="max-width:24em">正整数 p 的因数只有 1 和 p 自身则为素数；正整数 n 有 1 和 n 之外的正因数则为合数。</p><p class="body-zh anim-item" style="max-width:26em;opacity:.7">2 是最小的素数且是唯一的偶素数，3 是素数；<span aria-label="4 = 2×2" class="math-inline-source" data-tex="4 = 2\times 2">\(4 = 2\times 2\)</span>、<span aria-label="15 = 3×5" class="math-inline-source" data-tex="15 = 3\times 5">\(15 = 3\times 5\)</span> 是合数。大于 1 的整数要么是素数，要么是合数。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>37 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 1.2.1 · 唯一分解定理" data-theme="dark"><div class="chrome"><div>1.2.2 算术基本定理</div><div>38 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>42 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 1.2.1 · 唯一分解定理" data-theme="dark"><div class="chrome"><div>1.2.2 算术基本定理</div><div>43 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定理 1.2.1 · 唯一分解定理</div><h2 class="h1-zh anim-item" style="max-width:15em">每个整数唯一分解为素数乘积</h2><p class="lead-zh anim-item" style="max-width:24em">每个大于 1 的整数 n 都可唯一地分解为素数的乘积：</p><div aria-label="n = p₁ k₁ × p₂ k₂ × … × pᵣ kᵣ" class="formula anim-item mathjax-display-source" data-tex="n = p_{1}^{k_{1}}\times p_{2}^{k_{2}}\times \ldots \times p_{r}^{k_{r}}">\[\displaystyle n = p_{1}^{k_{1}}\times p_{2}^{k_{2}}\times \ldots \times p_{r}^{k_{r}}\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">其中 <span aria-label="p₁, …, pᵣ" class="math-inline-source" data-tex="p_{1}, \ldots , p_{r}">\(p_{1}, \ldots , p_{r}\)</span> 为互异素数，<span aria-label="k₁, …, kᵣ" class="math-inline-source" data-tex="k_{1}, \ldots , k_{r}">\(k_{1}, \ldots , k_{r}\)</span> 为正整数。例如 <span aria-label="20 = 2²×5" class="math-inline-source" data-tex="20 = 2^{2}\times 5">\(20 = 2^{2}\times 5\)</span>，<span aria-label="100 = 2²×5²" class="math-inline-source" data-tex="100 = 2^{2}\times 5^{2}">\(100 = 2^{2}\times 5^{2}\)</span>。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>38 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.2.5" data-theme="dark"><div class="chrome"><div>Python 示例 1.2.5</div><div>39 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>43 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.2.5" data-theme="dark"><div class="chrome"><div>Python 示例 1.2.5</div><div>44 / 92</div></div>
 <div class="slide-body">
 <div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1rem,2.2vh,1.8rem)">
 <div class="anim-item">
@@ -855,8 +1098,8 @@ print(f"{n} 的素因数分解为:")
 for factor, exponent in zip(factors, exponents):
     print(f"{factor}^{exponent}", end=" * ")</code></pre></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>39 / 82</div></div></section>
-<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.2 · 试除法" data-theme="light"><div class="chrome"><div>1.2.2 试除法</div><div>40 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>44 / 92</div></div></section>
+<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.2 · 试除法" data-theme="light"><div class="chrome"><div>1.2.2 试除法</div><div>45 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">算法 1.2.2 · 试除法</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">逐一试除判断素数</h2><ol class="steps" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><li>设整数 n &gt; 1</li><li>从 2 到 <span aria-label="√n" class="math-inline-source" data-tex="\sqrt{n}">\(\sqrt{n}\)</span> 检查每个 m 是否整除 n</li><li>若存在 m 整除 n，则 n 不是素数</li><li>若都不整除，则 n 是素数</li></ol></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def is_prime(n):
@@ -874,8 +1117,8 @@ for factor, exponent in zip(factors, exponents):
 n = 17011
 print(f"{n} 是素数" if is_prime(n)
       else f"{n} 不是素数")</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>40 / 82</div></div></section>
-<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.3 · 厄拉多塞筛法" data-theme="light"><div class="chrome"><div>1.2.2 厄拉多塞筛法</div><div>41 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>45 / 92</div></div></section>
+<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.3 · 厄拉多塞筛法" data-theme="light"><div class="chrome"><div>1.2.2 厄拉多塞筛法</div><div>46 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">算法 1.2.3 · 厄拉多塞筛法</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">高效筛出范围内所有素数</h2><ol class="steps" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><li>列出 2 到 N 的所有整数</li><li>从 2 开始，删除其所有倍数（不含自身）</li><li>移到下一个数，重复删除倍数</li><li>处理完所有数后，剩余即为全部素数</li></ol></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def sieve_of_eratosthenes(N):
@@ -890,8 +1133,8 @@ print(f"{n} 是素数" if is_prime(n)
 
 N = 300
 print(sieve_of_eratosthenes(N))</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>41 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Compare" data-source="1.2.2 试除法 vs 筛法" data-theme="dark"><div class="chrome"><div>试除法 vs 厄拉多塞筛法</div><div>42 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>46 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Compare" data-source="1.2.2 试除法 vs 筛法" data-theme="dark"><div class="chrome"><div>试除法 vs 厄拉多塞筛法</div><div>47 / 92</div></div>
 <div class="slide-body">
 <div class="table-wrap">
 <h2 class="h1-zh anim-item" style="text-align:center;max-width:16em;margin:0 auto">两种找素数方法的区别与联系</h2>
@@ -900,8 +1143,8 @@ print(sieve_of_eratosthenes(N))</code></pre></div>
 <tbody><tr><td>试除法</td><td>检查单个数，或不确定范围内找素数</td><td>实现简单，无须存储大量数据</td></tr><tr><td>厄拉多塞筛法</td><td>确定且较大范围内快速找出所有素数</td><td>需存储范围内的数以便筛选</td></tr></tbody>
 </table>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>42 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.2.4 · 最大公因数" data-theme="light"><div class="chrome"><div>1.2.2 最大公因数</div><div>43 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>47 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.2.4 · 最大公因数" data-theme="light"><div class="chrome"><div>1.2.2 最大公因数</div><div>48 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 1.2.4 · 最大公因数</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">同时整除两数的最大正整数</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)"><span aria-label="gcd(a, b)" class="math-inline-source" data-tex="\operatorname{gcd}(a, b)">\(\operatorname{gcd}(a, b)\)</span> 是能同时整除 a 和 b 的最大正整数，满足 <span aria-label="a mod d = 0" class="math-inline-source" data-tex="a \operatorname{mod} d = 0">\(a \operatorname{mod} d = 0\)</span> 且 <span aria-label="b mod d = 0" class="math-inline-source" data-tex="b \operatorname{mod} d = 0">\(b \operatorname{mod} d = 0\)</span>。在模运算与同余方程求解中作用重要。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 1.2.3</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="gcd(8, 12) = 4" class="math-inline-source" data-tex="\operatorname{gcd}(8, 12) = 4">\(\operatorname{gcd}(8, 12) = 4\)</span>；17 与 13 互素，<span aria-label="gcd(17, 13) = 1" class="math-inline-source" data-tex="\operatorname{gcd}(17, 13) = 1">\(\operatorname{gcd}(17, 13) = 1\)</span>。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>def gcd(a, b):
@@ -911,8 +1154,8 @@ print(sieve_of_eratosthenes(N))</code></pre></div>
 
 print(gcd(8, 12))    # 4
 print(gcd(17, 13))   # 1</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>43 / 82</div></div></section>
-<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.4 · 欧几里得算法" data-theme="light"><div class="chrome"><div>1.2.2 欧几里得算法</div><div>44 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>48 / 92</div></div></section>
+<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.4 · 欧几里得算法" data-theme="light"><div class="chrome"><div>1.2.2 欧几里得算法</div><div>49 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">算法 1.2.4 · 欧几里得算法</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">辗转相除求 gcd</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">用 a 除以 b 得余数 r，再令 a←b, b←r，重复至余数为 0，此时 b 即为 gcd。若有负数取绝对值。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 <span aria-label="1.2.4 · gcd(48,18)" class="math-inline-source" data-tex="1.2.4 \cdot \operatorname{gcd}(48,18)">\(1.2.4 \cdot \operatorname{gcd}(48,18)\)</span></div><p class="body-zh" style="margin-top:.6vh"><span aria-label="48=18×2+12 → 18=12×1+6 → 12=6×2+0" class="math-inline-source" data-tex="48=18\times 2+12 \to 18=12\times 1+6 \to 12=6\times 2+0">\(48=18\times 2+12 \to 18=12\times 1+6 \to 12=6\times 2+0\)</span>，余数为 0，<span aria-label="gcd(48,18) = 6" class="math-inline-source" data-tex="\operatorname{gcd}(48,18) = 6">\(\operatorname{gcd}(48,18) = 6\)</span>。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def euclidean_algorithm(a, b):
@@ -924,8 +1167,8 @@ print(gcd(17, 13))   # 1</code></pre></div>
 num1, num2 = -48, 18
 g = euclidean_algorithm(num1, num2)
 print(f"{abs(num1)} 和 {abs(num2)} 的gcd是 {g}")</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>44 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept+Code" data-source="算法 1.2.5 · 扩展欧几里得" data-theme="light"><div class="chrome"><div>1.2.2 扩展欧几里得算法</div><div>45 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>49 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="算法 1.2.5 · 扩展欧几里得" data-theme="light"><div class="chrome"><div>1.2.2 扩展欧几里得算法</div><div>50 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">算法 1.2.5 · 扩展欧几里得算法</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">顺带求出贝祖系数</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">不仅求 gcd，还能找到满足贝祖等式 <span aria-label="ax + by = gcd(a, b)" class="math-inline-source" data-tex="ax + by = \operatorname{gcd}(a, b)">\(ax + by = \operatorname{gcd}(a, b)\)</span> 的整数 x, y，称为贝祖系数。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 1.2.5</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="a=48, b=18" class="math-inline-source" data-tex="a=48, b=18">\(a=48, b=18\)</span>，<span aria-label="gcd=6" class="math-inline-source" data-tex="\operatorname{gcd}=6">\(\operatorname{gcd}=6\)</span>：取 <span aria-label="x=−1, y=3" class="math-inline-source" data-tex="x=-1, y=3">\(x=-1, y=3\)</span>，则 <span aria-label="6 = 48×(−1) + 18×3" class="math-inline-source" data-tex="6 = 48\times (-1) + 18\times 3">\(6 = 48\times (-1) + 18\times 3\)</span>。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def extended_gcd(a, b):
@@ -937,20 +1180,20 @@ print(f"{abs(num1)} 和 {abs(num2)} 的gcd是 {g}")</code></pre></div>
 g, x, y = extended_gcd(48, 18)
 print(f"gcd = {g}")
 print(f"贝祖系数 x={x}, y={y}")</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>45 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 1.2.6 · 最小公倍数" data-theme="light"><div class="chrome"><div>1.2.2 最小公倍数</div><div>46 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 1.2.6 · 最小公倍数" data-theme="light"><div class="chrome"><div>1.2.2 最小公倍数</div><div>51 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 1.2.6 · 最小公倍数</div><h2 class="h1-zh anim-item" style="max-width:15em">能被两数同时整除的最小正整数</h2><p class="lead-zh anim-item" style="max-width:24em"><span aria-label="lcm(a, b)" class="math-inline-source" data-tex="\operatorname{lcm}(a, b)">\(\operatorname{lcm}(a, b)\)</span> 是能被 a 和 b 同时整除的最小正整数，满足 <span aria-label="m mod a = 0" class="math-inline-source" data-tex="m \operatorname{mod} a = 0">\(m \operatorname{mod} a = 0\)</span> 且 <span aria-label="m mod b = 0" class="math-inline-source" data-tex="m \operatorname{mod} b = 0">\(m \operatorname{mod} b = 0\)</span>。</p><div class="example anim-item"><div class="meta" style="color:var(--accent);opacity:1">例 1.2.6</div><p class="body-zh" style="margin-top:.8vh"><span aria-label="lcm(4, 6) = 12" class="math-inline-source" data-tex="\operatorname{lcm}(4, 6) = 12">\(\operatorname{lcm}(4, 6) = 12\)</span>；5 与 7 互素，<span aria-label="lcm(5, 7) = 5×7 = 35" class="math-inline-source" data-tex="\operatorname{lcm}(5, 7) = 5\times 7 = 35">\(\operatorname{lcm}(5, 7) = 5\times 7 = 35\)</span>。</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>46 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="定理 1.2.2 · gcd 与 lcm 关系" data-theme="dark"><div class="chrome"><div>1.2.2 定理</div><div>47 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>51 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="定理 1.2.2 · gcd 与 lcm 关系" data-theme="dark"><div class="chrome"><div>1.2.2 定理</div><div>52 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定理 1.2.2</div><h2 class="h1-zh anim-item" style="max-width:15em">最大公因数乘最小公倍数等于乘积绝对值</h2><div aria-label="lcm(a, b) × gcd(a, b) = |a × b|" class="formula anim-item mathjax-display-source" data-tex="\operatorname{lcm}(a, b) \times \operatorname{gcd}(a, b) = |a \times b|">\[\displaystyle \operatorname{lcm}(a, b) \times \operatorname{gcd}(a, b) = |a \times b|\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">证明：由素因数分解，gcd 取各素因数幂次的较小者，lcm 取较大者。因 <span aria-label="min(aᵢ,bᵢ)+max(aᵢ,bᵢ)=aᵢ+bᵢ" class="math-inline-source" data-tex="\operatorname{min}(a_{i},b_{i})+\operatorname{max}(a_{i},b_{i})=a_{i}+b_{i}">\(\operatorname{min}(a_{i},b_{i})+\operatorname{max}(a_{i},b_{i})=a_{i}+b_{i}\)</span>，相乘即得 a、b 全部素因数之积，取绝对值即定理成立。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>47 / 82</div></div></section>
-<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.6 · 最小公倍数" data-theme="light"><div class="chrome"><div>1.2.2 最小公倍数算法</div><div>48 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>52 / 92</div></div></section>
+<section class="slide light" data-screen-label="Algorithm+Code" data-source="算法 1.2.6 · 最小公倍数" data-theme="light"><div class="chrome"><div>1.2.2 最小公倍数算法</div><div>53 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">算法 1.2.6 · 由 gcd 求 lcm</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">先求 gcd，再用关系式得 lcm</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">先用欧几里得算法求 <span aria-label="d = gcd(a,b)" class="math-inline-source" data-tex="d = \operatorname{gcd}(a,b)">\(d = \operatorname{gcd}(a,b)\)</span>，再由 <span aria-label="lcm(a,b) = |a×b| / d" class="math-inline-source" data-tex="\operatorname{lcm}(a,b) = |a\times b| / d">\(\operatorname{lcm}(a,b) = |a\times b| / d\)</span> 计算。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 1.2.7</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="gcd(12,15) = 3" class="math-inline-source" data-tex="\operatorname{gcd}(12,15) = 3">\(\operatorname{gcd}(12,15) = 3\)</span>，<span aria-label="lcm(12,15) = |12×15| / 3 = 60" class="math-inline-source" data-tex="\operatorname{lcm}(12,15) = |12\times 15| / 3 = 60">\(\operatorname{lcm}(12,15) = |12\times 15| / 3 = 60\)</span>。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def gcd(a, b):
@@ -964,24 +1207,25 @@ def lcm(a, b):
     return abs(a * b) // gcd(a, b)
 
 print(lcm(12, 15))   # 60</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>48 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 数据传输" data-theme="dark"><div class="chrome"><div>应用示例 · 数据压缩与分块传输</div><div>49 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>53 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 数据传输" data-theme="dark"><div class="chrome"><div>应用示例 · 数据压缩与分块传输</div><div>54 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:17em">gcd 与 lcm 优化分块传输</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">网络层块 1500 字节、应用层块 1024 字节，取 <span aria-label="lcm(1500,1024)" class="math-inline-source" data-tex="\operatorname{lcm}(1500,1024)">\(\operatorname{lcm}(1500,1024)\)</span> 作为最优块大小提高传输效率</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">硬盘扇区 4096 字节、文件系统块 8192 字节，取二者 lcm 作为存储块，减少碎片提高读写效率</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>49 / 82</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 数据压缩与分块传输" data-theme="dark"><div class="chrome"><div>应用动画 · 数据压缩与分块传输</div><div>50 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>54 / 92</div></div></section>
+<section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 数据压缩与分块传输" data-theme="dark"><div class="chrome"><div>应用动画 · 数据压缩与分块传输</div><div>55 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">数据压缩与分块传输</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/05_block_transfer.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/05_block_transfer.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/05_block_transfer.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/05_block_transfer.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.2.7 · 同余方程" data-theme="light"><div class="chrome"><div>1.2.3 同余方程</div><div>51 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>55 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept+Code" data-source="定义 1.2.7 · 同余方程" data-theme="light"><div class="chrome"><div>1.2.3 同余方程</div><div>56 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 1.2.7 · 同余方程</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">高斯在算术研究中系统介绍</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">同余方程 <span aria-label="ax ≡ b (mod n)" class="math-inline-source" data-tex="ax \equiv b (\operatorname{mod} n)">\(ax \equiv b (\operatorname{mod} n)\)</span>，即存在整数 k 使 <span aria-label="ax − b = kn" class="math-inline-source" data-tex="ax - b = kn">\(ax - b = kn\)</span>。若 <span aria-label="gcd(a, n) = 1" class="math-inline-source" data-tex="\operatorname{gcd}(a, n) = 1">\(\operatorname{gcd}(a, n) = 1\)</span>，则对任意 b 在<strong>模 n 意义下有唯一解</strong>（解恰为一个剩余类）；否则可能有多解或无解。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 1.2.8</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="(1) 3x ≡ 4 (mod 7)" class="math-inline-source" data-tex="(1) 3x \equiv 4 (\operatorname{mod} 7)">\((1) 3x \equiv 4 (\operatorname{mod} 7)\)</span>：<span aria-label="x = 6" class="math-inline-source" data-tex="x = 6">\(x = 6\)</span>。 <span aria-label="(2) 2x ≡ 4 (mod 6)" class="math-inline-source" data-tex="(2) 2x \equiv 4 (\operatorname{mod} 6)">\((2) 2x \equiv 4 (\operatorname{mod} 6)\)</span>：多解 <span aria-label="x = 2, 5" class="math-inline-source" data-tex="x = 2, 5">\(x = 2, 5\)</span>。 <span aria-label="(3) 4x ≡ 5 (mod 8)" class="math-inline-source" data-tex="(3) 4x \equiv 5 (\operatorname{mod} 8)">\((3) 4x \equiv 5 (\operatorname{mod} 8)\)</span>：左偶右奇，无解。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>def linear_congruence(a, b, m):
@@ -990,14 +1234,14 @@ print(lcm(12, 15))   # 60</code></pre></div>
 
 a, b, m = 3, 4, 7        # 3x ≡ 4 (mod 7)
 print(linear_congruence(a, b, m))   # [6]</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>51 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Theorem" data-source="1.2.3 中国剩余定理" data-theme="dark"><div class="chrome"><div>1.2.3 中国剩余定理</div><div>52 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Theorem" data-source="1.2.3 中国剩余定理" data-theme="dark"><div class="chrome"><div>1.2.3 中国剩余定理</div><div>57 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">中国剩余定理 · 孙子算经</div><h2 class="h1-zh anim-item" style="max-width:15em">两两互质模数下的联立同余</h2><p class="lead-zh anim-item" style="max-width:24em">设 <span aria-label="n₁, n₂, …, nₖ" class="math-inline-source" data-tex="n_{1}, n_{2}, \ldots , n_{k}">\(n_{1}, n_{2}, \ldots , n_{k}\)</span> 两两互质，联立方程组 <span aria-label="x ≡ aᵢ (mod nᵢ)" class="math-inline-source" data-tex="x \equiv a_{i} (\operatorname{mod} n_{i})">\(x \equiv a_{i} (\operatorname{mod} n_{i})\)</span> 存在整数解 x，且在模 <span aria-label="N = n₁×n₂×…×nₖ" class="math-inline-source" data-tex="N = n_{1}\times n_{2}\times \ldots \times n_{k}">\(N = n_{1}\times n_{2}\times \ldots \times n_{k}\)</span> 下唯一。</p><p class="body-zh anim-item" style="max-width:26em;opacity:.7">算法：① 计算 <span aria-label="N=∏nᵢ" class="math-inline-source" data-tex="N=\prod n_{i}">\(N=\prod n_{i}\)</span>；② 对每个 i 求 <span aria-label="Nᵢ=N/nᵢ" class="math-inline-source" data-tex="N_{i}=N/n_{i}">\(N_{i}=N/n_{i}\)</span> 及其模 <span aria-label="nᵢ" class="math-inline-source" data-tex="n_{i}">\(n_{i}\)</span> 逆元 <span aria-label="Mᵢ" class="math-inline-source" data-tex="M_{i}">\(M_{i}\)</span>；③ 构造 <span aria-label="x = Σ aᵢNᵢMᵢ" class="math-inline-source" data-tex="x = Σ a_{i}N_{i}M_{i}">\(x = Σ a_{i}N_{i}M_{i}\)</span>，再对 N 取模得最小非负解。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>52 / 82</div></div></section>
-<section class="slide light" data-screen-label="Example+Code" data-source="例 1.2.9 · CRT 求解" data-theme="light"><div class="chrome"><div>1.2.3 中国剩余定理</div><div>53 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>57 / 92</div></div></section>
+<section class="slide light" data-screen-label="Example+Code" data-source="例 1.2.9 · CRT 求解" data-theme="light"><div class="chrome"><div>1.2.3 中国剩余定理</div><div>58 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 1.2.9 · 算法 1.2.7</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">求解 <span aria-label="x ≡ 2 (mod 3)" class="math-inline-source" data-tex="x \equiv 2 (\operatorname{mod} 3)">\(x \equiv 2 (\operatorname{mod} 3)\)</span>，<span aria-label="x ≡ 3 (mod 5)" class="math-inline-source" data-tex="x \equiv 3 (\operatorname{mod} 5)">\(x \equiv 3 (\operatorname{mod} 5)\)</span></h2><ol class="steps" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><li><span aria-label="N = 3 × 5 = 15" class="math-inline-source" data-tex="N = 3 \times 5 = 15">\(N = 3 \times 5 = 15\)</span></li><li><span aria-label="n₁=3" class="math-inline-source" data-tex="n_{1}=3">\(n_{1}=3\)</span>：<span aria-label="N₁=5" class="math-inline-source" data-tex="N_{1}=5">\(N_{1}=5\)</span>，5 的模 3 逆元为 2（<span aria-label="5×2 ≡ 1" class="math-inline-source" data-tex="5\times 2 \equiv 1">\(5\times 2 \equiv 1\)</span>）</li><li><span aria-label="n₂=5" class="math-inline-source" data-tex="n_{2}=5">\(n_{2}=5\)</span>：<span aria-label="N₂=3" class="math-inline-source" data-tex="N_{2}=3">\(N_{2}=3\)</span>，3 的模 5 逆元为 2（<span aria-label="3×2 ≡ 1" class="math-inline-source" data-tex="3\times 2 \equiv 1">\(3\times 2 \equiv 1\)</span>）</li><li><span aria-label="x = 2×5×2 + 3×3×2 = 38" class="math-inline-source" data-tex="x = 2\times 5\times 2 + 3\times 3\times 2 = 38">\(x = 2\times 5\times 2 + 3\times 3\times 2 = 38\)</span>，<span aria-label="38 mod 15 = 8" class="math-inline-source" data-tex="38 \operatorname{mod} 15 = 8">\(38 \operatorname{mod} 15 = 8\)</span></li></ol></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def crt(equations):
@@ -1012,30 +1256,31 @@ print(linear_congruence(a, b, m))   # [6]</code></pre></div>
     return x % N               # 最小非负解
 
 print(crt([(2, 3), (3, 5)]))   # 8</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>53 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 同余方程" data-theme="dark"><div class="chrome"><div>应用示例 · 同余与中国剩余定理</div><div>54 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>58 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Application" data-source="应用示例 · 同余方程" data-theme="dark"><div class="chrome"><div>应用示例 · 同余与中国剩余定理</div><div>59 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:17em">同余方程与中国剩余定理的实际应用</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">各团队会议周期不同时，用中国剩余定理安排所有团队都能参加的联合会议</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">网络数据包传输周期不同时，用中国剩余定理优化同步，提高传输效率与完整性</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>54 / 82</div></div></section><section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 同余与中国剩余定理" data-theme="dark"><div class="chrome"><div>应用动画 · 同余与中国剩余定理</div><div>55 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 92</div></div></section>
+<section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 同余与中国剩余定理" data-theme="dark"><div class="chrome"><div>应用动画 · 同余与中国剩余定理</div><div>60 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">同余与中国剩余定理</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/06_crt.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/06_crt.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/06_crt.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/06_crt.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>55 / 82</div></div></section>
-<section class="slide light" data-screen-label="Concept" data-source="定义 1.2.8 · 欧拉函数" data-theme="light"><div class="chrome"><div>1.2.4 欧拉函数</div><div>56 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 92</div></div></section>
+<section class="slide light" data-screen-label="Concept" data-source="定义 1.2.8 · 欧拉函数" data-theme="light"><div class="chrome"><div>1.2.4 欧拉函数</div><div>61 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 1.2.8 · 欧拉函数 φ(n)</div><h2 class="h1-zh anim-item" style="max-width:15em">不超过 n 且与 n 互质的整数个数</h2><p class="lead-zh anim-item" style="max-width:24em">若 p 为素数则 <span aria-label="φ(p) = p − 1" class="math-inline-source" data-tex="φ(p) = p - 1">\(φ(p) = p - 1\)</span>；若 <span aria-label="n = p₁^k₁…pᵣ^kᵣ" class="math-inline-source" data-tex="n = p_{1}^{k_{1}}\ldots p_{r}^{k_{r}}">\(n = p_{1}^{k_{1}}\ldots p_{r}^{k_{r}}\)</span>，则：</p><div aria-label="φ(n) = n × (1 − 1/p₁) × (1 − 1/p₂) × … × (1 − 1/pᵣ)" class="formula anim-item mathjax-display-source" data-tex="φ(n) = n \times (1 - 1/p_{1}) \times (1 - 1/p_{2}) \times \ldots \times (1 - 1/p_{r})">\[\displaystyle φ(n) = n \times (1 - 1/p_{1}) \times (1 - 1/p_{2}) \times \ldots \times (1 - 1/p_{r})\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">例 1.2.10：<span aria-label="φ(1)=1" class="math-inline-source" data-tex="φ(1)=1">\(φ(1)=1\)</span>，<span aria-label="φ(5)=4" class="math-inline-source" data-tex="φ(5)=4">\(φ(5)=4\)</span>，<span aria-label="φ(15)=15×(1−1/3)×(1−1/5)=8" class="math-inline-source" data-tex="φ(15)=15\times (1-1/3)\times (1-1/5)=8">\(φ(15)=15\times (1-1/3)\times (1-1/5)=8\)</span>，<span aria-label="φ(12)=4" class="math-inline-source" data-tex="φ(12)=4">\(φ(12)=4\)</span>。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 82</div></div></section>
-<section class="slide light" data-screen-label="Theorem+Code" data-source="定理 1.2.3 · 欧拉定理" data-theme="light"><div class="chrome"><div>1.2.4 欧拉定理</div><div>57 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 92</div></div></section>
+<section class="slide light" data-screen-label="Theorem+Code" data-source="定理 1.2.3 · 欧拉定理" data-theme="light"><div class="chrome"><div>1.2.4 欧拉定理</div><div>62 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定理 1.2.3 · 欧拉定理</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">互质时幂次回到 1</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">设正整数 n 与互质整数 a，则 <span aria-label="a^φ(n) ≡ 1 (mod n)" class="math-inline-source" data-tex="a^{φ(n)} \equiv 1 (\operatorname{mod} n)">\(a^{φ(n)} \equiv 1 (\operatorname{mod} n)\)</span>。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 1.2.11</div><p class="body-zh" style="margin-top:.6vh"><span aria-label="n=9, a=2" class="math-inline-source" data-tex="n=9, a=2">\(n=9, a=2\)</span>，因 2 与 9 互质且 <span aria-label="φ(9)=6" class="math-inline-source" data-tex="φ(9)=6">\(φ(9)=6\)</span>，故 <span aria-label="2⁶ ≡ 1 (mod 9)" class="math-inline-source" data-tex="2^{6} \equiv 1 (\operatorname{mod} 9)">\(2^{6} \equiv 1 (\operatorname{mod} 9)\)</span>。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def euler_phi(n):
@@ -1052,57 +1297,60 @@ print(crt([(2, 3), (3, 5)]))   # 8</code></pre></div>
 
 a, n = 2, 9
 print(pow(a, euler_phi(n), n))   # 1</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>57 / 82</div></div></section>
-<section class="slide light" data-screen-label="Theorem+Code" data-source="定理 1.2.4 · 费马小定理" data-theme="light"><div class="chrome"><div>1.2.4 费马小定理</div><div>58 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>62 / 92</div></div></section>
+<section class="slide light" data-screen-label="Theorem+Code" data-source="定理 1.2.4 · 费马小定理" data-theme="light"><div class="chrome"><div>1.2.4 费马小定理</div><div>63 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定理 1.2.4 · 费马小定理</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">素数模下的幂次性质</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">若 p 为素数且 a 与 p 互质，则 <span aria-label="a^(p−1) ≡ 1 (mod p)" class="math-inline-source" data-tex="a^{p-1} \equiv 1 (\operatorname{mod} p)">\(a^{p-1} \equiv 1 (\operatorname{mod} p)\)</span>。可用于设计费马素性测试。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例 <span aria-label="1.2.12 · 2¹⁰⁰ mod 7" class="math-inline-source" data-tex="1.2.12 \cdot 2^{100} \operatorname{mod} 7">\(1.2.12 \cdot 2^{100} \operatorname{mod} 7\)</span></div><p class="body-zh" style="margin-top:.6vh"><span aria-label="2⁶ ≡ 1 (mod 7)" class="math-inline-source" data-tex="2^{6} \equiv 1 (\operatorname{mod} 7)">\(2^{6} \equiv 1 (\operatorname{mod} 7)\)</span>，将 <span aria-label="2¹⁰⁰" class="math-inline-source" data-tex="2^{100}">\(2^{100}\)</span> 写成 <span aria-label="(2⁶)¹⁶ × 2⁴" class="math-inline-source" data-tex="(2^{6})^{16} \times 2^{4}">\((2^{6})^{16} \times 2^{4}\)</span>，又 <span aria-label="2⁴ ≡ 2 (mod 7)" class="math-inline-source" data-tex="2^{4} \equiv 2 (\operatorname{mod} 7)">\(2^{4} \equiv 2 (\operatorname{mod} 7)\)</span>，故结果为 2。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code># 三参数 pow 即模幂：边乘边取模，
 # 不必先算出庞大的 2**100，与降幂思路一致
 result = pow(2, 100, 7)
 print("结果是:", result)   # 2</code></pre></div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>58 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Concept" data-source="定义 1.2.9 · 费马伪素数" data-theme="dark"><div class="chrome"><div>1.2.4 费马伪素数</div><div>59 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>63 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Concept" data-source="定义 1.2.9 · 费马伪素数" data-theme="dark"><div class="chrome"><div>1.2.4 费马伪素数</div><div>64 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 1.2.9 · 费马伪素数</div><h2 class="h1-zh anim-item" style="max-width:15em">满足费马小定理的合数</h2><p class="lead-zh anim-item" style="max-width:24em">费马伪素数指一些满足费马小定理却是合数的数。</p><p class="body-zh anim-item" style="max-width:26em;opacity:.7">例如 <span aria-label="n=341" class="math-inline-source" data-tex="n=341">\(n=341\)</span>、基数 <span aria-label="a=2" class="math-inline-source" data-tex="a=2">\(a=2\)</span> 时 <span aria-label="2³⁴⁰ ≡ 1 (mod 341)" class="math-inline-source" data-tex="2^{340} \equiv 1 (\operatorname{mod} 341)">\(2^{340} \equiv 1 (\operatorname{mod} 341)\)</span>，而 <span aria-label="341 = 11×31" class="math-inline-source" data-tex="341 = 11\times 31">\(341 = 11\times 31\)</span> 是合数。因此费马素性测试虽快，却不能可靠判定所有素数，存在局限。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 82</div></div></section>
-<section class="slide light" data-screen-label="Application" data-source="应用示例 · 欧拉与费马" data-theme="light"><div class="chrome"><div>应用示例 · 欧拉函数与费马小定理</div><div>60 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>64 / 92</div></div></section>
+<section class="slide light" data-screen-label="Application" data-source="应用示例 · 欧拉与费马" data-theme="light"><div class="chrome"><div>应用示例 · 欧拉函数与费马小定理</div><div>65 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:17em">欧拉函数与费马小定理支撑现代密码</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">RSA 密钥生成需计算 φ(n)，n 为两大素数之积；欧拉函数确定模 n 乘法群的阶，帮助选择加解密指数</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">区块链与加密货币设计中，利用欧拉函数与费马小定理确保交易安全与数据不可篡改</p></div></div>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 82</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 欧拉函数与费马小定理" data-theme="light"><div class="chrome"><div>应用动画 · 欧拉函数与费马小定理</div><div>61 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>65 / 92</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 欧拉函数与费马小定理" data-theme="light"><div class="chrome"><div>应用动画 · 欧拉函数与费马小定理</div><div>66 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">欧拉函数与费马小定理</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/07_euler_fermat.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/07_euler_fermat.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/07_euler_fermat.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/07_euler_fermat.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Summary" data-source="1.2.5 小结" data-theme="dark"><div class="chrome"><div>1.2.5 小结</div><div>62 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>66 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="1.2.5 小结" data-theme="dark"><div class="chrome"><div>1.2.5 小结</div><div>67 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.6rem,4vh,3rem)">
 <div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">整除性是数之间最基本的关系，模运算是处理周期性问题的重要工具</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">素数是数论的基本构件，唯一分解定理保证每个整数都有唯一的素数分解</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">最大公因数用于约分，欧几里得算法高效求解；gcd 与 lcm 满足 <span aria-label="lcm×gcd=|a×b|" class="math-inline-source" data-tex="\operatorname{lcm}\times \operatorname{gcd}=|a\times b|">\(\operatorname{lcm}\times \operatorname{gcd}=|a\times b|\)</span></p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">同余方程求解余数问题，欧拉函数计算互质数量，费马小定理是素数与模运算的重要定理</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>62 / 82</div></div></section>
-<section class="slide light" data-screen-label="Exercise" data-source="1.2 习题" data-theme="light"><div class="chrome"><div>1.2 习题</div><div>63 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>67 / 92</div></div></section>
+<section class="slide light mk-page mk-audio-page" data-screen-label="Podcast" data-source="播客音频 · 1.2 数论基础" data-theme="light" data-mk-sec="1.2"><div class="chrome"><div>播客音频 · 1.2 数论基础</div><div>68 / 92</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">播客音频</span><span class="mk-metaline">10:15 · 2.9 MB · 讲解音频版</span></div><div class="mk-audio-card anim-item"><button class="mk-abtn" type="button" data-mk-sec="1.2" aria-label="播放本节播客"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><div class="mk-audio-main"><h2 class="h2-zh">1.2 数论基础</h2><p class="mk-audio-desc">本节内容的播客讲解版，适合课后复盘、通勤复习与考前串讲；点击波形任意位置可跳转收听。</p><div class="mk-wave" data-mk-sec="1.2" role="slider" aria-label="音频进度"><i style="height:55%"></i><i style="height:40%"></i><i style="height:51%"></i><i style="height:80%"></i><i style="height:72%"></i><i style="height:62%"></i><i style="height:71%"></i><i style="height:51%"></i><i style="height:22%"></i><i style="height:33%"></i><i style="height:41%"></i><i style="height:33%"></i><i style="height:57%"></i><i style="height:82%"></i><i style="height:67%"></i><i style="height:63%"></i><i style="height:72%"></i><i style="height:48%"></i><i style="height:33%"></i><i style="height:55%"></i><i style="height:60%"></i><i style="height:56%"></i><i style="height:83%"></i><i style="height:90%"></i><i style="height:64%"></i><i style="height:59%"></i><i style="height:57%"></i><i style="height:27%"></i><i style="height:24%"></i><i style="height:49%"></i><i style="height:49%"></i><i style="height:51%"></i><i style="height:77%"></i><i style="height:72%"></i><i style="height:46%"></i><i style="height:51%"></i><i style="height:48%"></i><i style="height:28%"></i><i style="height:44%"></i><i style="height:72%"></i><i style="height:68%"></i><i style="height:75%"></i><i style="height:94%"></i><i style="height:73%"></i><i style="height:48%"></i><i style="height:54%"></i><i style="height:44%"></i><i style="height:28%"></i><i style="height:52%"></i><i style="height:70%"></i><i style="height:58%"></i><i style="height:66%"></i><i style="height:73%"></i><i style="height:42%"></i><i style="height:28%"></i><i style="height:42%"></i><i style="height:34%"></i><i style="height:35%"></i><i style="height:69%"></i><i style="height:80%"></i><i style="height:69%"></i><i style="height:80%"></i><i style="height:77%"></i><i style="height:44%"></i></div><div class="mk-atime"><span data-mk-cur>0:00</span><span>10:15</span></div></div></div><ul class="mk-audio-tips anim-item"><li data-n="01">支持后台收听：翻页、查阅源码时音频不中断</li><li data-n="02">迷你播放器可调 1× / 1.25× / 1.5× / 2× 倍速</li><li data-n="03">进度自动记忆，下次从上次听到的位置继续</li></ul></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>68 / 92</div></div></section>
+<section class="slide dark mk-page mk-code-page" data-screen-label="SourceCode" data-source="配套源码 · 1.2 数论基础" data-theme="dark" data-mk-sec="1.2"><div class="chrome"><div>配套源码 · 1.2 数论基础</div><div>69 / 92</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">配套源码</span><span class="mk-metaline">14 个文件 · 共 158 行 · 可查看 / 复制 / 下载</span></div><h2 class="h2-zh mk-title anim-item">1.2 数论基础 · Python 配套源码</h2><div class="mk-code-grid mk-chips anim-item"><button class="mk-cc" type="button" data-mk-code="1.2.1.py"><span class="mk-cc-name">1.2.1.py</span><span class="mk-cc-meta">6 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.2.py"><span class="mk-cc-name">1.2.2.py</span><span class="mk-cc-meta">5 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.3.py"><span class="mk-cc-name">1.2.3.py</span><span class="mk-cc-meta">7 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.4.py"><span class="mk-cc-name">1.2.4.py</span><span class="mk-cc-meta">7 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.5.py"><span class="mk-cc-name">1.2.5.py</span><span class="mk-cc-meta">21 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.6.py"><span class="mk-cc-name">1.2.6.py</span><span class="mk-cc-meta">16 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.7.py"><span class="mk-cc-name">1.2.7.py</span><span class="mk-cc-meta">13 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.8.py"><span class="mk-cc-name">1.2.8.py</span><span class="mk-cc-meta">12 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.9.py"><span class="mk-cc-name">1.2.9.py</span><span class="mk-cc-meta">11 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.10.py"><span class="mk-cc-name">1.2.10.py</span><span class="mk-cc-meta">12 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.11.py"><span class="mk-cc-name">1.2.11.py</span><span class="mk-cc-meta">11 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.12.py"><span class="mk-cc-name">1.2.12.py</span><span class="mk-cc-meta">13 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.13.py"><span class="mk-cc-name">1.2.13.py</span><span class="mk-cc-meta">21 行</span></button><button class="mk-cc" type="button" data-mk-code="1.2.14.py"><span class="mk-cc-name">1.2.14.py</span><span class="mk-cc-meta">3 行</span></button></div><p class="mk-foot-hint anim-item">点击任一文件查看完整高亮源码，支持一键复制与下载；按 <b>C</b> 打开本章源码浏览器</p></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>69 / 92</div></div></section>
+<section class="slide light" data-screen-label="Exercise" data-source="1.2 习题" data-theme="light"><div class="chrome"><div>1.2 习题</div><div>70 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 1.2</div><h2 class="h1-zh anim-item" style="max-width:17em">数论基础练习</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><ol class="biglist twocol anim-item"><li>57 mod 8 的结果（答案 B：1）</li><li>12 和 18 的最大公因数（答案 C：6）</li><li>φ(10) 的值（答案 B：4）</li><li>费马小定理下 <span aria-label="3⁴ mod 5" class="math-inline-source" data-tex="3^{4} \operatorname{mod} 5">\(3^{4} \operatorname{mod} 5\)</span>（答案 A：1）</li><li>找出 100 以内的所有素数</li><li>计算 φ(100) 的值</li><li>计算 <span aria-label="3¹⁶ mod 17" class="math-inline-source" data-tex="3^{16} \operatorname{mod} 17">\(3^{16} \operatorname{mod} 17\)</span></li><li>证明 p 为素数且 p|ab，则 p|a 或 p|b</li><li>证明 <span aria-label="ax ≡ b (mod m)" class="math-inline-source" data-tex="ax \equiv b (\operatorname{mod} m)">\(ax \equiv b (\operatorname{mod} m)\)</span> 有解当且仅当 <span aria-label="gcd(a,m) | b" class="math-inline-source" data-tex="\operatorname{gcd}(a,m) | b">\(\operatorname{gcd}(a,m) | b\)</span></li></ol></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>63 / 82</div></div></section>
-<section class="slide dark" data-screen-label="AI Prompts" data-source="1.2 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 1.2</div><div>64 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>70 / 92</div></div></section>
+<section class="slide dark" data-screen-label="AI Prompts" data-source="1.2 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 1.2</div><div>71 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">延伸提问</div><h2 class="h1-zh anim-item" style="max-width:17em">把数论推向更深的六个问题</h2>
 <div style="display:flex;flex-direction:column;gap:clamp(.9rem,2vh,1.5rem)"><ol class="biglist anim-item"><li>理论：解释同余方程基本原理，及其解的存在性与唯一性条件</li><li>实践：编写算法时如何高效实现大整数模运算与整除性检查</li><li>工程：大规模数据分析中如何用素数做数据加密与完整性验证</li><li>科研：gcd 与 lcm 在算法设计与应用上的异同及对比分析</li><li>习题：习题 9 的形式化证明过程</li><li>代码：示例 1.2.5 与示例 1.2.13 的详细解释与分析</li></ol></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>64 / 82</div></div></section>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>71 / 92</div></div></section>
 <section class="slide dark bare" data-screen-label="Section" data-source="1.3 应用案例和 Python 实现" data-theme="dark">
 <div class="slide-body" style="align-items:flex-start">
 <div class="w-statement">
@@ -1110,23 +1358,25 @@ print("结果是:", result)   # 2</code></pre></div>
 <h2 class="display-zh anim-item" style="font-size:clamp(3rem,7.5vw,7rem);max-width:9em;letter-spacing:0">应用案例与 Python 实现</h2>
 <p class="body-zh anim-item" style="max-width:24em;margin-top:clamp(1.6rem,3.5vh,2.6rem);opacity:.6">Hash 函数、伪随机数、校验码、RSA 加密、资源分配，五个把计数与数论落到工程的典型案例</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>65 / 82</div></div></section>
-<section class="slide light" data-screen-label="Case" data-source="1.3.1 Hash 函数构造" data-theme="light"><div class="chrome"><div>1.3.1 Hash 函数</div><div>66 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>72 / 92</div></div></section>
+<section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 1.3 应用案例和 Python 实现" data-theme="dark" data-mk-sec="1.3"><div class="chrome"><div>微课视频 · 1.3 应用案例和 Python 实现</div><div>73 / 92</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">09:01 · 16.9 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">1.3 应用案例和 Python 实现</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/1.3-applications.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 1.3 应用案例和 Python 实现"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">应用案例和 Python 实现</span><span class="mk-cover-m">微课视频 · 09:01 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>73 / 92</div></div></section>
+<section class="slide light" data-screen-label="Case" data-source="1.3.1 Hash 函数构造" data-theme="light"><div class="chrome"><div>1.3.1 Hash 函数</div><div>74 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">案例一 · Hash 函数</div><h2 class="h1-zh anim-item" style="max-width:15em">把任意数据映射到固定大小</h2><p class="lead-zh anim-item" style="max-width:24em">Hash 函数 H 把消息 m 映射为 Hash 值 h。关键特性：确定性、高效计算、抗碰撞性（弱碰撞与强碰撞）、抗修改性、原像抗性。</p><div aria-label="H(s) = [ Σ aⁿ⁻ⁱ · ord(cᵢ) ] mod p" class="formula anim-item mathjax-display-source" data-tex="H(s) = [ Σ a^{n-i} \cdot \operatorname{ord}(c_{i}) ] \operatorname{mod} p">\[\displaystyle H(s) = [ Σ a^{n-i} \cdot \operatorname{ord}(c_{i}) ] \operatorname{mod} p\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">选大素数 p 作模数、较小素数 a 作基数。例如 <span aria-label="p=997" class="math-inline-source" data-tex="p=997">\(p=997\)</span>、<span aria-label="a=31" class="math-inline-source" data-tex="a=31">\(a=31\)</span>，对字符串 <span aria-label="Hello, world!" class="math-inline-source" data-tex="Hello, world!">\(Hello, world!\)</span> 计算得 Hash 值 186。SHA 系列则使用更复杂的运算与结构。</p>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>66 / 82</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.1 Hash 函数" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.1 Hash 函数</div><div>67 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>74 / 92</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.1 Hash 函数" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.1 Hash 函数</div><div>75 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.1 Hash 函数</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/case01_hash.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/case01_hash.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case01_hash.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case01_hash.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>67 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.3.1" data-theme="dark"><div class="chrome"><div>Python 示例 1.3.1</div><div>68 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>75 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.3.1" data-theme="dark"><div class="chrome"><div>Python 示例 1.3.1</div><div>76 / 92</div></div>
 <div class="slide-body">
 <div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1rem,2.2vh,1.8rem)">
 <div class="anim-item">
@@ -1145,23 +1395,24 @@ a = 31                         # 一个较小的素数
 s = "Hello, world!"
 print(f"Hash value of '{s}': {hash_function(s, p, a)}")   # 186</code></pre></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>68 / 82</div></div></section>
-<section class="slide light" data-screen-label="Case" data-source="1.3.2 伪随机数生成" data-theme="light"><div class="chrome"><div>1.3.2 伪随机数</div><div>69 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>76 / 92</div></div></section>
+<section class="slide light" data-screen-label="Case" data-source="1.3.2 伪随机数生成" data-theme="light"><div class="chrome"><div>1.3.2 伪随机数</div><div>77 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">案例二 · 伪随机数</div><h2 class="h1-zh anim-item" style="max-width:15em">线性同余生成器 LCG</h2><p class="lead-zh anim-item" style="max-width:24em">伪随机数由确定性算法生成，关键特性为均匀性、无序性、长重复周期、对初值敏感。线性同余生成器用递推式：</p><div aria-label="X n+1 = (a·X n + c) mod m" class="formula anim-item mathjax-display-source" data-tex="X_{n+1}= (a\cdot X_{n}+ c) \operatorname{mod} m">\[\displaystyle X_{n+1}= (a\cdot X_{n}+ c) \operatorname{mod} m\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">例：<span aria-label="a=1664525, c=1013904223, m=2³²," class="math-inline-source" data-tex="a=1664525, c=1013904223, m=2^{32},">\(a=1664525, c=1013904223, m=2^{32},\)</span> 种子 <span aria-label="X₀=12345" class="math-inline-source" data-tex="X_{0}=12345">\(X_{0}=12345\)</span>，前 5 个数为 87628868, 71072467, 2332836374, 2726892157, 3908547000。其输出可被数学预测，不适合高安全场景。</p>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>69 / 82</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.2 伪随机数" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.2 伪随机数</div><div>70 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>77 / 92</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.2 伪随机数" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.2 伪随机数</div><div>78 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.2 伪随机数</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/case02_lcg.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/case02_lcg.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case02_lcg.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case02_lcg.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>70 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.3.2" data-theme="dark"><div class="chrome"><div>Python 示例 1.3.2</div><div>71 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>78 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.3.2" data-theme="dark"><div class="chrome"><div>Python 示例 1.3.2</div><div>79 / 92</div></div>
 <div class="slide-body">
 <div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1rem,2.2vh,1.8rem)">
 <div class="anim-item">
@@ -1183,8 +1434,8 @@ def linear_congruential_generator(a, c, m, seed, n):
 
 print(linear_congruential_generator(a, c, m, seed, 5))</code></pre></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>71 / 82</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="1.3.3 校验码设计" data-theme="light"><div class="chrome"><div>1.3.3 校验码</div><div>72 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>79 / 92</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="1.3.3 校验码设计" data-theme="light"><div class="chrome"><div>1.3.3 校验码</div><div>80 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例三 · 校验码</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">模 10 加权校验码</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">对数字序列加权求和后取模生成校验码，附加到末尾，用于检测错误。信用卡号、ISBN 均用此类方法。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例</div><p class="body-zh" style="margin-top:.6vh">序列 1..7、权重 2,1,2,1,2,1,2，加权和 <span aria-label="2+2+6+4+10+6+14 = 44" class="math-inline-source" data-tex="2+2+6+4+10+6+14 = 44">\(2+2+6+4+10+6+14 = 44\)</span>，<span aria-label="44 mod 10 = 4" class="math-inline-source" data-tex="44 \operatorname{mod} 10 = 4">\(44 \operatorname{mod} 10 = 4\)</span>，校验码为 4。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>digits = [1, 2, 3, 4, 5, 6, 7]    # 原始序列
@@ -1195,32 +1446,34 @@ check_digit = s % 10             # 模10余数
 digits.append(check_digit)
 print("加上校验码:", digits)</code></pre></div>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>72 / 82</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.3 校验码" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.3 校验码</div><div>73 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>80 / 92</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.3 校验码" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.3 校验码</div><div>81 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.3 校验码</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/case03_checkdigit.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/case03_checkdigit.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case03_checkdigit.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case03_checkdigit.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>73 / 82</div></div></section>
-<section class="slide light" data-screen-label="Case" data-source="1.3.4 RSA 加密算法设计" data-theme="light"><div class="chrome"><div>1.3.4 RSA 加密</div><div>74 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>81 / 92</div></div></section>
+<section class="slide light" data-screen-label="Case" data-source="1.3.4 RSA 加密算法设计" data-theme="light"><div class="chrome"><div>1.3.4 RSA 加密</div><div>82 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">案例四 · RSA</div><h2 class="h1-zh anim-item" style="max-width:15em">1977 年由 Rivest、Shamir、Adleman 提出</h2><p class="lead-zh anim-item" style="max-width:24em">安全性基于大数素因数分解的困难性，是现代公钥加密的基石。密钥生成：选大素数 p、q，<span aria-label="n = pq" class="math-inline-source" data-tex="n = pq">\(n = pq\)</span>，<span aria-label="φ(n) = (p−1)(q−1)" class="math-inline-source" data-tex="φ(n) = (p-1)(q-1)">\(φ(n) = (p-1)(q-1)\)</span>，选与 φ(n) 互质的 e，求 d 使 <span aria-label="de ≡ 1 (mod φ(n))" class="math-inline-source" data-tex="de \equiv 1 (\operatorname{mod} φ(n))">\(de \equiv 1 (\operatorname{mod} φ(n))\)</span>。</p><div aria-label="加密 C = Mᵉ mod n　　解密 M = Cᵈ mod n" class="formula anim-item mathjax-display-source" data-tex="\text{加密} C = M^{e} \operatorname{mod} n \text{解密} M = C^{d} \operatorname{mod} n">\[\displaystyle \text{加密} C = M^{e} \operatorname{mod} n \text{解密} M = C^{d} \operatorname{mod} n\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">公钥对 (n, e)，私钥对 (n, d)。不知 p、q 时对密文解密极其困难。</p>
 </div></div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>74 / 82</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.4 RSA 加密" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.4 RSA 加密</div><div>75 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>82 / 92</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.4 RSA 加密" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.4 RSA 加密</div><div>83 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.4 RSA 加密</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/case04_rsa.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/case04_rsa.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case04_rsa.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case04_rsa.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>75 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.3.4" data-theme="dark"><div class="chrome"><div>Python 示例 1.3.4</div><div>76 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>83 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Code" data-source="Python 实现示例 1.3.4" data-theme="dark"><div class="chrome"><div>Python 示例 1.3.4</div><div>84 / 92</div></div>
 <div class="slide-body">
 <div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1rem,2.2vh,1.8rem)">
 <div class="anim-item">
@@ -1265,8 +1518,8 @@ ciphertext = encrypt(public_key, 12345)
 print("密文:", ciphertext)
 print("解密后的明文:", decrypt(private_key, ciphertext))</code></pre></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>76 / 82</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="1.3.5 资源分配和优化" data-theme="light"><div class="chrome"><div>1.3.5 资源分配</div><div>77 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>84 / 92</div></div></section>
+<section class="slide light" data-screen-label="Case+Code" data-source="1.3.5 资源分配和优化" data-theme="light"><div class="chrome"><div>1.3.5 资源分配</div><div>85 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例五 · 资源分配</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">用最大公因数确定分配基本单位</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">某机构有总量为 R 的一种资源、M 个班级，按学生人数成比例分配。用各班学生数的 gcd 作为基本单位保证公平，再用排列组合分析方案优化利用率。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例</div><p class="body-zh" style="margin-top:.6vh">总资源 100，各班学生 [30, 20, 50]，按比例分配。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from math import gcd
@@ -1286,34 +1539,57 @@ students_per_class = [30, 20, 50]
 print(allocate_resources(resources,
                          students_per_class))</code></pre></div>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>77 / 82</div></div></section><section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.5 资源分配" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.5 资源分配</div><div>78 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>85 / 92</div></div></section>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.5 资源分配" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.5 资源分配</div><div>86 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.5 资源分配</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos/case05_resource_gcd.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos/case05_resource_gcd.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case05_resource_gcd.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case05_resource_gcd.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
-<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>78 / 82</div></div></section>
-<section class="slide dark" data-screen-label="Summary" data-source="1.3.6 小结" data-theme="dark"><div class="chrome"><div>1.3.6 小结</div><div>79 / 82</div></div>
+<div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>86 / 92</div></div></section>
+<section class="slide dark" data-screen-label="Summary" data-source="1.3.6 小结" data-theme="dark"><div class="chrome"><div>1.3.6 小结</div><div>87 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.6rem,4vh,3rem)">
 <div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">Hash 函数用大素数模数与小素数基数构造，减少碰撞，是数据摘要的基础</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">线性同余生成器用模运算递推产生伪随机序列，简单但可预测</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">模 10 加权校验码用于检测输入或传输错误，广泛见于信用卡号与 ISBN</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">RSA 把素数、欧拉函数与模幂结合成公钥加密，安全性源于大数分解困难</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">05</div><p class="body-zh">资源分配用最大公因数确定基本单位，结合排列组合优化利用率</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>79 / 82</div></div></section>
-<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 1 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>80 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>87 / 92</div></div></section>
+<section class="slide light mk-page mk-audio-page" data-screen-label="Podcast" data-source="播客音频 · 1.3 应用案例和 Python 实现" data-theme="light" data-mk-sec="1.3"><div class="chrome"><div>播客音频 · 1.3 应用案例和 Python 实现</div><div>88 / 92</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">播客音频</span><span class="mk-metaline">09:37 · 2.8 MB · 讲解音频版</span></div><div class="mk-audio-card anim-item"><button class="mk-abtn" type="button" data-mk-sec="1.3" aria-label="播放本节播客"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><div class="mk-audio-main"><h2 class="h2-zh">1.3 应用案例和 Python 实现</h2><p class="mk-audio-desc">本节内容的播客讲解版，适合课后复盘、通勤复习与考前串讲；点击波形任意位置可跳转收听。</p><div class="mk-wave" data-mk-sec="1.3" role="slider" aria-label="音频进度"><i style="height:51%"></i><i style="height:77%"></i><i style="height:83%"></i><i style="height:57%"></i><i style="height:53%"></i><i style="height:51%"></i><i style="height:23%"></i><i style="height:22%"></i><i style="height:49%"></i><i style="height:49%"></i><i style="height:54%"></i><i style="height:83%"></i><i style="height:77%"></i><i style="height:53%"></i><i style="height:59%"></i><i style="height:54%"></i><i style="height:33%"></i><i style="height:48%"></i><i style="height:73%"></i><i style="height:67%"></i><i style="height:74%"></i><i style="height:90%"></i><i style="height:67%"></i><i style="height:42%"></i><i style="height:47%"></i><i style="height:36%"></i><i style="height:21%"></i><i style="height:47%"></i><i style="height:65%"></i><i style="height:55%"></i><i style="height:67%"></i><i style="height:75%"></i><i style="height:46%"></i><i style="height:35%"></i><i style="height:49%"></i><i style="height:40%"></i><i style="height:42%"></i><i style="height:76%"></i><i style="height:85%"></i><i style="height:72%"></i><i style="height:82%"></i><i style="height:76%"></i><i style="height:42%"></i><i style="height:38%"></i><i style="height:50%"></i><i style="height:38%"></i><i style="height:47%"></i><i style="height:76%"></i><i style="height:69%"></i><i style="height:54%"></i><i style="height:63%"></i><i style="height:47%"></i><i style="height:20%"></i><i style="height:34%"></i><i style="height:49%"></i><i style="height:44%"></i><i style="height:66%"></i><i style="height:91%"></i><i style="height:75%"></i><i style="height:64%"></i><i style="height:71%"></i><i style="height:49%"></i><i style="height:32%"></i><i style="height:54%"></i></div><div class="mk-atime"><span data-mk-cur>0:00</span><span>09:37</span></div></div></div><ul class="mk-audio-tips anim-item"><li data-n="01">支持后台收听：翻页、查阅源码时音频不中断</li><li data-n="02">迷你播放器可调 1× / 1.25× / 1.5× / 2× 倍速</li><li data-n="03">进度自动记忆，下次从上次听到的位置继续</li></ul></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>88 / 92</div></div></section>
+<section class="slide dark mk-page mk-code-page" data-screen-label="SourceCode" data-source="配套源码 · 1.3 应用案例和 Python 实现" data-theme="dark" data-mk-sec="1.3"><div class="chrome"><div>配套源码 · 1.3 应用案例和 Python 实现</div><div>89 / 92</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">配套源码</span><span class="mk-metaline">5 个文件 · 共 80 行 · 可查看 / 复制 / 下载</span></div><h2 class="h2-zh mk-title anim-item">1.3 应用案例和 Python 实现 · Python 配套源码</h2><div class="mk-code-grid mk-rich anim-item"><button class="mk-cc" type="button" data-mk-code="1.3.1.py"><span class="mk-cc-name">1.3.1.py</span><span class="mk-cc-meta">12 行</span><pre class="mk-cc-prev">def hash_function(s, p, a):
+    n = len(s)
+    hash_value = 0
+    for i in range(n):
+        hash_value += ord(s[i]) * a**(n-i-1)</pre></button><button class="mk-cc" type="button" data-mk-code="1.3.2.py"><span class="mk-cc-name">1.3.2.py</span><span class="mk-cc-meta">14 行</span><pre class="mk-cc-prev">a = 1664525    #定义线性同余生成器的参数
+c = 1013904223
+m = 2**32
+seed = 12345    #初始种子
+def linear_congruential_generator(a, c, m, see</pre></button><button class="mk-cc" type="button" data-mk-code="1.3.3.py"><span class="mk-cc-name">1.3.3.py</span><span class="mk-cc-meta">7 行</span><pre class="mk-cc-prev">digits = [1, 2, 3, 4, 5, 6, 7]    #原始数字序列和加权因数
+weights = [2, 1, 2, 1, 2, 1, 2]
+#应用加权因数并计算总和
+weighted_sum = sum(d * w for d, w in zip(digit
+check_digit = weighted_sum % 10    #计算模10的余数作为</pre></button><button class="mk-cc" type="button" data-mk-code="1.3.4.py"><span class="mk-cc-name">1.3.4.py</span><span class="mk-cc-meta">30 行</span><pre class="mk-cc-prev">import random
+from sympy import isprime, mod_inverse
+def generate_large_prime(keysize):    #生成一个大素数
+    while True:
+        num = random.getrandbits(keysize)</pre></button><button class="mk-cc" type="button" data-mk-code="1.3.5.py"><span class="mk-cc-name">1.3.5.py</span><span class="mk-cc-meta">17 行</span><pre class="mk-cc-prev">from math import gcd
+from functools import reduce
+def find_gcd(list):
+    x = reduce(gcd, list)
+    return x</pre></button></div><p class="mk-foot-hint anim-item">点击任一文件查看完整高亮源码，支持一键复制与下载；按 <b>C</b> 打开本章源码浏览器</p></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>89 / 92</div></div></section>
+<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 1 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>90 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.6rem,4vh,3rem)">
 <div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">加法法则管互斥、乘法法则管顺序；排列计顺序、组合不计；鸽巢原理证明特定条件下某情况必然发生</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">整除与模运算是数论起点，同余对加法和乘法封闭，是处理周期性的核心工具</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">素数是数的原子，唯一分解定理给出每个整数唯一的素数分解；试除法查单个数、筛法找一批数</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>80 / 82</div></div></section>
-<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 2 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>81 / 82</div></div>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>90 / 92</div></div></section>
+<section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 2 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>91 / 92</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.6rem,4vh,3rem)">
 <div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">欧几里得算法辗转相除求 gcd，扩展版顺带给出贝祖系数；<span aria-label="lcm × gcd = |a×b|" class="math-inline-source" data-tex="\operatorname{lcm} \times \operatorname{gcd} = |a\times b|">\(\operatorname{lcm} \times \operatorname{gcd} = |a\times b|\)</span> 把两者联系起来</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">05</div><p class="body-zh">同余方程在 <span aria-label="gcd(a,n)=1" class="math-inline-source" data-tex="\operatorname{gcd}(a,n)=1">\(\operatorname{gcd}(a,n)=1\)</span> 时有唯一解；中国剩余定理在两两互质模数下联立求解</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">06</div><p class="body-zh">欧拉函数 φ(n) 与费马小定理 <span aria-label="a^(p−1)≡1(mod p)" class="math-inline-source" data-tex="a^{p-1}\equiv 1(\operatorname{mod} p)">\(a^{p-1}\equiv 1(\operatorname{mod} p)\)</span> 是 RSA、区块链等现代密码学的数学根基</p></div>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>81 / 82</div></div></section>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>91 / 92</div></div></section>
 <section class="slide dark bare" data-screen-label="Closing" data-source="本章收束" data-theme="dark">
 <div class="slide-body" style="align-items:center;text-align:center">
 <div class="w-quote guest-mark">
@@ -1321,7 +1597,7 @@ print(allocate_resources(resources,
 <h2 class="h1-zh anim-item" style="max-width:14em">从计数原理到 RSA，离散世界的底层语言已经铺好</h2>
 <p class="body-zh anim-item" style="max-width:24em;margin:clamp(1.6rem,3.5vh,2.6rem) auto 0;opacity:.62">本章 Python 程序源码与学习指南均提供二维码下载。下一步：把这些计数与数论工具带进集合、关系与图论。</p>
 </div>
-</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>82 / 82</div></div></section>
+</div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>92 / 92</div></div></section>
 </div>
 <div id="nav"></div>
 <script>
@@ -1625,7 +1901,7 @@ print(allocate_resources(resources,
     var s=slides[i];
     if(!s.__tbHinted && s.querySelector('.tb-ans')){s.__tbHinted=1;toast('本页为<b>习题</b>：答案已隐藏，点击模糊处逐题查看');}
   });}
-  new MutationObserver(onChange).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});
+  try{new MutationObserver(onChange).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});}catch(e){}
 
   /* ---------- 提示气泡 ---------- */
   var toastT=null;
@@ -1714,7 +1990,7 @@ print(allocate_resources(resources,
         });
       });
     });
-    slides.forEach(function(s){ obs.observe(s,{attributes:true,attributeFilter:['class']}); });
+    slides.forEach(function(s){try{obs.observe(s,{attributes:true,attributeFilter:['class']});}catch(e){}});
   }
 
   document.addEventListener('play', function(e){
@@ -1745,5 +2021,312 @@ print(allocate_resources(resources,
 })();
 </script>
 
+
+<!--MK-ASSETS-V1-->
+<audio id="mk-audio" preload="none"></audio>
+<div id="mk-mini" aria-label="播客迷你播放器"><button class="mk-m-play" type="button" aria-label="播放 / 暂停"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><span class="mk-m-info"><span class="mk-m-t"></span><span class="mk-m-bar"><span class="mk-m-fill"></span></span></span><span class="mk-m-time">0:00 / 0:00</span><button class="mk-m-rate" type="button" aria-label="倍速">1×</button><button class="mk-m-x" type="button" aria-label="关闭播放器">&times;</button></div>
+<script type="application/json" id="mk-data">{"ch":1,"sections":[{"k":"1.1","title":"计数基础","full":"1.1 计数基础","start":6,"v":{"path":"assets/micro-lectures/1.1-counting-basics.mp4","sec":449.2,"mb":14.4,"slide":6},"a":{"path":"assets/podcasts/1.1-counting-basics.mp3","sec":630.8,"mb":3,"slide":27},"c":{"slide":28,"files":["1.1.1.py","1.1.2.py","1.1.3.py","1.1.4.py","1.1.5.py"]}},{"k":"1.2","title":"数论基础","full":"1.2 数论基础","start":32,"v":{"path":"assets/micro-lectures/1.2-number-theory-basics.mp4","sec":391.1,"mb":11.8,"slide":32},"a":{"path":"assets/podcasts/1.2-number-theory-basics.mp3","sec":615.1,"mb":2.9,"slide":67},"c":{"slide":68,"files":["1.2.1.py","1.2.2.py","1.2.3.py","1.2.4.py","1.2.5.py","1.2.6.py","1.2.7.py","1.2.8.py","1.2.9.py","1.2.10.py","1.2.11.py","1.2.12.py","1.2.13.py","1.2.14.py"]}},{"k":"1.3","title":"应用案例和 Python 实现","full":"1.3 应用案例和 Python 实现","start":72,"v":{"path":"assets/micro-lectures/1.3-applications.mp4","sec":541.4,"mb":16.9,"slide":72},"a":{"path":"assets/podcasts/1.3-applications.mp3","sec":577.4,"mb":2.8,"slide":87},"c":{"slide":88,"files":["1.3.1.py","1.3.2.py","1.3.3.py","1.3.4.py","1.3.5.py"]}}],"files":{"1.1.1.py":{"lines":21,"dir":"CH1","sec":"1.1","src":"import itertools\nfrom itertools import product\nnumbers = [1, 2, 3, 4]\npermutations = itertools.permutations(numbers, 3)\nprint(\"所有数字排列（选取3个）：\")\nfor p in permutations:\n    print(p)\nathletes = [1, 2, 3, 4]    #代表四个运动员\nrankings = itertools.permutations(athletes)\nprint(\"所有可能的获奖者排名组合：\")\nfor r in rankings:\n    print(r)\nattendees = range(1, 6)    #5位与会者\nseating_arrangements = itertools.permutations(attendees)\nprint(\"所有可能的座位安排：\")\nfor arrangement in seating_arrangements:\n    print(arrangement)\ncombinations = product(range(10), repeat=4)\nprint(\"所有可能的四位数字组合：\")\nfor c in combinations:\n    print(''.join(map(str, c)))\n"},"1.1.2.py":{"lines":9,"dir":"CH1","sec":"1.1","src":"from itertools import permutations\ndef find_permutations(multiset):\n    s = ''.join([char * count for char, count in multiset.items()])    #转换为字符串\n    perms = set(permutations(s))    #找出所有可能的排列，然后使用set去重\n    return [''.join(p) for p in perms]    #将排列元组转换回字符串\nmultiset = {'A': 2, 'B': 3}    #多重集S={2×A, 3×B}\npermutations = find_permutations(multiset)   #获取排列\nprint(f\"Number of permutations: {len(permutations)}\")\nprint(\"Permutations:\", permutations)\n"},"1.1.3.py":{"lines":9,"dir":"CH1","sec":"1.1","src":"import math\ntotal_people = 200\nwinners = 30\nlottery_combinations = math.comb(total_people, winners)\nprint(\"抽奖活动的不同获奖组合数：\", lottery_combinations)\ncommittee_members = 15\nselected_members = 5\ncommittee_combinations = math.comb(committee_members, selected_members)\nprint(\"选择委员会成员的不同组合数：\", committee_combinations)\n"},"1.1.4.py":{"lines":9,"dir":"CH1","sec":"1.1","src":"from itertools import combinations\ndef find_combinations(multiset, r):\n    elements = [char for char, count in multiset.items() for _ in range(count)]\n    combs = set(combinations(elements, r))    #找出所有可能的组合，并去重\n    return [''.join(c) for c in combs]    #将组合元组转换回字符串\nmultiset = {'A': 3, 'B': 2, 'C': 1}\ncombinations = find_combinations(multiset, 3)    #获取组合\nprint(f\"Number of combinations: {len(combinations)}\")\nprint(\"Combinations:\", combinations)\n"},"1.1.5.py":{"lines":11,"dir":"CH1","sec":"1.1","src":"def calculate_min_cities_with_extra_snacks(num_snacks, num_cities):\n    #若小吃的数量不多于城市的数量，则不可能有城市获得超过一种小吃。\n    if num_snacks <= num_cities:\n        return 0\n    #计算至少会有多少个城市获得超过一种小吃。\n    extra_snacks = num_snacks - num_cities\n    min_cities_with_extra = min(extra_snacks, num_cities)\n    return min_cities_with_extra\nnum_snacks = 20    #小吃总数\nnum_cities = 14    #城市总数\nprint(calculate_min_cities_with_extra_snacks(num_snacks, num_cities))\n"},"1.2.1.py":{"lines":6,"dir":"CH1","sec":"1.2","src":"a = 12\nb = 3\nif a % b == 0:    #使用模运算符检查b是否整除a\n    print(f\"{b} 整除 {a}\")\nelse:\n    print(f\"{b} 不整除 {a}\")\n"},"1.2.2.py":{"lines":5,"dir":"CH1","sec":"1.2","src":"a = 29\nb = 5\nq = a // b    #计算商\nr = a % b    #计算余数\nprint(q, r)\n"},"1.2.3.py":{"lines":7,"dir":"CH1","sec":"1.2","src":"n = 5    #定义模数\na = 2    #给定同余关系\nc = 3\nif (a + c) % n == 0:    #使用加法性质检查同余关系\n    print(f\"{a} + {c} 在模{n}下同余于 0\")\nelse:\n    print(f\"{a} + {c} 在模{n}下不同余于 0\")\n"},"1.2.4.py":{"lines":7,"dir":"CH1","sec":"1.2","src":"n = 7    #定义模数\na = 3    #给定同余关系\nc = 4\nif (a * c) % n == 0:    #使用乘法性质检查同余关系\n    print(f\"{a} * {c} 在模{n}下同余于 0\")\nelse:\n    print(f\"{a} * {c} 在模{n}下不同余于 0\")\n"},"1.2.5.py":{"lines":21,"dir":"CH1","sec":"1.2","src":"def prime_factors(n):\n    factors = []    #用于存储素数因数\n    exponent = []    #用于存储相应素数因数的指数\n    while n % 2 == 0:    #找到n中的所有2的因数，并计算其指数\n        factors.append(2)\n        n //= 2\n    for i in range(3, int(n**0.5) + 1, 2):    #从3开始，逐渐找到更大的素数因数\n        while n % i == 0:\n            factors.append(i)\n            n //= i\n    if n > 1:    #若n仍然大于1，那么它本身就是素数因数\n        factors.append(n)\n    for factor in set(factors):     #计算每个素数因数的指数\n        exponent.append(factors.count(factor))\n    return list(set(factors)), exponent\nn = 100    #输入一个整数n来分解\nfactors, exponents = prime_factors(n)\nprint(f\"{n}的素因数分解为：\")\nfor factor, exponent in zip(factors, exponents):\n    print(f\"{factor}^{exponent}\", end=\" * \")\nprint(\"\\b\\b\")\n"},"1.2.6.py":{"lines":16,"dir":"CH1","sec":"1.2","src":"def is_prime(n):\n    if n <= 1:\n        return False    #1和负数不是素数\n    if n == 2:\n        return True    #2是素数\n    if n % 2 == 0:\n        return False    #偶数除了2之外都不是素数\n    for m in range(3, int(n ** 0.5) + 1, 2):\n        if n % m == 0:    #从3开始，只检查奇数，因为偶数已经在上面排除了\n            return False    #若n能被m整除，那么n不是素数\n    return True    #若没有找到能整除n的m，那么n是素数\nn = 17011\nif is_prime(n):\n    print(f\"{n} 是素数\")\nelse:\n    print(f\"{n} 不是素数\")\n"},"1.2.7.py":{"lines":13,"dir":"CH1","sec":"1.2","src":"def sieve_of_eratosthenes(N):\n    is_prime = [True] * (N + 1)    #创建一个布尔数组，用于标记是否为素数\n    is_prime[0] = is_prime[1] = False    #0和1不是素数\n    for p in range(2, int(N**0.5) + 1):    #从2开始，遍历到sqrt(N)\n        if is_prime[p]:\n            for i in range(p * p, N + 1, p):    #将p的倍数标记为非素数\n                is_prime[i] = False\n    primes = [p for p in range(2, N + 1) if is_prime[p]]    #收集所有素数\n    return primes\nN = 300    #找出小于或等于N的所有素数\nprime_numbers = sieve_of_eratosthenes(N)\nprint(f\"小于或等于{N}的所有素数：\")\nprint(prime_numbers)\n"},"1.2.8.py":{"lines":12,"dir":"CH1","sec":"1.2","src":"def euclidean_algorithm(a, b):\n    a = abs(a)\n    b = abs(b)\n    while b != 0:\n        remainder = a % b\n        a = b\n        b = remainder\n    return a\nnum1 = -48\nnum2 = 18\ngcd = euclidean_algorithm(num1, num2)    #计算最大公因数\nprint(f\"{abs(num1)} 和 {abs(num2)} 的最大公因数是 {gcd}\")\n"},"1.2.9.py":{"lines":11,"dir":"CH1","sec":"1.2","src":"def extended_gcd(a, b):\n    if b == 0:\n        return (a, 1, 0)\n    else:\n        gcd, x, y = extended_gcd(b, a % b)\n        return (gcd, y, x - (a // b) * y)\na = 48\nb = 18\ngcd, x, y = extended_gcd(a, b)\nprint(f\"{a} 和 {b} 的最大公因数是 {gcd}\")\nprint(f\"满足条件的整数 x 和 y 分别为：x = {x}, y = {y}\")\n"},"1.2.10.py":{"lines":12,"dir":"CH1","sec":"1.2","src":"def gcd(a, b):\n    while b:\n        a, b = b, a % b\n    return a\ndef lcm(a, b):\n    if a == 0 or b == 0:    #当其中一个数为0时，它们的lcm为0\n        return 0\n    return abs(a * b) //gcd(a, b)\nnum1 = 12\nnum2 = 15\nlcm_result = lcm(num1, num2)    #计算最小公倍数\nprint(f\"{num1} 和 {num2} 的最小公倍数是 {lcm_result}\")\n"},"1.2.11.py":{"lines":11,"dir":"CH1","sec":"1.2","src":"def linear_congruence(a, b, m):\n    solutions = []\n    for x in range(m):\n        if (a * x) % m == b:\n            solutions.append(x)\n    return solutions\na = 3    #解3x=4 mod 7\nb = 4\nm = 7\nsolutions = linear_congruence(a, b, m)\nprint(f\"Solutions of {a}x = {b} (mod {m}): {solutions}\")\n"},"1.2.12.py":{"lines":13,"dir":"CH1","sec":"1.2","src":"def chinese_remainder_theorem(equations):\n    N = 1    #计算N为所有模数的乘积\n    for q, ni in equations:\n        N *= ni\n    x = 0    #计算每个方程的部分乘积和逆元\n    for ai, ni in equations:\n        Ni = N // ni\n        Mi = pow(Ni, -1, ni)    #计算Ni模ni的逆元Mi\n        x += ai * Ni * Mi    #累加解\n    return x % N    #返回最小非负解\nequations = [(2, 3), (3, 5)]    #x=2 mod 3和x=3 mod 5的方程组\nsolution = chinese_remainder_theorem(equations)\nprint(solution)\n"},"1.2.13.py":{"lines":21,"dir":"CH1","sec":"1.2","src":"a = 2\nn = 9\ndef euler_phi(n):    #计算φ(9)\n    result = n\n    p = 2\n    while p * p <= n:\n        if n % p == 0:\n            while n % p == 0:\n                n //= p\n            result -= result // p\n        p += 1\n    if n > 1:\n        result -= result // n\n    return result\nphi_n = euler_phi(n)\nprint(phi_n)\nresult = pow(a, phi_n, n)    #检查26=1 mod 9\nif result == 1:\n    print(f\"{a}^{phi_n} = 1 (mod {n})\")\nelse:\n    print(f\"{a}^{phi_n} = {result} (mod {n})\")\n"},"1.2.14.py":{"lines":3,"dir":"CH1","sec":"1.2","src":"#计算2的100次方模7的结果\nresult = (2 ** 100) % 7\nprint(\"结果是:\", result)\n"},"1.3.1.py":{"lines":12,"dir":"CH1","sec":"1.3","src":"def hash_function(s, p, a):\n    n = len(s)\n    hash_value = 0\n    for i in range(n):\n        hash_value += ord(s[i]) * a**(n-i-1)\n    hash_value = hash_value % p\n    return hash_value\np = 997    #一个大素数\na = 31    #一个较小的素数\ns = \"Hello, world!\"    #示例字符串\nhash_value = hash_function(s, p, a)\nprint(f\"Hash value of '{s}': {hash_value}\")\n"},"1.3.2.py":{"lines":14,"dir":"CH1","sec":"1.3","src":"a = 1664525    #定义线性同余生成器的参数\nc = 1013904223\nm = 2**32\nseed = 12345    #初始种子\ndef linear_congruential_generator(a, c, m, seed, n):    #生成随机数序列的函数\n    random_numbers = []\n    x = seed\n    for _ in range(n):\n        x = (a * x + c) % m\n        random_numbers.append(x)\n    return random_numbers\nn_numbers = 5    #生成序列的前5个元素\nsequence = linear_congruential_generator(a, c, m, seed, n_numbers)\nprint(sequence)\n"},"1.3.3.py":{"lines":7,"dir":"CH1","sec":"1.3","src":"digits = [1, 2, 3, 4, 5, 6, 7]    #原始数字序列和加权因数\nweights = [2, 1, 2, 1, 2, 1, 2]\n#应用加权因数并计算总和\nweighted_sum = sum(d * w for d, w in zip(digits, weights))\ncheck_digit = weighted_sum % 10    #计算模10的余数作为校验码\ndigits.append(check_digit)    #将校验码附加到原始序列\nprint(\"原始序列加上校验码：\", digits)\n"},"1.3.4.py":{"lines":30,"dir":"CH1","sec":"1.3","src":"import random\nfrom sympy import isprime, mod_inverse\ndef generate_large_prime(keysize):    #生成一个大素数\n    while True:\n        num = random.getrandbits(keysize)\n        if isprime(num):\n            return num\ndef generate_keys(keysize):   #生成RSA密钥\n    p = generate_large_prime(keysize)    #选择大素数p和q\n    q = generate_large_prime(keysize)\n    n = p * q   #计算n=p*q\n    phi_n = (p - 1) * (q - 1)    #计算欧拉函数ϕ(n)=(p−1)*(q−1)\n    e = 65537    #选择常用的公钥指数e\n    d = mod_inverse(e, phi_n)    #计算私钥d\n    return ((n, e), (n, d))    #返回公钥和私钥\ndef encrypt(public_key, plaintext):   #加密函数\n    n, e = public_key\n    cipher = pow(plaintext, e, n)\n    return cipher\ndef decrypt(private_key, ciphertext):    #解密函数\n    n, d = private_key\n    plain = pow(ciphertext, d, n)\n    return plain\nkeysize = 1024    #密钥大小\npublic_key, private_key = generate_keys(keysize)    #生成密钥\nplaintext = 12345    #明文消息\nciphertext = encrypt(public_key, plaintext)    #加密\nprint(\"密文:\", ciphertext)\ndecrypted = decrypt(private_key, ciphertext)    #解密\nprint(\"解密后的明文:\", decrypted)\n"},"1.3.5.py":{"lines":17,"dir":"CH1","sec":"1.3","src":"from math import gcd\nfrom functools import reduce\ndef find_gcd(list):\n    x = reduce(gcd, list)\n    return x\ndef allocate_resources(resources, students_per_class):\n    #计算所有班级学生数的最大公约数，作为分配的基本单位\n    gcd_students = find_gcd(students_per_class)\n    total_units = sum(students_per_class) // gcd_students\n    resource_per_unit = resources // total_units\n    #分配资源\n    allocation = [students // gcd_students * resource_per_unit for students in students_per_class]\n    return allocation\nresources = 100    #总资源数量\nstudents_per_class = [30, 20, 50]    #各班级学生数量\nallocation = allocate_resources(resources, students_per_class)    #资源分配\nprint(f'Resource allocation: {allocation}')\n"}},"nv":3,"na":3,"nc":24}</script>
+<script id="mk-runtime">
+(function(){
+  if(window.__mkInit) return; window.__mkInit=true;
+  var el=document.getElementById('mk-data'); if(!el) return;
+  var D=JSON.parse(el.textContent);
+  var SEC=D.sections, FILES=D.files;
+  var deck=document.getElementById('deck'); if(!deck) return;
+  var slides=Array.prototype.slice.call(deck.querySelectorAll('.slide'));
+
+  function $(s,r){return (r||document).querySelector(s);}
+  function $$(s,r){return Array.prototype.slice.call((r||document).querySelectorAll(s));}
+  function esc(s){return String(s).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c];});}
+  function abs(p){try{return new URL(p,document.baseURI||location.href).href;}catch(e){return p;}}
+  function fmt(s){s=Math.max(0,Math.round(s||0));return Math.floor(s/60)+':'+('0'+(s%60)).slice(-2);}
+  function toast(html){var t=document.getElementById('tb-toast');if(!t)return;t.innerHTML=html;t.classList.add('tb-show');clearTimeout(t.__mk);t.__mk=setTimeout(function(){t.classList.remove('tb-show');},2400);}
+  function curIdx(){for(var i=0;i<slides.length;i++){if(slides[i].classList.contains('active'))return i;}return 0;}
+  function jump(i){closePanel();if(window.__deckGoTo)window.__deckGoTo(+i);}
+  function secOf(k){for(var i=0;i<SEC.length;i++){if(SEC[i].k===k)return SEC[i];}return null;}
+  /* 当前所处小节：取起始页不晚于当前页的最后一节 */
+  function curSec(){var i=curIdx(),best=SEC[0]||null;for(var j=0;j<SEC.length;j++){if(SEC[j].start<=i)best=SEC[j];}return best;}
+
+  /* ============ 微课视频：按需加载，避免预载数 GB ============ */
+  document.addEventListener('click',function(e){
+    var cov=e.target.closest?e.target.closest('.mk-cover'):null; if(!cov)return;
+    var stage=cov.closest('.mk-stage'); var v=stage&&stage.querySelector('video'); if(!v)return;
+    if(!v.getAttribute('src')){
+      v.setAttribute('src',abs(v.getAttribute('data-mk-src')||''));
+      v.setAttribute('preload','auto');
+      try{v.load();}catch(err){}
+    }
+    stage.classList.add('mk-live');
+    try{v.play();}catch(err){}
+  });
+  /* 离开页面暂停视频 */
+  try{new MutationObserver(function(){
+    slides.forEach(function(s){
+      if(s.classList.contains('active'))return;
+      $$('video',s).forEach(function(v){try{v.pause();}catch(e){}});
+    });
+  }).observe(deck,{subtree:true,attributes:true,attributeFilter:['class']});}catch(e){}
+
+  /* ============ 播客音频：全局单例播放器 ============ */
+  var AU=document.getElementById('mk-audio');
+  var mini=document.getElementById('mk-mini');
+  var curKey=null, RATES=[1,1.25,1.5,2], ri=0;
+
+  function posKey(k){return 'mk-pos-ch'+D.ch+'-'+k;}
+  function savePos(){if(!curKey||!AU.duration)return;try{
+    if(AU.currentTime>3&&AU.currentTime<AU.duration-3)localStorage.setItem(posKey(curKey),String(Math.floor(AU.currentTime)));
+    else localStorage.removeItem(posKey(curKey));
+  }catch(e){}}
+
+  function loadSec(k){
+    var s=secOf(k); if(!s||!s.a)return null;
+    if(curKey!==k){
+      savePos(); curKey=k;
+      AU.src=abs(s.a.path); AU.playbackRate=RATES[ri];
+      var p=0; try{p=parseInt(localStorage.getItem(posKey(k))||'0',10)||0;}catch(e){}
+      if(p>0){AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);try{AU.currentTime=p;}catch(e){}});}
+      $('.mk-m-t',mini).textContent=s.full;
+      mini.classList.add('mk-show');
+    }
+    return s;
+  }
+  function playSec(k){
+    var s=loadSec(k); if(!s)return;
+    $$('video').forEach(function(v){try{v.pause();}catch(e){}});
+    var pr=AU.play();
+    if(pr&&pr.catch)pr.catch(function(){toast('音频加载中，请稍候再试');});
+  }
+  function toggleSec(k){
+    if(curKey===k&&!AU.paused){AU.pause();}else{playSec(k);}
+  }
+  window.__mkPlaySection=playSec;
+
+  AU.addEventListener('play',syncUI);
+  AU.addEventListener('pause',function(){savePos();syncUI();});
+  AU.addEventListener('ended',function(){try{localStorage.removeItem(posKey(curKey));}catch(e){}syncUI();});
+  AU.addEventListener('timeupdate',function(){syncUI();if(!AU.__sv||Date.now()-AU.__sv>4000){AU.__sv=Date.now();savePos();}});
+  AU.addEventListener('error',function(){toast('音频文件读取失败，请确认 assets/podcasts 完整');});
+  document.addEventListener('play',function(e){if(e.target&&e.target.tagName==='VIDEO'){try{AU.pause();}catch(err){}}},true);
+
+  function syncUI(){
+    var playing=!AU.paused&&!AU.ended;
+    var dur=AU.duration||0, cu=AU.currentTime||0, pct=dur?cu/dur:0;
+    mini.classList.toggle('mk-on',playing);
+    $('.mk-m-fill',mini).style.width=(pct*100).toFixed(2)+'%';
+    $('.mk-m-time',mini).textContent=fmt(cu)+' / '+fmt(dur);
+    /* 幻灯片上的音频卡片 */
+    $$('.mk-abtn').forEach(function(b){
+      var on=playing&&b.getAttribute('data-mk-sec')===curKey;
+      b.classList.toggle('mk-playing',on);
+    });
+    $$('.mk-wave').forEach(function(w){
+      var mine=w.getAttribute('data-mk-sec')===curKey;
+      var bars=w.children, n=bars.length, lim=mine?Math.round(pct*n):0;
+      for(var i=0;i<n;i++)bars[i].classList.toggle('mk-on',i<lim);
+      var t=w.parentNode.querySelector('[data-mk-cur]');
+      if(t)t.textContent=mine?fmt(cu):'0:00';
+    });
+    /* 面板列表 */
+    $$('.mk-li.a').forEach(function(li){
+      li.classList.toggle('mk-playing',playing&&li.getAttribute('data-mk-sec')===curKey);
+    });
+  }
+
+  /* 幻灯片音频卡片交互 */
+  document.addEventListener('click',function(e){
+    var b=e.target.closest?e.target.closest('.mk-abtn'):null;
+    if(b){toggleSec(b.getAttribute('data-mk-sec'));return;}
+    var w=e.target.closest?e.target.closest('.mk-wave'):null;
+    if(w){
+      var k=w.getAttribute('data-mk-sec');
+      var r=w.getBoundingClientRect(), p=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width));
+      if(curKey!==k){
+        loadSec(k);
+        AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);try{AU.currentTime=p*AU.duration;}catch(err){}});
+      }else if(AU.duration){
+        try{AU.currentTime=p*AU.duration;}catch(err){}
+      }
+      playSec(k);
+      return;
+    }
+    var g=e.target.closest?e.target.closest('[data-mk-go]'):null;
+    if(g&&!g.hasAttribute('disabled')){jump(g.getAttribute('data-mk-go'));return;}
+    var c=e.target.closest?e.target.closest('[data-mk-code]'):null;
+    if(c){openPanel('c');showFile(c.getAttribute('data-mk-code'));return;}
+  });
+
+  /* 迷你播放器 */
+  $('.mk-m-play',mini).onclick=function(){if(curKey)toggleSec(curKey);};
+  $('.mk-m-bar',mini).onclick=function(e){
+    if(!AU.duration)return;
+    var r=this.getBoundingClientRect();
+    AU.currentTime=Math.min(1,Math.max(0,(e.clientX-r.left)/r.width))*AU.duration;
+  };
+  $('.mk-m-rate',mini).onclick=function(){
+    ri=(ri+1)%RATES.length; AU.playbackRate=RATES[ri];
+    this.textContent=RATES[ri]+'×'; toast('播放速度：<b>'+RATES[ri]+'×</b>');
+  };
+  $('.mk-m-x',mini).onclick=function(){
+    try{AU.pause();}catch(e){}
+    savePos(); mini.classList.remove('mk-show');
+  };
+
+  /* ============ 数字资源面板 ============ */
+  var panel=document.createElement('div');
+  panel.id='mk-panel'; panel.className='tb-overlay';
+  panel.innerHTML='<div class="tb-panel">'
+    +'<div class="tb-phead"><div class="tb-ptitle">数字资源 <small>第 '+D.ch+' 章</small></div><button class="tb-close" type="button" aria-label="关闭">&times;</button></div>'
+    +'<div class="mk-tabs">'
+    +'<button class="mk-tab mk-cur" data-mk-tab="v">微课视频 <small>'+D.nv+'</small></button>'
+    +'<button class="mk-tab" data-mk-tab="a">播客音频 <small>'+D.na+'</small></button>'
+    +'<button class="mk-tab" data-mk-tab="c">配套源码 <small>'+D.nc+'</small></button>'
+    +'</div>'
+    +'<div class="tb-pbody" style="padding:0"><div class="mk-pane mk-cur" id="mk-pane-v"></div><div class="mk-pane" id="mk-pane-a"></div><div class="mk-pane" id="mk-pane-c"></div></div>'
+    +'</div>';
+  document.body.appendChild(panel);
+  panel.addEventListener('click',function(e){if(e.target===panel)closePanel();});
+  panel.addEventListener('wheel',function(e){e.stopPropagation();},{passive:true});
+  $('.tb-close',panel).onclick=closePanel;
+
+  function closePanel(){panel.classList.remove('tb-show');}
+  function openPanel(tab){
+    $$('.tb-overlay.tb-show').forEach(function(o){o.classList.remove('tb-show');});
+    panel.classList.add('tb-show');
+    if(tab)setTab(tab);
+  }
+  function setTab(t){
+    $$('.mk-tab',panel).forEach(function(b){b.classList.toggle('mk-cur',b.getAttribute('data-mk-tab')===t);});
+    $$('.mk-pane',panel).forEach(function(p){p.classList.toggle('mk-cur',p.id==='mk-pane-'+t);});
+  }
+  $$('.mk-tab',panel).forEach(function(b){b.onclick=function(){setTab(b.getAttribute('data-mk-tab'));};});
+
+  /* --- 微课 / 播客列表 --- */
+  (function(){
+    var hv='<div class="mk-list">',ha='<div class="mk-list">';
+    SEC.forEach(function(s){
+      if(s.v)hv+='<button class="mk-li v" data-mk-go="'+s.v.slide+'"><span class="mk-li-ic">'+s.k+'</span>'
+        +'<span class="mk-li-b"><span class="mk-li-t">'+esc(s.title)+'</span><span class="mk-li-m">'+fmt(s.v.sec)+' · '+s.v.mb+' MB</span></span>'
+        +'<span class="mk-li-go">前往 →</span></button>';
+      if(s.a)ha+='<button class="mk-li a" data-mk-sec="'+s.k+'" data-mk-play="1"><span class="mk-li-ic">'
+        +'<svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>'
+        +'<svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></span>'
+        +'<span class="mk-li-b"><span class="mk-li-t">'+s.k+' '+esc(s.title)+'</span><span class="mk-li-m">'+fmt(s.a.sec)+' · '+s.a.mb+' MB</span></span>'
+        +'<span class="mk-li-go">播放</span></button>';
+    });
+    $('#mk-pane-v').innerHTML=hv+'</div>';
+    $('#mk-pane-a').innerHTML=ha+'</div>';
+    $$('.mk-li.a').forEach(function(li){li.onclick=function(){toggleSec(li.getAttribute('data-mk-sec'));};});
+  })();
+
+  /* --- 源码浏览器 --- */
+  function hl(code){
+    var re=/(#[^\n]*)|('{3}[\s\S]*?'{3}|"{3}[\s\S]*?"{3}|'(?:\\.|[^'\\\n])*'|"(?:\\.|[^"\\\n])*")|\b(False|None|True|and|as|assert|async|await|break|class|continue|def|del|elif|else|except|finally|for|from|global|if|import|in|is|lambda|nonlocal|not|or|pass|raise|return|try|while|with|yield)\b|\b(abs|all|any|bin|bool|chr|dict|divmod|enumerate|filter|float|format|frozenset|input|int|isinstance|len|list|map|max|min|open|ord|pow|print|range|repr|reversed|round|set|sorted|str|sum|tuple|type|zip)\b|\b(\d+(?:\.\d+)?)\b/g;
+    var out='',last=0,m;
+    while((m=re.exec(code))!==null){
+      out+=esc(code.slice(last,m.index));
+      var cls=m[1]?'c':m[2]?'s':m[3]?'k':m[4]?'b':'n';
+      out+='<span class="'+cls+'">'+esc(m[0])+'</span>';
+      last=re.lastIndex;
+    }
+    return out+esc(code.slice(last));
+  }
+  (function buildSrc(){
+    var side='';
+    SEC.forEach(function(s){
+      if(!s.c||!s.c.files.length)return;
+      side+='<div class="mk-src-grp">'+s.k+' '+esc(s.title)+'</div>';
+      s.c.files.forEach(function(n){
+        side+='<button class="mk-src-f" data-mk-file="'+n+'">'+n+'<span>'+FILES[n].lines+' 行</span></button>';
+      });
+    });
+    $('#mk-pane-c').innerHTML='<div class="mk-src"><div class="mk-src-side">'+(side||'<div class="mk-src-empty">本章无配套源码</div>')+'</div>'
+      +'<div class="mk-src-main"><div class="mk-src-bar"><div class="mk-src-name" id="mk-src-name">选择左侧文件</div>'
+      +'<button class="mk-btn" id="mk-copy">复制代码</button>'
+      +'<button class="mk-btn" id="mk-dl">下载 .py</button>'
+      +'<button class="mk-btn" id="mk-dl-all">打包下载本章</button></div>'
+      +'<div class="mk-src-code"><pre id="mk-src-pre"><code></code></pre></div></div></div>';
+    $$('.mk-src-f').forEach(function(b){b.onclick=function(){showFile(b.getAttribute('data-mk-file'));};});
+    $('#mk-copy').onclick=function(){copy(cf?FILES[cf].src:'');};
+    $('#mk-dl').onclick=function(){if(cf)dl(cf,FILES[cf].src);};
+    $('#mk-dl-all').onclick=dlAll;
+  })();
+
+  var cf=null;
+  function showFile(n){
+    if(!FILES[n]){toast('未找到源码文件 '+esc(n));return;}
+    cf=n;
+    $$('.mk-src-f').forEach(function(b){b.classList.toggle('mk-cur',b.getAttribute('data-mk-file')===n);});
+    $('#mk-src-name').innerHTML=esc(n)+'<em>'+FILES[n].lines+' 行 · '+esc(FILES[n].dir)+'</em>';
+    $('#mk-src-pre').innerHTML='<code>'+hl(FILES[n].src)+'</code>';
+    $('.mk-src-code').scrollTop=0;
+    var b=$('.mk-src-f.mk-cur');if(b)b.scrollIntoView({block:'nearest'});
+  }
+  function copy(text){
+    if(!text){toast('请先选择一个源码文件');return;}
+    function ok(){toast('源码已复制到剪贴板');}
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(ok,function(){fb(text);ok();});}
+    else{fb(text);ok();}
+    function fb(t){try{var ta=document.createElement('textarea');ta.value=t;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();document.execCommand('copy');document.body.removeChild(ta);}catch(e){}}
+  }
+  function saveBlob(name,text,mime){
+    try{
+      var b=new Blob(['﻿'+text],{type:(mime||'text/plain')+';charset=utf-8'});
+      var u=URL.createObjectURL(b), a=document.createElement('a');
+      a.href=u;a.download=name;document.body.appendChild(a);a.click();
+      setTimeout(function(){URL.revokeObjectURL(u);a.remove();},600);
+      toast('已下载 <b>'+esc(name)+'</b>');
+    }catch(e){toast('浏览器阻止了下载，请从 assets/source-code 目录直接取用');}
+  }
+  function dl(n,src){saveBlob(n,src,'text/x-python');}
+  function dlAll(){
+    var out='# 离散数学 · 第 '+D.ch+' 章 配套 Python 源码合集\n# 共 '+D.nc+' 个文件，导出自数字教材\n';
+    SEC.forEach(function(s){
+      if(!s.c)return;
+      s.c.files.forEach(function(n){
+        out+='\n\n# '+'='.repeat(64)+'\n# '+n+'  ('+s.k+' '+s.title+')\n# '+'='.repeat(64)+'\n'+FILES[n].src;
+      });
+    });
+    saveBlob('离散数学_第'+D.ch+'章_配套源码合集.py',out,'text/x-python');
+  }
+
+  /* ============ 控制坞按钮 ============ */
+  var dock=document.getElementById('tb-dock');
+  if(dock){
+    var btn=document.createElement('button');
+    btn.className='tb-ctl'; btn.type='button';
+    btn.setAttribute('data-tip','数字资源  (V)');
+    btn.innerHTML='<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M10 8.5l4.5 2.5L10 13.5z" fill="currentColor" stroke="none"/><path d="M7 21h10"/></svg>';
+    btn.onclick=function(e){e.stopPropagation();openPanel('v');};
+    dock.insertBefore(btn,dock.lastElementChild);
+  }
+
+  /* ============ 帮助面板补充快捷键 ============ */
+  (function(){
+    var hb=document.getElementById('tb-help-body'); if(!hb)return;
+    var foot=hb.querySelector('.tb-help-foot');
+    var rows=[['数字资源面板','V'],['播放/暂停本节播客','A'],['本章配套源码','C']];
+    var h='';rows.forEach(function(r){h+='<div class="tb-krow"><span>'+r[0]+'</span><span class="tb-keys"><span class="tb-key">'+r[1]+'</span></span></div>';});
+    var d=document.createElement('div'); d.innerHTML=h;
+    while(d.firstChild){foot?hb.insertBefore(d.firstChild,foot):hb.appendChild(d.firstChild);}
+  })();
+
+  /* ============ 快捷键 ============ */
+  document.addEventListener('keydown',function(e){
+    var tn=(e.target.tagName||'').toUpperCase();
+    if(tn==='INPUT'||tn==='TEXTAREA'||e.target.isContentEditable)return;
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
+    var k=e.key;
+    if(k==='v'||k==='V'){openPanel('v');e.preventDefault();e.stopPropagation();}
+    else if(k==='c'||k==='C'){openPanel('c');e.preventDefault();e.stopPropagation();}
+    else if(k==='a'||k==='A'){
+      var s=curKey?secOf(curKey):curSec();
+      if(s&&s.a){toggleSec(s.k);toast((AU.paused?'已暂停':'正在收听')+' <b>'+esc(s.full)+'</b>');}
+      e.preventDefault();e.stopPropagation();
+    }
+  },true);
+
+  syncUI();
+})();
+</script>
 </body>
 </html>
