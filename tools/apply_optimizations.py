@@ -16,15 +16,14 @@ SITE = 'https://dealtyxx.github.io/discretemath_digitalbook/'
 MARK = 'perf-a11y-v1'
 VER = '20260929'
 
-FONTS_CSS = ('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700'
-             '&family=Inter:wght@300..600&family=DM+Mono:wght@400..500'
-             '&family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700;900'
-             '&family=IBM+Plex+Mono:wght@300;400;500;600'
-             '&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&display=swap')
-FONT_BLOCK = ('<link rel="preconnect" href="https://fonts.googleapis.com">'
-              '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>'
-              '<link rel="stylesheet" href="%s" media="print" onload="this.media=\'all\'">'
-              '<noscript><link rel="stylesheet" href="%s"></noscript>' % (FONTS_CSS.replace('&', '&amp;'), FONTS_CSS.replace('&', '&amp;')))
+# 字体自托管：fonts/fonts.css 由 tools/build_fonts.py 生成（拉丁字体 + Noto Serif/Sans SC 子集）
+FONT_BLOCK = '<link rel="stylesheet" href="fonts/fonts.css">'
+# 第一版（perf-a11y-v1）写入的非阻塞 Google Fonts 块，升级时整体替换为本地字体
+LEGACY_FONT_RE = re.compile(
+    r'<link rel="preconnect" href="https://fonts\.googleapis\.com">\s*'
+    r'<link rel="preconnect" href="https://fonts\.gstatic\.com" crossorigin>\s*'
+    r'<link rel="stylesheet" href="https://fonts\.googleapis\.com[^"]*" media="print" onload="[^"]*">\s*'
+    r'<noscript><link rel="stylesheet" href="https://fonts\.googleapis\.com[^"]*"></noscript>')
 FONT_LINK_RE = re.compile(r'<link\b[^>]*fonts\.(?:googleapis|gstatic)\.com[^>]*>\s*', re.I)
 
 
@@ -210,20 +209,62 @@ def patch_index(s):
     return s, s != o
 
 
+MARK2 = 'selfhost-fonts-v1'
+NOINDEX = ('<meta name="robots" content="noindex"><script id="body-redirect">'
+           'try{if(window.top===window){location.replace(location.pathname.replace(/\\.body\\.html$/,".html")'
+           '+location.search.replace(/([?&])v=[^&]*&?/,"$1").replace(/[?&]$/,"")+location.hash);}}catch(e){}</script>')
+
+
+def use_local_fonts(s):
+    """把 Google Fonts 依赖换成本地 fonts/fonts.css（幂等）。"""
+    if 'fonts/fonts.css' in s:
+        return s
+    if LEGACY_FONT_RE.search(s):
+        return LEGACY_FONT_RE.sub(lambda m: FONT_BLOCK, s, count=1)
+    if FONT_LINK_RE.search(s):
+        return merge_fonts(s)
+    return s.replace('</head>', FONT_BLOCK + '\n</head>', 1)
+
+
+def stage2_body(s):
+    """正文页：本地字体 + noindex + 被直接打开（不在 iframe 内）时跳转到入口页。"""
+    o = s
+    s = use_local_fonts(s)
+    if 'id="body-redirect"' not in s:
+        s = s.replace('<head>', '<head>' + NOINDEX, 1)
+    return s, s != o
+
+
+def stage2_wrapper(s):
+    o = s
+    if 'fonts/fonts.css' not in s:
+        s = s.replace('</head>', FONT_BLOCK + '\n</head>', 1)
+    return s, s != o
+
+
+def stage2_index(s):
+    o = s
+    s = use_local_fonts(s)
+    return s, s != o
+
+
 def main():
     changed = 0
     for f in sorted(glob.glob('离散数学_第*章_*.html')):
         txt = open(f, encoding='utf8').read()
         if f.endswith('.body.html'):
-            new, ch = patch_body(txt)
+            new, _ = patch_body(txt)
+            new, _ = stage2_body(new)
         else:
-            new, ch = patch_wrapper(txt, f)
-        if ch:
+            new, _ = patch_wrapper(txt, f)
+            new, _ = stage2_wrapper(new)
+        if new != txt:
             open(f, 'w', encoding='utf8').write(new)
             changed += 1
     txt = open('index.html', encoding='utf8').read()
-    new, ch = patch_index(txt)
-    if ch:
+    new, _ = patch_index(txt)
+    new, _ = stage2_index(new)
+    if new != txt:
         open('index.html', 'w', encoding='utf8').write(new)
         changed += 1
     print('已修改文件数：', changed)

@@ -137,6 +137,8 @@
 | `search-index.json` | 全书 996 页的搜索索引，`index.html` 的“全书搜索”首次输入时按需加载；章节内容变动后请重新生成 |
 | `tools/build_search_index.py` | 生成 `search-index.json`：`python3 tools/build_search_index.py` |
 | `tools/apply_optimizations.py` | 对章节正文/入口页/目录页应用性能、无障碍、移动端与 SEO 优化（幂等）；若上游生成器重新导出了 HTML，请重新运行 |
+| `fonts/` + `tools/build_fonts.py` | 自托管字体（拉丁字体 + Noto Serif/Sans SC 子集，共约 2.7 MB，含书中全部字符与 GB2312 一级汉字），不再依赖 Google Fonts；书中新增生僻字后运行 `python3 tools/build_fonts.py`（需 fonttools、brotli 和网络）重新生成 |
+| 正文页 `*.body.html` | 带 `noindex`，且被直接打开（不在入口页 iframe 内）时自动跳转到对应入口页并保留 `?p=` 页码 |
 | `robots.txt` / `sitemap.xml` / `404.html` / `favicon.svg` | 搜索引擎与站点基础文件 |
 
 章节入口页支持 `?p=页码` 深链接，例如 `离散数学_第1章_计数和数论基础.html?p=61` 直接打开第 61 页。
