@@ -1,16 +1,10 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<link rel="icon" href="data:,">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&family=Inter:wght@300..600&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
-<meta charset="UTF-8">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300..600&amp;family=DM+Mono:wght@400..500&amp;family=Noto+Serif+SC:wght@400;500;600;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700;900&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&amp;display=swap" media="print" onload="this.media='all'"><noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300..600&amp;family=DM+Mono:wght@400..500&amp;family=Noto+Serif+SC:wght@400;500;600;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700;900&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&amp;display=swap"></noscript><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>离散数学 · 数字教材</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&family=Noto+Sans+SC:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
 :root{--ink:#1a2332;--ink-rgb:26,35,50;--paper:#faf9f5;--paper-rgb:250,249,245;--accent:#3a5fa8;--accent-rgb:58,95,168;--accent-2:#6f93dd;--muted:#6b7180;
 --serif:"Noto Serif SC",serif;--sans:"Noto Sans SC","Microsoft YaHei",sans-serif;--mono:"IBM Plex Mono",monospace;}
@@ -196,8 +190,33 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
   .res-stat+.res-stat{border-left:0;border-top:1px solid var(--line)}}
 </style>
 <!--MK-INDEX-V1-->
+
+<meta name="description" content="离散数学交互式数字教材（十一章、996 页）：计数与数论、集合、关系、命题与谓词逻辑、图论、代数系统、群环域格与布尔代数，每小节配微课视频、播客音频与 Python 配套源码。湖南信息学院 谢鑫。">
+<meta name="theme-color" content="#EDE8E0">
+<link rel="canonical" href="https://dealtyxx.github.io/discretemath_digitalbook/">
+<meta property="og:type" content="book"><meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="离散数学 · 数字教材">
+<meta property="og:description" content="离散数学交互式数字教材（十一章、996 页）：计数与数论、集合、关系、命题与谓词逻辑、图论、代数系统、群环域格与布尔代数，每小节配微课视频、播客音频与 Python 配套源码。湖南信息学院 谢鑫。">
+<meta property="og:url" content="https://dealtyxx.github.io/discretemath_digitalbook/">
+<meta name="twitter:card" content="summary">
+<script type="application/ld+json">{"@context":"https://schema.org","@type":"Book","name":"离散数学 · 交互式数字教材","inLanguage":"zh-CN","author":{"@type":"Person","name":"谢鑫"},"publisher":{"@type":"Organization","name":"湖南信息学院"},"copyrightYear":2026,"url":"https://dealtyxx.github.io/discretemath_digitalbook/","description":"十一章离散数学交互式数字教材，每小节配微课视频、播客音频与 Python 配套源码。"}</script>
+<style id="perf-a11y-v1">
+/* 对比度：辅助文字由 #8A8178（3.1:1）加深到 #6B6359（≥4.5:1） */
+.kicker,.hstat .l,.overall .otxt,.ch-no,.ch-secs li,.ch-res li,.ch-pages,.reset,footer,.res-stat em,.kbd,.gcard .kbd{color:#6b6359!important}
+.skip-link{position:absolute;left:8px;top:-60px;z-index:20000;background:var(--ink);color:var(--paper);padding:.6rem 1rem;font-size:.9rem;transition:top .15s}
+.skip-link:focus{top:8px}
+a:focus-visible,button:focus-visible,.gcard[role="button"]:focus-visible{outline:2px solid var(--ink);outline-offset:3px}
+.index-page-hits{margin-top:1.4rem}
+.index-page-hits h3{font:500 .85rem/1.4 var(--sans);letter-spacing:.06em;color:#6b6359;margin-bottom:.6rem}
+.index-page-hit{display:block;width:100%;text-align:left;background:rgba(255,255,255,.3);border:1px solid var(--line);padding:.7rem .9rem;margin-bottom:.5rem;cursor:pointer;font:inherit;color:var(--ink)}
+.index-page-hit:hover,.index-page-hit:focus-visible{background:rgba(255,255,255,.6)}
+.index-page-hit b{display:block;font-weight:500;font-size:.95rem}
+.index-page-hit small{display:block;color:#6b6359;font-size:.78rem;line-height:1.5;margin-top:.15rem}
+.index-page-hit mark{background:rgba(58,95,168,.22);color:inherit}
+</style>
 </head>
 <body>
+<a class="skip-link" href="#main">跳到章节目录</a>
 <header class="hero">
   <div class="kicker">Discrete Mathematics · 数字教材</div>
   <h1 class="htitle">离散数学</h1>
@@ -215,7 +234,7 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
   </div>
 </header>
 
-<section class="res-band">
+<section class="res-band" aria-label="数字资源概览">
   <div class="res-decl">
     <button class="res-play" id="declPlay" type="button" aria-label="播放作者声明"><svg class="ic-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="ic-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button>
     <div class="res-decl-b">
@@ -231,7 +250,7 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     <div class="res-stat"><b>253</b><span>段配套源码</span><em>共 3792 行 · 可复制下载</em></div>
   </div>
 </section>
-<main>
+<main id="main" tabindex="-1">
   <h2 class="sec-h">目录</h2>
   <p class="sec-sub">点击任意章节进入。每章章首设有「本章数字资源」总览页，每个小节按<strong>微课视频 → 正文 → 配套源码 → 播客音频 → 习题</strong>的动线编排；章内按 <span class="kbd">V</span> 打开资源面板、<span class="kbd">A</span> 收听本节播客、<span class="kbd">C</span> 浏览配套源码。学习进度、书签与自测记录保存在浏览器本地。</p>
   <div class="grid">
@@ -457,10 +476,16 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     openPanel('章节缩略总览',html,function(){var x=body.querySelector('.index-tool-item');if(x)x.focus();});
   }
   function showSearch(){
-    openPanel('全书目录搜索','<input class="index-tool-search" id="index-search-input" placeholder="输入章节、概念或小节名称…" autocomplete="off"><div id="index-search-results"></div>',function(){
+    openPanel('全书搜索','<input class="index-tool-search" id="index-search-input" aria-label="搜索全书" placeholder="输入章节、概念或小节名称，如：欧拉函数、Dijkstra、拉格朗日…" autocomplete="off"><div id="index-search-results"></div>',function(){
       var input=document.getElementById('index-search-input'),results=document.getElementById('index-search-results');
       function render(){var q=input.value.trim().toLowerCase(),hits=[];cards.forEach(function(card,i){var text=card.textContent.replace(/\s+/g,' ').trim(),desc=card.querySelector('.ch-sub')||card.querySelector('.ch-desc');if(!q||text.toLowerCase().indexOf(q)>-1)hits.push({i:i,name:card.querySelector('.ch-name').textContent.trim(),desc:desc?desc.textContent.trim():''});});results.innerHTML=hits.length?'<div class="index-tool-grid">'+hits.map(function(h){return '<button class="index-tool-item" data-index-nav data-card="'+h.i+'"><b>'+esc(h.name)+'</b><small>'+esc(h.desc)+'</small></button>';}).join('')+'</div>':'<div class="index-tool-empty">未找到匹配章节。</div>';}
-      input.addEventListener('input',render);input.addEventListener('keydown',function(e){if(e.key==='Enter'){var first=results.querySelector('[data-index-nav]');if(first)first.click();}});render();input.focus();
+      var pageBox=document.createElement('div');pageBox.className='index-page-hits';results.parentNode.appendChild(pageBox);
+      var bookIdx=null,loading=false,timer=null;
+      function loadIdx(cb){if(bookIdx)return cb();if(loading)return;loading=true;fetch('search-index.json').then(function(r){return r.json()}).then(function(d){bookIdx=d;cb();}).catch(function(){loading=false;pageBox.innerHTML='<div class="index-tool-empty">全书页面索引加载失败，仍可搜索章节。</div>';});}
+      function hl(t,q){var i=t.toLowerCase().indexOf(q);return i<0?esc(t):esc(t.slice(0,i))+'<mark>'+esc(t.slice(i,i+q.length))+'</mark>'+esc(t.slice(i+q.length));}
+      function pageSearch(){var q=input.value.trim().toLowerCase();if(q.length<2){pageBox.innerHTML='';return;}loadIdx(function(){var hits=[];bookIdx.chapters.forEach(function(c){c.p.forEach(function(p){var ti=p[1].toLowerCase().indexOf(q),tx=p[2].toLowerCase().indexOf(q);if(ti>-1||tx>-1)hits.push({c:c,p:p,s:(ti>-1?0:1)*1000+(ti>-1?ti:tx)});});});hits.sort(function(a,b){return a.s-b.s});var shown=hits.slice(0,30);var em=results.querySelector('.index-tool-empty');if(em)em.style.display=hits.length?'none':'';pageBox.innerHTML=hits.length?'<h3>正文页面命中 '+hits.length+' 处'+(hits.length>30?'（显示前 30）':'')+'</h3>'+shown.map(function(h){var t=h.p[2],k=t.toLowerCase().indexOf(q),sn=k>-1?t.slice(Math.max(0,k-24),k+60):t.slice(0,60);return '<button type="button" class="index-page-hit" data-href="'+esc(h.c.f)+'?p='+h.p[0]+'"><b>第 '+h.c.n+' 章 · 第 '+h.p[0]+' 页 · '+hl(h.p[1],q)+'</b><small>'+hl(sn,q)+'</small></button>';}).join(''):'<div class="index-tool-empty">正文中没有匹配「'+esc(input.value.trim())+'」的页面。</div>';});}
+      pageBox.addEventListener('click',function(e){var b=e.target.closest('.index-page-hit');if(b)location.href=b.getAttribute('data-href');});
+      input.addEventListener('input',function(){render();clearTimeout(timer);timer=setTimeout(pageSearch,180);});input.addEventListener('keydown',function(e){if(e.key==='Enter'){var first=results.querySelector('[data-index-nav]')||pageBox.querySelector('.index-page-hit');if(first)first.click();}});render();input.focus();
     });
   }
   function showBookmarks(){

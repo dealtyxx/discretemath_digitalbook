@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://dealtyxx.github.io/discretemath_digitalbook/sitemap.xml

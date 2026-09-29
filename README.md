@@ -27,8 +27,8 @@
 | 类型 | 命名规则 | 示例 |
 |------|---------|------|
 | 微课视频 | `<小节号>-<英文标题>.mp4` | `assets/micro-lectures/1.1-counting-basics.mp4` |
-| 播客音频 | `<小节号>-<英文标题>.wav` | `assets/podcasts/1.1-counting-basics.wav` |
-| 作者声明 | 固定名 | `assets/podcasts/0-author-statement.wav` |
+| 播客音频 | `<小节号>-<英文标题>.mp3` | `assets/podcasts/1.1-counting-basics.mp3` |
+| 作者声明 | 固定名 | `assets/podcasts/0-author-statement.mp3` |
 | 配套源码 | 沿用书内编号 | `assets/source-code/CH1/1.1.1.py` |
 
 微课与播客同一小节使用完全相同的文件名（仅扩展名不同），便于成对管理。
@@ -129,3 +129,14 @@
 ---
 
 离散数学数字化教材©2026 湖南信息学院 ｜ 作者：谢鑫
+
+## 站点维护（优化分支新增）
+
+| 文件 | 说明 |
+|------|------|
+| `search-index.json` | 全书 996 页的搜索索引，`index.html` 的“全书搜索”首次输入时按需加载；章节内容变动后请重新生成 |
+| `tools/build_search_index.py` | 生成 `search-index.json`：`python3 tools/build_search_index.py` |
+| `tools/apply_optimizations.py` | 对章节正文/入口页/目录页应用性能、无障碍、移动端与 SEO 优化（幂等）；若上游生成器重新导出了 HTML，请重新运行 |
+| `robots.txt` / `sitemap.xml` / `404.html` / `favicon.svg` | 搜索引擎与站点基础文件 |
+
+章节入口页支持 `?p=页码` 深链接，例如 `离散数学_第1章_计数和数论基础.html?p=61` 直接打开第 61 页。

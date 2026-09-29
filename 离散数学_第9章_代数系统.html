@@ -2,12 +2,9 @@
 <html lang="zh-CN">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>离散数学 第9章 · 代数系统</title>
-<link rel="icon" href="data:,">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300..600&family=Noto+Serif+SC:wght@400;700&display=swap" rel="stylesheet">
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
 <style>
 /* Fixed 16:9 stage used by every generated chapter wrapper. */
 html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage-bg,#000)}
@@ -56,17 +53,39 @@ img,video,canvas,svg{max-width:100%;max-height:100%}
 .copyright-bar{position:fixed;left:0;right:0;bottom:0;height:26px;z-index:4000;display:flex;align-items:center;justify-content:center;font:500 11px/1 "Inter","Noto Serif SC",serif;letter-spacing:.08em;color:var(--accent);background:var(--stage-bg,#E2DBD1);border-top:1px solid var(--line);user-select:none}
 @media print{.copyright-bar{display:none!important}}
 </style>
+
+<meta name="description" content="离散数学交互式数字教材 第9章「代数系统」：含微课视频、播客音频与 Python 配套源码，支持章内目录、搜索与书签。">
+<meta name="theme-color" content="#E2DBD1">
+<link rel="canonical" href="https://dealtyxx.github.io/discretemath_digitalbook/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6_%E7%AC%AC9%E7%AB%A0_%E4%BB%A3%E6%95%B0%E7%B3%BB%E7%BB%9F.html">
+<meta property="og:type" content="website"><meta property="og:locale" content="zh_CN">
+<meta property="og:title" content="离散数学 第9章 · 代数系统">
+<meta property="og:description" content="离散数学交互式数字教材 第9章「代数系统」：含微课视频、播客音频与 Python 配套源码，支持章内目录、搜索与书签。">
+<meta property="og:url" content="https://dealtyxx.github.io/discretemath_digitalbook/%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6_%E7%AC%AC9%E7%AB%A0_%E4%BB%A3%E6%95%B0%E7%B3%BB%E7%BB%9F.html">
+<meta name="twitter:card" content="summary">
+<style id="perf-a11y-v1">
+.copyright-bar,.source-tools a{font-family:"Inter","Noto Serif SC","PingFang SC","Microsoft YaHei",system-ui,sans-serif}
+.source-tools a:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.noscript-tip{position:fixed;inset:0;display:grid;place-items:center;text-align:center;padding:2rem;color:var(--ink);background:var(--paper);z-index:6000;font:16px/1.8 system-ui,sans-serif}
+/* 手机竖屏：取消 1920x1080 缩放舞台，正文页直接铺满屏幕（正文页内部已按 vw 自适应） */
+@media (max-width:820px){
+  .deck-stage{width:100vw!important;height:calc(100vh - 26px)!important;height:calc(100dvh - 26px)!important;transform:none!important;border:0;box-shadow:none}
+  .book-frame{width:100%!important;height:100%!important}
+  .source-tools{display:none}
+  .loading{font-size:13px}
+}
+</style>
 </head>
 <body>
 <div class="deck-viewport">
   <main class="deck-stage" id="deckStage" aria-label="固定 16:9 电子教材舞台">
-    <iframe class="book-frame" id="bookFrame" title="离散数学 第9章 · 代数系统" allowfullscreen></iframe>
+    <iframe class="book-frame" id="bookFrame" src="%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6_%E7%AC%AC9%E7%AB%A0_%E4%BB%A3%E6%95%B0%E7%B3%BB%E7%BB%9F.body.html?v=20260929" title="离散数学 第9章 · 代数系统" allowfullscreen></iframe>
   </main>
 </div>
 <nav class="source-tools" aria-label="教材导航">
   <a href="index.html">全书目录</a>
 </nav>
-<div class="loading" id="loading">LOADING / 1920 × 1080</div>
+<noscript><div class="noscript-tip">本教材需要启用 JavaScript。<br><a href="%E7%A6%BB%E6%95%A3%E6%95%B0%E5%AD%A6_%E7%AC%AC9%E7%AB%A0_%E4%BB%A3%E6%95%B0%E7%B3%BB%E7%BB%9F.body.html">直接打开正文</a></div></noscript>
+<div class="loading" id="loading" role="status">LOADING / 1920 × 1080</div>
 <script>
 
 (function(){
@@ -114,7 +133,10 @@ img,video,canvas,svg{max-width:100%;max-height:100%}
       // Static iframe content is resolved by the load hook and scheduled retries above.
     }catch(e){ console.warn(e); }
 
-    const tool=new URLSearchParams(location.search).get('tool');
+    const qs=new URLSearchParams(location.search);
+    const pg=parseInt(qs.get('p')||(location.hash.match(/p=(\d+)/)||[])[1],10);
+    if(pg>0){setTimeout(function(){try{frame.contentWindow.__deckGoTo(pg-1);}catch(e){}},120);}
+    const tool=qs.get('tool');
     const toolKeys={toc:'m',grid:'g',search:'/',help:'?',bookmark:'b',focus:'f',font:'t',res:'v',audio:'a',code:'c'};
     if(tool && toolKeys[tool]){
       setTimeout(()=>{
@@ -131,7 +153,7 @@ img,video,canvas,svg{max-width:100%;max-height:100%}
 
   // Primary: load sibling body.html so relative assets resolve against real file URL
   const bodyName=currentBodyName();
-  frame.src=bodyName+'?v=20260724c';
+  if(!frame.getAttribute("src"))frame.src=bodyName+'?v=20260929';
 
   // Keyboard proxy to iframe
   addEventListener('keydown',e=>{
