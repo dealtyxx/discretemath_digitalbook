@@ -17,6 +17,7 @@
 | `assets/source-code/` | 253 段 Python 配套源码，按 `CH1`…`CH11` 分目录，共 3792 行 |
 | `assets/app-videos-ch1` … `-ch11` | 应用案例教学动画 |
 | `assets/mathjax`、`assets/@mathjax` | 公式渲染引擎（本地化，离线可用） |
+| `assets/fonts/` | 页面字体（本地化，离线可用，许可证见 `assets/fonts/LICENSES/`） |
 
 共 11 章、996 页知识页，含定义、定理、例题、应用动画、Python 实现与自测习题。
 
@@ -27,8 +28,8 @@
 | 类型 | 命名规则 | 示例 |
 |------|---------|------|
 | 微课视频 | `<小节号>-<英文标题>.mp4` | `assets/micro-lectures/1.1-counting-basics.mp4` |
-| 播客音频 | `<小节号>-<英文标题>.wav` | `assets/podcasts/1.1-counting-basics.wav` |
-| 作者声明 | 固定名 | `assets/podcasts/0-author-statement.wav` |
+| 播客音频 | `<小节号>-<英文标题>.mp3` | `assets/podcasts/1.1-counting-basics.mp3` |
+| 作者声明 | 固定名 | `assets/podcasts/0-author-statement.mp3` |
 | 配套源码 | 沿用书内编号 | `assets/source-code/CH1/1.1.1.py` |
 
 微课与播客同一小节使用完全相同的文件名（仅扩展名不同），便于成对管理。
@@ -90,6 +91,12 @@
 
 ## 版本说明
 
+### 2026-09-29 · 字体本地化
+
+1. 页面字体（Inter、Playfair Display、DM Mono、Noto Serif SC）改为随教材分发，存放于 `assets/fonts/`，
+   不再请求 Google Fonts，断网时显示效果与联网一致。中文字体按书中实际用字裁剪，全部字体合计不到 1 MB。
+2. 修正本说明中与实际文件不符之处：完整体积、播客音频格式（`.mp3`），并删除不存在的 `_原始备份/` 目录说明。
+
 ### 2026-07-24（二）· 资源路径英文化
 
 1. `assets/2微课视频` → `assets/micro-lectures`，
@@ -121,10 +128,9 @@
 ## 分发说明
 
 - 整个文件夹即为完整教材，可整体拷贝 / 压缩分发；文件夹内部相对路径不可打乱。
-- 完整体积约 **6 GB**（其中微课视频约 4.9 GB、播客音频约 0.9 GB）。
+- 完整体积约 **0.8 GB**（其中微课视频约 554 MB、应用动画约 99 MB、播客音频约 92 MB）。
   若需精简分发，可单独移除 `assets/micro-lectures`（正文其余部分不受影响，
   仅微课视频页无法播放）。
-- `_原始备份/` 存放嵌入资源前的原始页面，仅作回退备份用，分发时可以删除。
 
 ---
 
