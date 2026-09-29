@@ -1113,9 +1113,9 @@ for row in floyd_warshall(weights):
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 71</div></div></section>
 <section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 7.3 应用案例和 Python 实现" data-theme="dark" data-mk-sec="7.3"><div class="chrome"><div>微课视频 · 7.3 应用案例和 Python 实现</div><div>57 / 71</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">08:08 · 15.1 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">7.3 应用案例和 Python 实现</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/7.3-applications.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 7.3 应用案例和 Python 实现"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">应用案例和 Python 实现</span><span class="mk-cover-m">微课视频 · 08:08 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>57 / 71</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="7.3.1 灾害救援调度" data-theme="light"><div class="chrome"><div>7.3.1 灾害救援调度</div><div>58 / 71</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="7.3.1 灾害救援调度" data-theme="light"><div class="chrome"><div>案例 7.3.1 · 灾害救援调度</div><div>58 / 71</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例一 · 救援调度</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Dijkstra 优化救援队调度</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">顶点表示受灾小区，边表示道路，权重表示通过时间。用 Dijkstra 找从救援中心到所有小区的最短路径，从而优化调度，体现图论在公共服务中的价值。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 7.3.1 · 救援调度</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Dijkstra 优化救援队调度</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">顶点表示受灾小区，边表示道路，权重表示通过时间。用 Dijkstra 找从救援中心到所有小区的最短路径，从而优化调度，体现图论在公共服务中的价值。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
 G = nx.DiGraph()
 G.add_weighted_edges_from([
@@ -1127,19 +1127,19 @@ for t in G.nodes():
         print(f"到 {t}: 路径 {paths[t]}, 时间 {dist[t]}")</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>58 / 71</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 7.3.1 灾害救援调度" data-theme="light"><div class="chrome"><div>应用动画 · 7.3.1 灾害救援调度</div><div>59 / 71</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 7.3.1 · 灾害救援调度" data-theme="light"><div class="chrome"><div>应用动画 · 案例 7.3.1 · 灾害救援调度</div><div>59 / 71</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">7.3.1 灾害救援调度</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 7.3.1 · 灾害救援调度</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch7/ch7_06_case_7_3_1_ee5e9550.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_06_case_7_3_1_ee5e9550.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 71</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="7.3.2 城市交通网络优化" data-theme="light"><div class="chrome"><div>7.3.2 城市交通网络</div><div>60 / 71</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="7.3.2 城市交通网络优化" data-theme="light"><div class="chrome"><div>案例 7.3.2 · 城市交通网络</div><div>60 / 71</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 城市交通</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">图运算分析自行车道与汽车道</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">自行车道网络 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 与汽车道网络 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span>。交运算 <span aria-label="G₁∩G₂" class="math-inline-source" data-tex="G_{1}\cap G_{2}">\(G_{1}\cap G_{2}\)</span> 找共用路段增设安全措施；并运算合并网络；差运算识别专用路段；补运算发现未利用的潜在路段。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 7.3.2 · 城市交通</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">图运算分析自行车道与汽车道</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">自行车道网络 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 与汽车道网络 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span>。交运算 <span aria-label="G₁∩G₂" class="math-inline-source" data-tex="G_{1}\cap G_{2}">\(G_{1}\cap G_{2}\)</span> 找共用路段增设安全措施；并运算合并网络；差运算识别专用路段；补运算发现未利用的潜在路段。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
 bike = nx.Graph()
 bike.add_edges_from([('A','B'),('B','C'),('C','D'),('E','F')])
@@ -1152,19 +1152,19 @@ union = nx.union(bike, car, rename=('bike-', 'car-'))
 print("并图边数:", union.number_of_edges())</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 71</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 7.3.2 城市交通网络" data-theme="light"><div class="chrome"><div>应用动画 · 7.3.2 城市交通网络</div><div>61 / 71</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 7.3.2 · 城市交通网络" data-theme="light"><div class="chrome"><div>应用动画 · 案例 7.3.2 · 城市交通网络</div><div>61 / 71</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">7.3.2 城市交通网络</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 7.3.2 · 城市交通网络</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch7/ch7_07_case_7_3_2_af8607c9.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_07_case_7_3_2_af8607c9.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 71</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="7.3.3 智能制造网络分析" data-theme="light"><div class="chrome"><div>7.3.3 智能制造网络</div><div>62 / 71</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="7.3.3 智能制造网络分析" data-theme="light"><div class="chrome"><div>案例 7.3.3 · 智能制造网络</div><div>62 / 71</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例三 · 智能制造</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">矩阵表示分析制造网络</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">顶点表示制造单元，边表示物流路径。用邻接矩阵快速识别直接相连的单元，用关联矩阵分析物流路径的连接强度，优化路径选择、合理分配资源、提高生产效率。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 7.3.3 · 智能制造</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">矩阵表示分析制造网络</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">顶点表示制造单元，边表示物流路径。用邻接矩阵快速识别直接相连的单元，用关联矩阵分析物流路径的连接强度，优化路径选择、合理分配资源、提高生产效率。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
 G = nx.Graph()
 G.add_edges_from([('1','2'),('1','3'),('2','4'),('3','4'),('3','5')])
@@ -1172,19 +1172,19 @@ print("邻接矩阵:\n", nx.adjacency_matrix(G).todense())
 print("关联矩阵:\n", nx.incidence_matrix(G).todense())</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>62 / 71</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 7.3.3 智能制造网络" data-theme="light"><div class="chrome"><div>应用动画 · 7.3.3 智能制造网络</div><div>63 / 71</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 7.3.3 · 智能制造网络" data-theme="light"><div class="chrome"><div>应用动画 · 案例 7.3.3 · 智能制造网络</div><div>63 / 71</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">7.3.3 智能制造网络</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 7.3.3 · 智能制造网络</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch7/ch7_08_case_7_3_3_c12ca226.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_08_case_7_3_3_c12ca226.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>63 / 71</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="7.3.4 智慧城市综合管理" data-theme="light"><div class="chrome"><div>7.3.4 智慧城市综合管理</div><div>64 / 71</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="7.3.4 智慧城市综合管理" data-theme="light"><div class="chrome"><div>案例 7.3.4 · 智慧城市综合管理</div><div>64 / 71</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例四 · 智慧城市</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">综合应用图论优化城市管理</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">综合应用图论：用 Dijkstra 计算交通网络最短路径减少出行时间；用邻接与关联矩阵优化制造物流；构建救援网络模型确保快速灾害响应。下例计算各节点到节点 G 的最短路径。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 7.3.4 · 智慧城市</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">综合应用图论优化城市管理</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">综合应用图论：用 Dijkstra 计算交通网络最短路径减少出行时间；用邻接与关联矩阵优化制造物流；构建救援网络模型确保快速灾害响应。下例计算各节点到节点 G 的最短路径。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
 G = nx.DiGraph()
 G.add_weighted_edges_from([
@@ -1197,10 +1197,10 @@ for node in G.nodes:
         print(f"{node}→G: {path}, 长度 {length}")</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>64 / 71</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 7.3.4 智慧城市综合管理" data-theme="light"><div class="chrome"><div>应用动画 · 7.3.4 智慧城市综合管理</div><div>65 / 71</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 7.3.4 · 智慧城市综合管理" data-theme="light"><div class="chrome"><div>应用动画 · 案例 7.3.4 · 智慧城市综合管理</div><div>65 / 71</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">7.3.4 智慧城市综合管理</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 7.3.4 · 智慧城市综合管理</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch7/ch7_09_case_7_3_4_97532cc2.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch7/ch7_09_case_7_3_4_97532cc2.mp4" type="video/mp4"></video>
 </div>

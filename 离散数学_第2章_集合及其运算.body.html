@@ -1340,9 +1340,9 @@ print("工艺师傅总数为:", total)   # 16</code></pre></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>82 / 97</div></div></section>
 <section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 2.3 应用案例和 Python 实现" data-theme="dark" data-mk-sec="2.3"><div class="chrome"><div>微课视频 · 2.3 应用案例和 Python 实现</div><div>83 / 97</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">07:49 · 14.2 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">2.3 应用案例和 Python 实现</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/2.3-applications.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 2.3 应用案例和 Python 实现"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">应用案例和 Python 实现</span><span class="mk-cover-m">微课视频 · 07:49 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>83 / 97</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="2.3.1 中秋节庆祝活动" data-theme="light"><div class="chrome"><div>2.3.1 中秋节庆祝活动</div><div>84 / 97</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="2.3.1 中秋节庆祝活动" data-theme="light"><div class="chrome"><div>案例 2.3.1 · 中秋节庆祝活动</div><div>84 / 97</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例一 · 中秋节</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">赏月、吃月饼、提灯笼三类人群</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">设 <span aria-label="A = {1,2,3,4,5}" class="math-inline-source" data-tex="A = \{1,2,3,4,5\}">\(A = \{1,2,3,4,5\}\)</span> 赏月，<span aria-label="B = {3,4,5,6,7}" class="math-inline-source" data-tex="B = \{3,4,5,6,7\}">\(B = \{3,4,5,6,7\}\)</span> 吃月饼，<span aria-label="C = {5,6,7,8,9}" class="math-inline-source" data-tex="C = \{5,6,7,8,9\}">\(C = \{5,6,7,8,9\}\)</span> 提灯笼。同时赏月吃月饼 <span aria-label="A∩B = {3,4,5}" class="math-inline-source" data-tex="A\cap B = \{3,4,5\}">\(A\cap B = \{3,4,5\}\)</span>；至少参与一种 <span aria-label="A∪B∪C = {1,…,9}" class="math-inline-source" data-tex="A\cup B\cup C = \{1,\ldots ,9\}">\(A\cup B\cup C = \{1,\ldots ,9\}\)</span>；只赏月 <span aria-label="A−(B∪C) = {1,2}" class="math-inline-source" data-tex="A-(B\cup C) = \{1,2\}">\(A-(B\cup C) = \{1,2\}\)</span>。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 2.3.1 · 中秋节</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">赏月、吃月饼、提灯笼三类人群</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">设 <span aria-label="A = {1,2,3,4,5}" class="math-inline-source" data-tex="A = \{1,2,3,4,5\}">\(A = \{1,2,3,4,5\}\)</span> 赏月，<span aria-label="B = {3,4,5,6,7}" class="math-inline-source" data-tex="B = \{3,4,5,6,7\}">\(B = \{3,4,5,6,7\}\)</span> 吃月饼，<span aria-label="C = {5,6,7,8,9}" class="math-inline-source" data-tex="C = \{5,6,7,8,9\}">\(C = \{5,6,7,8,9\}\)</span> 提灯笼。同时赏月吃月饼 <span aria-label="A∩B = {3,4,5}" class="math-inline-source" data-tex="A\cap B = \{3,4,5\}">\(A\cap B = \{3,4,5\}\)</span>；至少参与一种 <span aria-label="A∪B∪C = {1,…,9}" class="math-inline-source" data-tex="A\cup B\cup C = \{1,\ldots ,9\}">\(A\cup B\cup C = \{1,\ldots ,9\}\)</span>；只赏月 <span aria-label="A−(B∪C) = {1,2}" class="math-inline-source" data-tex="A-(B\cup C) = \{1,2\}">\(A-(B\cup C) = \{1,2\}\)</span>。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>A = {1, 2, 3, 4, 5}
 B = {3, 4, 5, 6, 7}
 C = {5, 6, 7, 8, 9}
@@ -1351,19 +1351,19 @@ print("至少参与一种活动:", A.union(B, C))
 print("只赏月:", A.difference(B.union(C)))</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>84 / 97</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 2.3.1 中秋节庆祝活动" data-theme="light"><div class="chrome"><div>应用动画 · 2.3.1 中秋节庆祝活动</div><div>85 / 97</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 2.3.1 · 中秋节庆祝活动" data-theme="light"><div class="chrome"><div>应用动画 · 案例 2.3.1 · 中秋节庆祝活动</div><div>85 / 97</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">2.3.1 中秋节庆祝活动</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 2.3.1 · 中秋节庆祝活动</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch2/ch2_case01_midautumn.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch2/ch2_case01_midautumn.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>85 / 97</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="2.3.2 古典园林植物配置" data-theme="light"><div class="chrome"><div>2.3.2 古典园林植物配置</div><div>86 / 97</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="2.3.2 古典园林植物配置" data-theme="light"><div class="chrome"><div>案例 2.3.2 · 古典园林植物配置</div><div>86 / 97</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 古典园林</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">花卉、树木、竹类、水生四类植物</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">A 花卉、B 树木、C 竹类、D 水生。花卉与树木共有 <span aria-label="A∩B = {桂花}" class="math-inline-source" data-tex="A\cap B = \{\text{桂花}\}">\(A\cap B = \{\text{桂花}\}\)</span>；园中独有竹类 <span aria-label="C−(A∪B∪D) = {苦竹, 黄竹}" class="math-inline-source" data-tex="C-(A\cup B\cup D) = \{\text{苦竹}, \text{黄竹}\}">\(C-(A\cup B\cup D) = \{\text{苦竹}, \text{黄竹}\}\)</span>；桂花跨花卉与树木，竹跨树木与竹类。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 2.3.2 · 古典园林</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">花卉、树木、竹类、水生四类植物</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">A 花卉、B 树木、C 竹类、D 水生。花卉与树木共有 <span aria-label="A∩B = {桂花}" class="math-inline-source" data-tex="A\cap B = \{\text{桂花}\}">\(A\cap B = \{\text{桂花}\}\)</span>；园中独有竹类 <span aria-label="C−(A∪B∪D) = {苦竹, 黄竹}" class="math-inline-source" data-tex="C-(A\cup B\cup D) = \{\text{苦竹}, \text{黄竹}\}">\(C-(A\cup B\cup D) = \{\text{苦竹}, \text{黄竹}\}\)</span>；桂花跨花卉与树木，竹跨树木与竹类。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>A = {'芍药', '牡丹', '茶花', '桂花'}
 B = {'松', '竹', '梅', '桂花'}
 C = {'竹', '黄竹', '苦竹'}
@@ -1373,19 +1373,19 @@ print("园中独有竹类:", C.difference(A.union(B, D)))
 print("B∩A∪B∩C∪B∩D:", B &amp; A | B &amp; C | B &amp; D)</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>86 / 97</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 2.3.2 古典园林植物配置" data-theme="light"><div class="chrome"><div>应用动画 · 2.3.2 古典园林植物配置</div><div>87 / 97</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 2.3.2 · 古典园林植物配置" data-theme="light"><div class="chrome"><div>应用动画 · 案例 2.3.2 · 古典园林植物配置</div><div>87 / 97</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">2.3.2 古典园林植物配置</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 2.3.2 · 古典园林植物配置</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch2/ch2_case02_garden.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch2/ch2_case02_garden.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>87 / 97</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="2.3.3 社区服务数据分析" data-theme="light"><div class="chrome"><div>2.3.3 社区服务数据分析</div><div>88 / 97</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="2.3.3 社区服务数据分析" data-theme="light"><div class="chrome"><div>案例 2.3.3 · 社区服务数据分析</div><div>88 / 97</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例三 · 社区服务</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">积极分子在参与居民中的贡献率</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">集合 P 是积极分子，集合 A 是参与清洁活动的居民。交集 <span aria-label="P∩A" class="math-inline-source" data-tex="P\cap A">\(P\cap A\)</span> 是实际参与的积极分子；实际参加活动的人数即 |A|，而并集 <span aria-label="P∪A" class="math-inline-source" data-tex="P\cup A">\(P\cup A\)</span> 是积极分子与参与者合计去重的总人数；贡献率为实际参与积极分子占参与居民的比例。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 2.3.3 · 社区服务</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">积极分子在参与居民中的贡献率</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">集合 P 是积极分子，集合 A 是参与清洁活动的居民。交集 <span aria-label="P∩A" class="math-inline-source" data-tex="P\cap A">\(P\cap A\)</span> 是实际参与的积极分子；实际参加活动的人数即 |A|，而并集 <span aria-label="P∪A" class="math-inline-source" data-tex="P\cup A">\(P\cup A\)</span> 是积极分子与参与者合计去重的总人数；贡献率为实际参与积极分子占参与居民的比例。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>party_members = {'张三', '李四', '王五'}
 attended = {'张三', '王五', '赵六', '孙七'}
 P, A = set(party_members), set(attended)
@@ -1398,19 +1398,19 @@ print(f"积极分子与参与者合计: {len(total)}")
 print(f"积极分子贡献率: {rate:.2f}%")</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>88 / 97</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 2.3.3 社区服务数据分析" data-theme="light"><div class="chrome"><div>应用动画 · 2.3.3 社区服务数据分析</div><div>89 / 97</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 2.3.3 · 社区服务数据分析" data-theme="light"><div class="chrome"><div>应用动画 · 案例 2.3.3 · 社区服务数据分析</div><div>89 / 97</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">2.3.3 社区服务数据分析</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 2.3.3 · 社区服务数据分析</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch2/ch2_case03_community.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch2/ch2_case03_community.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>89 / 97</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="2.3.4 科技创新团队合作" data-theme="light"><div class="chrome"><div>2.3.4 科技创新团队合作</div><div>90 / 97</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="2.3.4 科技创新团队合作" data-theme="light"><div class="chrome"><div>案例 2.3.4 · 科技创新团队合作</div><div>90 / 97</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例四 · 科技团队</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">用集合运算识别测试空白</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">R 科研人员、D 开发人员、T 已测试人员。差集 R−T 是未参与测试者，交集 <span aria-label="D∩R" class="math-inline-source" data-tex="D\cap R">\(D\cap R\)</span> 是开发人员中的科研人员，<span aria-label="R−(D∪T)" class="math-inline-source" data-tex="R-(D\cup T)">\(R-(D\cup T)\)</span> 借助德摩根律识别未被覆盖的人员。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 2.3.4 · 科技团队</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">用集合运算识别测试空白</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">R 科研人员、D 开发人员、T 已测试人员。差集 R−T 是未参与测试者，交集 <span aria-label="D∩R" class="math-inline-source" data-tex="D\cap R">\(D\cap R\)</span> 是开发人员中的科研人员，<span aria-label="R−(D∪T)" class="math-inline-source" data-tex="R-(D\cup T)">\(R-(D\cup T)\)</span> 借助德摩根律识别未被覆盖的人员。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>researchers = {'张三', '李四', '王五', '赵六', '孙七'}
 developers = {'王五', '孙七', '周八'}
 tested = {'张三', '王五'}
@@ -1420,10 +1420,10 @@ print("开发人员中的科研人员:", D &amp; R)
 print("未被覆盖且未测试:", R - (D | T))</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>90 / 97</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 2.3.4 科技创新团队合作" data-theme="light"><div class="chrome"><div>应用动画 · 2.3.4 科技创新团队合作</div><div>91 / 97</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 2.3.4 · 科技创新团队合作" data-theme="light"><div class="chrome"><div>应用动画 · 案例 2.3.4 · 科技创新团队合作</div><div>91 / 97</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">2.3.4 科技创新团队合作</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 2.3.4 · 科技创新团队合作</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch2/ch2_case04_team.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch2/ch2_case04_team.mp4" type="video/mp4"></video>
 </div>

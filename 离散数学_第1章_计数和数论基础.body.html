@@ -1360,16 +1360,16 @@ print("结果是:", result)   # 2</code></pre></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>72 / 92</div></div></section>
 <section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 1.3 应用案例和 Python 实现" data-theme="dark" data-mk-sec="1.3"><div class="chrome"><div>微课视频 · 1.3 应用案例和 Python 实现</div><div>73 / 92</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">09:01 · 16.9 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">1.3 应用案例和 Python 实现</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/1.3-applications.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 1.3 应用案例和 Python 实现"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">应用案例和 Python 实现</span><span class="mk-cover-m">微课视频 · 09:01 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>73 / 92</div></div></section>
-<section class="slide light" data-screen-label="Case" data-source="1.3.1 Hash 函数构造" data-theme="light"><div class="chrome"><div>1.3.1 Hash 函数</div><div>74 / 92</div></div>
+<section class="slide light" data-screen-label="Case" data-source="1.3.1 Hash 函数构造" data-theme="light"><div class="chrome"><div>案例 1.3.1 · Hash 函数</div><div>74 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">案例一 · Hash 函数</div><h2 class="h1-zh anim-item" style="max-width:15em">把任意数据映射到固定大小</h2><p class="lead-zh anim-item" style="max-width:24em">Hash 函数 H 把消息 m 映射为 Hash 值 h。关键特性：确定性、高效计算、抗碰撞性（弱碰撞与强碰撞）、抗修改性、原像抗性。</p><div aria-label="H(s) = [ Σ aⁿ⁻ⁱ · ord(cᵢ) ] mod p" class="formula anim-item mathjax-display-source" data-tex="H(s) = [ Σ a^{n-i} \cdot \operatorname{ord}(c_{i}) ] \operatorname{mod} p">\[\displaystyle H(s) = [ Σ a^{n-i} \cdot \operatorname{ord}(c_{i}) ] \operatorname{mod} p\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">选大素数 p 作模数、较小素数 a 作基数。例如 <span aria-label="p=997" class="math-inline-source" data-tex="p=997">\(p=997\)</span>、<span aria-label="a=31" class="math-inline-source" data-tex="a=31">\(a=31\)</span>，对字符串 <span aria-label="Hello, world!" class="math-inline-source" data-tex="Hello, world!">\(Hello, world!\)</span> 计算得 Hash 值 186。SHA 系列则使用更复杂的运算与结构。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">案例 1.3.1 · Hash 函数</div><h2 class="h1-zh anim-item" style="max-width:15em">把任意数据映射到固定大小</h2><p class="lead-zh anim-item" style="max-width:24em">Hash 函数 H 把消息 m 映射为 Hash 值 h。关键特性：确定性、高效计算、抗碰撞性（弱碰撞与强碰撞）、抗修改性、原像抗性。</p><div aria-label="H(s) = [ Σ aⁿ⁻ⁱ · ord(cᵢ) ] mod p" class="formula anim-item mathjax-display-source" data-tex="H(s) = [ Σ a^{n-i} \cdot \operatorname{ord}(c_{i}) ] \operatorname{mod} p">\[\displaystyle H(s) = [ Σ a^{n-i} \cdot \operatorname{ord}(c_{i}) ] \operatorname{mod} p\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">选大素数 p 作模数、较小素数 a 作基数。例如 <span aria-label="p=997" class="math-inline-source" data-tex="p=997">\(p=997\)</span>、<span aria-label="a=31" class="math-inline-source" data-tex="a=31">\(a=31\)</span>，对字符串 <span aria-label="Hello, world!" class="math-inline-source" data-tex="Hello, world!">\(Hello, world!\)</span> 计算得 Hash 值 186。SHA 系列则使用更复杂的运算与结构。</p>
 </div></div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>74 / 92</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.1 Hash 函数" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.1 Hash 函数</div><div>75 / 92</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 1.3.1 · Hash 函数" data-theme="light"><div class="chrome"><div>应用动画 · 案例 1.3.1 · Hash 函数</div><div>75 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">1.3.1 Hash 函数</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 1.3.1 · Hash 函数</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch1/case01_hash.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case01_hash.mp4" type="video/mp4"></video>
 </div>
@@ -1396,16 +1396,16 @@ s = "Hello, world!"
 print(f"Hash value of '{s}': {hash_function(s, p, a)}")   # 186</code></pre></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>76 / 92</div></div></section>
-<section class="slide light" data-screen-label="Case" data-source="1.3.2 伪随机数生成" data-theme="light"><div class="chrome"><div>1.3.2 伪随机数</div><div>77 / 92</div></div>
+<section class="slide light" data-screen-label="Case" data-source="1.3.2 伪随机数生成" data-theme="light"><div class="chrome"><div>案例 1.3.2 · 伪随机数</div><div>77 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">案例二 · 伪随机数</div><h2 class="h1-zh anim-item" style="max-width:15em">线性同余生成器 LCG</h2><p class="lead-zh anim-item" style="max-width:24em">伪随机数由确定性算法生成，关键特性为均匀性、无序性、长重复周期、对初值敏感。线性同余生成器用递推式：</p><div aria-label="X n+1 = (a·X n + c) mod m" class="formula anim-item mathjax-display-source" data-tex="X_{n+1}= (a\cdot X_{n}+ c) \operatorname{mod} m">\[\displaystyle X_{n+1}= (a\cdot X_{n}+ c) \operatorname{mod} m\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">例：<span aria-label="a=1664525, c=1013904223, m=2³²," class="math-inline-source" data-tex="a=1664525, c=1013904223, m=2^{32},">\(a=1664525, c=1013904223, m=2^{32},\)</span> 种子 <span aria-label="X₀=12345" class="math-inline-source" data-tex="X_{0}=12345">\(X_{0}=12345\)</span>，前 5 个数为 87628868, 71072467, 2332836374, 2726892157, 3908547000。其输出可被数学预测，不适合高安全场景。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">案例 1.3.2 · 伪随机数</div><h2 class="h1-zh anim-item" style="max-width:15em">线性同余生成器 LCG</h2><p class="lead-zh anim-item" style="max-width:24em">伪随机数由确定性算法生成，关键特性为均匀性、无序性、长重复周期、对初值敏感。线性同余生成器用递推式：</p><div aria-label="X n+1 = (a·X n + c) mod m" class="formula anim-item mathjax-display-source" data-tex="X_{n+1}= (a\cdot X_{n}+ c) \operatorname{mod} m">\[\displaystyle X_{n+1}= (a\cdot X_{n}+ c) \operatorname{mod} m\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">例：<span aria-label="a=1664525, c=1013904223, m=2³²," class="math-inline-source" data-tex="a=1664525, c=1013904223, m=2^{32},">\(a=1664525, c=1013904223, m=2^{32},\)</span> 种子 <span aria-label="X₀=12345" class="math-inline-source" data-tex="X_{0}=12345">\(X_{0}=12345\)</span>，前 5 个数为 87628868, 71072467, 2332836374, 2726892157, 3908547000。其输出可被数学预测，不适合高安全场景。</p>
 </div></div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>77 / 92</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.2 伪随机数" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.2 伪随机数</div><div>78 / 92</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 1.3.2 · 伪随机数" data-theme="light"><div class="chrome"><div>应用动画 · 案例 1.3.2 · 伪随机数</div><div>78 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">1.3.2 伪随机数</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 1.3.2 · 伪随机数</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch1/case02_lcg.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case02_lcg.mp4" type="video/mp4"></video>
 </div>
@@ -1435,9 +1435,9 @@ def linear_congruential_generator(a, c, m, seed, n):
 print(linear_congruential_generator(a, c, m, seed, 5))</code></pre></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>79 / 92</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="1.3.3 校验码设计" data-theme="light"><div class="chrome"><div>1.3.3 校验码</div><div>80 / 92</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="1.3.3 校验码设计" data-theme="light"><div class="chrome"><div>案例 1.3.3 · 校验码</div><div>80 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例三 · 校验码</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">模 10 加权校验码</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">对数字序列加权求和后取模生成校验码，附加到末尾，用于检测错误。信用卡号、ISBN 均用此类方法。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例</div><p class="body-zh" style="margin-top:.6vh">序列 1..7、权重 2,1,2,1,2,1,2，加权和 <span aria-label="2+2+6+4+10+6+14 = 44" class="math-inline-source" data-tex="2+2+6+4+10+6+14 = 44">\(2+2+6+4+10+6+14 = 44\)</span>，<span aria-label="44 mod 10 = 4" class="math-inline-source" data-tex="44 \operatorname{mod} 10 = 4">\(44 \operatorname{mod} 10 = 4\)</span>，校验码为 4。</p></div></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 1.3.3 · 校验码</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">模 10 加权校验码</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">对数字序列加权求和后取模生成校验码，附加到末尾，用于检测错误。信用卡号、ISBN 均用此类方法。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例</div><p class="body-zh" style="margin-top:.6vh">序列 1..7、权重 2,1,2,1,2,1,2，加权和 <span aria-label="2+2+6+4+10+6+14 = 44" class="math-inline-source" data-tex="2+2+6+4+10+6+14 = 44">\(2+2+6+4+10+6+14 = 44\)</span>，<span aria-label="44 mod 10 = 4" class="math-inline-source" data-tex="44 \operatorname{mod} 10 = 4">\(44 \operatorname{mod} 10 = 4\)</span>，校验码为 4。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>digits = [1, 2, 3, 4, 5, 6, 7]    # 原始序列
 weights = [2, 1, 2, 1, 2, 1, 2]  # 加权因数
 s = sum(d * w for d, w
@@ -1447,26 +1447,26 @@ digits.append(check_digit)
 print("加上校验码:", digits)</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>80 / 92</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.3 校验码" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.3 校验码</div><div>81 / 92</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 1.3.3 · 校验码" data-theme="light"><div class="chrome"><div>应用动画 · 案例 1.3.3 · 校验码</div><div>81 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">1.3.3 校验码</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 1.3.3 · 校验码</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch1/case03_checkdigit.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case03_checkdigit.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>81 / 92</div></div></section>
-<section class="slide light" data-screen-label="Case" data-source="1.3.4 RSA 加密算法设计" data-theme="light"><div class="chrome"><div>1.3.4 RSA 加密</div><div>82 / 92</div></div>
+<section class="slide light" data-screen-label="Case" data-source="1.3.4 RSA 加密算法设计" data-theme="light"><div class="chrome"><div>案例 1.3.4 · RSA 加密</div><div>82 / 92</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.4rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">案例四 · RSA</div><h2 class="h1-zh anim-item" style="max-width:15em">1977 年由 Rivest、Shamir、Adleman 提出</h2><p class="lead-zh anim-item" style="max-width:24em">安全性基于大数素因数分解的困难性，是现代公钥加密的基石。密钥生成：选大素数 p、q，<span aria-label="n = pq" class="math-inline-source" data-tex="n = pq">\(n = pq\)</span>，<span aria-label="φ(n) = (p−1)(q−1)" class="math-inline-source" data-tex="φ(n) = (p-1)(q-1)">\(φ(n) = (p-1)(q-1)\)</span>，选与 φ(n) 互质的 e，求 d 使 <span aria-label="de ≡ 1 (mod φ(n))" class="math-inline-source" data-tex="de \equiv 1 (\operatorname{mod} φ(n))">\(de \equiv 1 (\operatorname{mod} φ(n))\)</span>。</p><div aria-label="加密 C = Mᵉ mod n　　解密 M = Cᵈ mod n" class="formula anim-item mathjax-display-source" data-tex="\text{加密} C = M^{e} \operatorname{mod} n \text{解密} M = C^{d} \operatorname{mod} n">\[\displaystyle \text{加密} C = M^{e} \operatorname{mod} n \text{解密} M = C^{d} \operatorname{mod} n\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">公钥对 (n, e)，私钥对 (n, d)。不知 p、q 时对密文解密极其困难。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">案例 1.3.4 · RSA</div><h2 class="h1-zh anim-item" style="max-width:15em">1977 年由 Rivest、Shamir、Adleman 提出</h2><p class="lead-zh anim-item" style="max-width:24em">安全性基于大数素因数分解的困难性，是现代公钥加密的基石。密钥生成：选大素数 p、q，<span aria-label="n = pq" class="math-inline-source" data-tex="n = pq">\(n = pq\)</span>，<span aria-label="φ(n) = (p−1)(q−1)" class="math-inline-source" data-tex="φ(n) = (p-1)(q-1)">\(φ(n) = (p-1)(q-1)\)</span>，选与 φ(n) 互质的 e，求 d 使 <span aria-label="de ≡ 1 (mod φ(n))" class="math-inline-source" data-tex="de \equiv 1 (\operatorname{mod} φ(n))">\(de \equiv 1 (\operatorname{mod} φ(n))\)</span>。</p><div aria-label="加密 C = Mᵉ mod n　　解密 M = Cᵈ mod n" class="formula anim-item mathjax-display-source" data-tex="\text{加密} C = M^{e} \operatorname{mod} n \text{解密} M = C^{d} \operatorname{mod} n">\[\displaystyle \text{加密} C = M^{e} \operatorname{mod} n \text{解密} M = C^{d} \operatorname{mod} n\]</div><p class="body-zh anim-item" style="max-width:26em;opacity:.7">公钥对 (n, e)，私钥对 (n, d)。不知 p、q 时对密文解密极其困难。</p>
 </div></div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>82 / 92</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.4 RSA 加密" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.4 RSA 加密</div><div>83 / 92</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 1.3.4 · RSA 加密" data-theme="light"><div class="chrome"><div>应用动画 · 案例 1.3.4 · RSA 加密</div><div>83 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">1.3.4 RSA 加密</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 1.3.4 · RSA 加密</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch1/case04_rsa.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case04_rsa.mp4" type="video/mp4"></video>
 </div>
@@ -1519,9 +1519,9 @@ print("密文:", ciphertext)
 print("解密后的明文:", decrypt(private_key, ciphertext))</code></pre></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>84 / 92</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="1.3.5 资源分配和优化" data-theme="light"><div class="chrome"><div>1.3.5 资源分配</div><div>85 / 92</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="1.3.5 资源分配和优化" data-theme="light"><div class="chrome"><div>案例 1.3.5 · 资源分配</div><div>85 / 92</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例五 · 资源分配</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">用最大公因数确定分配基本单位</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">某机构有总量为 R 的一种资源、M 个班级，按学生人数成比例分配。用各班学生数的 gcd 作为基本单位保证公平，再用排列组合分析方案优化利用率。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例</div><p class="body-zh" style="margin-top:.6vh">总资源 100，各班学生 [30, 20, 50]，按比例分配。</p></div></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 1.3.5 · 资源分配</div><h2 class="h2-zh" style="max-width:13em;margin-top:1vh">用最大公因数确定分配基本单位</h2><p class="body-zh" style="max-width:22em;margin-top:clamp(1rem,2.2vh,1.8rem)">某机构有总量为 R 的一种资源、M 个班级，按学生人数成比例分配。用各班学生数的 gcd 作为基本单位保证公平，再用排列组合分析方案优化利用率。</p><div class="example" style="margin-top:clamp(1rem,2.2vh,1.8rem)"><div class="meta" style="color:var(--accent);opacity:1">例</div><p class="body-zh" style="margin-top:.6vh">总资源 100，各班学生 [30, 20, 50]，按比例分配。</p></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from math import gcd
 from functools import reduce
 
@@ -1540,10 +1540,10 @@ print(allocate_resources(resources,
                          students_per_class))</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>85 / 92</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 1.3.5 资源分配" data-theme="light"><div class="chrome"><div>应用动画 · 1.3.5 资源分配</div><div>86 / 92</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 1.3.5 · 资源分配" data-theme="light"><div class="chrome"><div>应用动画 · 案例 1.3.5 · 资源分配</div><div>86 / 92</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">1.3.5 资源分配</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 1.3.5 · 资源分配</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch1/case05_resource_gcd.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case05_resource_gcd.mp4" type="video/mp4"></video>
 </div>

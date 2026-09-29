@@ -1092,9 +1092,9 @@ def P_prime(x):       #特定谓词P(x),Q(x,y),R(x,y)
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>61 / 74</div></div></section>
 <section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 6.4 应用案例和 Python 实现" data-theme="dark" data-mk-sec="6.4"><div class="chrome"><div>微课视频 · 6.4 应用案例和 Python 实现</div><div>62 / 74</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">07:37 · 14.0 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">6.4 应用案例和 Python 实现</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/6.4-applications.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 6.4 应用案例和 Python 实现"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">应用案例和 Python 实现</span><span class="mk-cover-m">微课视频 · 07:37 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>62 / 74</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="6.4.1 个人进步和国家发展" data-theme="light"><div class="chrome"><div>6.4.1 智能推荐系统</div><div>63 / 74</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="6.4.1 个人进步和国家发展" data-theme="light"><div class="chrome"><div>案例 6.4.1 · 智能推荐系统</div><div>63 / 74</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例一 · 智能推荐</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">谓词规则匹配学生与国家需求</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">定义谓词 MajorIn、InterestIn、AbleIn、NationNeed、Match、Recommend，构建规则 <span aria-label="∀x,y,z,w,p(MajorIn(x,y)∧InterestIn(x,z)∧AbleIn(x,w)∧NationNeed(y)∧Match(y,z,w,p)→Recommend(x,p))" class="math-inline-source" data-tex="\forall x,y,z,w,p(MajorIn(x,y)\land InterestIn(x,z)\land AbleIn(x,w)\land NationNeed(y)\land Match(y,z,w,p)\to Recommend(x,p))">\(\forall x,y,z,w,p(MajorIn(x,y)\land InterestIn(x,z)\land AbleIn(x,w)\land NationNeed(y)\land Match(y,z,w,p)\to Recommend(x,p))\)</span>，把学生专业兴趣能力与国家需求匹配到职业路径。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 6.4.1 · 智能推荐</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">谓词规则匹配学生与国家需求</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">定义谓词 MajorIn、InterestIn、AbleIn、NationNeed、Match、Recommend，构建规则 <span aria-label="∀x,y,z,w,p(MajorIn(x,y)∧InterestIn(x,z)∧AbleIn(x,w)∧NationNeed(y)∧Match(y,z,w,p)→Recommend(x,p))" class="math-inline-source" data-tex="\forall x,y,z,w,p(MajorIn(x,y)\land InterestIn(x,z)\land AbleIn(x,w)\land NationNeed(y)\land Match(y,z,w,p)\to Recommend(x,p))">\(\forall x,y,z,w,p(MajorIn(x,y)\land InterestIn(x,z)\land AbleIn(x,w)\land NationNeed(y)\land Match(y,z,w,p)\to Recommend(x,p))\)</span>，把学生专业兴趣能力与国家需求匹配到职业路径。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-tiny"><code>students = [
     {"name": "李明", "major": "计算机科学",
      "interests": ["人工智能", "数据科学"], "abilities": ["编码", "数学"]},
@@ -1122,19 +1122,19 @@ for s in students:
         print(f"{s['name']}，建议从事的职业: {path}")</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>63 / 74</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 6.4.1 智能推荐系统" data-theme="light"><div class="chrome"><div>应用动画 · 6.4.1 智能推荐系统</div><div>64 / 74</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 6.4.1 · 智能推荐系统" data-theme="light"><div class="chrome"><div>应用动画 · 案例 6.4.1 · 智能推荐系统</div><div>64 / 74</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">6.4.1 智能推荐系统</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 6.4.1 · 智能推荐系统</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch6/ch6_06_case_6_4_1_f6507ed5.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_06_case_6_4_1_f6507ed5.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>64 / 74</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="6.4.2 国家历史文化遗产保护" data-theme="light"><div class="chrome"><div>6.4.2 历史文化遗产保护</div><div>65 / 74</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="6.4.2 国家历史文化遗产保护" data-theme="light"><div class="chrome"><div>案例 6.4.2 · 历史文化遗产保护</div><div>65 / 74</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 遗产保护</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">谓词规则推荐优先保护遗迹</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">定义谓词 Unique、InDanger、UNESCOHeritage、PriorityForProtection，构建规则 <span aria-label="∀x(Unique(x)∧InDanger(x)→优先保护)、∀x(UNESCOHeritage(x)→优先保护)" class="math-inline-source" data-tex="\forall x(Unique(x)\land InDanger(x)\to \text{优先保护})、\forall x(UNESCOHeritage(x)\to \text{优先保护})">\(\forall x(Unique(x)\land InDanger(x)\to \text{优先保护})、\forall x(UNESCOHeritage(x)\to \text{优先保护})\)</span>。独一无二且危险，或被列为世界遗产的遗迹应优先保护。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 6.4.2 · 遗产保护</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">谓词规则推荐优先保护遗迹</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">定义谓词 Unique、InDanger、UNESCOHeritage、PriorityForProtection，构建规则 <span aria-label="∀x(Unique(x)∧InDanger(x)→优先保护)、∀x(UNESCOHeritage(x)→优先保护)" class="math-inline-source" data-tex="\forall x(Unique(x)\land InDanger(x)\to \text{优先保护})、\forall x(UNESCOHeritage(x)\to \text{优先保护})">\(\forall x(Unique(x)\land InDanger(x)\to \text{优先保护})、\forall x(UNESCOHeritage(x)\to \text{优先保护})\)</span>。独一无二且危险，或被列为世界遗产的遗迹应优先保护。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>heritages = {
     '长城':   {'unique': True,  'in_danger': True,  'unesco_heritage': True},
     '兵马俑': {'unique': True,  'in_danger': False, 'unesco_heritage': True},
@@ -1151,19 +1151,19 @@ for name, p in heritages.items():
         print(f"{name}应该优先保护")</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>65 / 74</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 6.4.2 历史文化遗产保护" data-theme="light"><div class="chrome"><div>应用动画 · 6.4.2 历史文化遗产保护</div><div>66 / 74</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 6.4.2 · 历史文化遗产保护" data-theme="light"><div class="chrome"><div>应用动画 · 案例 6.4.2 · 历史文化遗产保护</div><div>66 / 74</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">6.4.2 历史文化遗产保护</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 6.4.2 · 历史文化遗产保护</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch6/ch6_07_case_6_4_2_b8082bee.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_07_case_6_4_2_b8082bee.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>66 / 74</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="6.4.2 多维度评估扩展" data-theme="light"><div class="chrome"><div>6.4.2 多维度评估</div><div>67 / 74</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="6.4.3 多维度评估扩展" data-theme="light"><div class="chrome"><div>案例 6.4.3 · 多维度评估</div><div>67 / 74</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 综合评估</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">扩展为多维度保护决策</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">进一步考虑历史价值、文化影响力、经济条件、保护成本与潜在效益等多维因素，构建综合规则：独特且危险，或高价值且高影响力，或经济好且成本低且效益高，则推荐优先保护。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 6.4.3 · 综合评估</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">扩展为多维度保护决策</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">进一步考虑历史价值、文化影响力、经济条件、保护成本与潜在效益等多维因素，构建综合规则：独特且危险，或高价值且高影响力，或经济好且成本低且效益高，则推荐优先保护。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def recommend(p):
     unique_danger = p['unique'] and p['in_danger']
     value_influence = (p['historical_value'] == 'high'
@@ -1178,10 +1178,10 @@ for name, p in heritages.items():
         print(f"{name} 建议优先保护")</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>67 / 74</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 6.4.2 多维度评估" data-theme="light"><div class="chrome"><div>应用动画 · 6.4.2 多维度评估</div><div>68 / 74</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 6.4.3 · 多维度评估" data-theme="light"><div class="chrome"><div>应用动画 · 案例 6.4.3 · 多维度评估</div><div>68 / 74</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">6.4.2 多维度评估</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 6.4.3 · 多维度评估</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch6/ch6_08_case_6_4_2_076667b1.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_08_case_6_4_2_076667b1.mp4" type="video/mp4"></video>
 </div>

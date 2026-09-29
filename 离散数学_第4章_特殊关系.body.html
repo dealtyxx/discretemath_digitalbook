@@ -1401,9 +1401,9 @@ x_values = [1, 2, 3, 4, 5]</pre></button></div><p class="mk-foot-hint anim-item"
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>88 / 105</div></div></section>
 <section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 4.4 应用案例和 Python 实现" data-theme="dark" data-mk-sec="4.4"><div class="chrome"><div>微课视频 · 4.4 应用案例和 Python 实现</div><div>89 / 105</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">06:57 · 13.4 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">4.4 应用案例和 Python 实现</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/4.4-applications.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 4.4 应用案例和 Python 实现"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">应用案例和 Python 实现</span><span class="mk-cover-m">微课视频 · 06:57 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>89 / 105</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="4.4.1 社会网络中的群体划分" data-theme="light"><div class="chrome"><div>4.4.1 社会网络群体划分</div><div>90 / 105</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="4.4.1 社会网络中的群体划分" data-theme="light"><div class="chrome"><div>案例 4.4.1 · 社会网络群体划分</div><div>90 / 105</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例一 · 社会网络</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">等价关系识别社区</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">社会网络用图表示，节点是个体、边是联系。定义等价关系：两人直接或间接相连即属于同一等价类（社区）。用连通分量算法划分社区。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 4.4.1 · 社会网络</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">等价关系识别社区</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">社会网络用图表示，节点是个体、边是联系。定义等价关系：两人直接或间接相连即属于同一等价类（社区）。用连通分量算法划分社区。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
 from networkx.algorithms.components.connected import connected_components
 
@@ -1416,19 +1416,19 @@ for i, community in enumerate(connected_components(G), 1):   # 连通分量=社�
     print(f"社区{i}: {community}")</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>90 / 105</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 4.4.1 社会网络群体划分" data-theme="light"><div class="chrome"><div>应用动画 · 4.4.1 社会网络群体划分</div><div>91 / 105</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 4.4.1 · 社会网络群体划分" data-theme="light"><div class="chrome"><div>应用动画 · 案例 4.4.1 · 社会网络群体划分</div><div>91 / 105</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">4.4.1 社会网络群体划分</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 4.4.1 · 社会网络群体划分</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch4/ch4_08_case_4_4_1_2a02a77f.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch4/ch4_08_case_4_4_1_2a02a77f.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>91 / 105</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="4.4.2 中国古代官职等级分析" data-theme="light"><div class="chrome"><div>4.4.2 中国古代官职等级</div><div>92 / 105</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="4.4.2 中国古代官职等级分析" data-theme="light"><div class="chrome"><div>案例 4.4.2 · 中国古代官职等级</div><div>92 / 105</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 官职等级</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">偏序关系刻画等级秩序</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">县令 &lt; 太守 &lt; 尚书 &lt; 丞相，等级关系是传递、自反、反对称的偏序。用有向图表示并可视化官职间的层级与从属关系。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><svg class="diagram" viewbox="0 0 220 290"><line opacity="0.55" stroke="currentColor" stroke-width="1.6" x1="110.0" x2="110.0" y1="230.0" y2="200.0"></line><line opacity="0.55" stroke="currentColor" stroke-width="1.6" x1="110.0" x2="110.0" y1="160.0" y2="130.0"></line><line opacity="0.55" stroke="currentColor" stroke-width="1.6" x1="110.0" x2="110.0" y1="90.0" y2="60.0"></line><circle cx="110" cy="40" fill="var(--paper)" r="20" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="110" y="45">丞相</text><circle cx="110" cy="110" fill="var(--paper)" r="20" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="110" y="115">尚书</text><circle cx="110" cy="180" fill="var(--paper)" r="20" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="110" y="185">太守</text><circle cx="110" cy="250" fill="var(--paper)" r="20" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="110" y="255">县令</text></svg></div></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 4.4.2 · 官职等级</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">偏序关系刻画等级秩序</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">县令 &lt; 太守 &lt; 尚书 &lt; 丞相，等级关系是传递、自反、反对称的偏序。用有向图表示并可视化官职间的层级与从属关系。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><svg class="diagram" viewbox="0 0 220 290"><line opacity="0.55" stroke="currentColor" stroke-width="1.6" x1="110.0" x2="110.0" y1="230.0" y2="200.0"></line><line opacity="0.55" stroke="currentColor" stroke-width="1.6" x1="110.0" x2="110.0" y1="160.0" y2="130.0"></line><line opacity="0.55" stroke="currentColor" stroke-width="1.6" x1="110.0" x2="110.0" y1="90.0" y2="60.0"></line><circle cx="110" cy="40" fill="var(--paper)" r="20" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="110" y="45">丞相</text><circle cx="110" cy="110" fill="var(--paper)" r="20" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="110" y="115">尚书</text><circle cx="110" cy="180" fill="var(--paper)" r="20" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="110" y="185">太守</text><circle cx="110" cy="250" fill="var(--paper)" r="20" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="110" y="255">县令</text></svg></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
 import matplotlib.pyplot as plt
 
@@ -1443,19 +1443,19 @@ plt.title("中国古代官职等级系统")
 plt.show()</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>92 / 105</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 4.4.2 中国古代官职等级" data-theme="light"><div class="chrome"><div>应用动画 · 4.4.2 中国古代官职等级</div><div>93 / 105</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 4.4.2 · 中国古代官职等级" data-theme="light"><div class="chrome"><div>应用动画 · 案例 4.4.2 · 中国古代官职等级</div><div>93 / 105</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">4.4.2 中国古代官职等级</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 4.4.2 · 中国古代官职等级</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch4/ch4_09_case_4_4_2_eda4a798.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch4/ch4_09_case_4_4_2_eda4a798.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>93 / 105</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="4.4.3 春节返乡人口流动模式分析" data-theme="light"><div class="chrome"><div>4.4.3 春节人口流动</div><div>94 / 105</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="4.4.3 春节返乡人口流动模式分析" data-theme="light"><div class="chrome"><div>案例 4.4.3 · 春节人口流动</div><div>94 / 105</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例三 · 春节流动</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">函数复合与逆运算分析人口流动</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)"><span aria-label="f(x)=2x+3" class="math-inline-source" data-tex="f(x)=2x+3">\(f(x)=2x+3\)</span> 表示春节前从城市到农村的流动，<span aria-label="g(x)=(x−3)/2" class="math-inline-source" data-tex="g(x)=(x-3)/2">\(g(x)=(x-3)/2\)</span> 表示春节后从农村返回城市，正好是 f 的逆。用复合与逆运算分析整体趋势并反推分布。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 4.4.3 · 春节流动</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">函数复合与逆运算分析人口流动</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)"><span aria-label="f(x)=2x+3" class="math-inline-source" data-tex="f(x)=2x+3">\(f(x)=2x+3\)</span> 表示春节前从城市到农村的流动，<span aria-label="g(x)=(x−3)/2" class="math-inline-source" data-tex="g(x)=(x-3)/2">\(g(x)=(x-3)/2\)</span> 表示春节后从农村返回城市，正好是 f 的逆。用复合与逆运算分析整体趋势并反推分布。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>def f(x): return 2 * x + 3            # 城市→农村
 def g(x): return (x - 3) / 2          # 农村→城市，f 的逆
 
@@ -1463,19 +1463,19 @@ print("f(g(5)):", f(g(5)))            # 5.0
 print("g(f(5)):", g(f(5)))            # 5.0</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>94 / 105</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 4.4.3 春节人口流动" data-theme="light"><div class="chrome"><div>应用动画 · 4.4.3 春节人口流动</div><div>95 / 105</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 4.4.3 · 春节人口流动" data-theme="light"><div class="chrome"><div>应用动画 · 案例 4.4.3 · 春节人口流动</div><div>95 / 105</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">4.4.3 春节人口流动</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 4.4.3 · 春节人口流动</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch4/ch4_10_case_4_4_3_006d138e.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch4/ch4_10_case_4_4_3_006d138e.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>95 / 105</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="4.4.4 地理信息处理系统" data-theme="light"><div class="chrome"><div>4.4.4 地理信息处理系统</div><div>96 / 105</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="4.4.4 地理信息处理系统" data-theme="light"><div class="chrome"><div>案例 4.4.4 · 地理信息处理系统</div><div>96 / 105</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例四 · 地理信息</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">坐标变换与逆变换</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">用旋转 θ 并缩放 s 的变换函数把古代遗址原始坐标转换到现代地图格式，再用逆变换恢复原始坐标，用于历史对比与研究。逆变换需反向执行缩放与旋转。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 4.4.4 · 地理信息</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">坐标变换与逆变换</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">用旋转 θ 并缩放 s 的变换函数把古代遗址原始坐标转换到现代地图格式，再用逆变换恢复原始坐标，用于历史对比与研究。逆变换需反向执行缩放与旋转。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import numpy as np
 
 def transform(x, y, theta, s):              # 旋转θ并缩放s
@@ -1493,19 +1493,19 @@ print("变换后:", t)
 print("恢复后:", inverse_transform(*t, 45, 2))   # (1.0, 2.0)</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>96 / 105</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 4.4.4 地理信息处理系统" data-theme="light"><div class="chrome"><div>应用动画 · 4.4.4 地理信息处理系统</div><div>97 / 105</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 4.4.4 · 地理信息处理系统" data-theme="light"><div class="chrome"><div>应用动画 · 案例 4.4.4 · 地理信息处理系统</div><div>97 / 105</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">4.4.4 地理信息处理系统</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 4.4.4 · 地理信息处理系统</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch4/ch4_11_case_4_4_4_6016c71b.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch4/ch4_11_case_4_4_4_6016c71b.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>97 / 105</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="4.4.5 探索宇宙边界的天文模拟" data-theme="light"><div class="chrome"><div>4.4.5 宇宙边界天文模拟</div><div>98 / 105</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="4.4.5 探索宇宙边界的天文模拟" data-theme="light"><div class="chrome"><div>案例 4.4.5 · 宇宙边界天文模拟</div><div>98 / 105</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例五 · 宇宙边界</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">无限集合视角下的可观测宇宙</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">把宇宙视为无限集合，可观测部分是其有限子集。用 Python 生成简单星图，绘制天体分布与可观测宇宙边界，借此探讨无限的概念。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 4.4.5 · 宇宙边界</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">无限集合视角下的可观测宇宙</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">把宇宙视为无限集合，可观测部分是其有限子集。用 Python 生成简单星图，绘制天体分布与可观测宇宙边界，借此探讨无限的概念。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import matplotlib.pyplot as plt
 import numpy as np
 
@@ -1522,10 +1522,10 @@ plt.gca().set_aspect('equal')
 plt.legend(); plt.show()</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>98 / 105</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 4.4.5 宇宙边界天文模拟" data-theme="light"><div class="chrome"><div>应用动画 · 4.4.5 宇宙边界天文模拟</div><div>99 / 105</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 4.4.5 · 宇宙边界天文模拟" data-theme="light"><div class="chrome"><div>应用动画 · 案例 4.4.5 · 宇宙边界天文模拟</div><div>99 / 105</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">4.4.5 宇宙边界天文模拟</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 4.4.5 · 宇宙边界天文模拟</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch4/ch4_12_case_4_4_5_c0af5ed2.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch4/ch4_12_case_4_4_5_c0af5ed2.mp4" type="video/mp4"></video>
 </div>

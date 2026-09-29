@@ -1347,9 +1347,9 @@ premise1 = Implies(P, Implies(Q, S))    #前提P→(</pre></button></div><p clas
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>79 / 91</div></div></section>
 <section class="slide dark mk-page mk-video-page" data-screen-label="MicroVideo" data-source="微课视频 · 5.4 应用案例和 Python 实现" data-theme="dark" data-mk-sec="5.4"><div class="chrome"><div>微课视频 · 5.4 应用案例和 Python 实现</div><div>80 / 91</div></div><div class="slide-body"><div class="mk-head anim-item"><span class="mk-tag">微课视频</span><span class="mk-metaline">07:01 · 13.0 MB · 本节导学</span></div><h2 class="h2-zh mk-title anim-item">5.4 应用案例和 Python 实现</h2><div class="mk-stage anim-item"><video class="mk-video" data-mk-src="assets/micro-lectures/5.4-applications.mp4" controls playsinline preload="none" controlslist="nodownload"></video><button class="mk-cover" type="button" aria-label="播放微课视频 5.4 应用案例和 Python 实现"><span class="mk-play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></span><span class="mk-cover-t">应用案例和 Python 实现</span><span class="mk-cover-m">微课视频 · 07:01 · 点击播放</span></button></div><p class="mk-foot-hint anim-item">建议先完整观看本节微课建立整体认知，再逐页精读；按 <b>V</b> 可随时打开本章数字资源面板</p></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>80 / 91</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="5.4.1 两弹一星" data-theme="light"><div class="chrome"><div>5.4.1 两弹一星</div><div>81 / 91</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="5.4.1 两弹一星" data-theme="light"><div class="chrome"><div>案例 5.4.1 · 两弹一星</div><div>81 / 91</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例一 · 两弹一星</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用推理验证项目能否完成</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">符号化：培养与经费 <span aria-label="P∧F→原子弹 A" class="math-inline-source" data-tex="P\land F\to \text{原子弹} A">\(P\land F\to \text{原子弹} A\)</span>；A 与设备经费 <span aria-label="A∧E∧F→氢弹 H" class="math-inline-source" data-tex="A\land E\land F\to \text{氢弹} H">\(A\land E\land F\to \text{氢弹} H\)</span>；H 与经费 <span aria-label="H∧F→卫星 S" class="math-inline-source" data-tex="H\land F\to \text{卫星} S">\(H\land F\to \text{卫星} S\)</span>；已知 P、E、F。经演算推证逐步得 A、H、S，结论 <span aria-label="A∧H∧S" class="math-inline-source" data-tex="A\land H\land S">\(A\land H\land S\)</span> 成立，可成功完成两弹一星。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 5.4.1 · 两弹一星</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用推理验证项目能否完成</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">符号化：培养与经费 <span aria-label="P∧F→原子弹 A" class="math-inline-source" data-tex="P\land F\to \text{原子弹} A">\(P\land F\to \text{原子弹} A\)</span>；A 与设备经费 <span aria-label="A∧E∧F→氢弹 H" class="math-inline-source" data-tex="A\land E\land F\to \text{氢弹} H">\(A\land E\land F\to \text{氢弹} H\)</span>；H 与经费 <span aria-label="H∧F→卫星 S" class="math-inline-source" data-tex="H\land F\to \text{卫星} S">\(H\land F\to \text{卫星} S\)</span>；已知 P、E、F。经演算推证逐步得 A、H、S，结论 <span aria-label="A∧H∧S" class="math-inline-source" data-tex="A\land H\land S">\(A\land H\land S\)</span> 成立，可成功完成两弹一星。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols
 from sympy.logic.boolalg import And, Implies, Not
 from sympy.logic.inference import satisfiable
@@ -1364,19 +1364,19 @@ print("可完成" if not satisfiable(And(premises, Not(conclusion)))
       else "无法完成")</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>81 / 91</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 5.4.1 两弹一星" data-theme="light"><div class="chrome"><div>应用动画 · 5.4.1 两弹一星</div><div>82 / 91</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 5.4.1 · 两弹一星" data-theme="light"><div class="chrome"><div>应用动画 · 案例 5.4.1 · 两弹一星</div><div>82 / 91</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">5.4.1 两弹一星</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 5.4.1 · 两弹一星</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch5/ch5_05_case_5_4_1_603a00df.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch5/ch5_05_case_5_4_1_603a00df.mp4" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>82 / 91</div></div></section>
-<section class="slide light" data-screen-label="Case+Code" data-source="5.4.2 深度学习项目" data-theme="light"><div class="chrome"><div>5.4.2 深度学习项目</div><div>83 / 91</div></div>
+<section class="slide light" data-screen-label="Case+Code" data-source="5.4.2 深度学习项目" data-theme="light"><div class="chrome"><div>案例 5.4.2 · 深度学习项目</div><div>83 / 91</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:4fr 8fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例二 · 深度学习</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用推理验证项目可行性</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">数据预处理与网络结构 <span aria-label="A∧B→训练 H" class="math-inline-source" data-tex="A\land B\to \text{训练} H">\(A\land B\to \text{训练} H\)</span>；H 与团队协同 <span aria-label="H∧E→验证 F" class="math-inline-source" data-tex="H\land E\to \text{验证} F">\(H\land E\to \text{验证} F\)</span>；验证 <span aria-label="F→完成 G" class="math-inline-source" data-tex="F\to \text{完成} G">\(F\to \text{完成} G\)</span>。已知 A、B、C、D、E。经演算推证逐步得 H、F，最终结论 G 成立，可成功完成深度学习项目。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">案例 5.4.2 · 深度学习</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">用推理验证项目可行性</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">数据预处理与网络结构 <span aria-label="A∧B→训练 H" class="math-inline-source" data-tex="A\land B\to \text{训练} H">\(A\land B\to \text{训练} H\)</span>；H 与团队协同 <span aria-label="H∧E→验证 F" class="math-inline-source" data-tex="H\land E\to \text{验证} F">\(H\land E\to \text{验证} F\)</span>；验证 <span aria-label="F→完成 G" class="math-inline-source" data-tex="F\to \text{完成} G">\(F\to \text{完成} G\)</span>。已知 A、B、C、D、E。经演算推证逐步得 H、F，最终结论 G 成立，可成功完成深度学习项目。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from sympy import symbols
 from sympy.logic.boolalg import And, Implies, Not
 from sympy.logic.inference import satisfiable
@@ -1391,10 +1391,10 @@ valid = not satisfiable(And(conditions, Not(G)))
 print("可以成功完成深度学习项目:", valid)</code></pre></div>
 </div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>83 / 91</div></div></section>
-<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 5.4.2 深度学习项目" data-theme="light"><div class="chrome"><div>应用动画 · 5.4.2 深度学习项目</div><div>84 / 91</div></div>
+<section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 案例 5.4.2 · 深度学习项目" data-theme="light"><div class="chrome"><div>应用动画 · 案例 5.4.2 · 深度学习项目</div><div>84 / 91</div></div>
 <div class="slide-body">
 <div class="app-video-kicker anim-item">应用动画</div>
-<h2 class="h2-zh app-video-title anim-item">5.4.2 深度学习项目</h2>
+<h2 class="h2-zh app-video-title anim-item">案例 5.4.2 · 深度学习项目</h2>
 <div class="app-video-stage anim-item">
 <video data-app-video="assets/app-videos-ch5/ch5_06_case_5_4_2_819a2712.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch5/ch5_06_case_5_4_2_819a2712.mp4" type="video/mp4"></video>
 </div>
