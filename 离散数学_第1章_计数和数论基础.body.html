@@ -2,15 +2,14 @@
 <html lang="zh-CN">
 <head>
 <base target="_top"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300..600&amp;family=DM+Mono:wght@400..500&amp;family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
+<link rel="preload" href="assets/fonts/noto-serif-sc-400-a.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+
 <title>离散数学 第1章 · 计数和数论基础</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700;900&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
 <style>
 :root{
   --ink:#1a2332; --ink-rgb:26,35,50;
@@ -468,6 +467,7 @@ window.MathJax={
   },
   options:{enableMenu:true,enableExplorer:true},
   startup:{
+    typeset:false,               /* 由 assets/js/book-polish.js 按页排版 */
     ready:function(){
       MathJax.startup.defaultReady();
       MathJax.startup.promise.then(function(){
@@ -692,6 +692,7 @@ body.tb-focus #mk-mini{display:none!important}
 .mk-src-empty{color:var(--accent);font-family:"Inter","Noto Serif SC",sans-serif;font-size:.86rem;padding:1rem .3rem}
 @media (max-width:900px){.mk-src{grid-template-columns:1fr}.mk-src-side{border-right:0;border-bottom:1px solid var(--line);max-height:9rem}}
 </style>
+<link rel="stylesheet" href="assets/css/book-polish.css">
 </head>
 <body>
 <div id="deck">
@@ -832,7 +833,7 @@ print("Permutations:", result)</code></pre></div>
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">密码系统</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/01_password.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/01_password.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/01_password.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -878,7 +879,7 @@ print("Combinations:", result)</code></pre></div>
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">数据挖掘</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/02_datamining.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/02_datamining.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/02_datamining.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -935,7 +936,7 @@ print(min_cities_with_extra(num_snacks, num_cities))   # 输出: 6
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">资源分配</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/03_pigeonhole_resource.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/03_pigeonhole_resource.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/03_pigeonhole_resource.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1052,7 +1053,7 @@ print((a * c) % n)   # 5</code></pre></div>
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">模运算编程</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/04_modular_programming.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/04_modular_programming.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/04_modular_programming.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1220,7 +1221,7 @@ print(lcm(12, 15))   # 60</code></pre></div>
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">数据压缩与分块传输</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/05_block_transfer.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/05_block_transfer.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/05_block_transfer.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1269,7 +1270,7 @@ print(crt([(2, 3), (3, 5)]))   # 8</code></pre></div>
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">同余与中国剩余定理</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/06_crt.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/06_crt.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/06_crt.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1324,7 +1325,7 @@ print("结果是:", result)   # 2</code></pre></div>
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">欧拉函数与费马小定理</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/07_euler_fermat.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/07_euler_fermat.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/07_euler_fermat.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1371,7 +1372,7 @@ print("结果是:", result)   # 2</code></pre></div>
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.1 Hash 函数</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/case01_hash.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case01_hash.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case01_hash.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1407,7 +1408,7 @@ print(f"Hash value of '{s}': {hash_function(s, p, a)}")   # 186</code></pre></di
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.2 伪随机数</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/case02_lcg.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case02_lcg.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case02_lcg.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1452,7 +1453,7 @@ print("加上校验码:", digits)</code></pre></div>
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.3 校验码</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/case03_checkdigit.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case03_checkdigit.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case03_checkdigit.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1468,7 +1469,7 @@ print("加上校验码:", digits)</code></pre></div>
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.4 RSA 加密</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/case04_rsa.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case04_rsa.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case04_rsa.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1545,7 +1546,7 @@ print(allocate_resources(resources,
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">1.3.5 资源分配</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch1/case05_resource_gcd.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch1/case05_resource_gcd.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch1/case05_resource_gcd.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1938,90 +1939,6 @@ def find_gcd(list):
 
 
 
-<script>
-(function(){
-  if(window.__appVideoRuntimeV3) return; window.__appVideoRuntimeV3=true;
-
-  function absUrl(rel){
-    try{ return new URL(rel, document.baseURI || location.href).href; }
-    catch(e){ return rel; }
-  }
-
-  function fixVideo(v){
-    var rel=v.getAttribute('data-app-video') || v.getAttribute('src');
-    if(!rel) return;
-    // strip query noise
-    var abs=absUrl(rel);
-    var cur=v.currentSrc || v.getAttribute('src') || '';
-    if(cur!==abs){
-      v.setAttribute('src', abs);
-      try{ v.load(); }catch(e){}
-    }
-    // ensure visible box
-    v.setAttribute('playsinline','');
-    v.setAttribute('controls','');
-    v.setAttribute('preload','auto');
-  }
-
-  function fixAll(){
-    document.querySelectorAll('video[data-app-video], .app-video-stage video').forEach(fixVideo);
-  }
-
-  function pauseOthers(except){
-    document.querySelectorAll('video').forEach(function(v){
-      if(except && v===except) return;
-      try{ v.pause(); }catch(e){}
-    });
-  }
-
-  // When a slide becomes active, reload its videos (metadata may not load while hidden)
-  function watchSlides(){
-    var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
-    if(!slides.length) return;
-    var obs=new MutationObserver(function(){
-      slides.forEach(function(s){
-        var active=s.classList.contains('active')||s.classList.contains('visible');
-        s.querySelectorAll('video').forEach(function(v){
-          if(active){
-            fixVideo(v);
-          }else{
-            try{ v.pause(); }catch(e){}
-          }
-        });
-      });
-    });
-    slides.forEach(function(s){try{obs.observe(s,{attributes:true,attributeFilter:['class']});}catch(e){}});
-  }
-
-  document.addEventListener('play', function(e){
-    if(e.target && e.target.tagName==='VIDEO') pauseOthers(e.target);
-  }, true);
-
-  document.addEventListener('error', function(e){
-    if(e.target && e.target.tagName==='VIDEO'){
-      console.warn('video error', e.target.getAttribute('src'), e.target.error);
-      // one retry with cache buster
-      var v=e.target;
-      var rel=v.getAttribute('data-app-video');
-      if(rel && !v.__retried){
-        v.__retried=true;
-        v.src=absUrl(rel)+(absUrl(rel).indexOf('?')>-1?'&':'?')+'t='+Date.now();
-        try{ v.load(); }catch(err){}
-      }
-    }
-  }, true);
-
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', function(){ fixAll(); watchSlides(); });
-  }else{
-    fixAll(); watchSlides();
-  }
-  setTimeout(fixAll, 300);
-  setTimeout(fixAll, 1200);
-})();
-</script>
-
-
 <!--MK-ASSETS-V1-->
 <audio id="mk-audio" preload="none"></audio>
 <div id="mk-mini" aria-label="播客迷你播放器"><button class="mk-m-play" type="button" aria-label="播放 / 暂停"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><span class="mk-m-info"><span class="mk-m-t"></span><span class="mk-m-bar"><span class="mk-m-fill"></span></span></span><span class="mk-m-time">0:00 / 0:00</span><button class="mk-m-rate" type="button" aria-label="倍速">1×</button><button class="mk-m-x" type="button" aria-label="关闭播放器">&times;</button></div>
@@ -2328,5 +2245,6 @@ def find_gcd(list):
   syncUI();
 })();
 </script>
+<script src="assets/js/book-polish.js"></script>
 </body>
 </html>

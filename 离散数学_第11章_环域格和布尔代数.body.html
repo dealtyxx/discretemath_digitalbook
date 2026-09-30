@@ -2,15 +2,14 @@
 <html lang="zh-CN">
 <head>
 <base target="_top"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300..600&amp;family=DM+Mono:wght@400..500&amp;family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
+<link rel="preload" href="assets/fonts/noto-serif-sc-400-a.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+
 <title>离散数学 第11章 · 环、域、格和布尔代数</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700;900&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
 <style>
 :root{
   --ink:#0f211a; --ink-rgb:15,33,26;
@@ -476,6 +475,7 @@ window.MathJax={
   },
   options:{enableMenu:true,enableExplorer:true},
   startup:{
+    typeset:false,               /* 由 assets/js/book-polish.js 按页排版 */
     ready:function(){
       MathJax.startup.defaultReady();
       MathJax.startup.promise.then(function(){
@@ -700,6 +700,7 @@ body.tb-focus #mk-mini{display:none!important}
 .mk-src-empty{color:var(--accent);font-family:"Inter","Noto Serif SC",sans-serif;font-size:.86rem;padding:1rem .3rem}
 @media (max-width:900px){.mk-src{grid-template-columns:1fr}.mk-src-side{border-right:0;border-bottom:1px solid var(--line);max-height:9rem}}
 </style>
+<link rel="stylesheet" href="assets/css/book-polish.css">
 </head>
 <body>
 <div id="deck">
@@ -809,7 +810,7 @@ body.tb-focus #mk-mini{display:none!important}
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_01_app_11_1_1_1bcc8173.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_01_app_11_1_1_1bcc8173.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_01_app_11_1_1_1bcc8173.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -854,7 +855,7 @@ body.tb-focus #mk-mini{display:none!important}
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_02_app_11_1_2_1f8fd2fb.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_02_app_11_1_2_1f8fd2fb.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_02_app_11_1_2_1f8fd2fb.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -888,7 +889,7 @@ body.tb-focus #mk-mini{display:none!important}
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_03_app_11_1_3_f662aca5.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_03_app_11_1_3_f662aca5.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_03_app_11_1_3_f662aca5.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -970,7 +971,7 @@ print(f&quot;a · b = {result}&quot;)
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_04_app_11_2_1_90cc2714.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_04_app_11_2_1_90cc2714.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_04_app_11_2_1_90cc2714.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1009,7 +1010,7 @@ print(f&quot;a · b = {result}&quot;)
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_05_app_11_2_2_bc6b8189.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_05_app_11_2_2_bc6b8189.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_05_app_11_2_2_bc6b8189.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1044,7 +1045,7 @@ print(f&quot;a · b = {result}&quot;)
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_06_app_11_2_3_0df8e198.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_06_app_11_2_3_0df8e198.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_06_app_11_2_3_0df8e198.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1100,7 +1101,7 @@ print(f&quot;a · b = {result}&quot;)
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">应用示例</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_07_app_11_2_4_9c8a2d89.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_07_app_11_2_4_9c8a2d89.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_07_app_11_2_4_9c8a2d89.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1159,7 +1160,7 @@ class LinearCode:
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">案例 11.3.1</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_08_case_11_3_1_d4bc7d1d.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_08_case_11_3_1_d4bc7d1d.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_08_case_11_3_1_d4bc7d1d.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1185,7 +1186,7 @@ class HomomorphicEncryption:
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">案例 11.3.2</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_09_case_11_3_2_730cd932.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_09_case_11_3_2_730cd932.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_09_case_11_3_2_730cd932.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1201,7 +1202,7 @@ class HomomorphicEncryption:
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">案例 11.3.3</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_10_case_11_3_3_7f485236.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_10_case_11_3_3_7f485236.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_10_case_11_3_3_7f485236.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1224,7 +1225,7 @@ for P in (0, 1):
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">案例 11.3.4</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch11/ch11_11_case_11_3_4_3fd4702a.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch11/ch11_11_case_11_3_4_3fd4702a.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch11/ch11_11_case_11_3_4_3fd4702a.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1601,90 +1602,6 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
 
 
 
-<script>
-(function(){
-  if(window.__appVideoRuntimeV3) return; window.__appVideoRuntimeV3=true;
-
-  function absUrl(rel){
-    try{ return new URL(rel, document.baseURI || location.href).href; }
-    catch(e){ return rel; }
-  }
-
-  function fixVideo(v){
-    var rel=v.getAttribute('data-app-video') || v.getAttribute('src');
-    if(!rel) return;
-    // strip query noise
-    var abs=absUrl(rel);
-    var cur=v.currentSrc || v.getAttribute('src') || '';
-    if(cur!==abs){
-      v.setAttribute('src', abs);
-      try{ v.load(); }catch(e){}
-    }
-    // ensure visible box
-    v.setAttribute('playsinline','');
-    v.setAttribute('controls','');
-    v.setAttribute('preload','auto');
-  }
-
-  function fixAll(){
-    document.querySelectorAll('video[data-app-video], .app-video-stage video').forEach(fixVideo);
-  }
-
-  function pauseOthers(except){
-    document.querySelectorAll('video').forEach(function(v){
-      if(except && v===except) return;
-      try{ v.pause(); }catch(e){}
-    });
-  }
-
-  // When a slide becomes active, reload its videos (metadata may not load while hidden)
-  function watchSlides(){
-    var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
-    if(!slides.length) return;
-    var obs=new MutationObserver(function(){
-      slides.forEach(function(s){
-        var active=s.classList.contains('active')||s.classList.contains('visible');
-        s.querySelectorAll('video').forEach(function(v){
-          if(active){
-            fixVideo(v);
-          }else{
-            try{ v.pause(); }catch(e){}
-          }
-        });
-      });
-    });
-    slides.forEach(function(s){try{obs.observe(s,{attributes:true,attributeFilter:['class']});}catch(e){}});
-  }
-
-  document.addEventListener('play', function(e){
-    if(e.target && e.target.tagName==='VIDEO') pauseOthers(e.target);
-  }, true);
-
-  document.addEventListener('error', function(e){
-    if(e.target && e.target.tagName==='VIDEO'){
-      console.warn('video error', e.target.getAttribute('src'), e.target.error);
-      // one retry with cache buster
-      var v=e.target;
-      var rel=v.getAttribute('data-app-video');
-      if(rel && !v.__retried){
-        v.__retried=true;
-        v.src=absUrl(rel)+(absUrl(rel).indexOf('?')>-1?'&':'?')+'t='+Date.now();
-        try{ v.load(); }catch(err){}
-      }
-    }
-  }, true);
-
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', function(){ fixAll(); watchSlides(); });
-  }else{
-    fixAll(); watchSlides();
-  }
-  setTimeout(fixAll, 300);
-  setTimeout(fixAll, 1200);
-})();
-</script>
-
-
 <!--MK-ASSETS-V1-->
 <audio id="mk-audio" preload="none"></audio>
 <div id="mk-mini" aria-label="播客迷你播放器"><button class="mk-m-play" type="button" aria-label="播放 / 暂停"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><span class="mk-m-info"><span class="mk-m-t"></span><span class="mk-m-bar"><span class="mk-m-fill"></span></span></span><span class="mk-m-time">0:00 / 0:00</span><button class="mk-m-rate" type="button" aria-label="倍速">1×</button><button class="mk-m-x" type="button" aria-label="关闭播放器">&times;</button></div>
@@ -1991,5 +1908,6 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
   syncUI();
 })();
 </script>
+<script src="assets/js/book-polish.js"></script>
 </body>
 </html>
