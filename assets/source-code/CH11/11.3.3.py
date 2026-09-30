@@ -19,8 +19,8 @@ class FormalContext:
         formal_concepts = []
         for i in range(len(self.objects) + 1):
             for objs in combinations(self.objects, i):
-                extent = set(objs)
-                intent = self.get_intent(extent)
+                intent = self.get_intent(set(objs))    #闭包：X'=Y，再取Y'=X''作为外延
+                extent = self.get_extent(intent)
                 if (extent, intent) not in formal_concepts:
                     formal_concepts.append((extent, intent))
         return formal_concepts

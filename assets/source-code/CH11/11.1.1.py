@@ -22,7 +22,7 @@ add_closure = all((a + b).value in range(n) for a in elements for b in elements)
 mul_closure = all((a * b).value in range(n) for a in elements for b in elements)
 #验证加法和乘法结合性
 add_associative = all((a + (b + c)) == ((a + b) + c) for a in elements for b in elements for c in elements)
-mul_associative = all((a * (b + c)) == ((a * b) + (a * c)) for a in elements for b in elements for c in elements)
+mul_associative = all((a * (b * c)) == ((a * b) * c) for a in elements for b in elements for c in elements)
 #验证分配律
 distributive = all((a * (b + c)) == (a * b + a * c) for a in elements for b in elements for c in elements)
 #验证存在加法单位元和乘法单位元

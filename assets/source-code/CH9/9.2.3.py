@@ -12,7 +12,7 @@ result = operation_on_DE(pair1, pair2)
 print(f"{pair1} * {pair2} = {result}")
 D = {0, 1}                          #定义集合D和E的取值范围
 E = [-1 + 0.5 * i for i in range(5)]       #生成从−1到1的一些示例值
-DE = [(d, e) for d in D for e in E]        #笛卡尔积D×E
+DE = [(d, e) for d in D for e in E]        #笛卡儿积D×E
 print("\n集合 D × E 的所有元素和运算示例:")
 for pair1 in DE:
     for pair2 in DE:

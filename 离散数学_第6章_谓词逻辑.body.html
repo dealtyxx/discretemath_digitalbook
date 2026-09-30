@@ -2,15 +2,14 @@
 <html lang="zh-CN">
 <head>
 <base target="_top"/>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..700;1,400..700&amp;family=Inter:wght@300..600&amp;family=DM+Mono:wght@400..500&amp;family=Noto+Serif+SC:wght@400;700&amp;display=swap" rel="stylesheet"/>
 <meta charset="utf-8"/>
 <meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
+<link rel="preload" href="assets/fonts/noto-serif-sc-400-a.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/fonts/fonts.css">
+
 <title>离散数学 第6章 · 谓词逻辑</title>
-<link href="https://fonts.googleapis.com" rel="preconnect"/>
-<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;500;600;700;900&amp;family=Noto+Sans+SC:wght@300;400;500;700;900&amp;family=IBM+Plex+Mono:wght@300;400;500;600&amp;family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,400;0,8..60,700;1,8..60,400&amp;display=swap" rel="stylesheet"/>
 <style>
 :root{
   --ink:#17231c; --ink-rgb:23,35,28;
@@ -466,6 +465,7 @@ window.MathJax={
   },
   options:{enableMenu:true,enableExplorer:true},
   startup:{
+    typeset:false,               /* 由 assets/js/book-polish.js 按页排版 */
     ready:function(){
       MathJax.startup.defaultReady();
       MathJax.startup.promise.then(function(){
@@ -690,6 +690,7 @@ body.tb-focus #mk-mini{display:none!important}
 .mk-src-empty{color:var(--accent);font-family:"Inter","Noto Serif SC",sans-serif;font-size:.86rem;padding:1rem .3rem}
 @media (max-width:900px){.mk-src{grid-template-columns:1fr}.mk-src-side{border-right:0;border-bottom:1px solid var(--line);max-height:9rem}}
 </style>
+<link rel="stylesheet" href="assets/css/book-polish.css">
 </head>
 <body>
 <div id="deck">
@@ -713,7 +714,7 @@ body.tb-focus #mk-mini{display:none!important}
 <div class="w-wide">
 <h2 class="h1-zh anim-item" style="text-align:center;max-width:17em;margin:0 auto clamp(2rem,5vh,3.6rem)">谓词逻辑：从概念文字到一阶逻辑</h2>
 <div class="timeline-row" style="display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(.9rem,2vw,2rem)">
-<div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">1879 年</div><p class="body-zh" style="margin-top:1.2vh">弗雷格在概念文字中区分一阶与高阶逻辑，引入量化，现代谓词逻辑诞生</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">20 世纪初</div><p class="body-zh" style="margin-top:1.2vh">罗素与怀特海在数学原理中进一步巩固发展这一体系</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">20 世纪</div><p class="body-zh" style="margin-top:1.2vh">扩展出逻辑程序设计、模型论与证明论等领域</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">相对命题逻辑</div><p class="body-zh" style="margin-top:1.2vh">增加量词所有与存在以及描述属性关系的谓词，表达更精确的逻辑</p></div>
+<div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">1879 年</div><p class="body-zh" style="margin-top:1.2vh">弗雷格在《概念文字》中引入量词与量化理论，现代谓词逻辑诞生</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">20 世纪初</div><p class="body-zh" style="margin-top:1.2vh">罗素与怀特海在数学原理中进一步巩固发展这一体系</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">20 世纪</div><p class="body-zh" style="margin-top:1.2vh">扩展出逻辑程序设计、模型论与证明论等领域</p></div><div class="timeline-node anim-item"><div class="meta" style="color:var(--accent);opacity:1">相对命题逻辑</div><p class="body-zh" style="margin-top:1.2vh">增加量词所有与存在以及描述属性关系的谓词，表达更精确的逻辑</p></div>
 </div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>3 / 74</div></div></section>
@@ -748,7 +749,7 @@ body.tb-focus #mk-mini{display:none!important}
 <section class="slide light" data-screen-label="Concept" data-source="定义 6.1.6 至 6.1.8 · 量词" data-theme="light"><div class="chrome"><div>6.1.3 量词</div><div>10 / 74</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.1.6 至 6.1.8 · 全称与存在量词</div><h2 class="h1-zh anim-item" style="max-width:17em">全称量词 ∀ 与存在量词 ∃</h2><div aria-label="∀xP(x) = P(a₁)∧…∧P(aₙ)　　∃xP(x) = P(a₁)∨…∨P(aₙ)" class="formula anim-item mathjax-display-source" data-tex="\forall xP(x) = P(a_{1})\land \ldots \land P(a_{n}) \exists xP(x) = P(a_{1})\lor \ldots \lor P(a_{n})">\[\displaystyle \forall xP(x) = P(a_{1})\land \ldots \land P(a_{n}) \exists xP(x) = P(a_{1})\lor \ldots \lor P(a_{n})\]</div><p class="body-zh anim-item" style="max-width:29em;opacity:.7"><span aria-label="∀xP(x)" class="math-inline-source" data-tex="\forall xP(x)">\(\forall xP(x)\)</span> 为真当且仅当个体域中每个 x 都使 <span aria-label="P(x)" class="math-inline-source" data-tex="P(x)">\(P(x)\)</span> 真；<span aria-label="∃xP(x)" class="math-inline-source" data-tex="\exists xP(x)">\(\exists xP(x)\)</span> 为真当且仅当至少存在一个 x 使 <span aria-label="P(x)" class="math-inline-source" data-tex="P(x)">\(P(x)\)</span> 真。量词限定变量是对所有个体还是某些个体。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 6.1.6 至 6.1.8 · 全称与存在量词</div><h2 class="h1-zh anim-item" style="max-width:17em">全称量词 ∀ 与存在量词 ∃</h2><div aria-label="∀xP(x) = P(a₁)∧…∧P(aₙ)　　∃xP(x) = P(a₁)∨…∨P(aₙ)" class="formula anim-item mathjax-display-source" data-tex="\forall xP(x) = P(a_{1})\land \ldots \land P(a_{n}) \qquad \exists xP(x) = P(a_{1})\lor \ldots \lor P(a_{n})">\[\displaystyle \forall xP(x) = P(a_{1})\land \ldots \land P(a_{n}) \qquad \exists xP(x) = P(a_{1})\lor \ldots \lor P(a_{n})\]</div><p class="body-zh anim-item" style="max-width:29em;opacity:.7"><span aria-label="∀xP(x)" class="math-inline-source" data-tex="\forall xP(x)">\(\forall xP(x)\)</span> 为真当且仅当个体域中每个 x 都使 <span aria-label="P(x)" class="math-inline-source" data-tex="P(x)">\(P(x)\)</span> 真；<span aria-label="∃xP(x)" class="math-inline-source" data-tex="\exists xP(x)">\(\exists xP(x)\)</span> 为真当且仅当至少存在一个 x 使 <span aria-label="P(x)" class="math-inline-source" data-tex="P(x)">\(P(x)\)</span> 真。量词限定变量是对所有个体还是某些个体。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>10 / 74</div></div></section>
 <section class="slide dark" data-screen-label="Example" data-source="例 6.1.3 / 6.1.4 · 符号化" data-theme="dark"><div class="chrome"><div>例 6.1.3 与 6.1.4</div><div>11 / 74</div></div>
@@ -769,7 +770,7 @@ body.tb-focus #mk-mini{display:none!important}
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">个体词谓词量词</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch6/ch6_01_app_cf1f35b2.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_01_app_cf1f35b2.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch6/ch6_01_app_cf1f35b2.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -785,7 +786,7 @@ body.tb-focus #mk-mini{display:none!important}
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 6.1</div><h2 class="h1-zh anim-item" style="max-width:18em">谓词符号化练习</h2>
-<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li>所有猫都喜欢鱼 的符号化（答案 B：<span aria-label="∀x(C(x)→LF(x))" class="math-inline-source" data-tex="\forall x(C(x)\to LF(x))">\(\forall x(C(x)\to LF(x))\)</span>）</li><li>有些学生喜欢每一本书（答案 B：<span aria-label="∃x∀y(S(x)∧L(x,y)∧B(y))" class="math-inline-source" data-tex="\exists x\forall y(S(x)\land L(x,y)\land B(y))">\(\exists x\forall y(S(x)\land L(x,y)\land B(y))\)</span>）</li><li>有些医生治疗所有病人（答案 A：<span aria-label="∃x∀y(D(x)∧P(y)→T(x,y))" class="math-inline-source" data-tex="\exists x\forall y(D(x)\land P(y)\to T(x,y))">\(\exists x\forall y(D(x)\land P(y)\to T(x,y))\)</span>）</li><li>每个学生至少选一门课且每门课至少一人选（答案 A）</li><li>比较全称量词与存在量词的不同并各举例符号化</li><li>谓词逻辑在数据库查询中的应用并举例</li><li>解释谓词逻辑在人工智能推理系统中的应用</li><li>解释 <span aria-label="∃x∀y(P(x)→Q(y))" class="math-inline-source" data-tex="\exists x\forall y(P(x)\to Q(y))">\(\exists x\forall y(P(x)\to Q(y))\)</span> 的含义并举例</li></ol></div>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li>所有猫都喜欢鱼 的符号化（答案 B：<span aria-label="∀x(C(x)→LF(x))" class="math-inline-source" data-tex="\forall x(C(x)\to LF(x))">\(\forall x(C(x)\to LF(x))\)</span>）</li><li>有些学生喜欢每一本书（答案 B：<span aria-label="∃x(S(x)∧∀y(B(y)→L(x,y)))" class="math-inline-source" data-tex="\exists x(S(x)\land \forall y(B(y)\to L(x,y)))">\(\exists x(S(x)\land \forall y(B(y)\to L(x,y)))\)</span>）</li><li>有些医生治疗所有病人（答案 A：<span aria-label="∃x(D(x)∧∀y(P(y)→T(x,y)))" class="math-inline-source" data-tex="\exists x(D(x)\land \forall y(P(y)\to T(x,y)))">\(\exists x(D(x)\land \forall y(P(y)\to T(x,y)))\)</span>）</li><li>每个学生至少选一门课且每门课至少一人选（答案 A）</li><li>比较全称量词与存在量词的不同并各举例符号化</li><li>谓词逻辑在数据库查询中的应用并举例</li><li>解释谓词逻辑在人工智能推理系统中的应用</li><li>解释 <span aria-label="∃x∀y(P(x)→Q(y))" class="math-inline-source" data-tex="\exists x\forall y(P(x)\to Q(y))">\(\exists x\forall y(P(x)\to Q(y))\)</span> 的含义并举例</li></ol></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 74</div></div></section>
 <section class="slide dark" data-screen-label="AI Prompts" data-source="6.1 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 6.1</div><div>17 / 74</div></div>
@@ -860,7 +861,7 @@ print(all(any(R(x, y) for y in D) for x in D))     # ∀x∃yR(x,y) -&gt; True</
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">谓词公式与解释</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch6/ch6_02_app_547f76ef.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_02_app_547f76ef.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch6/ch6_02_app_547f76ef.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -903,7 +904,7 @@ print(all(any(R(x, y) for y in D) for x in D))     # ∀x∃yR(x,y) -&gt; True</
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">谓词等价与蕴含</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch6/ch6_03_app_3d12b6a5.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_03_app_3d12b6a5.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch6/ch6_03_app_3d12b6a5.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -938,7 +939,7 @@ print(all(any(R(x, y) for y in D) for x in D))     # ∀x∃yR(x,y) -&gt; True</
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">前束范式</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch6/ch6_04_app_ff5a8176.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_04_app_ff5a8176.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch6/ch6_04_app_ff5a8176.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -988,7 +989,7 @@ def P_prime(x):       #特定谓词P(x),Q(x,y),R(x,y)
 <div class="slide-body">
 <div class="w-wide" style="display:flex;flex-direction:column;gap:clamp(1.3rem,3vh,2.3rem)">
 <h2 class="h1-zh anim-item" style="max-width:18em">量词消去与产生四规则</h2>
-<div class="laws-grid" style="grid-template-columns:repeat(2,1fr)"><div class="law-card anim-item"><div class="law-name">全称量词消去 US</div><div class="law-formula"><span aria-label="∀xA(x) ⇒ A(c)" class="math-inline-source" data-tex="\forall xA(x) \Rightarrow A(c)">\(\forall xA(x) \Rightarrow A(c)\)</span>，c 为任意个体常元</div></div><div class="law-card anim-item"><div class="law-name">存在量词消去 ES</div><div class="law-formula"><span aria-label="∃xA(x) ⇒ A(c)" class="math-inline-source" data-tex="\exists xA(x) \Rightarrow A(c)">\(\exists xA(x) \Rightarrow A(c)\)</span>，c 为新的特定个体常元</div></div><div class="law-card anim-item"><div class="law-name">存在量词产生 EG</div><div class="law-formula"><span aria-label="A(c) ⇒ ∃yA(y)" class="math-inline-source" data-tex="A(c) \Rightarrow \exists yA(y)">\(A(c) \Rightarrow \exists yA(y)\)</span>，c 为特定个体常元</div></div><div class="law-card anim-item"><div class="law-name">全称量词产生 UG</div><div class="law-formula"><span aria-label="A(x) ⇒ ∀yA(y)" class="math-inline-source" data-tex="A(x) \Rightarrow \forall yA(y)">\(A(x) \Rightarrow \forall yA(y)\)</span>，x 在推理中自由</div></div></div>
+<div class="laws-grid" style="grid-template-columns:repeat(2,1fr)"><div class="law-card anim-item"><div class="law-name">全称量词消去 US</div><div class="law-formula"><span aria-label="∀xA(x) ⇒ A(c)" class="math-inline-source" data-tex="\forall xA(x) \Rightarrow A(c)">\(\forall xA(x) \Rightarrow A(c)\)</span>，c 为任意个体常元</div></div><div class="law-card anim-item"><div class="law-name">存在量词消去 ES</div><div class="law-formula"><span aria-label="∃xA(x) ⇒ A(c)" class="math-inline-source" data-tex="\exists xA(x) \Rightarrow A(c)">\(\exists xA(x) \Rightarrow A(c)\)</span>，c 为新的特定个体常元</div></div><div class="law-card anim-item"><div class="law-name">存在量词产生 EG</div><div class="law-formula"><span aria-label="A(c) ⇒ ∃yA(y)" class="math-inline-source" data-tex="A(c) \Rightarrow \exists yA(y)">\(A(c) \Rightarrow \exists yA(y)\)</span>，c 为特定个体常元</div></div><div class="law-card anim-item"><div class="law-name">全称量词产生 UG</div><div class="law-formula"><span aria-label="A(x) ⇒ ∀yA(y)" class="math-inline-source" data-tex="A(x) \Rightarrow \forall yA(y)">\(A(x) \Rightarrow \forall yA(y)\)</span>，x 为任意个体：不在前提中自由出现，且不依赖 ES 引入的常元</div></div></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>47 / 74</div></div></section>
 <section class="slide light" data-screen-label="Proof" data-source="例 6.3.1 · 量词推证" data-theme="light"><div class="chrome"><div>例 6.3.1</div><div>48 / 74</div></div>
@@ -1025,7 +1026,7 @@ def P_prime(x):       #特定谓词P(x),Q(x,y),R(x,y)
 <h2 class="h2-zh" style="max-width:14em;margin-top:1vh">有书法家是有良好审美的年轻艺术家</h2>
 <p class="body-zh" style="max-width:24em">所有书法家是艺术家且有良好审美 <span aria-label="∀x(F(x)→(A(x)∧B(x)))" class="math-inline-source" data-tex="\forall x(F(x)\to (A(x)\land B(x)))">\(\forall x(F(x)\to (A(x)\land B(x)))\)</span>；有些书法家是年轻人 <span aria-label="∃x(F(x)∧Y(x))" class="math-inline-source" data-tex="\exists x(F(x)\land Y(x))">\(\exists x(F(x)\land Y(x))\)</span>。结论 <span aria-label="∃x(F(x)∧Y(x)∧A(x)∧B(x))" class="math-inline-source" data-tex="\exists x(F(x)\land Y(x)\land A(x)\land B(x))">\(\exists x(F(x)\land Y(x)\land A(x)\land B(x))\)</span>。</p>
 </div>
-<div class="anim-item"><div class="proof"><div class="pn">③</div><div class="pf"><span aria-label="F(c)∧Y(c)" class="math-inline-source" data-tex="F(c)\land Y(c)">\(F(c)\land Y(c)\)</span></div><div class="pr">ES</div><div class="pn">④</div><div class="pf">F(c)</div><div class="pr">合取消去</div><div class="pn">⑤</div><div class="pf">Y(c)</div><div class="pr">合取消去</div><div class="pn">⑥</div><div class="pf"><span aria-label="F(c)→(A(c)∧B(c))" class="math-inline-source" data-tex="F(c)\to (A(c)\land B(c))">\(F(c)\to (A(c)\land B(c))\)</span></div><div class="pr">US</div><div class="pn">⑦</div><div class="pf"><span aria-label="A(c)∧B(c)" class="math-inline-source" data-tex="A(c)\land B(c)">\(A(c)\land B(c)\)</span></div><div class="pr">④⑥蕴含消去</div><div class="pn">⑧</div><div class="pf">A(c), B(c)</div><div class="pr">合取消去</div><div class="pn">⑨</div><div class="pf"><span aria-label="F(c)∧Y(c)∧A(c)∧B(c)" class="math-inline-source" data-tex="F(c)\land Y(c)\land A(c)\land B(c)">\(F(c)\land Y(c)\land A(c)\land B(c)\)</span></div><div class="pr">合取引入</div><div class="pn">⑩</div><div class="pf"><span aria-label="∃x(F(x)∧Y(x)∧A(x)∧B(x))" class="math-inline-source" data-tex="\exists x(F(x)\land Y(x)\land A(x)\land B(x))">\(\exists x(F(x)\land Y(x)\land A(x)\land B(x))\)</span></div><div class="pr">EG</div></div></div>
+<div class="anim-item"><div class="proof"><div class="pn">①</div><div class="pf"><span aria-label="∀x(F(x)→(A(x)∧B(x)))" class="math-inline-source" data-tex="\forall x(F(x)\to (A(x)\land B(x)))">\(\forall x(F(x)\to (A(x)\land B(x)))\)</span></div><div class="pr">前提</div><div class="pn">②</div><div class="pf"><span aria-label="∃x(F(x)∧Y(x))" class="math-inline-source" data-tex="\exists x(F(x)\land Y(x))">\(\exists x(F(x)\land Y(x))\)</span></div><div class="pr">前提</div><div class="pn">③</div><div class="pf"><span aria-label="F(c)∧Y(c)" class="math-inline-source" data-tex="F(c)\land Y(c)">\(F(c)\land Y(c)\)</span></div><div class="pr">ES</div><div class="pn">④</div><div class="pf">F(c)</div><div class="pr">合取消去</div><div class="pn">⑤</div><div class="pf">Y(c)</div><div class="pr">合取消去</div><div class="pn">⑥</div><div class="pf"><span aria-label="F(c)→(A(c)∧B(c))" class="math-inline-source" data-tex="F(c)\to (A(c)\land B(c))">\(F(c)\to (A(c)\land B(c))\)</span></div><div class="pr">US</div><div class="pn">⑦</div><div class="pf"><span aria-label="A(c)∧B(c)" class="math-inline-source" data-tex="A(c)\land B(c)">\(A(c)\land B(c)\)</span></div><div class="pr">④⑥蕴含消去</div><div class="pn">⑧</div><div class="pf">A(c), B(c)</div><div class="pr">合取消去</div><div class="pn">⑨</div><div class="pf"><span aria-label="F(c)∧Y(c)∧A(c)∧B(c)" class="math-inline-source" data-tex="F(c)\land Y(c)\land A(c)\land B(c)">\(F(c)\land Y(c)\land A(c)\land B(c)\)</span></div><div class="pr">合取引入</div><div class="pn">⑩</div><div class="pf"><span aria-label="∃x(F(x)∧Y(x)∧A(x)∧B(x))" class="math-inline-source" data-tex="\exists x(F(x)\land Y(x)\land A(x)\land B(x))">\(\exists x(F(x)\land Y(x)\land A(x)\land B(x))\)</span></div><div class="pr">EG</div></div></div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>51 / 74</div></div></section>
 <section class="slide light" data-screen-label="Example" data-source="例 6.3.3 · 一题多形式化" data-theme="light"><div class="chrome"><div>例 6.3.3</div><div>52 / 74</div></div>
 <div class="slide-body">
@@ -1045,7 +1046,7 @@ def P_prime(x):       #特定谓词P(x),Q(x,y),R(x,y)
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">谓词演算</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch6/ch6_05_app_030e51b3.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_05_app_030e51b3.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch6/ch6_05_app_030e51b3.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1059,7 +1060,7 @@ def P_prime(x):       #特定谓词P(x),Q(x,y),R(x,y)
 <section class="slide dark" data-screen-label="Concept" data-source="6.3.2 哥德尔不完全定理" data-theme="dark"><div class="chrome"><div>6.3.2 哥德尔不完全定理</div><div>56 / 74</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.5vh,2rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">哥德尔不完全定理的影响</div><h2 class="h1-zh anim-item" style="max-width:17em">哥德尔定理对谓词逻辑的影响</h2><p class="lead-zh anim-item" style="max-width:27em">哥德尔不完全定理表明即使谓词逻辑这样强大的系统也存在无法解决的问题，对其在数学与逻辑中的应用构成限制。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">它强调选择合适公理系统的重要性：无论选何公理总有真理无法证明；在计算机科学中暗示某些程序行为无法完全由逻辑推理预测。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">哥德尔不完全定理的影响</div><h2 class="h1-zh anim-item" style="max-width:17em">哥德尔定理对谓词逻辑的影响</h2><p class="lead-zh anim-item" style="max-width:27em">哥德尔不完全定理表明，建立在谓词逻辑之上、含初等算术的一致形式系统中总存在既不能证明也不能否证的命题，对其在数学与逻辑中的应用构成限制。</p><p class="body-zh anim-item" style="max-width:29em;opacity:.7">它强调选择合适公理系统的重要性：只要公理系统一致、可递归枚举且包含初等算术，总有真命题无法证明；在计算机科学中暗示某些程序行为无法完全由逻辑推理预测。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>56 / 74</div></div></section>
 <section class="slide dark" data-screen-label="Summary" data-source="6.3.3 小结" data-theme="dark"><div class="chrome"><div>6.3.3 小结</div><div>57 / 74</div></div>
@@ -1073,7 +1074,7 @@ def P_prime(x):       #特定谓词P(x),Q(x,y),R(x,y)
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">习题 · 6.3</div><h2 class="h1-zh anim-item" style="max-width:18em">谓词逻辑推理练习</h2>
-<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li>关于谓词演算推证哪个正确（答案 D：某些情况下前提真而结论假）</li><li>哪个是永真式（答案 A：<span aria-label="∀x(P(x)→P(x))" class="math-inline-source" data-tex="\forall x(P(x)\to P(x))">\(\forall x(P(x)\to P(x))\)</span>）</li><li>关于一致性哪个正确（答案 A：推理规则使用时无冲突）</li><li>哥德尔不完全性定理表明（答案 A：存在某些真命题不可证明）</li><li>证明 <span aria-label="∀x(P(x)→Q(x))→(∀xP(x)→∀xQ(x))" class="math-inline-source" data-tex="\forall x(P(x)\to Q(x))\to (\forall xP(x)\to \forall xQ(x))">\(\forall x(P(x)\to Q(x))\to (\forall xP(x)\to \forall xQ(x))\)</span></li><li>证明若 <span aria-label="∃xP(x)" class="math-inline-source" data-tex="\exists xP(x)">\(\exists xP(x)\)</span> 真则 <span aria-label="¬∀x¬P(x)" class="math-inline-source" data-tex="\neg \forall x\neg P(x)">\(\neg \forall x\neg P(x)\)</span> 真</li><li>阐述推理规则如何保证推理可靠性</li><li>构造两组推理的证明</li><li>有理数都是实数等三组论证的推理证明</li><li>符号化并证明自然数奇偶等多组命题</li></ol></div>
+<div style="display:flex;flex-direction:column;gap:clamp(.78rem,1.7vh,1.3rem)"><ol class="biglist twocol anim-item"><li>关于谓词演算推证哪个说法错误（答案 D：某些情况下前提真而结论假）</li><li>哪个是永真式（答案 A：<span aria-label="∀x(P(x)→P(x))" class="math-inline-source" data-tex="\forall x(P(x)\to P(x))">\(\forall x(P(x)\to P(x))\)</span>）</li><li>关于一致性哪个正确（答案 A：推理规则使用时无冲突）</li><li>哥德尔不完全性定理表明（答案 A：存在某些真命题不可证明）</li><li>证明 <span aria-label="∀x(P(x)→Q(x))→(∀xP(x)→∀xQ(x))" class="math-inline-source" data-tex="\forall x(P(x)\to Q(x))\to (\forall xP(x)\to \forall xQ(x))">\(\forall x(P(x)\to Q(x))\to (\forall xP(x)\to \forall xQ(x))\)</span></li><li>证明若 <span aria-label="∃xP(x)" class="math-inline-source" data-tex="\exists xP(x)">\(\exists xP(x)\)</span> 真则 <span aria-label="¬∀x¬P(x)" class="math-inline-source" data-tex="\neg \forall x\neg P(x)">\(\neg \forall x\neg P(x)\)</span> 真</li><li>阐述推理规则如何保证推理可靠性</li><li>构造两组推理的证明</li><li>有理数都是实数等三组论证的推理证明</li><li>符号化并证明自然数奇偶等多组命题</li></ol></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 74</div></div></section>
 <section class="slide dark" data-screen-label="AI Prompts" data-source="6.3 向 AI 大模型提问" data-theme="dark"><div class="chrome"><div>向 AI 大模型探索提问 · 6.3</div><div>60 / 74</div></div>
@@ -1127,7 +1128,7 @@ for s in students:
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">6.4.1 智能推荐系统</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch6/ch6_06_case_6_4_1_f6507ed5.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_06_case_6_4_1_f6507ed5.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch6/ch6_06_case_6_4_1_f6507ed5.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1156,7 +1157,7 @@ for name, p in heritages.items():
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">6.4.2 历史文化遗产保护</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch6/ch6_07_case_6_4_2_b8082bee.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_07_case_6_4_2_b8082bee.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch6/ch6_07_case_6_4_2_b8082bee.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1183,7 +1184,7 @@ for name, p in heritages.items():
 <div class="app-video-kicker anim-item">应用动画</div>
 <h2 class="h2-zh app-video-title anim-item">6.4.2 多维度评估</h2>
 <div class="app-video-stage anim-item">
-<video data-app-video="assets/app-videos-ch6/ch6_08_case_6_4_2_076667b1.mp4" controls playsinline controlslist="nodownload" preload="auto" src="assets/app-videos-ch6/ch6_08_case_6_4_2_076667b1.mp4" type="video/mp4"></video>
+<video data-app-video="assets/app-videos-ch6/ch6_08_case_6_4_2_076667b1.mp4" controls playsinline controlslist="nodownload" preload="none" type="video/mp4"></video>
 </div>
 <p class="app-video-foot-hint anim-item">点击播放 · 图解旁白同步 · 720p</p>
 </div>
@@ -1196,18 +1197,18 @@ for name, p in heritages.items():
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>69 / 74</div></div></section>
 <section class="slide light mk-page mk-audio-page" data-screen-label="Podcast" data-source="播客音频 · 6.4 应用案例和 Python 实现" data-theme="light" data-mk-sec="6.4"><div class="chrome"><div>播客音频 · 6.4 应用案例和 Python 实现</div><div>70 / 74</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">播客音频</span><span class="mk-metaline">06:18 · 1.8 MB · 讲解音频版</span></div><div class="mk-audio-card anim-item"><button class="mk-abtn" type="button" data-mk-sec="6.4" aria-label="播放本节播客"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><div class="mk-audio-main"><h2 class="h2-zh">6.4 应用案例和 Python 实现</h2><p class="mk-audio-desc">本节内容的播客讲解版，适合课后复盘、通勤复习与考前串讲；点击波形任意位置可跳转收听。</p><div class="mk-wave" data-mk-sec="6.4" role="slider" aria-label="音频进度"><i style="height:37%"></i><i style="height:24%"></i><i style="height:49%"></i><i style="height:70%"></i><i style="height:58%"></i><i style="height:64%"></i><i style="height:73%"></i><i style="height:45%"></i><i style="height:32%"></i><i style="height:49%"></i><i style="height:45%"></i><i style="height:46%"></i><i style="height:79%"></i><i style="height:89%"></i><i style="height:72%"></i><i style="height:77%"></i><i style="height:72%"></i><i style="height:39%"></i><i style="height:34%"></i><i style="height:50%"></i><i style="height:42%"></i><i style="height:48%"></i><i style="height:77%"></i><i style="height:70%"></i><i style="height:51%"></i><i style="height:57%"></i><i style="height:46%"></i><i style="height:20%"></i><i style="height:34%"></i><i style="height:54%"></i><i style="height:50%"></i><i style="height:68%"></i><i style="height:93%"></i><i style="height:75%"></i><i style="height:60%"></i><i style="height:67%"></i><i style="height:49%"></i><i style="height:31%"></i><i style="height:54%"></i><i style="height:66%"></i><i style="height:58%"></i><i style="height:75%"></i><i style="height:82%"></i><i style="height:52%"></i><i style="height:40%"></i><i style="height:45%"></i><i style="height:25%"></i><i style="height:23%"></i><i style="height:55%"></i><i style="height:62%"></i><i style="height:59%"></i><i style="height:80%"></i><i style="height:77%"></i><i style="height:47%"></i><i style="height:48%"></i><i style="height:54%"></i><i style="height:38%"></i><i style="height:51%"></i><i style="height:82%"></i><i style="height:77%"></i><i style="height:71%"></i><i style="height:83%"></i><i style="height:62%"></i><i style="height:32%"></i></div><div class="mk-atime"><span data-mk-cur>0:00</span><span>06:18</span></div></div></div><ul class="mk-audio-tips anim-item"><li data-n="01">支持后台收听：翻页、查阅源码时音频不中断</li><li data-n="02">迷你播放器可调 1× / 1.25× / 1.5× / 2× 倍速</li><li data-n="03">进度自动记忆，下次从上次听到的位置继续</li></ul></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>70 / 74</div></div></section>
 <section class="slide dark mk-page mk-code-page" data-screen-label="SourceCode" data-source="配套源码 · 6.4 应用案例和 Python 实现" data-theme="dark" data-mk-sec="6.4"><div class="chrome"><div>配套源码 · 6.4 应用案例和 Python 实现</div><div>71 / 74</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">配套源码</span><span class="mk-metaline">3 个文件 · 共 73 行 · 可查看 / 复制 / 下载</span></div><h2 class="h2-zh mk-title anim-item">6.4 应用案例和 Python 实现 · Python 配套源码</h2><div class="mk-code-grid mk-rich anim-item"><button class="mk-cc" type="button" data-mk-code="6.4.1.py"><span class="mk-cc-name">6.4.1.py</span><span class="mk-cc-meta">30 行</span><pre class="mk-cc-prev">students = [
-    {&quot;name&quot;: &quot;李明&quot;, &quot;major&quot;: &quot;计算机科学&quot;, &quot;interest
-    {&quot;name&quot;: &quot;张梅梅&quot;, &quot;major&quot;: &quot;电器工程&quot;, &quot;interest
+    {&quot;name&quot;: &quot;李明&quot;, &quot;major&quot;: &quot;计算机科学&quot;, &quot;interests&quot;: [&quot;人工智能&quot;, &quot;数据科学&quot;], &quot;abilities&quot;: [&quot;编码&quot;, &quot;数学&quot;]},
+    {&quot;name&quot;: &quot;张梅梅&quot;, &quot;major&quot;: &quot;电气工程&quot;, &quot;interests&quot;: [&quot;机器人&quot;, &quot;可再生能源&quot;], &quot;abilities&quot;: [&quot;集成电路设计&quot;, &quot;数学&quot;]},
     # 更多学生...
 ]</pre></button><button class="mk-cc" type="button" data-mk-code="6.4.2.py"><span class="mk-cc-name">6.4.2.py</span><span class="mk-cc-meta">14 行</span><pre class="mk-cc-prev">heritages = {     #遗迹的示例属性
-    '长城': {'unique': True, 'in_danger': True, 
-    '兵马俑': {'unique': True, 'in_danger': False
-    '紫禁城': {'unique': False, 'in_danger': Fals
+    &#x27;长城&#x27;: {&#x27;unique&#x27;: True, &#x27;in_danger&#x27;: True, &#x27;unesco_heritage&#x27;: True},
+    &#x27;兵马俑&#x27;: {&#x27;unique&#x27;: True, &#x27;in_danger&#x27;: False, &#x27;unesco_heritage&#x27;: True},
+    &#x27;紫禁城&#x27;: {&#x27;unique&#x27;: False, &#x27;in_danger&#x27;: False, &#x27;unesco_heritage&#x27;: True},
 }</pre></button><button class="mk-cc" type="button" data-mk-code="6.4.3.py"><span class="mk-cc-name">6.4.3.py</span><span class="mk-cc-meta">29 行</span><pre class="mk-cc-prev">heritages = {     #定义遗迹的示例属性
-    '长城': {
-        'unique': True, 'in_danger': True, 'hi
-        'cultural_influence': 'high', 'economi
-        'protection_cost': 'low', 'potential_b</pre></button></div><p class="mk-foot-hint anim-item">点击任一文件查看完整高亮源码，支持一键复制与下载；按 <b>C</b> 打开本章源码浏览器</p></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>71 / 74</div></div></section>
+    &#x27;长城&#x27;: {
+        &#x27;unique&#x27;: True, &#x27;in_danger&#x27;: True, &#x27;historical_value&#x27;: &#x27;high&#x27;,
+        &#x27;cultural_influence&#x27;: &#x27;high&#x27;, &#x27;economic_condition&#x27;: &#x27;good&#x27;,
+        &#x27;protection_cost&#x27;: &#x27;low&#x27;, &#x27;potential_benefit&#x27;: &#x27;high&#x27;</pre></button></div><p class="mk-foot-hint anim-item">点击任一文件查看完整高亮源码，支持一键复制与下载；按 <b>C</b> 打开本章源码浏览器</p></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>71 / 74</div></div></section>
 <section class="slide light" data-screen-label="Takeaways" data-source="核心总结 · 1 / 2" data-theme="light"><div class="chrome"><div>核心总结</div><div>72 / 74</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.4rem,3.4vh,2.6rem)">
@@ -1568,94 +1569,10 @@ for name, p in heritages.items():
 
 
 
-<script>
-(function(){
-  if(window.__appVideoRuntimeV3) return; window.__appVideoRuntimeV3=true;
-
-  function absUrl(rel){
-    try{ return new URL(rel, document.baseURI || location.href).href; }
-    catch(e){ return rel; }
-  }
-
-  function fixVideo(v){
-    var rel=v.getAttribute('data-app-video') || v.getAttribute('src');
-    if(!rel) return;
-    // strip query noise
-    var abs=absUrl(rel);
-    var cur=v.currentSrc || v.getAttribute('src') || '';
-    if(cur!==abs){
-      v.setAttribute('src', abs);
-      try{ v.load(); }catch(e){}
-    }
-    // ensure visible box
-    v.setAttribute('playsinline','');
-    v.setAttribute('controls','');
-    v.setAttribute('preload','auto');
-  }
-
-  function fixAll(){
-    document.querySelectorAll('video[data-app-video], .app-video-stage video').forEach(fixVideo);
-  }
-
-  function pauseOthers(except){
-    document.querySelectorAll('video').forEach(function(v){
-      if(except && v===except) return;
-      try{ v.pause(); }catch(e){}
-    });
-  }
-
-  // When a slide becomes active, reload its videos (metadata may not load while hidden)
-  function watchSlides(){
-    var slides=Array.prototype.slice.call(document.querySelectorAll('.slide'));
-    if(!slides.length) return;
-    var obs=new MutationObserver(function(){
-      slides.forEach(function(s){
-        var active=s.classList.contains('active')||s.classList.contains('visible');
-        s.querySelectorAll('video').forEach(function(v){
-          if(active){
-            fixVideo(v);
-          }else{
-            try{ v.pause(); }catch(e){}
-          }
-        });
-      });
-    });
-    slides.forEach(function(s){try{obs.observe(s,{attributes:true,attributeFilter:['class']});}catch(e){}});
-  }
-
-  document.addEventListener('play', function(e){
-    if(e.target && e.target.tagName==='VIDEO') pauseOthers(e.target);
-  }, true);
-
-  document.addEventListener('error', function(e){
-    if(e.target && e.target.tagName==='VIDEO'){
-      console.warn('video error', e.target.getAttribute('src'), e.target.error);
-      // one retry with cache buster
-      var v=e.target;
-      var rel=v.getAttribute('data-app-video');
-      if(rel && !v.__retried){
-        v.__retried=true;
-        v.src=absUrl(rel)+(absUrl(rel).indexOf('?')>-1?'&':'?')+'t='+Date.now();
-        try{ v.load(); }catch(err){}
-      }
-    }
-  }, true);
-
-  if(document.readyState==='loading'){
-    document.addEventListener('DOMContentLoaded', function(){ fixAll(); watchSlides(); });
-  }else{
-    fixAll(); watchSlides();
-  }
-  setTimeout(fixAll, 300);
-  setTimeout(fixAll, 1200);
-})();
-</script>
-
-
 <!--MK-ASSETS-V1-->
 <audio id="mk-audio" preload="none"></audio>
 <div id="mk-mini" aria-label="播客迷你播放器"><button class="mk-m-play" type="button" aria-label="播放 / 暂停"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><span class="mk-m-info"><span class="mk-m-t"></span><span class="mk-m-bar"><span class="mk-m-fill"></span></span></span><span class="mk-m-time">0:00 / 0:00</span><button class="mk-m-rate" type="button" aria-label="倍速">1×</button><button class="mk-m-x" type="button" aria-label="关闭播放器">&times;</button></div>
-<script type="application/json" id="mk-data">{"ch":6,"sections":[{"k":"6.1","title":"自然语言的谓词符号化","full":"6.1 自然语言的谓词符号化","start":6,"v":{"path":"assets/micro-lectures/6.1-predicate-symbolization.mp4","sec":416.8,"mb":13.2,"slide":6},"a":{"path":"assets/podcasts/6.1-predicate-symbolization.mp3","sec":558.2,"mb":2.7,"slide":14}},{"k":"6.2","title":"谓词公式","full":"6.2 谓词公式","start":18,"v":{"path":"assets/micro-lectures/6.2-predicate-formulas.mp4","sec":456.1,"mb":14.5,"slide":18},"a":{"path":"assets/podcasts/6.2-predicate-formulas.mp3","sec":630.9,"mb":3,"slide":39},"c":{"slide":40,"files":["6.2.1.py"]}},{"k":"6.3","title":"谓词逻辑推理","full":"6.3 谓词逻辑推理","start":44,"v":{"path":"assets/micro-lectures/6.3-predicate-inference.mp4","sec":490.2,"mb":15.5,"slide":44},"a":{"path":"assets/podcasts/6.3-predicate-inference.mp3","sec":524.2,"mb":2.5,"slide":57}},{"k":"6.4","title":"应用案例和 Python 实现","full":"6.4 应用案例和 Python 实现","start":61,"v":{"path":"assets/micro-lectures/6.4-applications.mp4","sec":457.1,"mb":14,"slide":61},"a":{"path":"assets/podcasts/6.4-applications.mp3","sec":377.8,"mb":1.8,"slide":69},"c":{"slide":70,"files":["6.4.1.py","6.4.2.py","6.4.3.py"]}}],"files":{"6.2.1.py":{"lines":29,"dir":"CH6","sec":"6.2","src":"D_I = [3, 6]          #个体域DI\ndef f_prime(x):       #特定函数f(x)\n    return 6 if x == 3 else 3\ndef P_prime(x):       #特定谓词P(x),Q(x,y),R(x,y)\n    return x == 6\ndef Q_prime(x, y):\n    return (x == 3 and y == 6) or (x == 6 and y == 3)\ndef R_prime(x, y):\n    return (x == y)\n#计算公式的真值\ndef formula_1():        #公式x(P(x)∧Q(x,a))\n    a_prime = 3       #特定元素a\n    for x in D_I:\n        if not (P_prime(x) and Q_prime(x, a_prime)):\n            return False\n    return True\ndef formula_2():       #公式x(P(f(x))∧Q(x,f(x)))\n    for x in D_I:\n        if P_prime(f_prime(x)) and Q_prime(x, f_prime(x)):\n            return True\n    return False\ndef formula_3():       #公式xyR(x,y)\n    for x in D_I:\n        if not any(R_prime(x, y) for y in D_I):\n            return False\n    return True\nprint(formula_1())\nprint(formula_2())\nprint(formula_3())\n"},"6.4.1.py":{"lines":30,"dir":"CH6","sec":"6.4","src":"students = [\n    {\"name\": \"李明\", \"major\": \"计算机科学\", \"interests\": [\"人工智能\", \"数据科学\"], \"abilities\": [\"编码\", \"数学\"]},\n    {\"name\": \"张梅梅\", \"major\": \"电器工程\", \"interests\": [\"机器人\", \"可再生能源\"], \"abilities\": [\"集成电路设计\", \"数学\"]},\n    # 更多学生...\n]\nnation_needs = [\"计算机科学\", \"电器工程\", \"可再生能源\"]\ncareer_paths = {\n    (\"计算机科学\", \"人工智能\", \"编码\"): \"人工智能研究员\",\n    (\"电器工程\", \"机器人\", \"集成电路设计\"): \"机器人研发工程师\",\n    # 更多职业路径...\n}\ndef match(major, interests, abilities):\n    for need in nation_needs:\n        if major == need:\n            for interest in interests:\n                for ability in abilities:\n                    key = (major, interest, ability)\n                    if key in career_paths:\n                        return career_paths[key]\n    return None\ndef recommend_careers(students):\n    recommendations = {}\n    for student in students:\n        path = match(student['major'], student['interests'], student['abilities'])\n        if path:\n            recommendations[student['name']] = path\n    return recommendations\nrecommendations = recommend_careers(students)     #运行推荐系统\nfor name, path in recommendations.items():\n    print(f\"{name}，建议从事的职业：{path}.\")\n"},"6.4.2.py":{"lines":14,"dir":"CH6","sec":"6.4","src":"heritages = {     #遗迹的示例属性\n    '长城': {'unique': True, 'in_danger': True, 'unesco_heritage': True},\n    '兵马俑': {'unique': True, 'in_danger': False, 'unesco_heritage': True},\n    '紫禁城': {'unique': False, 'in_danger': False, 'unesco_heritage': True},\n}\ndef should_protect(name, properties):       #逻辑推理判断函数\n    if properties['unique'] and properties['in_danger']:\n        return True\n    if properties['unesco_heritage']:\n        return True\n    return False\nfor heritage, properties in heritages.items():     #应用逻辑推理\n    if should_protect(heritage, properties):\n        print(f\"{heritage}应该优先保护.\")\n"},"6.4.3.py":{"lines":29,"dir":"CH6","sec":"6.4","src":"heritages = {     #定义遗迹的示例属性\n    '长城': {\n        'unique': True, 'in_danger': True, 'historical_value': 'high',\n        'cultural_influence': 'high', 'economic_condition': 'good',\n        'protection_cost': 'low', 'potential_benefit': 'high'\n    },\n    '兵马俑': {\n            'unique': True, 'in_danger': False, 'historical_value': 'high',\n            'cultural_influence': 'high', 'economic_condition': 'good',\n            'protection_cost': 'low', 'potential_benefit': 'high'\n        },\n    '紫禁城': {\n            'unique': False, 'in_danger': False, 'historical_value': 'high',\n            'cultural_influence': 'high', 'economic_condition': 'bad',\n            'protection_cost': 'high', 'potential_benefit': 'high'\n        }\n}\ndef recommend_for_protection(name, properties):      #逻辑判断函数\n    unique_and_danger = properties['unique'] and properties['in_danger']\n    high_value_and_influence = properties['historical_value'] == 'high' and properties['cultural_influence'] == 'high'\n    economic_and_cost_benefit = (properties['economic_condition'] == 'good' and\n                                 properties['protection_cost'] == 'low' and\n                                 properties['potential_benefit'] == 'high')\n    if unique_and_danger or high_value_and_influence or economic_and_cost_benefit:\n        return True\n    return False\nfor heritage, properties in heritages.items():   #应用逻辑判断\n    if recommend_for_protection(heritage, properties):\n        print(f\"{heritage} 建议优先保护.\")\n"}},"nv":4,"na":4,"nc":4}</script>
+<script type="application/json" id="mk-data">{"ch":6,"sections":[{"k":"6.1","title":"自然语言的谓词符号化","full":"6.1 自然语言的谓词符号化","start":6,"v":{"path":"assets/micro-lectures/6.1-predicate-symbolization.mp4","sec":416.8,"mb":13.2,"slide":6},"a":{"path":"assets/podcasts/6.1-predicate-symbolization.mp3","sec":558.2,"mb":2.7,"slide":14}},{"k":"6.2","title":"谓词公式","full":"6.2 谓词公式","start":18,"v":{"path":"assets/micro-lectures/6.2-predicate-formulas.mp4","sec":456.1,"mb":14.5,"slide":18},"a":{"path":"assets/podcasts/6.2-predicate-formulas.mp3","sec":630.9,"mb":3,"slide":39},"c":{"slide":40,"files":["6.2.1.py"]}},{"k":"6.3","title":"谓词逻辑推理","full":"6.3 谓词逻辑推理","start":44,"v":{"path":"assets/micro-lectures/6.3-predicate-inference.mp4","sec":490.2,"mb":15.5,"slide":44},"a":{"path":"assets/podcasts/6.3-predicate-inference.mp3","sec":524.2,"mb":2.5,"slide":57}},{"k":"6.4","title":"应用案例和 Python 实现","full":"6.4 应用案例和 Python 实现","start":61,"v":{"path":"assets/micro-lectures/6.4-applications.mp4","sec":457.1,"mb":14,"slide":61},"a":{"path":"assets/podcasts/6.4-applications.mp3","sec":377.8,"mb":1.8,"slide":69},"c":{"slide":70,"files":["6.4.1.py","6.4.2.py","6.4.3.py"]}}],"files":{"6.2.1.py":{"lines":29,"dir":"CH6","sec":"6.2","src":"D_I = [3, 6]          #个体域DI\ndef f_prime(x):       #特定函数f(x)\n    return 6 if x == 3 else 3\ndef P_prime(x):       #特定谓词P(x),Q(x,y),R(x,y)\n    return x == 6\ndef Q_prime(x, y):\n    return True       #Q(x,y)恒为1\ndef R_prime(x, y):\n    return (x == y)\n#计算公式的真值\ndef formula_1():        #公式∀x(P(x)∧Q(x,a))\n    a_prime = 3       #特定元素a\n    for x in D_I:\n        if not (P_prime(x) and Q_prime(x, a_prime)):\n            return False\n    return True\ndef formula_2():       #公式∃x(P(f(x))∧Q(x,f(x)))\n    for x in D_I:\n        if P_prime(f_prime(x)) and Q_prime(x, f_prime(x)):\n            return True\n    return False\ndef formula_3():       #公式∀x∃yR(x,y)\n    for x in D_I:\n        if not any(R_prime(x, y) for y in D_I):\n            return False\n    return True\nprint(formula_1())\nprint(formula_2())\nprint(formula_3())"},"6.4.1.py":{"lines":30,"dir":"CH6","sec":"6.4","src":"students = [\n    {\"name\": \"李明\", \"major\": \"计算机科学\", \"interests\": [\"人工智能\", \"数据科学\"], \"abilities\": [\"编码\", \"数学\"]},\n    {\"name\": \"张梅梅\", \"major\": \"电气工程\", \"interests\": [\"机器人\", \"可再生能源\"], \"abilities\": [\"集成电路设计\", \"数学\"]},\n    # 更多学生...\n]\nnation_needs = [\"计算机科学\", \"电气工程\", \"可再生能源\"]\ncareer_paths = {\n    (\"计算机科学\", \"人工智能\", \"编码\"): \"人工智能研究员\",\n    (\"电气工程\", \"机器人\", \"集成电路设计\"): \"机器人研发工程师\",\n    # 更多职业路径...\n}\ndef match(major, interests, abilities):\n    for need in nation_needs:\n        if major == need:\n            for interest in interests:\n                for ability in abilities:\n                    key = (major, interest, ability)\n                    if key in career_paths:\n                        return career_paths[key]\n    return None\ndef recommend_careers(students):\n    recommendations = {}\n    for student in students:\n        path = match(student['major'], student['interests'], student['abilities'])\n        if path:\n            recommendations[student['name']] = path\n    return recommendations\nrecommendations = recommend_careers(students)     #运行推荐系统\nfor name, path in recommendations.items():\n    print(f\"{name}，建议从事的职业：{path}.\")"},"6.4.2.py":{"lines":14,"dir":"CH6","sec":"6.4","src":"heritages = {     #遗迹的示例属性\n    '长城': {'unique': True, 'in_danger': True, 'unesco_heritage': True},\n    '兵马俑': {'unique': True, 'in_danger': False, 'unesco_heritage': True},\n    '紫禁城': {'unique': False, 'in_danger': False, 'unesco_heritage': True},\n}\ndef should_protect(name, properties):       #逻辑推理判断函数\n    if properties['unique'] and properties['in_danger']:\n        return True\n    if properties['unesco_heritage']:\n        return True\n    return False\nfor heritage, properties in heritages.items():     #应用逻辑推理\n    if should_protect(heritage, properties):\n        print(f\"{heritage}应该优先保护.\")"},"6.4.3.py":{"lines":29,"dir":"CH6","sec":"6.4","src":"heritages = {     #定义遗迹的示例属性\n    '长城': {\n        'unique': True, 'in_danger': True, 'historical_value': 'high',\n        'cultural_influence': 'high', 'economic_condition': 'good',\n        'protection_cost': 'low', 'potential_benefit': 'high'\n    },\n    '兵马俑': {\n            'unique': True, 'in_danger': False, 'historical_value': 'high',\n            'cultural_influence': 'high', 'economic_condition': 'good',\n            'protection_cost': 'low', 'potential_benefit': 'high'\n        },\n    '紫禁城': {\n            'unique': False, 'in_danger': False, 'historical_value': 'high',\n            'cultural_influence': 'high', 'economic_condition': 'bad',\n            'protection_cost': 'high', 'potential_benefit': 'high'\n        }\n}\ndef recommend_for_protection(name, properties):      #逻辑判断函数\n    unique_and_danger = properties['unique'] and properties['in_danger']\n    high_value_and_influence = properties['historical_value'] == 'high' and properties['cultural_influence'] == 'high'\n    economic_and_cost_benefit = (properties['economic_condition'] == 'good' and\n                                 properties['protection_cost'] == 'low' and\n                                 properties['potential_benefit'] == 'high')\n    if unique_and_danger or high_value_and_influence or economic_and_cost_benefit:\n        return True\n    return False\nfor heritage, properties in heritages.items():   #应用逻辑判断\n    if recommend_for_protection(heritage, properties):\n        print(f\"{heritage} 建议优先保护.\")"}},"nv":4,"na":4,"nc":4}</script>
 <script id="mk-runtime">
 (function(){
   if(window.__mkInit) return; window.__mkInit=true;
@@ -1958,5 +1875,6 @@ for name, p in heritages.items():
   syncUI();
 })();
 </script>
+<script src="assets/js/book-polish.js"></script>
 </body>
 </html>

@@ -11,7 +11,7 @@ def get_formula_depth(formula):
                 formula = inner_formula
             else:
                 break
-        if re.match(r'^[A−Z]$', formula):     #若是单个命题变元，返回0层
+        if re.match(r'^[A-Z]$', formula):     #若是单个命题变元，返回0层
             return 0
         max_depth = 0
         for op in operators:

@@ -4,7 +4,7 @@ def add_mod_2(a, b):                  #定义运算+2和+3
     return (a + b) % 2
 def add_mod_3(a, b):
     return (a + b) % 3
-Z2Z3 = [(a, b) for a in Z2 for b in Z3]     #笛卡尔积Z2×Z3
+Z2Z3 = [(a, b) for a in Z2 for b in Z3]     #笛卡儿积Z2×Z3
 def operation(pair1, pair2):              #定义Z2和Z3上的运算
     i1, i2 = pair1
     j1, j2 = pair2

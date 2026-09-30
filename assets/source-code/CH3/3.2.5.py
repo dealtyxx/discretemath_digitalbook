@@ -8,7 +8,7 @@ def relation_to_matrix(relation, elements):
     return matrix
 def matrix_power(matrix, power):
     result = np.linalg.matrix_power(matrix, power)
-    result[result > 0] = 1  # Convert any non−zero eduintries to 1
+    result[result > 0] = 1  # Convert any non−zero entries to 1
     return result
 B = ['a', 'b', 'c']
 S = {('a', 'b'), ('b', 'c'), ('c', 'a')}

@@ -3,7 +3,7 @@ b = 3 - 4j
 result = a * b
 print(f"a · b = {result}")
 #验证结果是否在Z[i]中
-if isinstance(result.real, int) and isinstance(result.imag, int):
+if result.real.is_integer() and result.imag.is_integer():
     print("The result is in the Gaussian integer ring Z[i].")
 else:
     print("The result is not in the Gaussian integer ring Z[i].")

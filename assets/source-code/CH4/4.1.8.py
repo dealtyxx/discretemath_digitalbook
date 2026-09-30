@@ -5,7 +5,7 @@ G = nx.DiGraph()     #创建有向图
 G.add_edges_from(P_relations)
 def is_antichain(subset, graph):
     for pair in itertools.combinations(subset, 2):
-        if graph.has_edge(pair[0], pair[1]) or graph.has_edge(pair[1], pair[0]):
+        if nx.has_path(graph, pair[0], pair[1]) or nx.has_path(graph, pair[1], pair[0]):
             return False
     return True
 def find_longest_antichain(relations):

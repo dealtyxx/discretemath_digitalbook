@@ -1,7 +1,7 @@
 import networkx as nx
 import matplotlib.pyplot as plt
 # 设置中文字体
-plt.rcParams['font.sans−serif'] = ['SimHei']
+plt.rcParams['font.sans-serif'] = ['SimHei']
 plt.rcParams['axes.unicode_minus'] = False
 G = nx.Graph()
 G.add_edges_from([('1', '2'), ('1', '3'), ('2', '4'), ('3', '4'), ('3', '5')])
