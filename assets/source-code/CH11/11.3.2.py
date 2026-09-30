@@ -13,8 +13,8 @@ class HomomorphicEncryption:
         return (ciphertext1 + ciphertext2) % self.m
 if __name__ == "__main__":              #使用同态加密进行加密和解密
     n = 10                            #明文环的模数（示例值）
-    m = 17                           #密文环的模数（示例值）
-    k = 3                             #密钥（与m互素）
+    m = n                            #密文环的模数取m=n，即Z_n→Z_n，保证加法同态
+    k = 3                             #密钥（与m互素，可逆）
     he = HomomorphicEncryption(n, m, k)
     message1 = 7
     message2 = 4

@@ -1,0 +1,7 @@
+本目录字体均以 SIL Open Font License 1.1 (https://openfontlicense.org) 分发，允许免费使用、嵌入与再分发。
+
+- Noto Serif SC          © Google / Adobe（Source Han Serif）     https://github.com/notofonts/noto-cjk
+  仅含本书用到的汉字子集（noto-serif-sc-*.woff2）。
+- Playfair Display       © The Playfair Display Project Authors   https://github.com/clauswilke/PlayfairDisplay
+- Inter                  © The Inter Project Authors              https://github.com/rsms/inter
+- DM Mono                © Colophon Foundry / Google              https://github.com/googlefonts/dm-mono

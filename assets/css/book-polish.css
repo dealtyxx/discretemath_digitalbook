@@ -31,3 +31,11 @@ html.mj-fail .slide[data-mj="pending"] .slide-body{visibility:visible}
   outline:2px solid var(--ink);outline-offset:3px;border-radius:0;
 }
 .tb-ans:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+
+/* ---------- 5. 配图区为空时收拢为单栏，避免右半页留白 ---------- */
+.grid-2-7-5:has(.vis-center:empty){grid-template-columns:minmax(0,1fr)}
+.vis-center:empty{display:none}
+.anim-item:has(>.vis-center:empty){display:none}
+
+/* ---------- 6. 收藏星标沿用主色调（原为金色，与图录配色不一致） ---------- */
+.tb-star{color:var(--ink)}

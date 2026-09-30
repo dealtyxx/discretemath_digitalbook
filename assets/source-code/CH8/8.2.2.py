@@ -1,4 +1,6 @@
-def dfs(graph, current, end, path=[], visited=set()):
+def dfs(graph, current, end, path=None, visited=None):
+    if path is None: path = []
+    if visited is None: visited = set()
     path.append(current)             #添加当前节点到路径中
     if current == end:                #若当前节点是目标节点
         return path                 #返回路径

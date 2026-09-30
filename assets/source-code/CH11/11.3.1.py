@@ -1,4 +1,5 @@
 import numpy as np
+import itertools
 class LinearCode:
     def __init__(self, p, G):
         self.p = p    #素数p
@@ -12,8 +13,9 @@ class LinearCode:
     def minimum_distance(self):          #计算线性码的最小距离
         m, n = self.G.shape
         min_distance = n
-        for i in range(1, 2 ** m):
-            u = [(i >> j) & 1 for j in range(m)]
+        for u in itertools.product(range(self.p), repeat=m):    #枚举Z_p^m中全部非零信息向量
+            if not any(u):
+                continue
             c = self.encode(u)
             weight = self.hamming_weight(c)
             if 0 < weight < min_distance:

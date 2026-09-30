@@ -10,14 +10,14 @@ U = [{1, 2}, {2, 3}]
 def is_cover(base_set, subset_collection):
     union_set = set().union(*subset_collection)
     return union_set == base_set
-# 检查是否为完全覆盖（覆盖 + 无交集 + 无包含关系）
+# 检查是否为完全覆盖（覆盖 + 子集间无包含关系）
 def is_exact_cover_new(base_set, subset_c):
     if not is_cover(base_set, subset_c):
         return False
-    # 检查子集间是否有交集
+    # 检查子集间是否有包含关系
     for i in range(len(subset_c)):
-        for j in range(i + 1, len(subset_c)):
-            if subset_c[i] & subset_c[j]:  # 有交集
+        for j in range(len(subset_c)):
+            if i != j and subset_c[i] <= subset_c[j]:  # 有包含关系
                 return False
     return True
 is_cover_A = is_cover(A, S)

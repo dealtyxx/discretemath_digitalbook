@@ -1,6 +1,6 @@
 A = {0, 1}    #定义集合A和B
 B = {'a', 'b'}
-C = [(a, b) for a in A for b in B]      #笛卡尔积A×B
+C = [(a, b) for a in A for b in B]      #笛卡儿积A×B
 def operation_on_A(x, y):          #定义运算⊙和○
     return x + y                  #加法
 def operation_on_B(x, y):

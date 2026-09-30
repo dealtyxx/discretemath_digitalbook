@@ -1,3 +1,4 @@
+from itertools import combinations
 def has_subgraph_k5(graph):       #是否形成K5
     nodes = list(graph.keys())
     n = len(nodes)
@@ -12,7 +13,7 @@ def has_subgraph_k5(graph):       #是否形成K5
                             return True
     return False
 
-def has_subgraph_k33(graph):        #是否形成K3,3
+def has_subgraph_k33(graph):        #是否含K3,3子图（只查子图本身，不查与K3,3同胚的细分图）
     nodes = list(graph.keys())
     n = len(nodes)
     for i in range(n):
@@ -21,14 +22,16 @@ def has_subgraph_k33(graph):        #是否形成K3,3
                 for l in range(k + 1, n):
                     for m in range(l + 1, n):
                         for o in range(m + 1, n):
-                            #检查是否每个节点都与其他分区的节点相连
-                            partition1 = {nodes[i], nodes[j], nodes[k]}
-                            partition2 = {nodes[l], nodes[m], nodes[o]}
-                            if all((node in graph[other]) or (other in graph[node])
-                                   for node in partition1 for other in partition2):
-                                return True
+                            six = (nodes[i], nodes[j], nodes[k], nodes[l], nodes[m], nodes[o])
+                            for p1 in combinations(six, 3):    #遍历全部C(6,3)种3+3划分
+                                #检查是否每个节点都与其他分区的节点相连
+                                partition1 = set(p1)
+                                partition2 = set(six) - partition1
+                                if all((node in graph[other]) or (other in graph[node])
+                                       for node in partition1 for other in partition2):
+                                    return True
     return False
-def is_planar(graph):
+def is_planar(graph):    #注意：只检测是否含K5/K3,3子图（必要条件），不检测同胚子图，严格判定可用nx.check_planarity
     return not (has_subgraph_k5(graph) or has_subgraph_k33(graph))
 graph_example_2 = {    #示例图
     'A': ['B', 'C', 'D', 'E'],

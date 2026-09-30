@@ -7,9 +7,9 @@ premise_2 = Implies(And(A, E, F), H)
 premise_3 = Implies(And(H, F), S)
 premises = And(premise_1, premise_2, premise_3, P, E, F)
 conclusion = And(A, H, S)                  #定义结论
-all_statements = And(premises, conclusion)    #定义全部语句
+all_statements = And(premises, ~conclusion)    #前提∧¬结论
 result = satisfiable(all_statements)
-if result:
+if not result:
     print("在给定的前提下，可以成功完成'两弹一星'的项目。")
 else:
     print("在给定的前提下，无法成功完成'两弹一星'的项目。")
