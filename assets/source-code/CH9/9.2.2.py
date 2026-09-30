@@ -2,7 +2,7 @@ A = {0, 1}    #定义集合A和B
 B = {'a', 'b'}
 C = [(a, b) for a in A for b in B]      #笛卡儿积A×B
 def operation_on_A(x, y):          #定义运算⊙和○
-    return x + y                  #加法
+    return (x + y) % 2            #模2加法（保证在A中封闭）
 def operation_on_B(x, y):
     return x + y                  #字符串连接
 def operation_on_C(pair1, pair2):    #定义A×B上的运算
