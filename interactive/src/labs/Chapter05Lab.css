@@ -1,0 +1,107 @@
+.ch05-lab { min-width: 0; }
+.ch05-current-formula { margin-bottom: 18px; overflow-x: auto; }
+.ch05-tree-toolbar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.ch05-tree-toolbar > span { color: var(--muted); font-size: var(--caption-font-size); line-height: 1.6; }
+.ch05-tree-toolbar > button { flex-shrink: 0; min-height: 36px; }
+.ch05-tree-toolbar > button[aria-pressed="true"] { border-color: var(--series-1); }
+.ch05-tree-scroll { width: 100%; overflow-x: auto; }
+.ch05-analysis .ch05-tree.svg-lab { display: block; width: 100%; height: auto; max-height: none; margin: 0; padding: 0; overflow: visible; }
+.ch05-structure-edge { stroke: var(--diagram-edge); stroke-width: 2.3; stroke-linecap: round; }
+.ch05-node-halo { fill: var(--diagram-halo); }
+.ch05-node-circle { fill: var(--surface); stroke: var(--diagram-node-border); stroke-width: 1.8; filter: drop-shadow(var(--diagram-node-shadow)); }
+.ch05-expression-node[data-root="true"] .ch05-node-circle { stroke: var(--series-1); stroke-width: 2.8; }
+.ch05-tree .ch05-node-symbol { fill: var(--ink); font-size: 20px; font-weight: 600; }
+.ch05-node-truth-bg { fill: color-mix(in srgb, var(--series-2) 10%, var(--surface)); stroke: var(--series-2); stroke-width: .65; }
+.ch05-expression-node[data-value="true"] .ch05-node-truth-bg { fill: color-mix(in srgb, var(--series-3) 10%, var(--surface)); stroke: var(--diagram-positive); }
+.ch05-tree .ch05-node-truth { fill: var(--ink); font-size: 10px; font-weight: 700; }
+.ch05-node-number-bg { fill: var(--surface); stroke: var(--diagram-node-border); stroke-width: 1; }
+.ch05-tree .ch05-node-number { fill: var(--ink-secondary); font-size: 11px; font-weight: 650; }
+.ch05-subformula-details { margin-top: 14px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+.ch05-subformula-details summary { padding: 11px 12px; color: var(--ink-secondary); font-size: var(--control-font-size); cursor: pointer; }
+.ch05-subformula-details summary:focus-visible { outline: 2px solid var(--series-1); outline-offset: 2px; }
+.ch05-subformula-details ol { list-style: none; margin: 0; padding: 0 12px 12px; display: grid; gap: 6px; }
+.ch05-subformula-details li { display: grid; grid-template-columns: 24px minmax(0, 1fr) auto; align-items: center; gap: 10px; padding: 8px 10px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-soft); }
+.ch05-detail-number { display: grid; place-items: center; width: 22px; height: 22px; border: 1px solid var(--diagram-node-border); border-radius: 50%; background: var(--surface); font-size: var(--caption-font-size); }
+.ch05-subformula-details code { min-width: 0; overflow-wrap: anywhere; font-size: var(--control-font-size); }
+.ch05-subformula-details .ch05-truth { margin-top: 0; }
+.ch05-truth { display: inline-flex; align-items: center; justify-content: center; min-width: 38px; margin-top: 5px; padding: 2px 5px; border: 1px solid var(--line-strong); border-radius: 3px; color: var(--ink); font-size: var(--caption-font-size, 11px); font-weight: 700; white-space: nowrap; }
+.ch05-truth[data-value="true"] { border-style: solid; border-color: var(--series-3); }
+.ch05-truth[data-value="false"] { border-style: dashed; border-color: var(--series-2); }
+.ch05-table-scroll { max-width: 100%; overflow: auto; }
+.ch05-table-scroll:focus-visible { outline: 2px solid var(--series-1); outline-offset: 3px; }
+.ch05-table { min-width: 520px; }
+.ch05-table caption { margin-bottom: 10px; color: var(--ink-secondary); font-size: var(--control-font-size, 12px); line-height: 1.6; text-align: left; }
+.ch05-table th { min-width: 72px; vertical-align: bottom; }
+.ch05-table th:first-child, .ch05-table td:first-child { position: sticky; left: 0; z-index: 1; min-width: 58px; background: var(--surface); }
+.ch05-table .formula { overflow: visible; }
+.ch05-table .katex { font-size: .95em; }
+.ch05-result-column { background: color-mix(in srgb, var(--series-1) 6%, var(--surface)); }
+.ch05-current-row td { border-bottom-color: var(--series-1); }
+.ch05-column-tag { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+.ch05-row-select { min-width: 42px; min-height: 30px; padding: 4px 6px; border: 1px solid var(--line); border-radius: 3px; background: var(--surface-soft); color: var(--ink); cursor: pointer; font-size: var(--caption-font-size, 11px); }
+.ch05-row-select[aria-pressed="true"] { border: 2px solid var(--series-1); background: var(--surface); }
+.ch05-presets { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-bottom: var(--layout-gap, 16px); }
+.ch05-presets button { min-width: 0; padding: 9px; border: 1px solid var(--line); border-radius: 4px; background: var(--surface-soft); color: var(--ink); cursor: pointer; text-align: left; }
+.ch05-presets button.active { border: 2px solid var(--series-1); background: var(--surface); padding: 8px; }
+.ch05-presets strong, .ch05-presets code { display: block; }
+.ch05-presets strong { font-size: var(--control-font-size, 12px); line-height: 1.5; }
+.ch05-presets code { margin-top: 5px; overflow-wrap: anywhere; color: var(--muted); font-size: var(--caption-font-size, 11px); line-height: 1.5; }
+.ch05-presets button { display: grid; grid-template-rows: minmax(30px, auto) 1fr; align-content: start; }
+.ch05-preset-description { min-height: 34px; color: var(--ink-secondary); }
+.ch05-atom-controls { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; margin-top: 8px; }
+.ch05-atom-button { display: inline-flex; align-items: center; gap: 8px; min-width: 84px; min-height: 42px; padding: 7px 10px; border: 1px solid var(--line-strong); border-radius: 4px; background: var(--surface-soft); cursor: pointer; }
+.ch05-atom-button code { font-size: 17px; }
+.ch05-atom-button .ch05-truth { margin-top: 0; }
+.ch05-atom-button { justify-content: space-between; min-width: 0; }
+.ch05-classification-note { margin-bottom: 0; color: var(--ink-secondary); }
+.ch05-inference-schema { display: grid; grid-template-columns: 42px minmax(0, 1fr); gap: 7px 10px; align-items: center; margin-bottom: 12px; padding: 11px; background: var(--surface-soft); font-size: var(--control-font-size, 12px); }
+.ch05-inference-schema > span { color: var(--muted); }
+.ch05-inference-schema > div { display: flex; flex-wrap: wrap; gap: 4px 12px; }
+.ch05-inference-schema .formula { display: inline-block; }
+.ch05-complete { width: 100%; min-height: 42px; }
+@media (max-width: 680px) {
+  .ch05-presets { grid-template-columns: 1fr; }
+  .ch05-atom-controls { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+/* Configuration, structural inspection and the complete table form distinct rows. */
+.ch05-lab { display: flex; flex-direction: column; gap: var(--layout-gap); }
+.ch05-configuration .ch05-presets { grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; margin-bottom: 12px; }
+.ch05-presets button { min-height: 82px; padding: 12px; grid-template-rows: auto 1fr; gap: 6px; }
+.ch05-presets button.active { padding: 11px; }
+.ch05-presets strong { font-size: var(--control-font-size, 12px); }
+.ch05-presets code { margin-top: 0; font-size: var(--caption-font-size, 11px); }
+.ch05-preset-description { min-height: 0; margin: 0 0 16px; line-height: 1.7; }
+.ch05-assignment-tools { display: grid; grid-template-columns: auto minmax(240px, 1fr) auto; align-items: center; gap: 16px; padding-top: 16px; border-top: 1px solid var(--line); }
+.ch05-assignment-tools .control-label { margin: 0; }
+.ch05-assignment-tools .ch05-atom-controls { margin: 0; max-width: 490px; }
+.ch05-assignment-tools > button { min-height: 42px; }
+.ch05-analysis .visualization-panel { min-width: 0; }
+.ch05-truth { min-width: 46px; min-height: 24px; padding: 3px 7px; }
+.ch05-table { width: 100%; min-width: 100%; }
+.ch05-table th, .ch05-table td { padding: 12px 10px; font-size: var(--control-font-size, 12px); }
+.ch05-table th { min-width: 76px; }
+.ch05-table .katex { font-size: 1.08em; }
+.ch05-table .ch05-truth { margin-top: 0; }
+.ch05-row-select { min-width: 54px; min-height: 40px; font-size: var(--control-font-size, 12px); }
+.ch05-inference-schema { padding: 14px; gap: 10px 12px; }
+.ch05-analysis { align-items: stretch; }
+.ch05-analysis > .lab-column > .visualization-panel { display: flex; flex-direction: column; flex: 1; }
+.ch05-analysis .ch05-tree-scroll { flex: 1; display: flex; align-items: center; }
+.ch05-analysis > .lab-column > .math-panel:last-child { flex: 1; }
+@container (max-width: 980px) {
+ .ch05-configuration .ch05-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .ch05-assignment-tools { grid-template-columns: 1fr auto; }
+ .ch05-assignment-tools .control-label { grid-column: 1 / -1; }
+}
+@media (max-width: 680px) {
+ .ch05-configuration .ch05-presets { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+ .ch05-presets button { min-height: 105px; padding: 10px; }
+ .ch05-presets button.active { padding: 9px; }
+ .ch05-assignment-tools { grid-template-columns: 1fr; gap: 10px; }
+ .ch05-assignment-tools .ch05-atom-controls { max-width: none; grid-template-columns: repeat(3, minmax(0, 1fr)); }
+ .ch05-assignment-tools > button { width: 100%; }
+ .ch05-table th, .ch05-table td { padding: 10px 6px; }
+ .ch05-tree .ch05-node-symbol { font-size: 22px; }
+ .ch05-tree .ch05-node-truth { font-size: 13px; }
+}

@@ -11,10 +11,7 @@
 <meta property="og:description" content="从计数、集合、关系、逻辑到图论与代数结构的十一章交互式数字教材。">
 <meta property="og:type" content="website">
 <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-<link rel="preload" href="assets/fonts/noto-serif-sc-400-a.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/fonts/fonts.css">
+<script src="assets/js/font-loader.js"></script>
 <style>
 /* ==========================================================================
    全书目录页 · 「笛卡尔」博物馆图录风格
@@ -162,6 +159,10 @@ footer{margin-top:1rem;padding:2.2rem var(--gutter) 2.6rem;border-top:1px solid 
 .index-tool-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
 .index-tool-btn{border:1px solid var(--line);background:transparent;color:var(--accent);padding:10px 14px;cursor:pointer;font:500 .8rem/1 var(--sans);transition:background .2s,color .2s}
 .index-tool-btn:hover{background:var(--ink);color:var(--paper)}
+.index-tool-panel{overscroll-behavior:contain}
+.index-tool-search:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+.index-tool-item:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+body.index-modal-open{overflow:hidden}
 #index-toast{position:fixed;left:50%;bottom:26px;z-index:10010;transform:translate(-50%,18px);opacity:0;pointer-events:none;background:var(--ink);color:var(--paper);border:1px solid var(--line);padding:10px 15px;font:400 .82rem/1.4 var(--sans);transition:.25s}
 #index-toast.show{opacity:1;transform:translate(-50%,0)}
 body.index-focus .hero,body.index-focus footer,body.index-focus .guide,body.index-focus .res-band{display:none!important}
@@ -197,12 +198,12 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     <div class="hstat"><div class="n">11</div><div class="l">章</div></div>
     <div class="hstat"><div class="n">996</div><div class="l">知识页</div></div>
     <div class="hstat"><div class="n">612</div><div class="l">分钟音视频</div></div>
-    <div class="hstat"><div class="n">3822</div><div class="l">行配套源码</div></div>
+    <div class="hstat"><div class="n">3858</div><div class="l">行配套源码</div></div>
   </div>
   <div class="overall">
     <div class="obar"><div class="ofill" id="ofill"></div></div>
     <div class="otxt" id="otxt">阅读进度将自动记录在本机</div>
-    <div class="hero-actions"><a class="btn primary" id="continue" href="#toc" hidden>继续阅读</a><button class="btn reset" id="reset" type="button">清除全部阅读记录</button></div>
+    <div class="hero-actions"><a class="btn primary" href="lab/index.html">进入交互实验室 · 11 个动态模型</a><a class="btn" id="continue" href="#toc" hidden>继续阅读</a><button class="btn reset" id="reset" type="button">清除全部阅读记录</button></div>
   </div>
 </header>
 
@@ -219,7 +220,7 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
   <div class="res-stats">
     <div class="res-stat"><b>36</b><span>讲微课视频</span><em>约 294 分钟 · 逐节导学</em></div>
     <div class="res-stat"><b>36</b><span>期播客音频</span><em>约 318 分钟 · 可后台收听</em></div>
-    <div class="res-stat"><b>253</b><span>段配套源码</span><em>共 3822 行 · 可复制下载</em></div>
+    <div class="res-stat"><b>253</b><span>段配套源码</span><em>共 3858 行 · 可复制下载</em></div>
   </div>
 </section>
 <main id="toc">
@@ -365,6 +366,7 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     <div class="gcard"><h4><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1z"/></svg></span> 书签与进度</h4><p>按 <span class="kbd">B</span> 收藏重点页；每页阅读自动记录，目录与本页可随时查看已读百分比。</p></div>
     <div class="gcard"><h4><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="13" rx="2"/><path d="M10 8.5l4.5 2.5-4.5 2.5z"/><path d="M8 21h8"/></svg></span> 数字资源</h4><p>每节配有<strong>微课视频</strong>与<strong>播客音频</strong>，播客支持后台收听与倍速；<strong>配套源码</strong>可在线阅读、一键复制或下载。章内按 <span class="kbd">V</span> 打开资源面板。</p></div>
     <div class="gcard"><h4><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17a8.5 8.5 0 0 0 0-17z" fill="currentColor"/></svg></span> 专注与字号</h4><p>按 <span class="kbd">F</span> 进入专注模式隐藏页眉页脚，按 <span class="kbd">T</span> 循环切换字号，适配不同屏幕与阅读习惯。</p></div>
+    <div class="gcard"><h4><span class="ic" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 3h6M10 3v6l-5 8c-.8 1.3.1 3 1.7 3h10.6c1.6 0 2.5-1.7 1.7-3l-5-8V3"/><path d="M7.5 14h9"/></svg></span> 交互实验室</h4><p>进入 11 章动态数学模型：旋转三维布尔立方体、编辑关系矩阵、单步执行图算法、验证群旋转与逻辑量词。实验记录保存在本机。</p></div>
   </div>
 </main>
 <footer>离散数学 · 基于 Python 语言的实现 &nbsp;|&nbsp; 数字教材发布版 · 微课 36 讲 / 播客 36 期 / 源码 253 段 &nbsp;|&nbsp; 进度数据存储于浏览器本地<div style="margin-top:.7rem">离散数学数字化教材©2026 湖南信息学院 ｜ 作者：谢鑫</div></footer>
@@ -374,10 +376,12 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
   function pad(n){return (n<10?'0':'')+n;}
   function readData(ch){
     var prog=null,read=0,pages=0;
-    try{var p=localStorage.getItem('discrete-ch'+pad(ch)+'-progress');if(p!=null)prog=parseInt(p,10);}catch(e){}
-    try{var r=JSON.parse(localStorage.getItem('discrete-ch'+pad(ch)+'-read'));if(r){for(var k in r)if(r[k])read++;}}catch(e){}
+    var count=[92,97,109,105,91,74,71,126,79,73,79][ch-1];
+    try{var p=localStorage.getItem('discrete-ch'+pad(ch)+'-progress');if(p!=null&&/^\d+$/.test(p)&&Number(p)<count)prog=Number(p);}catch(e){}
+    try{var r=JSON.parse(localStorage.getItem('discrete-ch'+pad(ch)+'-read'));if(r&&typeof r==='object'&&!Array.isArray(r)){Object.keys(r).forEach(function(k){if(/^\d+$/.test(k)&&Number(k)<count&&(r[k]===true||r[k]===1))read++;});}}catch(e){}
     return {prog:prog,read:read};
   }
+  function refreshReadingProgress(){
   var totalRead=0,totalPages=0,started=0;
   document.querySelectorAll('.ch-card').forEach(function(card){
     var ch=+card.getAttribute('data-ch');
@@ -386,13 +390,13 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     totalPages+=pages;totalRead+=Math.min(d.read,pages);
     var pct=pages?Math.round(Math.min(d.read,pages)/pages*100):0;
     var bar=card.querySelector('.ch-prog-bar');var txt=card.querySelector('.ch-prog-txt');
-    setTimeout(function(){bar.style.width=pct+'%';},120);
-    if(d.read>0){started++;txt.textContent=pct>=99?'已学完 ✓':('已读 '+pct+'%（第 '+((d.prog||0)+1)+' 页）');}
+    bar.style.width=pct+'%';
+    if(d.read>0){started++;txt.textContent=d.read>=pages?'已学完 ✓':('已读 '+pct+'%（第 '+((d.prog||0)+1)+' 页）');}
     else if(d.prog>0){txt.textContent='上次看到第 '+(d.prog+1)+' 页';}
     else{txt.textContent='未开始';}
   });
   var opct=totalPages?Math.round(totalRead/totalPages*100):0;
-  setTimeout(function(){document.getElementById('ofill').style.width=opct+'%';},150);
+  document.getElementById('ofill').style.width=opct+'%';
   document.getElementById('otxt').textContent='全书进度 '+opct+'%　·　已读 '+totalRead+' / '+totalPages+' 页　·　'+started+' / '+N+' 章已开始';
   (function(){
     var best=null,score=-1;
@@ -402,10 +406,20 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     });
     var b=document.getElementById('continue');
     if(best&&b){b.href=best.card.getAttribute('href');b.textContent='继续阅读 · '+best.card.querySelector('.ch-name').textContent.trim();b.hidden=false;}
+    else if(b){b.hidden=true;}
   })();
+  }
+  var refreshTimer=null;
+  function scheduleReadingRefresh(){clearTimeout(refreshTimer);refreshTimer=setTimeout(refreshReadingProgress,30);}
+  refreshReadingProgress();
+  window.addEventListener('storage',function(event){if(event.key===null||/^discrete-ch(?:0[1-9]|1[01])-(?:progress|read|marks)$/.test(event.key))scheduleReadingRefresh();});
+  window.addEventListener('pageshow',scheduleReadingRefresh);
+  window.addEventListener('focus',scheduleReadingRefresh);
   document.getElementById('reset').onclick=function(){
     if(!confirm('确定清除全部章节的阅读进度、书签与自测记录吗？此操作不可撤销。'))return;
     for(var i=1;i<=N;i++){try{localStorage.removeItem('discrete-ch'+pad(i)+'-progress');localStorage.removeItem('discrete-ch'+pad(i)+'-read');localStorage.removeItem('discrete-ch'+pad(i)+'-marks');}catch(e){}}
+    try{localStorage.removeItem('dm-interactive-learning-v2');}catch(e){}
+    try{var audioKeys=[];for(var k=0;k<localStorage.length;k++){var key=localStorage.key(k);if(/^mk-pos-ch(?:[1-9]|1[01])-\d+\.\d+$/.test(key))audioKeys.push(key);}audioKeys.forEach(function(key){localStorage.removeItem(key);});}catch(e){}
     location.reload();
   };
 })();
@@ -421,9 +435,11 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
   function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
   function state(card){
     var ch=+card.getAttribute('data-ch'),progress=0,read=0,marks={};
-    try{progress=+(localStorage.getItem('discrete-ch'+pad(ch)+'-progress')||0);}catch(e){}
-    try{var r=JSON.parse(localStorage.getItem('discrete-ch'+pad(ch)+'-read')||'{}');Object.keys(r).forEach(function(k){if(r[k])read++;});}catch(e){}
-    try{marks=JSON.parse(localStorage.getItem('discrete-ch'+pad(ch)+'-marks')||'{}')||{};}catch(e){}
+    var count=Number(card.querySelector('.ch-pages').getAttribute('data-pages'));
+    function validPages(value){var out={};if(value&&typeof value==='object'&&!Array.isArray(value)){Object.keys(value).forEach(function(k){if(/^\d+$/.test(k)&&Number(k)<count&&(value[k]===true||value[k]===1))out[k]=true;});}return out;}
+    try{var p=localStorage.getItem('discrete-ch'+pad(ch)+'-progress');if(p&&/^\d+$/.test(p)&&Number(p)<count)progress=Number(p);}catch(e){}
+    try{read=Object.keys(validPages(JSON.parse(localStorage.getItem('discrete-ch'+pad(ch)+'-read')||'{}'))).length;}catch(e){}
+    try{marks=validPages(JSON.parse(localStorage.getItem('discrete-ch'+pad(ch)+'-marks')||'{}'));}catch(e){}
     return {ch:ch,progress:progress,read:read,marks:marks};
   }
   function bestCard(){
@@ -437,14 +453,17 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
   }
   function toast(msg){
     var el=document.getElementById('index-toast');if(!el){el=document.createElement('div');el.id='index-toast';document.body.appendChild(el);}
-    el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show');},2100);
+    el.setAttribute('role','status');el.setAttribute('aria-live','polite');el.textContent=msg;el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(function(){el.classList.remove('show');},2100);
   }
   var overlay=document.createElement('div');overlay.className='index-tool-overlay';overlay.setAttribute('aria-hidden','true');
   overlay.innerHTML='<section class="index-tool-panel" role="dialog" aria-modal="true" aria-labelledby="index-tool-title"><div class="index-tool-head"><h2 id="index-tool-title"></h2><button class="index-tool-close" type="button" aria-label="关闭">×</button></div><div id="index-tool-body"></div></section>';
   document.body.appendChild(overlay);
   var body=overlay.querySelector('#index-tool-body'),title=overlay.querySelector('#index-tool-title');
-  function closePanel(){overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true');}
-  function openPanel(t,html,after){title.textContent=t;body.innerHTML=html;overlay.classList.add('show');overlay.setAttribute('aria-hidden','false');if(after)setTimeout(after,20);}
+  var previousFocus=null;
+  function inertBackground(active){Array.prototype.forEach.call(document.body.children,function(el){if(el!==overlay&&el.id!=='index-toast'&&el.tagName!=='SCRIPT')el.inert=active;});document.body.classList.toggle('index-modal-open',active);}
+  function closePanel(){var wasOpen=overlay.classList.contains('show');overlay.classList.remove('show');overlay.setAttribute('aria-hidden','true');inertBackground(false);if(wasOpen){var target=previousFocus&&previousFocus!==document.body&&previousFocus.isConnected&&previousFocus.getClientRects().length?previousFocus:cards[Math.max(0,selected)];if(target)target.focus({preventScroll:true});}}
+  function openPanel(t,html,after){previousFocus=document.activeElement;title.textContent=t;body.innerHTML=html;overlay.classList.add('show');overlay.setAttribute('aria-hidden','false');inertBackground(true);overlay.querySelector('.index-tool-close').focus();if(after)after();}
+  overlay.addEventListener('keydown',function(e){if(e.key!=='Tab')return;var all=Array.prototype.filter.call(overlay.querySelectorAll('button,input,a[href],[tabindex="0"]'),function(el){return !el.disabled&&el.getClientRects().length;});var first=all[0],last=all[all.length-1];if(e.shiftKey&&document.activeElement===first){e.preventDefault();last.focus();}else if(!e.shiftKey&&document.activeElement===last){e.preventDefault();first.focus();}});
   overlay.querySelector('.index-tool-close').onclick=closePanel;
   overlay.addEventListener('click',function(e){
     if(e.target===overlay){closePanel();return;}
@@ -457,7 +476,7 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
     openPanel('章节缩略总览',html,function(){var x=body.querySelector('.index-tool-item');if(x)x.focus();});
   }
   function showSearch(){
-    openPanel('全书目录搜索','<input class="index-tool-search" id="index-search-input" placeholder="输入章节、概念或小节名称…" autocomplete="off"><div id="index-search-results"></div>',function(){
+    openPanel('全书目录搜索','<input class="index-tool-search" id="index-search-input" aria-label="搜索全书目录" placeholder="输入章节、概念或小节名称…" autocomplete="off"><div id="index-search-results" aria-live="polite"></div>',function(){
       var input=document.getElementById('index-search-input'),results=document.getElementById('index-search-results');
       function render(){var q=input.value.trim().toLowerCase(),hits=[];cards.forEach(function(card,i){var text=card.textContent.replace(/\s+/g,' ').trim(),desc=card.querySelector('.ch-sub')||card.querySelector('.ch-desc');if(!q||text.toLowerCase().indexOf(q)>-1)hits.push({i:i,name:card.querySelector('.ch-name').textContent.trim(),desc:desc?desc.textContent.trim():''});});results.innerHTML=hits.length?'<div class="index-tool-grid">'+hits.map(function(h){return '<button class="index-tool-item" data-index-nav data-card="'+h.i+'"><b>'+esc(h.name)+'</b><small>'+esc(h.desc)+'</small></button>';}).join('')+'</div>':'<div class="index-tool-empty">未找到匹配章节。</div>';}
       input.addEventListener('input',render);input.addEventListener('keydown',function(e){if(e.key==='Enter'){var first=results.querySelector('[data-index-nav]');if(first)first.click();}});render();input.focus();
@@ -490,15 +509,17 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
   function applyFont(){document.documentElement.style.fontSize=fontSizes[fontIndex];}
   function cycleFont(){fontIndex=(fontIndex+1)%fontSizes.length;applyFont();try{localStorage.setItem('index-font',String(fontIndex));}catch(e){}toast('目录字号：'+fontSizes[fontIndex]);}
   function resetFont(){fontIndex=0;applyFont();try{localStorage.setItem('index-font','0');}catch(e){}toast('已恢复默认字号');}
-  try{var fi=+localStorage.getItem('index-font');if(fi>=0&&fi<fontSizes.length){fontIndex=fi;applyFont();}if(localStorage.getItem('index-focus')==='1')document.body.classList.add('index-focus');}catch(e){}
-  var actions=[showHelp,startExercise,showBookmarks,showResources,showSettings],labels=['打开快捷键','开始自测','查看书签与进度','查看各章资源','打开阅读设置'];
+  try{var fi=+localStorage.getItem('index-font');if(Number.isInteger(fi)&&fi>=0&&fi<fontSizes.length){fontIndex=fi;applyFont();}if(localStorage.getItem('index-focus')==='1')document.body.classList.add('index-focus');}catch(e){}
+  function openLabs(){location.href='lab/index.html';}
+  var actions=[showHelp,startExercise,showBookmarks,showResources,showSettings,openLabs],labels=['打开快捷键','开始自测','查看书签与进度','查看各章资源','打开阅读设置','进入交互实验室'];
   guides.forEach(function(card,i){card.setAttribute('role','button');card.setAttribute('tabindex','0');card.setAttribute('data-action-label',labels[i]);card.addEventListener('click',actions[i]);card.addEventListener('keydown',function(e){if(e.key==='Enter'||e.key===' '){e.preventDefault();actions[i]();}});});
   document.addEventListener('keydown',function(e){
     var tag=(e.target.tagName||'').toUpperCase(),typing=tag==='INPUT'||tag==='TEXTAREA'||e.target.isContentEditable;
     if(overlay.classList.contains('show')){if(e.key==='Escape'){closePanel();e.preventDefault();}return;}
-    if(typing)return;
+    if(typing||tag==='SELECT')return;
     var k=e.key;
     if((e.ctrlKey||e.metaKey)&&(k==='k'||k==='K')){showSearch();e.preventDefault();return;}
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
     if(k==='/'){showSearch();e.preventDefault();return;}
     if(k==='?'){showHelp();e.preventDefault();return;}
     if(k==='m'||k==='M'){focusDirectory();e.preventDefault();return;}
@@ -518,14 +539,14 @@ body.index-focus::after{content:"专注模式 · F 退出";position:fixed;right:
   var a=document.getElementById('declAudio'), b=document.getElementById('declPlay');
   if(!a||!b) return;
   var bar=document.querySelector('.res-decl-bar i');
-  b.onclick=function(){ if(a.paused){ a.play(); } else { a.pause(); } };
+  var description=document.querySelector('.res-decl-m'),normalDescription=description?description.textContent:'';
+  function failed(){b.classList.remove('on');var m=document.querySelector('.res-decl-m');if(m){m.setAttribute('role','status');m.setAttribute('aria-live','polite');m.textContent='未能播放作者声明，可再次点击重试；请确认播客文件完整。';}}
+  b.onclick=function(){ if(a.paused){try{var playing=a.play();if(playing&&typeof playing.catch==='function')playing.catch(failed);}catch(e){failed();}} else { a.pause(); } };
   function sync(){ b.classList.toggle('on', !a.paused && !a.ended);
+    if(!a.paused&&!a.ended&&description)description.textContent=normalDescription;
     if(bar) bar.style.width=(a.duration?(a.currentTime/a.duration*100):0).toFixed(1)+'%'; }
   ['play','pause','ended','timeupdate'].forEach(function(e){ a.addEventListener(e,sync); });
-  a.addEventListener('error',function(){
-    var m=document.querySelector('.res-decl-m');
-    if(m) m.textContent='音频文件读取失败，请确认 assets/podcasts 目录完整';
-  });
+  a.addEventListener('error',failed);
 })();
 </script>
 </body>

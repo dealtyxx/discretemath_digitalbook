@@ -1,0 +1,8 @@
+# Preserve byte hashes in lab/build-manifest.json across Git checkouts.
+interactive/** -text
+lab/** -text
+assets/fonts/** -text
+/package.json -text
+/package-lock.json -text
+/vite.config.ts -text
+/tools/build-lab.mjs -text

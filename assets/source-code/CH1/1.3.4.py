@@ -2,12 +2,16 @@ import random
 from math import gcd
 from sympy import isprime, mod_inverse
 def generate_large_prime(keysize):    #生成一个大素数
+    if type(keysize) is not int or keysize < 3:
+        raise ValueError("教学示例要求素数位长至少为3，才能选出两个不同的奇素数")
     while True:
         num = random.getrandbits(keysize)
         num |= (1 << keysize - 1) | 1     #保证位长足够且为奇数
         if isprime(num):
             return num
 def generate_keys(keysize):   #生成RSA密钥
+    if type(keysize) is not int or keysize < 3:
+        raise ValueError("RSA素数位长必须是至少为3的整数")
     p = generate_large_prime(keysize)    #选择大素数p和q
     q = generate_large_prime(keysize)
     while q == p:    #排除p=q，否则ϕ(n)公式失效

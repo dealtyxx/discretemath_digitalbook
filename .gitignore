@@ -1,3 +1,6 @@
 tools/.fontsrc/
 node_modules/
 __pycache__/
+artifacts/
+*.tsbuildinfo
+.DS_Store

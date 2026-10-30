@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="离散数学">
+  <rect width="64" height="64" rx="10" fill="#1A1A1A"/>
+  <circle cx="32" cy="32" r="24.5" fill="none" stroke="#B8B0A4" stroke-width="1.5" opacity=".55"/>
+  <path d="M19 17h26M19 17l15 15-15 15M19 47h26" fill="none" stroke="#EDE8E0" stroke-width="4.6" stroke-linecap="square" stroke-linejoin="miter"/>
+</svg>

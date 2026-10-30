@@ -13,9 +13,57 @@
   var loading = document.getElementById('loading');
   if (!frame || !stage) return;
   var BAR = 26;                                              // 与 CSS 中 --bar-h 一致
+  var portrait = window.matchMedia('(max-width:700px) and (orientation:portrait)');
+  var preference = null;
+  try { preference = localStorage.getItem('book-layout'); } catch (e) {}
+  if (preference !== 'reader' && preference !== 'slides') preference = null;
+  var reader = preference ? preference === 'reader' : portrait.matches;
+  var requestedPage = new URLSearchParams(location.search).get('p');
+  var layoutButton = document.createElement('button');
+  layoutButton.type = 'button';
+  layoutButton.id = 'layoutBtn';
+  var tools = document.querySelector('.source-tools');
+  if (tools) tools.insertBefore(layoutButton, tools.firstChild);
+  var pager = document.createElement('nav');
+  pager.className = 'reader-pager';
+  pager.setAttribute('aria-label', '教材翻页');
+  pager.innerHTML = '<button type="button" data-page-prev aria-label="上一页">← 上一页</button>'
+    + '<label>页码 <input type="number" inputmode="numeric" min="1" value="1" aria-label="跳转到页码"></label>'
+    + '<span data-page-total></span><button type="button" data-page-next aria-label="下一页">下一页 →</button>';
+  document.body.appendChild(pager);
+  var pageInput = pager.querySelector('input'), current = 0, total = 1;
+  function send(data) { try { frame.contentWindow.postMessage(data, '*'); } catch (e) {} }
+  function syncLayout() {
+    document.documentElement.classList.toggle('reader-layout', reader);
+    layoutButton.textContent = reader ? '整页版式' : '流式阅读';
+    layoutButton.setAttribute('aria-label', reader ? '切换到整页版式' : '切换到流式阅读');
+    layoutButton.setAttribute('aria-pressed', String(reader));
+    send({ type: 'book-layout', reader: reader });
+    fit();
+  }
+  layoutButton.addEventListener('click', function () {
+    reader = !reader;
+    preference = reader ? 'reader' : 'slides';
+    try { localStorage.setItem('book-layout', preference); } catch (e) {}
+    syncLayout();
+  });
+  function gotoPage(index) { send({ type: 'book-page', index: Math.max(0, Math.min(total - 1, index)) }); }
+  pager.querySelector('[data-page-prev]').onclick = function () { gotoPage(current - 1); };
+  pager.querySelector('[data-page-next]').onclick = function () { gotoPage(current + 1); };
+  pageInput.addEventListener('change', function () {
+    var value = Number(pageInput.value);
+    if (Number.isInteger(value) && value >= 1 && value <= total) gotoPage(value - 1);
+    else pageInput.value = String(current + 1);
+  });
+  pageInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') { pageInput.blur(); frame.focus(); } });
+  portrait.addEventListener('change', function () {
+    if (!preference) { reader = portrait.matches; syncLayout(); }
+  });
+  syncLayout();
 
   /* ---------- 舞台缩放 ---------- */
   function fit() {
+    if (reader) { stage.style.transform = 'none'; return; }
     var w = window.innerWidth, h = window.innerHeight - BAR;
     if (!w || h <= 0) return;
     var s = Math.min(w / 1920, h / 1080);
@@ -42,17 +90,27 @@
     if (isReady) return;
     isReady = true;
     if (loading) loading.classList.add('done');
-    try { frame.contentWindow.focus(); } catch (e) {}
+    syncLayout();
+    if (requestedPage && /^\d+$/.test(requestedPage)) send({ type: 'book-page', index: Number(requestedPage) - 1 });
     var tool = new URLSearchParams(location.search).get('tool');
     var keys = { toc: 'm', grid: 'g', search: '/', help: '?', bookmark: 'b', focus: 'f', font: 't', res: 'v', audio: 'a', code: 'c' };
     if (tool && keys[tool]) setTimeout(function () { sendKey(keys[tool]); }, 260);
   }
   frame.addEventListener('load', ready);
   window.addEventListener('message', function (e) {
-    if (e.source === frame.contentWindow && e.data && e.data.type === 'book-ready') ready();
+    if (e.source !== frame.contentWindow || !e.data) return;
+    if (e.data.type === 'book-ready') { ready(); syncLayout(); }
+    if (e.data.type === 'book-state' && Number.isInteger(e.data.index) && Number.isInteger(e.data.total) && e.data.total > 0) {
+      current = e.data.index; total = e.data.total;
+      if (document.activeElement !== pageInput) pageInput.value = String(current + 1);
+      pageInput.max = String(total);
+      pager.querySelector('[data-page-total]').textContent = '/ ' + total;
+      pager.querySelector('[data-page-prev]').disabled = current === 0;
+      pager.querySelector('[data-page-next]').disabled = current === total - 1;
+      try { var url = new URL(location.href); url.searchParams.set('p', String(current + 1)); history.replaceState(null, '', url); } catch (err) {}
+    }
   });
   setTimeout(function () { if (!isReady && loading) loading.classList.add('slow'); }, 6000);
-  window.addEventListener('focus', function () { try { frame.contentWindow.focus(); } catch (e) {} });
 
   /* ---------- 快捷键代理 ---------- */
   var FORWARD = { ArrowLeft: 1, ArrowRight: 1, ArrowUp: 1, ArrowDown: 1, ' ': 1, PageUp: 1, PageDown: 1, Home: 1, End: 1,
@@ -62,6 +120,11 @@
     if (tag === 'INPUT' || tag === 'TEXTAREA' || (t && t.isContentEditable)) return;
     if ((tag === 'A' || tag === 'BUTTON') && (e.key === 'Enter' || e.key === ' ')) return;   // 让按钮 / 链接自己响应
     var k = e.key;
+    if (reader && !(e.ctrlKey || e.metaKey || e.altKey) && ['ArrowUp','ArrowDown','PageUp','PageDown','Home','End',' '].indexOf(k) >= 0) {
+      send({ type: 'book-scroll', key: k, shiftKey: e.shiftKey });
+      e.preventDefault();
+      return;
+    }
     var ctrlK = (e.ctrlKey || e.metaKey) && (k === 'k' || k === 'K');
     var plain = FORWARD[k] && !(e.ctrlKey || e.metaKey || e.altKey);
     if (!plain && !ctrlK) return;
@@ -79,8 +142,10 @@
     else {
       var cur = function () { return document.fullscreenElement || document.webkitFullscreenElement; };
       fs.addEventListener('click', function () {
-        if (cur()) (document.exitFullscreen || document.webkitExitFullscreen).call(document);
-        else req.call(el);
+        try {
+          var result = cur() ? (document.exitFullscreen || document.webkitExitFullscreen).call(document) : req.call(el);
+          if (result && result.catch) result.catch(function () { fs.textContent = '全屏不可用'; });
+        } catch (e) { fs.textContent = '全屏不可用'; }
       });
       var sync = function () { fs.textContent = cur() ? '退出全屏' : '全屏'; setTimeout(fit, 80); };
       document.addEventListener('fullscreenchange', sync);

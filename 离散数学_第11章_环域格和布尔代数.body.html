@@ -3,11 +3,8 @@
 <head>
 <base target="_top"/>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
-<link rel="preload" href="assets/fonts/noto-serif-sc-400-a.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/fonts/fonts.css">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="assets/js/font-loader.js"></script>
 
 <title>离散数学 第11章 · 环、域、格和布尔代数</title>
 <style>
@@ -464,7 +461,7 @@ sup{top:-.58em}sub{bottom:-.18em}
 </style>
 <script id="mathjax-config">
 window.MathJax={
-  loader:{paths:{fonts:'assets/@mathjax'}},
+  loader:{paths:{fonts:'assets/@mathjax'},load:location.protocol==='file:'?['a11y/assistive-mml']:[]},
   tex:{
     inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],
     processEscapes:true,packages:{'[+]':['ams']}
@@ -473,11 +470,22 @@ window.MathJax={
     displayOverflow:'linebreak',
     linebreaks:{inline:true,width:'100%',lineleading:.18}
   },
-  options:{enableMenu:true,enableExplorer:true},
+  options:{
+    enableMenu:true,
+    enableEnrichment:location.protocol!=='file:',
+    enableSpeech:location.protocol!=='file:',enableBraille:location.protocol!=='file:',
+    enableExplorer:location.protocol!=='file:',
+    menuOptions:{settings:location.protocol==='file:'?{enrich:false,speech:false,braille:false,collapsible:false,assistiveMml:true}:{} }
+  },
   startup:{
     typeset:false,               /* 由 assets/js/book-polish.js 按页排版 */
     ready:function(){
       MathJax.startup.defaultReady();
+      if(location.protocol==='file:'){
+        var doc=MathJax.startup.document;
+        Object.assign(doc.options,{enableEnrichment:false,enableComplexity:false,enableSpeech:false,enableBraille:false,enableExplorer:false,enableAssistiveMml:true});
+        if(doc.menu)Object.assign(doc.menu.settings,{enrich:false,speech:false,braille:false,collapsible:false,assistiveMml:true});
+      }
       MathJax.startup.promise.then(function(){
         document.documentElement.classList.add('mathjax-ready');
       });
@@ -485,7 +493,14 @@ window.MathJax={
   }
 };
 </script>
-<script defer="" src="assets/mathjax/tex-chtml.js"></script>
+<script>
+(function(){
+  // SVG uses bundled vector glyphs, so local-file formula rendering needs no font fetch.
+  var script=document.createElement('script');
+  script.src='assets/mathjax/'+(location.protocol==='file:'?'tex-svg.js':'tex-chtml.js');
+  script.async=false;document.head.appendChild(script);
+})();
+</script>
 <style id="mk-style">
 /* ===================================================================
    数字资源层 · 微课视频 / 播客音频 / 配套源码
@@ -771,19 +786,19 @@ body.tb-focus #mk-mini{display:none!important}
 <section class="slide dark" data-screen-label="Concept" data-source="定义 11.1.5 与例 11.1.5 · 零因子" data-theme="dark"><div class="chrome"><div>零因子</div><div>12 / 79</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 11.1.5</div><h2 class="h1-zh anim-item" style="max-width:16em">零因子：与非零元相乘得零</h2><div aria-label="a ≠ 0，b ≠ 0 且 a · b = 0  ⟹  a 是零因子" class="formula anim-item mathjax-display-source" data-tex="a \ne 0,\ b \ne 0 \text{且} a \cdot b = 0 \Longrightarrow a \text{是零因子}">\[\displaystyle a \ne 0,\ b \ne 0 \text{且} a \cdot b = 0 \Longrightarrow a \text{是零因子}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若存在非零 b 使 <span aria-label="a·b = 0" class="math-inline-source" data-tex="a\cdot b = 0">\(a\cdot b = 0\)</span> 则 a 是左零因子，<span aria-label="b·a = 0" class="math-inline-source" data-tex="b\cdot a = 0">\(b\cdot a = 0\)</span> 则是右零因子，两者皆是则为零因子。<span aria-label="Z₁₀" class="math-inline-source" data-tex="Z_{10}">\(Z_{10}\)</span> 中的零因子为 2,4,5,6,8；整数环 Z 中没有零因子。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 11.1.5</div><h2 class="h1-zh anim-item" style="max-width:16em">零因子：与非零元相乘得零</h2><div aria-label="a ≠ 0，b ≠ 0 且 a · b = 0  ⟹  a 是零因子" class="formula anim-item mathjax-display-source" data-tex="a \ne 0,\ b \ne 0 \text{且} a \cdot b = 0 \Longrightarrow a \text{是零因子}">\[\displaystyle a \ne 0,\ b \ne 0 \text{且} a \cdot b = 0 \Longrightarrow a \text{是零因子}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设 a 非零。若存在非零 b 使 <span aria-label="a·b = 0" class="math-inline-source" data-tex="a\cdot b = 0">\(a\cdot b = 0\)</span> 则 a 是左零因子，<span aria-label="b·a = 0" class="math-inline-source" data-tex="b\cdot a = 0">\(b\cdot a = 0\)</span> 则是右零因子，任一情形成立即称为零因子。<span aria-label="Z₁₀" class="math-inline-source" data-tex="Z_{10}">\(Z_{10}\)</span> 中的零因子为 2,4,5,6,8；整数环 Z 中没有零因子。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 79</div></div></section>
 <section class="slide light" data-screen-label="Concept" data-source="定义 11.1.6 · 整环" data-theme="light"><div class="chrome"><div>整环</div><div>13 / 79</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 11.1.6</div><h2 class="h1-zh anim-item" style="max-width:16em">整环：无零因子的可换环</h2><div aria-label="ab = 0  ⟹  a = 0 或 b = 0" class="formula anim-item mathjax-display-source" data-tex="ab = 0 \Longrightarrow a = 0 \text{或} b = 0">\[\displaystyle ab = 0 \Longrightarrow a = 0 \text{或} b = 0\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">整环是无零因子的可换环：任意两个非零元素的乘积非零。整数环 Z、多项式环 R[x]、高斯整数环 Z[i] 都是整环。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 11.1.6</div><h2 class="h1-zh anim-item" style="max-width:16em">整环：无零因子的可换含幺环</h2><div aria-label="ab = 0  ⟹  a = 0 或 b = 0" class="formula anim-item mathjax-display-source" data-tex="ab = 0 \Longrightarrow a = 0 \text{或} b = 0">\[\displaystyle ab = 0 \Longrightarrow a = 0 \text{或} b = 0\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">整环是满足 1≠0、无零因子的可换含幺环，即任意两个非零元素的乘积非零。整数环 Z、多项式环 R[x]、高斯整数环 Z[i] 都是整环。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 79</div></div></section>
 <section class="slide dark" data-screen-label="Concept" data-source="定义 11.1.7 与例 11.1.7 · 除环与域" data-theme="dark"><div class="chrome"><div>除环与域</div><div>14 / 79</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 11.1.7</div><h2 class="h1-zh anim-item" style="max-width:16em">域：每个非零元都可逆的可换环</h2><div aria-label="∀ a ≠ 0 : a · a −1 = a −1 · a = 1" class="formula anim-item mathjax-display-source" data-tex="\forall a \ne 0 : a \cdot a^{-1}= a^{-1}\cdot a = 1">\[\displaystyle \forall a \ne 0 : a \cdot a^{-1}= a^{-1}\cdot a = 1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">含幺环 D 中每个非零元都有乘法逆元则为除环；若乘法还交换则为域。实数集 R 与有理数集 Q 是域；整数集 Z 不是域，因为如 2 没有整数乘法逆元。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 11.1.7</div><h2 class="h1-zh anim-item" style="max-width:16em">域：每个非零元都可逆的整环</h2><div aria-label="∀ a ≠ 0 : a · a −1 = a −1 · a = 1" class="formula anim-item mathjax-display-source" data-tex="\forall a \ne 0 : a \cdot a^{-1}= a^{-1}\cdot a = 1">\[\displaystyle \forall a \ne 0 : a \cdot a^{-1}= a^{-1}\cdot a = 1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">含幺环 D 满足 1≠0，且每个非零元都有乘法逆元，则为除环；若乘法还交换则为域。实数集 R 与有理数集 Q 是域；整数集 Z 不是域，因为如 2 没有整数乘法逆元。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 79</div></div></section>
 <section class="slide light" data-screen-label="Theorem" data-source="定理 11.1.1 与 11.1.2 · 整环性质" data-theme="light"><div class="chrome"><div>定理 11.1.1 / 11.1.2</div><div>15 / 79</div></div>
@@ -802,7 +817,7 @@ body.tb-focus #mk-mini{display:none!important}
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">环和域的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">像素运算、向量空间与 RSA</h2>
-<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">图像处理：像素值集合构成环，亮度对比度调整就是环上的加法与乘法</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">机器学习：向量与矩阵运算在实数或复数域 F 上进行，支撑特征分析与建模</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">密码学：RSA 利用模运算这种特殊环运算，设计既安全又高效的加密算法</p></div></div>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">图像处理：模 256 的像素值在模加乘下构成环，常见饱和或截断运算需另行分析</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">机器学习：向量与矩阵运算在实数或复数域 F 上进行，支撑特征分析与建模</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">密码学：RSA 利用模运算这种特殊环运算，设计既安全又高效的加密算法</p></div></div>
 </div></div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 79</div></div></section>
 <section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="light"><div class="chrome"><div>应用动画</div><div>18 / 79</div></div>
@@ -847,7 +862,7 @@ body.tb-focus #mk-mini{display:none!important}
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">子环理想商环的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">多项式、循环码与有限域</h2>
-<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">计算机代数：低次多项式子环是多项式环的简化版，用于优化计算</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">编码理论：循环码是多项式环 <span aria-label="F₂[x]" class="math-inline-source" data-tex="F_{2}[x]">\(F_{2}[x]\)</span> 中的一个理想，由生成多项式构成</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">加密算法：有限域可看作多项式环对不可约多项式理想的商环</p></div></div>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">计算机代数：常数多项式构成子环；固定次数上界的多项式一般对乘法不封闭</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">编码理论：长度 n 的二元循环码对应商环 <span aria-label="F₂[x]/(xⁿ−1)" class="math-inline-source" data-tex="F_{2}[x]/(x^{n}-1)">\(F_{2}[x]/(x^{n}-1)\)</span> 中的理想</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">加密算法：有限域可由素数域上的多项式环对不可约多项式生成的理想取商构造</p></div></div>
 </div></div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 79</div></div></section>
 <section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="light"><div class="chrome"><div>应用动画</div><div>25 / 79</div></div>
@@ -880,8 +895,8 @@ body.tb-focus #mk-mini{display:none!important}
 <section class="slide light" data-screen-label="Application" data-source="11.1.3 应用示例" data-theme="light"><div class="chrome"><div>应用示例</div><div>29 / 79</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">环同态同构的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">灰度转换与同态加密</h2>
-<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">图像处理：灰度转换是从彩色像素环到灰度像素环的同态，保持加乘关系</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">同态加密：明文环与密文环之间的同构映射，允许在密文上直接运算</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">云计算：同态加密让数据在不解密的情况下完成安全的计算与分析</p></div></div>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">环同态同构的应用</div><h2 class="h1-zh anim-item" style="max-width:18em">通道映射与同态加密</h2>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">图像处理：逐通道加乘模型中的单通道投影是环同态，一般加权灰度转换并非如此</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">同态加密：在密文上执行支持的运算，解密结果与对应的明文运算一致</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">云计算：同态加密让数据在不解密的情况下完成安全的计算与分析</p></div></div>
 </div></div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>29 / 79</div></div></section>
 <section class="slide light app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例" data-theme="light"><div class="chrome"><div>应用动画</div><div>30 / 79</div></div>
@@ -897,7 +912,7 @@ body.tb-focus #mk-mini{display:none!important}
 <section class="slide dark" data-screen-label="Summary" data-source="11.1.4 小结 · 环和域" data-theme="dark"><div class="chrome"><div>11.1 小结</div><div>31 / 79</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
-<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">环带加法与乘法两种运算，加法成交换群、乘法成半群、二者由分配律连接</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">整环是无零因子的可换环，域是每个非零元都可逆的可换环，有限整环必是域</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">子环本身成环，理想对环元素乘法有吸收性，商环以理想的陪集为元素</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">环同态保持加乘运算，同态基本定理把核、商环与像联系起来</p></div>
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">环带加法与乘法两种运算，加法成交换群、乘法成半群、二者由分配律连接</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">整环是满足 1≠0、无零因子的可换含幺环；每个非零元都可逆的整环是域，有限整环必是域</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">子环本身成环，理想对环元素乘法有吸收性，商环以理想的陪集为元素</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">环同态保持加乘运算，同态基本定理把核、商环与像联系起来</p></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 79</div></div></section>
 <section class="slide light mk-page mk-audio-page" data-screen-label="Podcast" data-source="播客音频 · 11.1 环和域" data-theme="light" data-mk-sec="11.1"><div class="chrome"><div>播客音频 · 11.1 环和域</div><div>32 / 79</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">播客音频</span><span class="mk-metaline">10:54 · 3.1 MB · 讲解音频版</span></div><div class="mk-audio-card anim-item"><button class="mk-abtn" type="button" data-mk-sec="11.1" aria-label="播放本节播客"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><div class="mk-audio-main"><h2 class="h2-zh">11.1 环和域</h2><p class="mk-audio-desc">本节内容的播客讲解版，适合课后复盘、通勤复习与考前串讲；点击波形任意位置可跳转收听。</p><div class="mk-wave" data-mk-sec="11.1" role="slider" aria-label="音频进度"><i style="height:84%"></i><i style="height:55%"></i><i style="height:34%"></i><i style="height:47%"></i><i style="height:43%"></i><i style="height:37%"></i><i style="height:65%"></i><i style="height:76%"></i><i style="height:57%"></i><i style="height:59%"></i><i style="height:59%"></i><i style="height:28%"></i><i style="height:25%"></i><i style="height:47%"></i><i style="height:46%"></i><i style="height:53%"></i><i style="height:86%"></i><i style="height:85%"></i><i style="height:65%"></i><i style="height:70%"></i><i style="height:62%"></i><i style="height:34%"></i><i style="height:43%"></i><i style="height:62%"></i><i style="height:55%"></i><i style="height:65%"></i><i style="height:86%"></i><i style="height:67%"></i><i style="height:45%"></i><i style="height:50%"></i><i style="height:35%"></i><i style="height:16%"></i><i style="height:40%"></i><i style="height:59%"></i><i style="height:53%"></i><i style="height:71%"></i><i style="height:85%"></i><i style="height:60%"></i><i style="height:48%"></i><i style="height:57%"></i><i style="height:42%"></i><i style="height:38%"></i><i style="height:69%"></i><i style="height:78%"></i><i style="height:69%"></i><i style="height:83%"></i><i style="height:79%"></i><i style="height:44%"></i><i style="height:37%"></i><i style="height:43%"></i><i style="height:27%"></i><i style="height:34%"></i><i style="height:66%"></i><i style="height:65%"></i><i style="height:58%"></i><i style="height:72%"></i><i style="height:59%"></i><i style="height:31%"></i><i style="height:40%"></i><i style="height:50%"></i><i style="height:41%"></i><i style="height:63%"></i><i style="height:91%"></i><i style="height:78%"></i></div><div class="mk-atime"><span data-mk-cur>0:00</span><span>10:54</span></div></div></div><ul class="mk-audio-tips anim-item"><li data-n="01">支持后台收听：翻页、查阅源码时音频不中断</li><li data-n="02">迷你播放器可调 1× / 1.25× / 1.5× / 2× 倍速</li><li data-n="03">进度自动记忆，下次从上次听到的位置继续</li></ul></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>32 / 79</div></div></section>
@@ -990,7 +1005,7 @@ print(f&quot;a · b = {result}&quot;)
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 11.2.2 至 11.2.4 · 子格定理" data-theme="dark"><div class="chrome"><div>定理 11.2.2 ~ 11.2.4</div><div>45 / 79</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">子格三定理</div><h2 class="h1-zh anim-item" style="max-width:16em">子格的判定、交与生成</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 11.2.2：对上下确界封闭的非空子集即为子格。定理 11.2.3：若干子格的交集仍是子格。定理 11.2.4：子集 S 经有限次上下确界运算生成的集合是子格，称为由 S 生成的子格。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">子格三定理</div><h2 class="h1-zh anim-item" style="max-width:16em">子格的判定、交与生成</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 11.2.2：对上下确界封闭的非空子集即为子格。定理 11.2.3：若干子格的交集非空时，交集仍是子格。定理 11.2.4：非空子集 S 经有限次上下确界运算生成的集合是子格，称为由 S 生成的子格。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>45 / 79</div></div></section>
 <section class="slide light" data-screen-label="Concept" data-source="定义 11.2.4 与定理 11.2.5 · 格同态" data-theme="light"><div class="chrome"><div>格同态</div><div>46 / 79</div></div>
@@ -1024,7 +1039,7 @@ print(f&quot;a · b = {result}&quot;)
 <section class="slide dark" data-screen-label="Concept" data-source="定义 11.2.7 与 11.2.8 · 完全格与有界格" data-theme="dark"><div class="chrome"><div>完全格与有界格</div><div>50 / 79</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 11.2.7 / 11.2.8</div><h2 class="h1-zh anim-item" style="max-width:16em">完全格与有界格</h2><div aria-label="0 ≤ a ≤ 1 ， ∀ a ∈ L" class="formula anim-item mathjax-display-source" data-tex="0 \le a \le 1 \text{，} \forall a \in L">\[\displaystyle 0 \le a \le 1 \text{，} \forall a \in L\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若每个子集都有上确界与下确界则为完全格，如闭区间集合。若存在最小元 0 与最大元 1 使任意 a 满足 <span aria-label="0 ≤ a ≤ 1" class="math-inline-source" data-tex="0 \le a \le 1">\(0 \le a \le 1\)</span> 则为有界格，如幂集 <span aria-label="P(S)" class="math-inline-source" data-tex="P(S)">\(P(S)\)</span> 以 ∅ 为最小元、全集为最大元。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 11.2.7 / 11.2.8</div><h2 class="h1-zh anim-item" style="max-width:16em">完全格与有界格</h2><div aria-label="0 ≤ a ≤ 1 ， ∀ a ∈ L" class="formula anim-item mathjax-display-source" data-tex="0 \le a \le 1 \text{，} \forall a \in L">\[\displaystyle 0 \le a \le 1 \text{，} \forall a \in L\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若每个子集（包括空集）都有上确界与下确界，则为完全格，如实数闭区间 [0,1] 在通常序下。若存在最小元 0 与最大元 1 使任意 a 满足 <span aria-label="0 ≤ a ≤ 1" class="math-inline-source" data-tex="0 \le a \le 1">\(0 \le a \le 1\)</span> 则为有界格，如幂集 <span aria-label="P(S)" class="math-inline-source" data-tex="P(S)">\(P(S)\)</span> 以 ∅ 为最小元、全集为最大元。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 79</div></div></section>
 <section class="slide light" data-screen-label="Concept" data-source="定义 11.2.9 至 11.2.11 · 链格、代数格与分数格" data-theme="light"><div class="chrome"><div>链格 / 代数格 / 分数格</div><div>51 / 79</div></div>
@@ -1360,12 +1375,15 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
   }
   window.__deckGoTo=goTo;
   document.addEventListener('keydown',e=>{
+    if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.altKey||(e.target.closest&&e.target.closest('input,textarea,select,button,a,video,audio,.tb-overlay,[contenteditable="true"],[role="button"],[role="slider"],pre,[data-book-scroll]')))return;
+    if(document.documentElement.classList.contains('reader-mode')&&['ArrowUp','ArrowDown',' ','PageUp','PageDown','Home','End'].includes(e.key))return;
     if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();goTo(current+1);}
     if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goTo(current-1);}
     if(e.key==='Home'){e.preventDefault();goTo(0);}
     if(e.key==='End'){e.preventDefault();goTo(total-1);}});
   let acc=0,lastNav=0,lastDir=0;
   document.addEventListener('wheel',e=>{
+    if(e.ctrlKey||document.documentElement.classList.contains('reader-mode')||e.target.closest('pre,[data-book-scroll],.tb-overlay,video,audio'))return;
     const now=performance.now();
     const d=e.deltaY;
     if(now-lastNav<420){acc=0;return;}
@@ -1377,6 +1395,7 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
   let tx=0,ty=0;
   document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
   document.addEventListener('touchend',e=>{
+    if(e.target.closest('pre,[data-book-scroll],.tb-overlay,video,audio,.mk-wave,input,button,a'))return;
     const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
     if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy))return;
     if(dx>0)goTo(current+1);else goTo(current-1);},{passive:true});
@@ -1416,7 +1435,7 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
 
   /* ---------- 持久化：已读 / 书签 ---------- */
   var RKEY='discrete-ch'+pad(CH)+'-read', BKEY='discrete-ch'+pad(CH)+'-marks';
-  function loadSet(k){try{var v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+  function loadSet(k){var clean={};try{var v=JSON.parse(localStorage.getItem(k));if(v&&typeof v==='object'&&!Array.isArray(v))Object.keys(v).forEach(function(key){if(/^\d+$/.test(key)&&Number(key)<total&&(v[key]===1||v[key]===true))clean[key]=1;});}catch(e){}return clean;}
   function saveSet(k,o){try{localStorage.setItem(k,JSON.stringify(o));}catch(e){}}
   var readSet=loadSet(RKEY), markSet=loadSet(BKEY);
   function readCount(){var n=0;for(var k in readSet)if(readSet[k])n++;return n;}
@@ -1505,7 +1524,7 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
     sres.innerHTML=out||'<div class="tb-snone">未找到「'+esc(q)+'」。</div>';
   }
   sin.addEventListener('input',doSearch);
-  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
+  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){e.preventDefault();var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
   sres.addEventListener('click',function(e){var r=e.target.closest('.tb-sr');if(r)jump(+r.getAttribute('data-j'));});
 
   /* ---------- 习题自测：隐藏答案 ---------- */
@@ -1522,7 +1541,11 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
           var token='@@TBMATH'+mathKeep.length+'@@'; mathKeep.push(m); return token;
         });
         if(/[（(]/.test(html)){
-          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner){
+          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner,offset){
+            var explicit=/^(?:答案|答\s*[:：])/.test(inner.trim());
+            var trailing=/^[\s。．.；;，,]*$/.test(html.slice(offset+m.length));
+            var result=/^(?:[A-D]|[-+]?\d+(?:\.\d+)?)(?:\s*[:：].*)?$/.test(inner.trim());
+            if(!explicit&&(!trailing||!result||/[A-Za-z0-9_]$/.test(html.slice(0,offset))))return m;
             return '<span class="tb-ans" title="点击查看答案">（<span class="tb-ans-x">'+inner+'</span>）</span>';
           });
           html=html.replace(/@@TBMATH(\d+)@@/g,function(m,i){return mathKeep[+i];});
@@ -1539,7 +1562,7 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
   /* ---------- 代码一键复制 ---------- */
   (function copyButtons(){
     var COPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
-    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);return true;}catch(e){return false;}}
+    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();var ok=document.execCommand('copy');document.body.removeChild(ta);return ok;}catch(e){return false;}}
     Array.prototype.forEach.call(document.querySelectorAll('pre.code'),function(pre){
       if(pre.__tbCopy)return; pre.__tbCopy=1;
       var wrap=document.createElement('div'); wrap.className='tb-codewrap';
@@ -1551,8 +1574,8 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
         e.stopPropagation();
         var code=pre.querySelector('code'); var text=(code?code.innerText:pre.innerText).replace(/\u00a0/g,' ');
         function done(){btn.classList.add('tb-copied');label.textContent='已复制';toast('代码已复制到剪贴板');clearTimeout(btn.__t);btn.__t=setTimeout(function(){btn.classList.remove('tb-copied');label.textContent='复制';},1600);}
-        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallbackCopy(text);done();});}
-        else{fallbackCopy(text);done();}
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){if(fallbackCopy(text))done();else toast('复制失败，请选中代码后复制');});}
+        else{if(fallbackCopy(text))done();else toast('复制失败，请选中代码后复制');}
       });
       wrap.appendChild(btn);
     });
@@ -1560,7 +1583,7 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
 
   /* ---------- 字号 ---------- */
   var fonts=['100%','112%','124%','90%'],fi=0;
-  try{var fs=+localStorage.getItem('tb-font');if(fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
+  try{var fs=+localStorage.getItem('tb-font');if(Number.isInteger(fs)&&fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
   function applyFont(){document.documentElement.style.fontSize=fonts[fi];}
   function cycleFont(){fi=(fi+1)%fonts.length;applyFont();try{localStorage.setItem('tb-font',fi);}catch(e){}toast('字号：<b>'+fonts[fi]+'</b>');}
 
@@ -1577,7 +1600,7 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
   function toggleHelp(){toggleO(helpEl);}
 
   /* ---------- 书签 ---------- */
-  function toggleMark(){var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
+  function toggleMark(){markSet=loadSet(BKEY);var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
   function updateMarkUI(i){bmBtn.classList.toggle('tb-on',!!markSet[i]);var it=tocEl.querySelector('.tb-item[data-j="'+i+'"]');if(it)it.classList.toggle('tb-mark',!!markSet[i]);}
 
   /* ---------- 状态同步 ---------- */
@@ -1603,10 +1626,16 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
   function updateBar(i){var b=document.getElementById('tb-bar');if(b)b.style.width=((i+1)/total*100)+'%';}
   function updateTheme(i){document.body.setAttribute('data-tb-theme',slides[i].getAttribute('data-theme')||'dark');}
 
-  var raf=null;
+  var raf=null, observedPage=curIdx();
+  window.__bookSyncLearning=function(key,cleared){
+    if(key&&key!==RKEY&&key!==BKEY)return;
+    if(cleared){if(raf){cancelAnimationFrame(raf);raf=null;}observedPage=curIdx();}
+    readSet=loadSet(RKEY);markSet=loadSet(BKEY);var i=curIdx();
+    updateMarkUI(i);updateTOCcur(i);updateGridCur(i);
+  };
   function onChange(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;
     var i=curIdx();
-    if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}
+    if(i!==observedPage){readSet=loadSet(RKEY);if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}observedPage=i;}
     updateBar(i);updateTheme(i);updateMarkUI(i);
     if(tocEl.classList.contains('tb-show'))updateTOCcur(i);
     if(gridEl.classList.contains('tb-show'))updateGridCur(i);
@@ -1624,11 +1653,12 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
     if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){if(!searchEl.classList.contains('tb-show'))openSearch();e.preventDefault();e.stopPropagation();return;}
     if(anyOpen()){
       if(e.key==='Escape'){closeAll();e.stopPropagation();e.preventDefault();return;}
-      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].indexOf(e.key)>-1){e.stopPropagation();}
+
       return;
     }
     var tn=(e.target.tagName||'');
-    if(tn==='INPUT'||tn==='TEXTAREA')return;
+    if(tn==='INPUT'||tn==='TEXTAREA'||tn==='SELECT'||e.target.isContentEditable)return;
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
     var k=e.key;
     if(k==='m'||k==='M'){toggleTOC();e.stopPropagation();}
     else if(k==='g'||k==='G'){toggleGrid();e.stopPropagation();}
@@ -1698,10 +1728,10 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
   /* ============ 播客音频：全局单例播放器 ============ */
   var AU=document.getElementById('mk-audio');
   var mini=document.getElementById('mk-mini');
-  var curKey=null, RATES=[1,1.25,1.5,2], ri=0;
+  var curKey=null, RATES=[1,1.25,1.5,2], ri=0, positionEpoch=0, resettingPosition=false;
 
   function posKey(k){return 'mk-pos-ch'+D.ch+'-'+k;}
-  function savePos(){if(!curKey||!AU.duration)return;try{
+  function savePos(){if(resettingPosition||!curKey||!AU.duration)return;try{
     if(AU.currentTime>3&&AU.currentTime<AU.duration-3)localStorage.setItem(posKey(curKey),String(Math.floor(AU.currentTime)));
     else localStorage.removeItem(posKey(curKey));
   }catch(e){}}
@@ -1712,7 +1742,7 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
       savePos(); curKey=k;
       AU.src=abs(s.a.path); AU.playbackRate=RATES[ri];
       var p=0; try{p=parseInt(localStorage.getItem(posKey(k))||'0',10)||0;}catch(e){}
-      if(p>0){AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);try{AU.currentTime=p;}catch(e){}});}
+      if(p>0){var epoch=positionEpoch;AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);if(epoch!==positionEpoch)return;try{AU.currentTime=p;}catch(e){}});}
       $('.mk-m-t',mini).textContent=s.full;
       mini.classList.add('mk-show');
     }
@@ -1728,6 +1758,12 @@ inputs = [</pre></button></div><p class="mk-foot-hint anim-item">点击任一文
     if(curKey===k&&!AU.paused){AU.pause();}else{playSec(k);}
   }
   window.__mkPlaySection=playSec;
+  window.__bookSyncAudioPosition=function(key){
+    if(!curKey||(key&&key!==posKey(curKey)))return;
+    try{if(localStorage.getItem(posKey(curKey))!==null)return;}catch(e){return;}
+    positionEpoch++;resettingPosition=true;
+    try{AU.pause();AU.currentTime=0;AU.__sv=Date.now();syncUI();}finally{resettingPosition=false;}
+  };
 
   AU.addEventListener('play',syncUI);
   AU.addEventListener('pause',function(){savePos();syncUI();});

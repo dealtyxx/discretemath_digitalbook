@@ -14,9 +14,8 @@
   .slide{content-visibility:visible!important}
 }
 
-/* ---------- 2. MathJax 按页排版：尚未排版的页先隐藏正文，避免闪现 TeX 源码 ---------- */
-.slide[data-mj="pending"] .slide-body{visibility:hidden}
-html.mj-fail .slide[data-mj="pending"] .slide-body{visibility:visible}
+/* ---------- 2. 公式延迟或辅助线程失败时，正文仍须始终可读 ---------- */
+/* 不隐藏等待公式的整页正文；排版完成前保留原始公式作为渐进增强回退。 */
 
 /* ---------- 3. 中文排版细节 ---------- */
 /* 标题、导语均衡断行，避免末行只剩一两个字 */
@@ -39,3 +38,73 @@ html.mj-fail .slide[data-mj="pending"] .slide-body{visibility:visible}
 
 /* ---------- 6. 收藏星标沿用主色调（原为金色，与图录配色不一致） ---------- */
 .tb-star{color:var(--ink)}
+
+/* ---------- 7. 阅读与交互的共同底线 ---------- */
+.slide-body>*{min-width:0}
+html:not(.reader-mode) .slide>.grid-2-7-5 pre.code{max-height:70vh}
+.tb-item:focus-visible,.tb-card:focus-visible,.tb-sr:focus-visible,.mk-li:focus-visible,
+pre.code:focus-visible,[data-book-scroll]:focus-visible{outline:2px solid var(--ink);outline-offset:-2px}
+.tb-pbody,.tb-sres,.tb-help-body,.mk-panel-body{overscroll-behavior:contain}
+.tb-ans[role="button"]{cursor:pointer}
+.tb-copy:focus-visible{opacity:1}
+.mk-wave:focus-visible{outline:2px solid var(--ink);outline-offset:4px}
+html.book-modal-open{overflow:hidden!important}
+@media(prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;scroll-behavior:auto!important}
+}
+
+/* ---------- 8. 可切换的流式阅读，保留整页投影版式 ---------- */
+html.reader-mode,html.reader-mode body{height:auto;min-height:100%;overflow-x:hidden;overflow-y:auto;background:var(--paper)}
+.reader-mode #deck{position:relative;width:100%;height:auto;min-height:100vh}
+.reader-mode .slide{display:none;position:relative;inset:auto;width:100%;height:auto;min-height:100vh;padding:24px 24px 90px!important;overflow:visible;transition:none!important;transform:none!important}
+.reader-mode .slide.active{display:flex}
+.reader-mode .slide.leaving{display:none}
+.reader-mode .slide::before,.reader-mode .slide::after{display:none}
+.reader-mode .slide .slide-body{flex:1;min-height:0;width:100%!important;max-width:900px!important;margin:0 auto!important;gap:24px;justify-content:flex-start!important;padding:12px 0!important}
+.reader-mode .slide-body div{min-width:0;max-width:100%}
+.reader-mode .slide.bare .slide-body{justify-content:center!important;min-height:60vh}
+.reader-mode .slide-body [class^="w-"],.reader-mode .mk-w{width:100%!important;max-width:100%!important;margin-left:0!important;margin-right:0!important}
+.reader-mode .display-zh{font-size:2.4rem!important;max-width:100%!important;line-height:1.35!important}
+.reader-mode .h1-zh{font-size:1.85rem!important;max-width:100%!important;line-height:1.4!important}
+.reader-mode .h2-zh{font-size:1.45rem!important;max-width:100%!important;line-height:1.5!important}
+.reader-mode .lead-zh{font-size:1.1rem!important;line-height:1.85!important;max-width:100%!important}
+.reader-mode .body-zh,.reader-mode ol.biglist li,.reader-mode ol.steps li{font-size:1rem!important;line-height:1.85!important;max-width:100%!important}
+.reader-mode .kicker,.reader-mode .meta,.reader-mode .chrome,.reader-mode .foot{font-size:.75rem!important;letter-spacing:.02em!important}
+.reader-mode .chrome{gap:16px;margin-bottom:16px!important}
+.reader-mode .foot{gap:12px;margin-top:32px!important}
+.reader-mode .slide-body [style*="grid-template-columns"],.reader-mode .grid-2-7-5,.reader-mode .grid-3,.reader-mode .app-video-layout,.reader-mode ol.biglist.twocol,.reader-mode .mk-hub-stats{grid-template-columns:minmax(0,1fr)!important;gap:24px!important}
+.reader-mode .listrow{grid-template-columns:auto minmax(0,1fr)!important;gap:12px}
+.reader-mode .vis-center{min-width:0;max-width:100%;overflow-x:auto}
+.reader-mode .vis-center svg{max-width:100%;height:auto;flex-shrink:0}
+.reader-mode .example{padding:16px!important}
+.reader-mode .formula,.reader-mode .formula-sm{font-size:1.2rem!important;max-width:100%!important;overflow-x:auto;overflow-y:hidden;padding-block:8px}
+.reader-mode .math-inline-source{max-width:100%;overflow-x:auto;overflow-y:hidden;vertical-align:middle;padding-block:3px}
+.reader-mode .mathjax-display-source mjx-container[display="true"]{min-width:0;overflow:visible!important}
+.reader-mode table{display:block;max-width:100%;overflow-x:auto;font-size:.9rem!important}
+.reader-mode th,.reader-mode td{font-size:inherit!important;padding:10px!important;min-width:75px}
+.reader-mode pre.code{font-size:.8rem!important;max-width:100%;max-height:65vh;padding:16px!important}
+.reader-mode #nav{display:none}
+.reader-mode #tb-dock{left:0;right:0;top:auto;bottom:0;transform:none;flex-direction:row;justify-content:center;gap:4px;padding:6px 4px;background:var(--paper);border-top:1px solid var(--line)}
+.reader-mode .tb-ctl{flex:0 1 44px;width:44px;height:44px;min-width:32px;font-size:.9rem}
+.reader-mode .tb-ctl:hover{transform:none}
+.reader-mode .tb-ctl[data-tip]::after{right:auto;top:auto;bottom:110%;transform:none}
+.reader-mode .tb-panel{max-width:100%}
+.reader-mode #tb-grid .tb-panel,.reader-mode #mk-panel .tb-panel{inset:12px}
+.reader-mode .tb-gwrap{grid-template-columns:repeat(2,minmax(0,1fr))}
+.reader-mode .tb-card{min-width:0}
+.reader-mode .tb-phead{padding:12px;gap:8px}
+.reader-mode .tb-pbody{padding:12px}
+.reader-mode #tb-toast{max-width:90%;bottom:65px;font-size:.8rem}
+.reader-mode .mk-audio-card{grid-template-columns:minmax(0,1fr);gap:18px;align-items:stretch;padding:18px}
+.reader-mode .mk-abtn{justify-self:center}
+.reader-mode .mk-audio-main{width:100%;min-width:0}
+.reader-mode .mk-wave{gap:1px;min-width:0}
+.reader-mode .mk-wave i{min-width:0}
+.reader-mode .mk-audio-tips{grid-template-columns:minmax(0,1fr);gap:16px}
+.reader-mode .mk-audio-desc,.reader-mode .mk-audio-tips li{font-size:.9rem!important}
+.reader-mode .mk-path{flex-wrap:wrap;gap:10px}
+.reader-mode .mk-stage,.reader-mode .app-video-stage{width:100%!important;max-width:100%!important;height:auto!important;aspect-ratio:16/9;min-height:0!important}
+.reader-mode video{width:100%!important;height:auto!important;max-width:100%!important}
+.reader-mode .app-video-stage-page .slide-body{gap:20px!important}
+.reader-mode #mk-mini{bottom:58px;left:8px;right:8px;max-width:calc(100% - 16px);font-size:.75rem}
+.reader-mode .mk-panel-layout{grid-template-columns:minmax(0,1fr)!important}

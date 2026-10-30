@@ -1,58 +1,65 @@
-import re
 def get_formula_depth(formula):
-    formula = formula.replace(' ', '')       #去掉公式中的空格
-    operators = ['↔', '→', '∨', '∧', '¬']    #逻辑联结词的优先级
-    def parse(formula):
-        if len(formula) == 0:
+    """原子命题深度为0；按¬、∧、∨、→、↔的优先级解析，→右结合。"""
+    if not isinstance(formula, str):
+        raise ValueError("公式必须是字符串")
+    tokens = ''.join(formula.split())
+    index = 0
+
+    def unary():
+        nonlocal index
+        if index >= len(tokens):
+            raise ValueError("公式不完整")
+        token = tokens[index]
+        index += 1
+        if token == '¬':
+            return 1 + unary()
+        if token == '(':
+            depth = equivalence()
+            if index >= len(tokens) or tokens[index] != ')':
+                raise ValueError("括号不匹配")
+            index += 1
+            return depth
+        if 'A' <= token <= 'Z':
             return 0
-        while formula[0] == '(' and formula[-1] == ')':    #处理括号中的内容
-            inner_formula = formula[1:-1]
-            if valid_parentheses(inner_formula):
-                formula = inner_formula
-            else:
-                break
-        if re.match(r'^[A-Z]$', formula):     #若是单个命题变元，返回0层
-            return 0
-        max_depth = 0
-        for op in operators:
-            parts = split_formula(formula, op)
-            if parts:
-                depth = 1 + max(parse(part) for part in parts)
-                max_depth = max(max_depth, depth)
-        return max_depth
-    def valid_parentheses(formula):
-        stack = []
-        for char in formula:
-            if char == '(':
-                stack.append(char)
-            elif char == ')':
-                if stack:
-                    stack.pop()
-                else:
-                    return False
-        return len(stack) == 0
-    def split_formula(formula, op):
-        if op == '¬':
-            if formula[0] == '¬':
-                return [formula[1:]]
-            return None
-        parentheses = 0
-        parts = []
-        current = []
-        for char in formula:
-            if char == '(':
-                parentheses += 1
-            elif char == ')':
-                parentheses -= 1
-            elif char == op and parentheses == 0:
-                parts.append(''.join(current))
-                current = []
-                continue
-            current.append(char)
-        if current:
-            parts.append(''.join(current))
-        return parts if len(parts) > 1 else None
-    return parse(formula)
+        raise ValueError("应输入命题变元、否定或左括号")
+
+    def conjunction():
+        nonlocal index
+        depth = unary()
+        while index < len(tokens) and tokens[index] == '∧':
+            index += 1
+            depth = 1 + max(depth, unary())
+        return depth
+
+    def disjunction():
+        nonlocal index
+        depth = conjunction()
+        while index < len(tokens) and tokens[index] == '∨':
+            index += 1
+            depth = 1 + max(depth, conjunction())
+        return depth
+
+    def implication():
+        nonlocal index
+        depth = disjunction()
+        if index < len(tokens) and tokens[index] == '→':
+            index += 1
+            depth = 1 + max(depth, implication())
+        return depth
+
+    def equivalence():
+        nonlocal index
+        depth = implication()
+        while index < len(tokens) and tokens[index] == '↔':
+            index += 1
+            depth = 1 + max(depth, implication())
+        return depth
+
+    result = equivalence()
+    if index != len(tokens):
+        raise ValueError("存在多余字符或缺少联结词")
+    return result
+
 formula1 = "(¬P∧Q)→R"
 formula2 = "(¬(P→¬Q))∧((R∨S)↔¬P)"
 depth1 = get_formula_depth(formula1)

@@ -3,11 +3,8 @@
 <head>
 <base target="_top"/>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
-<link rel="preload" href="assets/fonts/noto-serif-sc-400-a.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/fonts/fonts.css">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="assets/js/font-loader.js"></script>
 
 <title>离散数学 第3章 · 二元关系</title>
 <style>
@@ -470,7 +467,7 @@ sup{top:-.58em}sub{bottom:-.18em}
 </style>
 <script id="mathjax-config">
 window.MathJax={
-  loader:{paths:{fonts:'assets/@mathjax'}},
+  loader:{paths:{fonts:'assets/@mathjax'},load:location.protocol==='file:'?['a11y/assistive-mml']:[]},
   tex:{
     inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],
     processEscapes:true,packages:{'[+]':['ams']}
@@ -479,11 +476,22 @@ window.MathJax={
     displayOverflow:'linebreak',
     linebreaks:{inline:true,width:'100%',lineleading:.18}
   },
-  options:{enableMenu:true,enableExplorer:true},
+  options:{
+    enableMenu:true,
+    enableEnrichment:location.protocol!=='file:',
+    enableSpeech:location.protocol!=='file:',enableBraille:location.protocol!=='file:',
+    enableExplorer:location.protocol!=='file:',
+    menuOptions:{settings:location.protocol==='file:'?{enrich:false,speech:false,braille:false,collapsible:false,assistiveMml:true}:{} }
+  },
   startup:{
     typeset:false,               /* 由 assets/js/book-polish.js 按页排版 */
     ready:function(){
       MathJax.startup.defaultReady();
+      if(location.protocol==='file:'){
+        var doc=MathJax.startup.document;
+        Object.assign(doc.options,{enableEnrichment:false,enableComplexity:false,enableSpeech:false,enableBraille:false,enableExplorer:false,enableAssistiveMml:true});
+        if(doc.menu)Object.assign(doc.menu.settings,{enrich:false,speech:false,braille:false,collapsible:false,assistiveMml:true});
+      }
       MathJax.startup.promise.then(function(){
         document.documentElement.classList.add('mathjax-ready');
       });
@@ -491,7 +499,14 @@ window.MathJax={
   }
 };
 </script>
-<script defer="" src="assets/mathjax/tex-chtml.js"></script>
+<script>
+(function(){
+  // SVG uses bundled vector glyphs, so local-file formula rendering needs no font fetch.
+  var script=document.createElement('script');
+  script.src='assets/mathjax/'+(location.protocol==='file:'?'tex-svg.js':'tex-chtml.js');
+  script.async=false;document.head.appendChild(script);
+})();
+</script>
 <style id="mk-style">
 /* ===================================================================
    数字资源层 · 微课视频 / 播客音频 / 配套源码
@@ -958,7 +973,7 @@ for row in M:
 <section class="slide light" data-screen-label="Concept" data-source="定义 3.1.12 · 图表示法" data-theme="light"><div class="chrome"><div>3.1.4 图表示法</div><div>31 / 109</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 3.1.12 · 图表示法</div><h2 class="h1-zh anim-item" style="max-width:16em">用顶点和边表示关系 <span aria-label="G = &lt;V, E&gt;" class="math-inline-source" data-tex="G = \langle V, E\rangle">\(G = \langle V, E\rangle\)</span></h2><p class="lead-zh anim-item" style="max-width:26em">顶点集 <span aria-label="V = A∪B" class="math-inline-source" data-tex="V = A\cup B">\(V = A\cup B\)</span>，每个元素一个顶点；对每个 <span aria-label="&lt;a,b&gt;∈R" class="math-inline-source" data-tex="\langle a,b\rangle \in R">\(\langle a,b\rangle \in R\)</span> 画一条从 a 到 b 的边。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若 <span aria-label="&lt;a,b&gt;∈R" class="math-inline-source" data-tex="\langle a,b\rangle \in R">\(\langle a,b\rangle \in R\)</span> 且 <span aria-label="&lt;b,a&gt;∈R" class="math-inline-source" data-tex="\langle b,a\rangle \in R">\(\langle b,a\rangle \in R\)</span>，边是无向的（相互关系）；若仅 <span aria-label="&lt;a,b&gt;∈R" class="math-inline-source" data-tex="\langle a,b\rangle \in R">\(\langle a,b\rangle \in R\)</span>，边是有向的（单向关系）。同集合上的关系 <span aria-label="R⊆A×A" class="math-inline-source" data-tex="R\subseteq A\times A">\(R\subseteq A\times A\)</span>，每个元素对应一个顶点。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 3.1.12 · 图表示法</div><h2 class="h1-zh anim-item" style="max-width:16em">用顶点和边表示关系 <span aria-label="G = &lt;V, E&gt;" class="math-inline-source" data-tex="G = \langle V, E\rangle">\(G = \langle V, E\rangle\)</span></h2><p class="lead-zh anim-item" style="max-width:26em">顶点集 <span aria-label="V = A∪B" class="math-inline-source" data-tex="V = A\cup B">\(V = A\cup B\)</span>，每个元素一个顶点；对每个 <span aria-label="&lt;a,b&gt;∈R" class="math-inline-source" data-tex="\langle a,b\rangle \in R">\(\langle a,b\rangle \in R\)</span> 画一条从 a 到 b 的边。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若 <span aria-label="&lt;a,b&gt;∈R" class="math-inline-source" data-tex="\langle a,b\rangle \in R">\(\langle a,b\rangle \in R\)</span> 且 <span aria-label="&lt;b,a&gt;∈R" class="math-inline-source" data-tex="\langle b,a\rangle \in R">\(\langle b,a\rangle \in R\)</span>，应画两条反向有向边，也可用一条无向线简记这两个有序对；若仅 <span aria-label="&lt;a,b&gt;∈R" class="math-inline-source" data-tex="\langle a,b\rangle \in R">\(\langle a,b\rangle \in R\)</span>，边是有向的（单向关系）。同集合上的关系 <span aria-label="R⊆A×A" class="math-inline-source" data-tex="R\subseteq A\times A">\(R\subseteq A\times A\)</span>，每个元素对应一个顶点。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 109</div></div></section>
 <section class="slide light" data-screen-label="Example" data-source="例 3.1.16 · 图表示" data-theme="light"><div class="chrome"><div>例 3.1.16</div><div>32 / 109</div></div>
@@ -1168,7 +1183,7 @@ print(R_circ_S)</code></pre></div>
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 3.2.4 · 复合的代数性质" data-theme="dark"><div class="chrome"><div>定理 3.2.4</div><div>54 / 109</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定理 3.2.4 · 结合律与恒等</div><h2 class="h1-zh anim-item" style="max-width:16em">复合的结合律、逆与恒等</h2><div aria-label="(R∘S)∘T = R∘(S∘T)　(R∘S) −1 = S −1 ∘R −1" class="formula anim-item mathjax-display-source" data-tex="(R\circ S)\circ T = R\circ (S\circ T) \quad (R\circ S)^{-1}= S^{-1}\circ R^{-1}">\[\displaystyle (R\circ S)\circ T = R\circ (S\circ T) \quad (R\circ S)^{-1}= S^{-1}\circ R^{-1}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">并且恒等关系是复合的单位元：<span aria-label="I_A∘R = R" class="math-inline-source" data-tex="I_{A}\circ R = R">\(I_{A}\circ R = R\)</span>，<span aria-label="R∘I_A = R" class="math-inline-source" data-tex="R\circ I_{A} = R">\(R\circ I_{A} = R\)</span>。证明均通过追踪中间元素 b 后展开复合定义得到。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定理 3.2.4 · 结合律与恒等</div><h2 class="h1-zh anim-item" style="max-width:16em">复合的结合律、逆与恒等</h2><div aria-label="(R∘S)∘T = R∘(S∘T)　(R∘S) −1 = S −1 ∘R −1" class="formula anim-item mathjax-display-source" data-tex="(R\circ S)\circ T = R\circ (S\circ T) \quad (R\circ S)^{-1}= S^{-1}\circ R^{-1}">\[\displaystyle (R\circ S)\circ T = R\circ (S\circ T) \quad (R\circ S)^{-1}= S^{-1}\circ R^{-1}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设 R⊆A×B，按本章先 R 后 S 的复合约定，恒等关系满足：<span aria-label="I_A∘R = R" class="math-inline-source" data-tex="I_{A}\circ R = R">\(I_{A}\circ R = R\)</span>，<span aria-label="R∘I_B=R" class="math-inline-source" data-tex="R\circ I_{B} = R">\(R\circ I_{B} = R\)</span>。证明均通过追踪中间元素 b 后展开复合定义得到。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>54 / 109</div></div></section>
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 3.2.5 / 3.2.6 · 复合与并交、子集" data-theme="dark"><div class="chrome"><div>定理 3.2.5 与 3.2.6</div><div>55 / 109</div></div>
@@ -1732,12 +1747,15 @@ relations = [
   }
   window.__deckGoTo=goTo;
   document.addEventListener('keydown',e=>{
+    if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.altKey||(e.target.closest&&e.target.closest('input,textarea,select,button,a,video,audio,.tb-overlay,[contenteditable="true"],[role="button"],[role="slider"],pre,[data-book-scroll]')))return;
+    if(document.documentElement.classList.contains('reader-mode')&&['ArrowUp','ArrowDown',' ','PageUp','PageDown','Home','End'].includes(e.key))return;
     if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();goTo(current+1);}
     if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goTo(current-1);}
     if(e.key==='Home'){e.preventDefault();goTo(0);}
     if(e.key==='End'){e.preventDefault();goTo(total-1);}});
   let acc=0,lastNav=0,lastDir=0;
   document.addEventListener('wheel',e=>{
+    if(e.ctrlKey||document.documentElement.classList.contains('reader-mode')||e.target.closest('pre,[data-book-scroll],.tb-overlay,video,audio'))return;
     const now=performance.now();
     const d=e.deltaY;
     if(now-lastNav<420){acc=0;return;}
@@ -1749,6 +1767,7 @@ relations = [
   let tx=0,ty=0;
   document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
   document.addEventListener('touchend',e=>{
+    if(e.target.closest('pre,[data-book-scroll],.tb-overlay,video,audio,.mk-wave,input,button,a'))return;
     const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
     if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy))return;
     if(dx>0)goTo(current+1);else goTo(current-1);},{passive:true});
@@ -1788,7 +1807,7 @@ relations = [
 
   /* ---------- 持久化：已读 / 书签 ---------- */
   var RKEY='discrete-ch'+pad(CH)+'-read', BKEY='discrete-ch'+pad(CH)+'-marks';
-  function loadSet(k){try{var v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+  function loadSet(k){var clean={};try{var v=JSON.parse(localStorage.getItem(k));if(v&&typeof v==='object'&&!Array.isArray(v))Object.keys(v).forEach(function(key){if(/^\d+$/.test(key)&&Number(key)<total&&(v[key]===1||v[key]===true))clean[key]=1;});}catch(e){}return clean;}
   function saveSet(k,o){try{localStorage.setItem(k,JSON.stringify(o));}catch(e){}}
   var readSet=loadSet(RKEY), markSet=loadSet(BKEY);
   function readCount(){var n=0;for(var k in readSet)if(readSet[k])n++;return n;}
@@ -1877,7 +1896,7 @@ relations = [
     sres.innerHTML=out||'<div class="tb-snone">未找到「'+esc(q)+'」。</div>';
   }
   sin.addEventListener('input',doSearch);
-  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
+  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){e.preventDefault();var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
   sres.addEventListener('click',function(e){var r=e.target.closest('.tb-sr');if(r)jump(+r.getAttribute('data-j'));});
 
   /* ---------- 习题自测：隐藏答案 ---------- */
@@ -1894,7 +1913,11 @@ relations = [
           var token='@@TBMATH'+mathKeep.length+'@@'; mathKeep.push(m); return token;
         });
         if(/[（(]/.test(html)){
-          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner){
+          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner,offset){
+            var explicit=/^(?:答案|答\s*[:：])/.test(inner.trim());
+            var trailing=/^[\s。．.；;，,]*$/.test(html.slice(offset+m.length));
+            var result=/^(?:[A-D]|[-+]?\d+(?:\.\d+)?)(?:\s*[:：].*)?$/.test(inner.trim());
+            if(!explicit&&(!trailing||!result||/[A-Za-z0-9_]$/.test(html.slice(0,offset))))return m;
             return '<span class="tb-ans" title="点击查看答案">（<span class="tb-ans-x">'+inner+'</span>）</span>';
           });
           html=html.replace(/@@TBMATH(\d+)@@/g,function(m,i){return mathKeep[+i];});
@@ -1911,7 +1934,7 @@ relations = [
   /* ---------- 代码一键复制 ---------- */
   (function copyButtons(){
     var COPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
-    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);return true;}catch(e){return false;}}
+    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();var ok=document.execCommand('copy');document.body.removeChild(ta);return ok;}catch(e){return false;}}
     Array.prototype.forEach.call(document.querySelectorAll('pre.code'),function(pre){
       if(pre.__tbCopy)return; pre.__tbCopy=1;
       var wrap=document.createElement('div'); wrap.className='tb-codewrap';
@@ -1923,8 +1946,8 @@ relations = [
         e.stopPropagation();
         var code=pre.querySelector('code'); var text=(code?code.innerText:pre.innerText).replace(/\u00a0/g,' ');
         function done(){btn.classList.add('tb-copied');label.textContent='已复制';toast('代码已复制到剪贴板');clearTimeout(btn.__t);btn.__t=setTimeout(function(){btn.classList.remove('tb-copied');label.textContent='复制';},1600);}
-        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallbackCopy(text);done();});}
-        else{fallbackCopy(text);done();}
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){if(fallbackCopy(text))done();else toast('复制失败，请选中代码后复制');});}
+        else{if(fallbackCopy(text))done();else toast('复制失败，请选中代码后复制');}
       });
       wrap.appendChild(btn);
     });
@@ -1932,7 +1955,7 @@ relations = [
 
   /* ---------- 字号 ---------- */
   var fonts=['100%','112%','124%','90%'],fi=0;
-  try{var fs=+localStorage.getItem('tb-font');if(fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
+  try{var fs=+localStorage.getItem('tb-font');if(Number.isInteger(fs)&&fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
   function applyFont(){document.documentElement.style.fontSize=fonts[fi];}
   function cycleFont(){fi=(fi+1)%fonts.length;applyFont();try{localStorage.setItem('tb-font',fi);}catch(e){}toast('字号：<b>'+fonts[fi]+'</b>');}
 
@@ -1949,7 +1972,7 @@ relations = [
   function toggleHelp(){toggleO(helpEl);}
 
   /* ---------- 书签 ---------- */
-  function toggleMark(){var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
+  function toggleMark(){markSet=loadSet(BKEY);var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
   function updateMarkUI(i){bmBtn.classList.toggle('tb-on',!!markSet[i]);var it=tocEl.querySelector('.tb-item[data-j="'+i+'"]');if(it)it.classList.toggle('tb-mark',!!markSet[i]);}
 
   /* ---------- 状态同步 ---------- */
@@ -1975,10 +1998,16 @@ relations = [
   function updateBar(i){var b=document.getElementById('tb-bar');if(b)b.style.width=((i+1)/total*100)+'%';}
   function updateTheme(i){document.body.setAttribute('data-tb-theme',slides[i].getAttribute('data-theme')||'dark');}
 
-  var raf=null;
+  var raf=null, observedPage=curIdx();
+  window.__bookSyncLearning=function(key,cleared){
+    if(key&&key!==RKEY&&key!==BKEY)return;
+    if(cleared){if(raf){cancelAnimationFrame(raf);raf=null;}observedPage=curIdx();}
+    readSet=loadSet(RKEY);markSet=loadSet(BKEY);var i=curIdx();
+    updateMarkUI(i);updateTOCcur(i);updateGridCur(i);
+  };
   function onChange(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;
     var i=curIdx();
-    if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}
+    if(i!==observedPage){readSet=loadSet(RKEY);if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}observedPage=i;}
     updateBar(i);updateTheme(i);updateMarkUI(i);
     if(tocEl.classList.contains('tb-show'))updateTOCcur(i);
     if(gridEl.classList.contains('tb-show'))updateGridCur(i);
@@ -1996,11 +2025,12 @@ relations = [
     if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){if(!searchEl.classList.contains('tb-show'))openSearch();e.preventDefault();e.stopPropagation();return;}
     if(anyOpen()){
       if(e.key==='Escape'){closeAll();e.stopPropagation();e.preventDefault();return;}
-      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].indexOf(e.key)>-1){e.stopPropagation();}
+
       return;
     }
     var tn=(e.target.tagName||'');
-    if(tn==='INPUT'||tn==='TEXTAREA')return;
+    if(tn==='INPUT'||tn==='TEXTAREA'||tn==='SELECT'||e.target.isContentEditable)return;
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
     var k=e.key;
     if(k==='m'||k==='M'){toggleTOC();e.stopPropagation();}
     else if(k==='g'||k==='G'){toggleGrid();e.stopPropagation();}
@@ -2070,10 +2100,10 @@ relations = [
   /* ============ 播客音频：全局单例播放器 ============ */
   var AU=document.getElementById('mk-audio');
   var mini=document.getElementById('mk-mini');
-  var curKey=null, RATES=[1,1.25,1.5,2], ri=0;
+  var curKey=null, RATES=[1,1.25,1.5,2], ri=0, positionEpoch=0, resettingPosition=false;
 
   function posKey(k){return 'mk-pos-ch'+D.ch+'-'+k;}
-  function savePos(){if(!curKey||!AU.duration)return;try{
+  function savePos(){if(resettingPosition||!curKey||!AU.duration)return;try{
     if(AU.currentTime>3&&AU.currentTime<AU.duration-3)localStorage.setItem(posKey(curKey),String(Math.floor(AU.currentTime)));
     else localStorage.removeItem(posKey(curKey));
   }catch(e){}}
@@ -2084,7 +2114,7 @@ relations = [
       savePos(); curKey=k;
       AU.src=abs(s.a.path); AU.playbackRate=RATES[ri];
       var p=0; try{p=parseInt(localStorage.getItem(posKey(k))||'0',10)||0;}catch(e){}
-      if(p>0){AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);try{AU.currentTime=p;}catch(e){}});}
+      if(p>0){var epoch=positionEpoch;AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);if(epoch!==positionEpoch)return;try{AU.currentTime=p;}catch(e){}});}
       $('.mk-m-t',mini).textContent=s.full;
       mini.classList.add('mk-show');
     }
@@ -2100,6 +2130,12 @@ relations = [
     if(curKey===k&&!AU.paused){AU.pause();}else{playSec(k);}
   }
   window.__mkPlaySection=playSec;
+  window.__bookSyncAudioPosition=function(key){
+    if(!curKey||(key&&key!==posKey(curKey)))return;
+    try{if(localStorage.getItem(posKey(curKey))!==null)return;}catch(e){return;}
+    positionEpoch++;resettingPosition=true;
+    try{AU.pause();AU.currentTime=0;AU.__sv=Date.now();syncUI();}finally{resettingPosition=false;}
+  };
 
   AU.addEventListener('play',syncUI);
   AU.addEventListener('pause',function(){savePos();syncUI();});

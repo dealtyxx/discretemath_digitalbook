@@ -3,7 +3,7 @@
    1920×1080 固定版心 + 等比缩放居中；正文在 iframe（*.body.html）中渲染。
    ========================================================================== */
 :root{
-  --stage-bg:#E2DBD1;--paper:#EDE8E0;--ink:#1A1A1A;--accent:#8A8178;--line:#B8B0A4;
+  --stage-bg:#E2DBD1;--paper:#EDE8E0;--ink:#1A1A1A;--accent:#6F675D;--line:#B8B0A4;
   --bar-h:26px;
   --serif:"Playfair Display","Noto Serif SC",serif;
   --sans:"Inter","Noto Serif SC",sans-serif;
@@ -24,8 +24,23 @@ html,body{width:100%;height:100%;margin:0;overflow:hidden;background:var(--stage
   background:rgba(237,232,224,.96);border:1px solid var(--line);border-radius:0;padding:9px 12px;
   text-decoration:none;cursor:pointer;transition:background .2s,color .2s}
 .source-tools a:hover,.source-tools button:hover{background:var(--ink);color:var(--paper)}
+.source-tools .lab-entry{background:var(--ink);color:var(--paper);border-color:var(--ink)}
+.source-tools .lab-entry::before{content:"";display:inline-block;width:5px;height:5px;margin-right:7px;border-radius:50%;background:#1baf7a;vertical-align:1px}
 .source-tools a:focus-visible,.source-tools button:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .source-tools [hidden]{display:none}
+.reader-pager{display:none}
+.reader-layout .deck-stage{top:66px;width:100%;height:calc(100% - 172px);box-shadow:none}
+.reader-layout .source-tools{top:10px;left:10px;right:10px;max-width:none;flex-wrap:nowrap;justify-content:center;gap:6px}
+.reader-layout .source-tools a,.reader-layout .source-tools button{min-height:44px;padding:9px 10px;color:var(--ink);letter-spacing:0}
+.reader-layout .source-tools .lab-entry{color:var(--paper)}
+.reader-layout .rotate-hint{display:none}
+.reader-layout .reader-pager{position:fixed;bottom:var(--bar-h);left:0;right:0;height:80px;display:flex;align-items:center;justify-content:center;gap:8px;padding:8px max(8px,env(safe-area-inset-right)) calc(8px + env(safe-area-inset-bottom));border-top:1px solid var(--line);background:var(--paper);font-size:12px}
+.reader-pager button{min-height:44px;padding:8px;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;cursor:pointer}
+.reader-pager button:disabled{opacity:.4;cursor:default}
+.reader-pager input{width:54px;min-height:44px;border:1px solid var(--line);background:transparent;color:var(--ink);font:inherit;text-align:center;font-variant-numeric:tabular-nums}
+.reader-pager label{display:flex;align-items:center;gap:6px}
+.reader-pager :focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+@media(max-width:700px){.copyright-bar{font-size:9px;letter-spacing:0}.source-tools{max-width:95vw;right:8px;top:8px;gap:4px}.source-tools a,.source-tools button{padding:9px 8px}}
 
 /* ---------- 载入提示 ---------- */
 .loading{position:fixed;left:0;right:0;top:0;bottom:var(--bar-h);z-index:4500;display:grid;place-items:center;

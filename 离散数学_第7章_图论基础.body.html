@@ -3,11 +3,8 @@
 <head>
 <base target="_top"/>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
-<link rel="preload" href="assets/fonts/noto-serif-sc-400-a.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/fonts/fonts.css">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="assets/js/font-loader.js"></script>
 
 <title>离散数学 第7章 · 图论基础</title>
 <style>
@@ -462,7 +459,7 @@ sup{top:-.58em}sub{bottom:-.18em}
 </style>
 <script id="mathjax-config">
 window.MathJax={
-  loader:{paths:{fonts:'assets/@mathjax'}},
+  loader:{paths:{fonts:'assets/@mathjax'},load:location.protocol==='file:'?['a11y/assistive-mml']:[]},
   tex:{
     inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],
     processEscapes:true,packages:{'[+]':['ams']}
@@ -471,11 +468,22 @@ window.MathJax={
     displayOverflow:'linebreak',
     linebreaks:{inline:true,width:'100%',lineleading:.18}
   },
-  options:{enableMenu:true,enableExplorer:true},
+  options:{
+    enableMenu:true,
+    enableEnrichment:location.protocol!=='file:',
+    enableSpeech:location.protocol!=='file:',enableBraille:location.protocol!=='file:',
+    enableExplorer:location.protocol!=='file:',
+    menuOptions:{settings:location.protocol==='file:'?{enrich:false,speech:false,braille:false,collapsible:false,assistiveMml:true}:{} }
+  },
   startup:{
     typeset:false,               /* 由 assets/js/book-polish.js 按页排版 */
     ready:function(){
       MathJax.startup.defaultReady();
+      if(location.protocol==='file:'){
+        var doc=MathJax.startup.document;
+        Object.assign(doc.options,{enableEnrichment:false,enableComplexity:false,enableSpeech:false,enableBraille:false,enableExplorer:false,enableAssistiveMml:true});
+        if(doc.menu)Object.assign(doc.menu.settings,{enrich:false,speech:false,braille:false,collapsible:false,assistiveMml:true});
+      }
       MathJax.startup.promise.then(function(){
         document.documentElement.classList.add('mathjax-ready');
       });
@@ -483,7 +491,14 @@ window.MathJax={
   }
 };
 </script>
-<script defer="" src="assets/mathjax/tex-chtml.js"></script>
+<script>
+(function(){
+  // SVG uses bundled vector glyphs, so local-file formula rendering needs no font fetch.
+  var script=document.createElement('script');
+  script.src='assets/mathjax/'+(location.protocol==='file:'?'tex-svg.js':'tex-chtml.js');
+  script.async=false;document.head.appendChild(script);
+})();
+</script>
 <style id="mk-style">
 /* ===================================================================
    数字资源层 · 微课视频 / 播客音频 / 配套源码
@@ -778,7 +793,7 @@ print("顶点2的闭邻域:", list(G.neighbors(2)) + [2])   # [1, 3, 2]</code></
 <section class="slide light" data-screen-label="Concept" data-source="定义 7.1.15 / 7.1.16 · 顶点的度" data-theme="light"><div class="chrome"><div>7.1.2 顶点的度</div><div>12 / 71</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.1.15 与 7.1.16</div><h2 class="h1-zh anim-item" style="max-width:16em">度、入度与出度</h2><p class="lead-zh anim-item" style="max-width:26em">无向图中顶点 v 的度 <span aria-label="deg(v)" class="math-inline-source" data-tex="\operatorname{deg}(v)">\(\operatorname{deg}(v)\)</span> 是与它相连的边数。最大度 Δ(G)、最小度 δ(G)。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">有向图中入度 <span aria-label="deg⁻(v)" class="math-inline-source" data-tex="\operatorname{deg}^{-}(v)">\(\operatorname{deg}^{-}(v)\)</span> 是指向 v 的边数，出度 <span aria-label="deg⁺(v)" class="math-inline-source" data-tex="\operatorname{deg}^{+}(v)">\(\operatorname{deg}^{+}(v)\)</span> 是从 v 出发的边数。例 7.1.8：顶点 3 连接 1,2,4 度为 3。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.1.15 与 7.1.16</div><h2 class="h1-zh anim-item" style="max-width:16em">度、入度与出度</h2><p class="lead-zh anim-item" style="max-width:26em">无向图中顶点 v 的度 <span aria-label="deg(v)" class="math-inline-source" data-tex="\operatorname{deg}(v)">\(\operatorname{deg}(v)\)</span> 按关联边端计数：非自环边计 1，自环计 2。最大度 Δ(G)、最小度 δ(G)。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">有向图中入度 <span aria-label="deg⁻(v)" class="math-inline-source" data-tex="\operatorname{deg}^{-}(v)">\(\operatorname{deg}^{-}(v)\)</span> 是指向 v 的边数，出度 <span aria-label="deg⁺(v)" class="math-inline-source" data-tex="\operatorname{deg}^{+}(v)">\(\operatorname{deg}^{+}(v)\)</span> 是从 v 出发的边数。例 7.1.8：顶点 3 连接 1,2,4 度为 3。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>12 / 71</div></div></section>
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 7.1.1 · 握手定理" data-theme="dark"><div class="chrome"><div>7.1.2 握手定理</div><div>13 / 71</div></div>
@@ -789,7 +804,7 @@ print("顶点2的闭邻域:", list(G.neighbors(2)) + [2])   # [1, 3, 2]</code></
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>13 / 71</div></div></section>
 <section class="slide light" data-screen-label="Theorem+Code" data-source="定理 7.1.2 / 7.1.3 · 度的性质" data-theme="light"><div class="chrome"><div>7.1.2 度的性质与可图化</div><div>14 / 71</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定理 7.1.2 与 7.1.3</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">奇数度顶点个数必为偶数</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">任何图中度数为奇数的顶点个数必为偶数。度数序列之和必为偶数（必要条件），但和为偶数不足以保证可图化，如 (3,3,3,1) 和为偶数却不可图化。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定理 7.1.2 与 7.1.3</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">奇数度顶点个数必为偶数</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">无向图中奇度顶点个数必为偶数。度数和为偶数是简单无向图可图化的必要条件，但不充分，例如 (3,3,3,1) 不能成为简单图的度数序列。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code># 握手定理：边数 = 度数之和 // 2（度数和须为偶）
 print(sum([2, 3, 2, 3]) // 2)               # 例7.1.9: 5 条边
 # 度数为奇数的顶点个数必为偶数
@@ -802,7 +817,7 @@ print(degree_sum_even([3, 3, 2, 2, 2]))     # True（和为偶）</code></pre></
 <section class="slide light" data-screen-label="Concept" data-source="定义 7.1.17 · 图同构" data-theme="light"><div class="chrome"><div>7.1.3 图同构</div><div>15 / 71</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.1.17 · 图同构</div><h2 class="h1-zh anim-item" style="max-width:16em">存在保持边连接的双射即同构</h2><p class="lead-zh anim-item" style="max-width:26em">若存在双射 <span aria-label="f:V₁→V₂" class="math-inline-source" data-tex="f:V_{1}\to V_{2}">\(f:V_{1}\to V_{2}\)</span>，使 (u,v) 是 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 的边当且仅当 (f(u),f(v)) 是 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span> 的边，则 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 与 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span> 同构。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">必要条件：顶点数相等、边数相等、度数序列相同、有相同的子结构（如圈、路径）。这些条件不总是充分，复杂图的同构通常需用算法求解。例 7.1.13：<span aria-label="a→1,b→2,c→3" class="math-inline-source" data-tex="a\to 1,b\to 2,c\to 3">\(a\to 1,b\to 2,c\to 3\)</span> 使 <span aria-label="K₃" class="math-inline-source" data-tex="K_{3}">\(K_{3}\)</span> 同构。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.1.17 · 图同构</div><h2 class="h1-zh anim-item" style="max-width:16em">存在保持边连接的双射即同构</h2><p class="lead-zh anim-item" style="max-width:26em">对简单图，若存在双射 <span aria-label="f:V₁→V₂" class="math-inline-source" data-tex="f:V_{1}\to V_{2}">\(f:V_{1}\to V_{2}\)</span>，使 (u,v) 是 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 的边当且仅当 (f(u),f(v)) 是 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span> 的边，则 <span aria-label="G₁" class="math-inline-source" data-tex="G_{1}">\(G_{1}\)</span> 与 <span aria-label="G₂" class="math-inline-source" data-tex="G_{2}">\(G_{2}\)</span> 同构。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">必要条件：顶点数相等、边数相等、度数序列相同、有相同的子结构（如圈、路径）。这些条件不总是充分，复杂图的同构通常需用算法求解。例 7.1.13：<span aria-label="a→1,b→2,c→3" class="math-inline-source" data-tex="a\to 1,b\to 2,c\to 3">\(a\to 1,b\to 2,c\to 3\)</span> 使 <span aria-label="K₃" class="math-inline-source" data-tex="K_{3}">\(K_{3}\)</span> 同构。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 71</div></div></section>
 <section class="slide dark" data-screen-label="Application" data-source="应用示例 · 图与同构" data-theme="dark"><div class="chrome"><div>应用示例 · 图与图同构</div><div>16 / 71</div></div>
@@ -824,7 +839,7 @@ print(degree_sum_even([3, 3, 2, 2, 2]))     # True（和为偶）</code></pre></
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>17 / 71</div></div></section>
 <section class="slide light" data-screen-label="Concept" data-source="定义 7.1.18 / 7.1.19 / 定理 7.1.4 · 正则图" data-theme="light"><div class="chrome"><div>7.1.4 几种典型图</div><div>18 / 71</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.1.18、7.1.19 与 定理 7.1.4</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">n 阶图与 K-正则图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">n 阶图有 n 个顶点。K-正则图每个顶点都恰好与 K 个其他顶点相连。定理 7.1.4：K-正则图有 n 个顶点时边数为 nK/2。例 7.1.15：4-正则 10 顶点有 20 条边；3-正则 8 顶点有 12 条边。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定义 7.1.18、7.1.19 与 定理 7.1.4</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">n 阶图与 K-正则图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">n 阶图有 n 个顶点。K-正则图每个顶点的度均为 K；在简单图中，这表示恰与 K 个其他顶点相邻。定理 7.1.4：K-正则图有 n 个顶点时边数为 nK/2。例 7.1.15：4-正则 10 顶点有 20 条边；3-正则 8 顶点有 12 条边。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>def edges_k_regular(n, K):       # K-正则图边数 = nK/2
     return n * K // 2
 print(edges_k_regular(10, 4))   # 20
@@ -869,7 +884,7 @@ print(degree_complete(6))   # K6: 每个顶点度为 5</code></pre></div>
 <section class="slide dark" data-screen-label="Summary" data-source="7.1.6 小结" data-theme="dark"><div class="chrome"><div>7.1.6 小结</div><div>24 / 71</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
-<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">图由顶点和边组成，分有向图、无向图、混合图、加权图等，顶点的度是与之相连的边数</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">握手定理：度数之和等于边数两倍；奇数度顶点个数必为偶数</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">图同构指存在保持边连接的双射，顶点数边数度序列相同是必要条件</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">典型图含完全图、正则图、彼得森图、立方体图；图运算含子图、补图、并交差</p></div>
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">图由顶点和边组成，分有向图、无向图、混合图、加权图等，无向顶点的度按关联边端计数，自环计两次</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">握手定理：度数之和等于边数两倍；奇数度顶点个数必为偶数</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">图同构指存在保持边连接的双射，顶点数边数度序列相同是必要条件</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">典型图含完全图、正则图、彼得森图、立方体图；图运算含子图、补图、并交差</p></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 71</div></div></section>
 <section class="slide light mk-page mk-audio-page" data-screen-label="Podcast" data-source="播客音频 · 7.1 图概述" data-theme="light" data-mk-sec="7.1"><div class="chrome"><div>播客音频 · 7.1 图概述</div><div>25 / 71</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">播客音频</span><span class="mk-metaline">07:08 · 2.0 MB · 讲解音频版</span></div><div class="mk-audio-card anim-item"><button class="mk-abtn" type="button" data-mk-sec="7.1" aria-label="播放本节播客"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><div class="mk-audio-main"><h2 class="h2-zh">7.1 图概述</h2><p class="mk-audio-desc">本节内容的播客讲解版，适合课后复盘、通勤复习与考前串讲；点击波形任意位置可跳转收听。</p><div class="mk-wave" data-mk-sec="7.1" role="slider" aria-label="音频进度"><i style="height:54%"></i><i style="height:58%"></i><i style="height:36%"></i><i style="height:19%"></i><i style="height:43%"></i><i style="height:54%"></i><i style="height:48%"></i><i style="height:70%"></i><i style="height:78%"></i><i style="height:51%"></i><i style="height:45%"></i><i style="height:52%"></i><i style="height:34%"></i><i style="height:36%"></i><i style="height:69%"></i><i style="height:74%"></i><i style="height:71%"></i><i style="height:90%"></i><i style="height:82%"></i><i style="height:49%"></i><i style="height:48%"></i><i style="height:49%"></i><i style="height:30%"></i><i style="height:42%"></i><i style="height:70%"></i><i style="height:63%"></i><i style="height:59%"></i><i style="height:72%"></i><i style="height:52%"></i><i style="height:26%"></i><i style="height:37%"></i><i style="height:41%"></i><i style="height:33%"></i><i style="height:60%"></i><i style="height:85%"></i><i style="height:72%"></i><i style="height:73%"></i><i style="height:81%"></i><i style="height:53%"></i><i style="height:36%"></i><i style="height:53%"></i><i style="height:52%"></i><i style="height:48%"></i><i style="height:76%"></i><i style="height:83%"></i><i style="height:60%"></i><i style="height:59%"></i><i style="height:56%"></i><i style="height:24%"></i><i style="height:22%"></i><i style="height:45%"></i><i style="height:43%"></i><i style="height:51%"></i><i style="height:81%"></i><i style="height:77%"></i><i style="height:56%"></i><i style="height:63%"></i><i style="height:56%"></i><i style="height:32%"></i><i style="height:46%"></i><i style="height:69%"></i><i style="height:63%"></i><i style="height:74%"></i><i style="height:93%"></i></div><div class="mk-atime"><span data-mk-cur>0:00</span><span>07:08</span></div></div></div><ul class="mk-audio-tips anim-item"><li data-n="01">支持后台收听：翻页、查阅源码时音频不中断</li><li data-n="02">迷你播放器可调 1× / 1.25× / 1.5× / 2× 倍速</li><li data-n="03">进度自动记忆，下次从上次听到的位置继续</li></ul></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 71</div></div></section>
@@ -957,7 +972,7 @@ print(degree_complete_graph)    #6个顶点的完全图</pre></button></div><p c
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>31 / 71</div></div></section>
 <section class="slide light" data-screen-label="Example+Code" data-source="例 7.2.2 · K3 与 K4 的圈数" data-theme="light"><div class="chrome"><div>例 7.2.2</div><div>32 / 71</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 7.2.2 · 完全图的圈数</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh"><span aria-label="K₃" class="math-inline-source" data-tex="K_{3}">\(K_{3}\)</span> 有 6 个圈，<span aria-label="K₄" class="math-inline-source" data-tex="K_{4}">\(K_{4}\)</span> 有 48 个圈</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)"><span aria-label="K₃" class="math-inline-source" data-tex="K_{3}">\(K_{3}\)</span> 考虑顶点标定与方向有 <span aria-label="3!=6" class="math-inline-source" data-tex="3!=6">\(3!=6\)</span> 个圈。<span aria-label="K₄" class="math-inline-source" data-tex="K_{4}">\(K_{4}\)</span> 含长度为 3 的圈 <span aria-label="C(4,3)×3!=24" class="math-inline-source" data-tex="C(4,3)\times 3!=24">\(C(4,3)\times 3!=24\)</span> 个，长度为 4 的圈 <span aria-label="4!=24" class="math-inline-source" data-tex="4!=24">\(4!=24\)</span> 个，共 48 个。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">例 7.2.2 · 完全图的圈数</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">K3 与 K4 的圈及其序列表示</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">无向简单圈不区分起点与方向：K3 有 1 个；K4 有 4 个三角形和 3 个四边形，共 7 个。若每种起点与方向都分别计数，代码会枚举 K3 的 6 种、K4 的 48 种序列表示。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-normal"><code>from math import comb, factorial
 print(factorial(3))                           # K3: 6 个圈
 print(comb(4, 3) * factorial(3) + factorial(4))   # K4: 24+24 = 48</code></pre></div>
@@ -976,7 +991,7 @@ print("连通分量:", list(nx.connected_components(G)))
 <section class="slide dark" data-screen-label="Concept" data-source="定义 7.2.6 / 7.2.7 / 定理 7.2.1 · 割点与连通度" data-theme="dark"><div class="chrome"><div>7.2.1 割点、割边与连通度</div><div>34 / 71</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.2.6、7.2.7 与 定理 7.2.1</div><h2 class="h1-zh anim-item" style="max-width:16em">割点、割边、点连通度与边连通度</h2><p class="lead-zh anim-item" style="max-width:26em">删除割点（及关联边）使图不连通；删除割边使图不连通。点连通度 k(G) 是最小点割集大小，边连通度 λ(G) 是最小边割集大小。</p><div aria-label="k(G) ≤ λ(G) ≤ δ(G)" class="formula anim-item mathjax-display-source" data-tex="k(G) \le λ(G) \le δ(G)">\[\displaystyle k(G) \le λ(G) \le δ(G)\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 7.2.1：点连通度不超过边连通度，边连通度不超过最小度数 δ(G)。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.2.6、7.2.7 与 定理 7.2.1</div><h2 class="h1-zh anim-item" style="max-width:16em">割点、割边、点连通度与边连通度</h2><p class="lead-zh anim-item" style="max-width:26em">割点或割边的删除会使连通分量数增加。点连通度 k(G) 为最小点割集大小，边连通度 λ(G) 为最小边割集大小；完全图约定 k(Kn)=n−1，不连通图的连通度为 0。</p><div aria-label="k(G) ≤ λ(G) ≤ δ(G)" class="formula anim-item mathjax-display-source" data-tex="k(G) \le λ(G) \le δ(G)">\[\displaystyle k(G) \le λ(G) \le δ(G)\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 7.2.1：对至少含两个顶点的简单无向图，点连通度不超过边连通度，边连通度不超过最小度 δ(G)。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 71</div></div></section>
 <section class="slide light" data-screen-label="Concept+Code" data-source="定义 7.2.9 / 例 7.2.7 · 有向图连通" data-theme="light"><div class="chrome"><div>7.2.1 单向强弱连通</div><div>35 / 71</div></div>
@@ -992,14 +1007,14 @@ for name, G in [("G1", G1), ("G2", G2)]:
 <section class="slide light" data-screen-label="Concept" data-source="算法 7.2.1 / 定义 7.2.11 · 极大路径与图距离" data-theme="light"><div class="chrome"><div>7.2.1 极大路径与图距离</div><div>36 / 71</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">算法 7.2.1 与 定义 7.2.11</div><h2 class="h1-zh anim-item" style="max-width:16em">极大路径与图距离</h2><p class="lead-zh anim-item" style="max-width:26em">扩大路径法从某顶点出发逐步添加未访问的相邻顶点，直到无法扩展，所得为极大路径。极大路径未必是最长路径。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">图距离 d(u,v) 是 u 到 v 最短路径的长度，满足非负、<span aria-label="d(u,u)=0" class="math-inline-source" data-tex="d(u,u)=0">\(d(u,u)=0\)</span>、三角不等式 <span aria-label="d(u,v)+d(v,w)≥d(u,w)" class="math-inline-source" data-tex="d(u,v)+d(v,w)\ge d(u,w)">\(d(u,v)+d(v,w)\ge d(u,w)\)</span>；不可达时 <span aria-label="d=∞" class="math-inline-source" data-tex="d=\infty">\(d=\infty\)</span>；有向图中 d(u,v) 未必等于 d(v,u)。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">算法 7.2.1 与 定义 7.2.11</div><h2 class="h1-zh anim-item" style="max-width:16em">极大路径与图距离</h2><p class="lead-zh anim-item" style="max-width:26em">扩大路径法从某顶点出发，在路径任一端添加未访问的相邻顶点，直到两端均不能扩展，得到极大路径。极大路径未必最长。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">图距离 d(u,v) 是 u 到 v 最短路径的长度，满足非负、<span aria-label="d(u,u)=0" class="math-inline-source" data-tex="d(u,u)=0">\(d(u,u)=0\)</span>、三角不等式 <span aria-label="d(u,v)+d(v,w)≥d(u,w)" class="math-inline-source" data-tex="d(u,v)+d(v,w)\ge d(u,w)">\(d(u,v)+d(v,w)\ge d(u,w)\)</span>；不可达时 <span aria-label="d=∞" class="math-inline-source" data-tex="d=\infty">\(d=\infty\)</span>；有向图中 d(u,v) 未必等于 d(v,u)。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>36 / 71</div></div></section>
 <section class="slide dark" data-screen-label="Application" data-source="应用示例 · 连通性" data-theme="dark"><div class="chrome"><div>应用示例 · 连通性</div><div>37 / 71</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">应用示例</div><h2 class="h1-zh anim-item" style="max-width:18em">连通性的应用</h2>
-<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">计算机网络中连通性保证任意两点有路径，识别冗余路径抵御单点故障</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">社交网络中连通分量表示彼此有联系的自然群体，分析关系紧密程度</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">强连通网络中数据包可多路径传输，提高效率减少延迟</p></div></div>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">计算机网络中连通性保证任意两点有路径，识别冗余路径抵御单点故障</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">社交网络中连通分量表示彼此有联系的自然群体，分析关系紧密程度</p></div><div class="anim-item listrow"><span class="ldot"></span><p class="body-zh">强连通保证任意两点双向可达；是否有冗余路径，还需检查更强的连通性条件</p></div></div>
 </div></div>
 <div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>37 / 71</div></div></section>
 <section class="slide dark app-video-stage-page" data-screen-label="AppVideo" data-source="应用动画 · 应用示例 · 连通性" data-theme="dark"><div class="chrome"><div>应用动画 · 连通性</div><div>38 / 71</div></div>
@@ -1025,7 +1040,7 @@ print(nx.to_numpy_array(G, nodelist=[1, 2, 3]))
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>39 / 71</div></div></section>
 <section class="slide dark" data-screen-label="Theorem+Code" data-source="定理 7.2.2 / 例 7.2.11 · 矩阵幂与通路数" data-theme="dark"><div class="chrome"><div>7.2.2 矩阵幂与通路数</div><div>40 / 71</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定理 <span aria-label="7.2.2 · Aⁿ" class="math-inline-source" data-tex="7.2.2 \cdot A^{n}">\(7.2.2 \cdot A^{n}\)</span> 的含义</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh"><span aria-label="Aⁿ" class="math-inline-source" data-tex="A^{n}">\(A^{n}\)</span> 的元素是长度为 n 的通路数</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">邻接矩阵 A 的 n 次幂中，<span aria-label="(Aⁿ)ᵢⱼ" class="math-inline-source" data-tex="(A^{n})_{ij}">\((A^{n})_{ij}\)</span> 等于从顶点 i 到顶点 j 长度为 n 的通路数目（数学归纳法可证）。例 7.2.11：<span aria-label="A=[[0,1],[1,0]]" class="math-inline-source" data-tex="A=[[0,1],[1,0]]">\(A=[[0,1],[1,0]]\)</span> 时 <span aria-label="A²=单位矩阵" class="math-inline-source" data-tex="A^{2}=\text{单位矩阵}">\(A^{2}=\text{单位矩阵}\)</span>，表示每个顶点到自身有长度为 2 的通路；<span aria-label="A+B" class="math-inline-source" data-tex="A+B">\(A+B\)</span> 是并图的邻接矩阵。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><div class="matgroup"><div class="matcell"><div class="matlabel">A</div><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(2,1fr)"><span class="zero">0</span><span class="one">1</span><span class="one">1</span><span class="zero">0</span></span><span class="br r"></span></span></div><div class="matcell"><div class="matlabel"><span aria-label="A²" class="math-inline-source" data-tex="A^{2}">\(A^{2}\)</span></div><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(2,1fr)"><span class="one">1</span><span class="zero">0</span><span class="zero">0</span><span class="one">1</span></span><span class="br r"></span></span></div><div class="matcell"><div class="matlabel"><span aria-label="A+B" class="math-inline-source" data-tex="A+B">\(A+B\)</span></div><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(2,1fr)"><span class="zero">0</span><span class="one">1</span><span class="one">1</span><span class="one">1</span></span><span class="br r"></span></span></div></div></div></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">定理 <span aria-label="7.2.2 · Aⁿ" class="math-inline-source" data-tex="7.2.2 \cdot A^{n}">\(7.2.2 \cdot A^{n}\)</span> 的含义</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh"><span aria-label="Aⁿ" class="math-inline-source" data-tex="A^{n}">\(A^{n}\)</span> 的元素是长度为 n 的通路数</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">对无权图的 0/1 邻接矩阵 A，其 n 次幂中，<span aria-label="(Aⁿ)ᵢⱼ" class="math-inline-source" data-tex="(A^{n})_{ij}">\((A^{n})_{ij}\)</span> 等于从顶点 i 到顶点 j 长度为 n 的通路数目（数学归纳法可证）。例 7.2.11：<span aria-label="A=[[0,1],[1,0]]" class="math-inline-source" data-tex="A=[[0,1],[1,0]]">\(A=[[0,1],[1,0]]\)</span> 时 <span aria-label="A²=单位矩阵" class="math-inline-source" data-tex="A^{2}=\text{单位矩阵}">\(A^{2}=\text{单位矩阵}\)</span>，表示每个顶点到自身有长度为 2 的通路；<span aria-label="A∨B（逐项布尔或）" class="math-inline-source" data-tex="A\lor B">\(A\lor B\)</span> 是同顶点集两图并图的邻接矩阵，∨ 表示逐项布尔或。</p><div class="vis-left" style="margin-top:clamp(.9rem,2vh,1.5rem)"><div class="matgroup"><div class="matcell"><div class="matlabel">A</div><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(2,1fr)"><span class="zero">0</span><span class="one">1</span><span class="one">1</span><span class="zero">0</span></span><span class="br r"></span></span></div><div class="matcell"><div class="matlabel"><span aria-label="A²" class="math-inline-source" data-tex="A^{2}">\(A^{2}\)</span></div><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(2,1fr)"><span class="one">1</span><span class="zero">0</span><span class="zero">0</span><span class="one">1</span></span><span class="br r"></span></span></div><div class="matcell"><div class="matlabel"><span aria-label="A∨B（逐项布尔或）" class="math-inline-source" data-tex="A\lor B">\(A\lor B\)</span></div><span class="matrix"><span class="br l"></span><span class="grid" style="grid-template-columns:repeat(2,1fr)"><span class="zero">0</span><span class="one">1</span><span class="one">1</span><span class="one">1</span></span><span class="br r"></span></span></div></div></div></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import numpy as np
 A = np.array([[0, 1], [1, 0]])
 B = np.array([[0, 0], [0, 1]])
@@ -1044,7 +1059,7 @@ print((R &gt; 0).astype(int))   # 全 1：彼此可达</code></pre></div>
 <section class="slide dark" data-screen-label="Concept" data-source="定义 7.2.18 / 7.2.19 · 关联矩阵" data-theme="dark"><div class="chrome"><div>7.2.2 关联矩阵</div><div>42 / 71</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.2.18 与 7.2.19</div><h2 class="h1-zh anim-item" style="max-width:16em">关联矩阵表示顶点与边的关联</h2><p class="lead-zh anim-item" style="max-width:26em">无向图关联矩阵 M 是 <span aria-label="|V|" class="math-inline-source" data-tex="|V|">\(|V|\)</span>×<span aria-label="|E|" class="math-inline-source" data-tex="|E|">\(|E|\)</span> 矩阵，边 <span aria-label="eⱼ" class="math-inline-source" data-tex="e_{j}">\(e_{j}\)</span> 与顶点 <span aria-label="vᵢ" class="math-inline-source" data-tex="v_{i}">\(v_{i}\)</span> 关联则 <span aria-label="Mᵢⱼ=1" class="math-inline-source" data-tex="M_{ij}=1">\(M_{ij}=1\)</span>。每列两个 1 表示一条边的两端，每行元素和是该顶点的度。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">有向图关联矩阵中边的起点取 1、终点取 −1，每列 1 与 −1 各一个，全矩阵元素和为 0；非零元素总数是边数的两倍。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 7.2.18 与 7.2.19</div><h2 class="h1-zh anim-item" style="max-width:16em">关联矩阵表示顶点与边的关联</h2><p class="lead-zh anim-item" style="max-width:26em">对无自环图，无向关联矩阵 M 是 <span aria-label="|V|" class="math-inline-source" data-tex="|V|">\(|V|\)</span>×<span aria-label="|E|" class="math-inline-source" data-tex="|E|">\(|E|\)</span> 矩阵，边 <span aria-label="eⱼ" class="math-inline-source" data-tex="e_{j}">\(e_{j}\)</span> 与顶点 <span aria-label="vᵢ" class="math-inline-source" data-tex="v_{i}">\(v_{i}\)</span> 关联则 <span aria-label="Mᵢⱼ=1" class="math-inline-source" data-tex="M_{ij}=1">\(M_{ij}=1\)</span>。每列两个 1 表示一条边的两端，每行元素和是该顶点的度。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">无自环有向图的关联矩阵中，边的起点取 1、终点取 −1，每列 1 与 −1 各一个，全矩阵元素和为 0；非零元素总数是边数的两倍。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>42 / 71</div></div></section>
 <section class="slide dark" data-screen-label="Application" data-source="应用示例 · 矩阵表示" data-theme="dark"><div class="chrome"><div>应用示例 · 图的矩阵表示</div><div>43 / 71</div></div>
@@ -1398,12 +1413,15 @@ G.add_weighted_edges_from([
   }
   window.__deckGoTo=goTo;
   document.addEventListener('keydown',e=>{
+    if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.altKey||(e.target.closest&&e.target.closest('input,textarea,select,button,a,video,audio,.tb-overlay,[contenteditable="true"],[role="button"],[role="slider"],pre,[data-book-scroll]')))return;
+    if(document.documentElement.classList.contains('reader-mode')&&['ArrowUp','ArrowDown',' ','PageUp','PageDown','Home','End'].includes(e.key))return;
     if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();goTo(current+1);}
     if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goTo(current-1);}
     if(e.key==='Home'){e.preventDefault();goTo(0);}
     if(e.key==='End'){e.preventDefault();goTo(total-1);}});
   let acc=0,lastNav=0,lastDir=0;
   document.addEventListener('wheel',e=>{
+    if(e.ctrlKey||document.documentElement.classList.contains('reader-mode')||e.target.closest('pre,[data-book-scroll],.tb-overlay,video,audio'))return;
     const now=performance.now();
     const d=e.deltaY;
     if(now-lastNav<420){acc=0;return;}
@@ -1415,6 +1433,7 @@ G.add_weighted_edges_from([
   let tx=0,ty=0;
   document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
   document.addEventListener('touchend',e=>{
+    if(e.target.closest('pre,[data-book-scroll],.tb-overlay,video,audio,.mk-wave,input,button,a'))return;
     const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
     if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy))return;
     if(dx>0)goTo(current+1);else goTo(current-1);},{passive:true});
@@ -1454,7 +1473,7 @@ G.add_weighted_edges_from([
 
   /* ---------- 持久化：已读 / 书签 ---------- */
   var RKEY='discrete-ch'+pad(CH)+'-read', BKEY='discrete-ch'+pad(CH)+'-marks';
-  function loadSet(k){try{var v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+  function loadSet(k){var clean={};try{var v=JSON.parse(localStorage.getItem(k));if(v&&typeof v==='object'&&!Array.isArray(v))Object.keys(v).forEach(function(key){if(/^\d+$/.test(key)&&Number(key)<total&&(v[key]===1||v[key]===true))clean[key]=1;});}catch(e){}return clean;}
   function saveSet(k,o){try{localStorage.setItem(k,JSON.stringify(o));}catch(e){}}
   var readSet=loadSet(RKEY), markSet=loadSet(BKEY);
   function readCount(){var n=0;for(var k in readSet)if(readSet[k])n++;return n;}
@@ -1543,7 +1562,7 @@ G.add_weighted_edges_from([
     sres.innerHTML=out||'<div class="tb-snone">未找到「'+esc(q)+'」。</div>';
   }
   sin.addEventListener('input',doSearch);
-  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
+  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){e.preventDefault();var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
   sres.addEventListener('click',function(e){var r=e.target.closest('.tb-sr');if(r)jump(+r.getAttribute('data-j'));});
 
   /* ---------- 习题自测：隐藏答案 ---------- */
@@ -1560,7 +1579,11 @@ G.add_weighted_edges_from([
           var token='@@TBMATH'+mathKeep.length+'@@'; mathKeep.push(m); return token;
         });
         if(/[（(]/.test(html)){
-          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner){
+          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner,offset){
+            var explicit=/^(?:答案|答\s*[:：])/.test(inner.trim());
+            var trailing=/^[\s。．.；;，,]*$/.test(html.slice(offset+m.length));
+            var result=/^(?:[A-D]|[-+]?\d+(?:\.\d+)?)(?:\s*[:：].*)?$/.test(inner.trim());
+            if(!explicit&&(!trailing||!result||/[A-Za-z0-9_]$/.test(html.slice(0,offset))))return m;
             return '<span class="tb-ans" title="点击查看答案">（<span class="tb-ans-x">'+inner+'</span>）</span>';
           });
           html=html.replace(/@@TBMATH(\d+)@@/g,function(m,i){return mathKeep[+i];});
@@ -1577,7 +1600,7 @@ G.add_weighted_edges_from([
   /* ---------- 代码一键复制 ---------- */
   (function copyButtons(){
     var COPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
-    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);return true;}catch(e){return false;}}
+    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();var ok=document.execCommand('copy');document.body.removeChild(ta);return ok;}catch(e){return false;}}
     Array.prototype.forEach.call(document.querySelectorAll('pre.code'),function(pre){
       if(pre.__tbCopy)return; pre.__tbCopy=1;
       var wrap=document.createElement('div'); wrap.className='tb-codewrap';
@@ -1589,8 +1612,8 @@ G.add_weighted_edges_from([
         e.stopPropagation();
         var code=pre.querySelector('code'); var text=(code?code.innerText:pre.innerText).replace(/\u00a0/g,' ');
         function done(){btn.classList.add('tb-copied');label.textContent='已复制';toast('代码已复制到剪贴板');clearTimeout(btn.__t);btn.__t=setTimeout(function(){btn.classList.remove('tb-copied');label.textContent='复制';},1600);}
-        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallbackCopy(text);done();});}
-        else{fallbackCopy(text);done();}
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){if(fallbackCopy(text))done();else toast('复制失败，请选中代码后复制');});}
+        else{if(fallbackCopy(text))done();else toast('复制失败，请选中代码后复制');}
       });
       wrap.appendChild(btn);
     });
@@ -1598,7 +1621,7 @@ G.add_weighted_edges_from([
 
   /* ---------- 字号 ---------- */
   var fonts=['100%','112%','124%','90%'],fi=0;
-  try{var fs=+localStorage.getItem('tb-font');if(fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
+  try{var fs=+localStorage.getItem('tb-font');if(Number.isInteger(fs)&&fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
   function applyFont(){document.documentElement.style.fontSize=fonts[fi];}
   function cycleFont(){fi=(fi+1)%fonts.length;applyFont();try{localStorage.setItem('tb-font',fi);}catch(e){}toast('字号：<b>'+fonts[fi]+'</b>');}
 
@@ -1615,7 +1638,7 @@ G.add_weighted_edges_from([
   function toggleHelp(){toggleO(helpEl);}
 
   /* ---------- 书签 ---------- */
-  function toggleMark(){var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
+  function toggleMark(){markSet=loadSet(BKEY);var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
   function updateMarkUI(i){bmBtn.classList.toggle('tb-on',!!markSet[i]);var it=tocEl.querySelector('.tb-item[data-j="'+i+'"]');if(it)it.classList.toggle('tb-mark',!!markSet[i]);}
 
   /* ---------- 状态同步 ---------- */
@@ -1641,10 +1664,16 @@ G.add_weighted_edges_from([
   function updateBar(i){var b=document.getElementById('tb-bar');if(b)b.style.width=((i+1)/total*100)+'%';}
   function updateTheme(i){document.body.setAttribute('data-tb-theme',slides[i].getAttribute('data-theme')||'dark');}
 
-  var raf=null;
+  var raf=null, observedPage=curIdx();
+  window.__bookSyncLearning=function(key,cleared){
+    if(key&&key!==RKEY&&key!==BKEY)return;
+    if(cleared){if(raf){cancelAnimationFrame(raf);raf=null;}observedPage=curIdx();}
+    readSet=loadSet(RKEY);markSet=loadSet(BKEY);var i=curIdx();
+    updateMarkUI(i);updateTOCcur(i);updateGridCur(i);
+  };
   function onChange(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;
     var i=curIdx();
-    if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}
+    if(i!==observedPage){readSet=loadSet(RKEY);if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}observedPage=i;}
     updateBar(i);updateTheme(i);updateMarkUI(i);
     if(tocEl.classList.contains('tb-show'))updateTOCcur(i);
     if(gridEl.classList.contains('tb-show'))updateGridCur(i);
@@ -1662,11 +1691,12 @@ G.add_weighted_edges_from([
     if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){if(!searchEl.classList.contains('tb-show'))openSearch();e.preventDefault();e.stopPropagation();return;}
     if(anyOpen()){
       if(e.key==='Escape'){closeAll();e.stopPropagation();e.preventDefault();return;}
-      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].indexOf(e.key)>-1){e.stopPropagation();}
+
       return;
     }
     var tn=(e.target.tagName||'');
-    if(tn==='INPUT'||tn==='TEXTAREA')return;
+    if(tn==='INPUT'||tn==='TEXTAREA'||tn==='SELECT'||e.target.isContentEditable)return;
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
     var k=e.key;
     if(k==='m'||k==='M'){toggleTOC();e.stopPropagation();}
     else if(k==='g'||k==='G'){toggleGrid();e.stopPropagation();}
@@ -1736,10 +1766,10 @@ G.add_weighted_edges_from([
   /* ============ 播客音频：全局单例播放器 ============ */
   var AU=document.getElementById('mk-audio');
   var mini=document.getElementById('mk-mini');
-  var curKey=null, RATES=[1,1.25,1.5,2], ri=0;
+  var curKey=null, RATES=[1,1.25,1.5,2], ri=0, positionEpoch=0, resettingPosition=false;
 
   function posKey(k){return 'mk-pos-ch'+D.ch+'-'+k;}
-  function savePos(){if(!curKey||!AU.duration)return;try{
+  function savePos(){if(resettingPosition||!curKey||!AU.duration)return;try{
     if(AU.currentTime>3&&AU.currentTime<AU.duration-3)localStorage.setItem(posKey(curKey),String(Math.floor(AU.currentTime)));
     else localStorage.removeItem(posKey(curKey));
   }catch(e){}}
@@ -1750,7 +1780,7 @@ G.add_weighted_edges_from([
       savePos(); curKey=k;
       AU.src=abs(s.a.path); AU.playbackRate=RATES[ri];
       var p=0; try{p=parseInt(localStorage.getItem(posKey(k))||'0',10)||0;}catch(e){}
-      if(p>0){AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);try{AU.currentTime=p;}catch(e){}});}
+      if(p>0){var epoch=positionEpoch;AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);if(epoch!==positionEpoch)return;try{AU.currentTime=p;}catch(e){}});}
       $('.mk-m-t',mini).textContent=s.full;
       mini.classList.add('mk-show');
     }
@@ -1766,6 +1796,12 @@ G.add_weighted_edges_from([
     if(curKey===k&&!AU.paused){AU.pause();}else{playSec(k);}
   }
   window.__mkPlaySection=playSec;
+  window.__bookSyncAudioPosition=function(key){
+    if(!curKey||(key&&key!==posKey(curKey)))return;
+    try{if(localStorage.getItem(posKey(curKey))!==null)return;}catch(e){return;}
+    positionEpoch++;resettingPosition=true;
+    try{AU.pause();AU.currentTime=0;AU.__sv=Date.now();syncUI();}finally{resettingPosition=false;}
+  };
 
   AU.addEventListener('play',syncUI);
   AU.addEventListener('pause',function(){savePos();syncUI();});

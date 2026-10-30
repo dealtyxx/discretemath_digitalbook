@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#111a24" />
+    <meta name="description" content="离散数学交互实验室：11 章可操作数学模型、算法单步演示、三维结构与即时反馈。" />
+    <link rel="icon" type="image/svg+xml" href="./assets/favicon-B2KMG69D.svg" />
+    <title>离散数学 · 交互实验室</title>
+    
+    
+  <style>
+  [data-lab-startup]{box-sizing:border-box;max-width:640px;margin:12vh auto;padding:32px;font:16px/1.8 "Microsoft YaHei",sans-serif;color:#142330;background:#fcfcfb;border:1px solid #b8b0a4}
+  [data-lab-startup] small{letter-spacing:.16em;color:#6f675d}[data-lab-startup] h1{font-size:clamp(24px,5vw,32px);line-height:1.4;font-weight:400}
+  [data-lab-startup] a,[data-lab-startup] button{color:inherit;margin-right:16px}[data-lab-startup] button{padding:8px 16px;font:inherit;cursor:pointer}
+  @media(max-width:700px){[data-lab-startup]{margin:8vh 16px;padding:24px}}
+  </style></head>
+  <body>
+    <div id="root"><div data-lab-startup id="lab-startup" role="status" aria-live="polite">
+      <small>DISCRETE MATHEMATICS</small><h1>离散数学 · 交互实验室</h1>
+      <p>正在准备数学模型…</p><a href="../index.html">返回全书目录</a>
+    </div></div>
+  <script id="lab-distribution-loader">
+  (function(){
+    'use strict';
+    var paths={"moduleScript":"./assets/index-puyYC48Z.js","moduleStyle":"./assets/index-BfK36qKG.css","offlineScript":"./offline/book-lab.js","offlineStyle":"./offline/book-lab.css"};
+    var local=location.protocol==='file:';
+    document.documentElement.setAttribute('data-lab-distribution',local?'offline':'module');
+    function failed(){
+      var box=document.getElementById('lab-startup');
+      if(!box)return;
+      box.setAttribute('role','alert');
+      box.querySelector('p').textContent='实验室文件加载失败，请确认教材文件夹完整。';
+      if(!box.querySelector('button')){var retry=document.createElement('button');retry.type='button';retry.textContent='重新加载';retry.onclick=function(){location.reload();};box.insertBefore(retry,box.querySelector('a'));}
+    }
+    var css=document.createElement('link');css.rel='stylesheet';
+    css.href=local?paths.offlineStyle:paths.moduleStyle;
+    css.onerror=failed;
+    css.onload=function(){
+      var script=document.createElement('script');
+      if(!local)script.type='module';
+      script.src=local?paths.offlineScript:paths.moduleScript;
+      script.onerror=failed;document.body.appendChild(script);
+    };
+    document.head.appendChild(css);
+    setTimeout(function(){if(document.getElementById('lab-startup'))failed();},20000);
+  })();
+  </script><noscript>请启用 JavaScript 以使用交互实验室。<a href="../index.html">返回全书目录</a></noscript></body>
+</html>

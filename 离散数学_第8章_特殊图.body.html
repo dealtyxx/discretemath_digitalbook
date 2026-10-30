@@ -3,11 +3,8 @@
 <head>
 <base target="_top"/>
 <meta charset="utf-8"/>
-<meta content="width=device-width, initial-scale=1.0, user-scalable=no" name="viewport"/>
-<link rel="preload" href="assets/fonts/noto-serif-sc-400-a.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/inter-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="preload" href="assets/fonts/playfair-display-latin.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="assets/fonts/fonts.css">
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="assets/js/font-loader.js"></script>
 
 <title>离散数学 第8章 · 特殊图</title>
 <style>
@@ -458,7 +455,7 @@ sup{top:-.58em}sub{bottom:-.18em}
 </style>
 <script id="mathjax-config">
 window.MathJax={
-  loader:{paths:{fonts:'assets/@mathjax'}},
+  loader:{paths:{fonts:'assets/@mathjax'},load:location.protocol==='file:'?['a11y/assistive-mml']:[]},
   tex:{
     inlineMath:[['\\(','\\)']],displayMath:[['\\[','\\]']],
     processEscapes:true,packages:{'[+]':['ams']}
@@ -467,11 +464,22 @@ window.MathJax={
     displayOverflow:'linebreak',
     linebreaks:{inline:true,width:'100%',lineleading:.18}
   },
-  options:{enableMenu:true,enableExplorer:true},
+  options:{
+    enableMenu:true,
+    enableEnrichment:location.protocol!=='file:',
+    enableSpeech:location.protocol!=='file:',enableBraille:location.protocol!=='file:',
+    enableExplorer:location.protocol!=='file:',
+    menuOptions:{settings:location.protocol==='file:'?{enrich:false,speech:false,braille:false,collapsible:false,assistiveMml:true}:{} }
+  },
   startup:{
     typeset:false,               /* 由 assets/js/book-polish.js 按页排版 */
     ready:function(){
       MathJax.startup.defaultReady();
+      if(location.protocol==='file:'){
+        var doc=MathJax.startup.document;
+        Object.assign(doc.options,{enableEnrichment:false,enableComplexity:false,enableSpeech:false,enableBraille:false,enableExplorer:false,enableAssistiveMml:true});
+        if(doc.menu)Object.assign(doc.menu.settings,{enrich:false,speech:false,braille:false,collapsible:false,assistiveMml:true});
+      }
       MathJax.startup.promise.then(function(){
         document.documentElement.classList.add('mathjax-ready');
       });
@@ -479,7 +487,14 @@ window.MathJax={
   }
 };
 </script>
-<script defer="" src="assets/mathjax/tex-chtml.js"></script>
+<script>
+(function(){
+  // SVG uses bundled vector glyphs, so local-file formula rendering needs no font fetch.
+  var script=document.createElement('script');
+  script.src='assets/mathjax/'+(location.protocol==='file:'?'tex-svg.js':'tex-chtml.js');
+  script.async=false;document.head.appendChild(script);
+})();
+</script>
 <style id="mk-style">
 /* ===================================================================
    数字资源层 · 微课视频 / 播客音频 / 配套源码
@@ -746,7 +761,7 @@ body.tb-focus #mk-mini{display:none!important}
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.1 · 无向欧拉回路充要条件" data-theme="dark"><div class="chrome"><div>定理 8.1.1</div><div>9 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">无向图 · 欧拉回路</div><h2 class="h1-zh anim-item" style="max-width:16em">连通无向图有欧拉回路，当且仅当每个节点度数都是偶数</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">必要性：沿回路遍历时每个节点都被一进一出地经过，度数必为偶。充分性：连通且各点度数为偶时，每次进入一个节点后必能找到另一条未用边离开，最终回到起点形成闭合回路。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">无向图 · 欧拉回路</div><h2 class="h1-zh anim-item" style="max-width:16em">连通无向图有欧拉回路，当且仅当每个节点度数都是偶数</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">必要性：回路在每点一进一出，度数必为偶。充分性：先构造闭合迹；若仍有未用边，就从迹上有未用边的顶点构造新闭合迹并拼接，直到用完所有边。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>9 / 126</div></div></section>
 <section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.2 · 无向欧拉通路充要条件" data-theme="light"><div class="chrome"><div>定理 8.1.2</div><div>10 / 126</div></div>
@@ -758,7 +773,7 @@ body.tb-focus #mk-mini{display:none!important}
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.3 · 有向欧拉回路充要条件" data-theme="dark"><div class="chrome"><div>定理 8.1.3</div><div>11 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">有向图 · 欧拉回路</div><h2 class="h1-zh anim-item" style="max-width:16em">强连通有向图有欧拉回路，当且仅当每个节点入度等于出度</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">每次经过一个节点都需一条边进入、一条边离开，故入度必等于出度；反之入出度处处相等且强连通时，总能找到未用边离开，直到回到起点。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">有向图 · 欧拉回路</div><h2 class="h1-zh anim-item" style="max-width:16em">强连通有向图有欧拉回路，当且仅当每个节点入度等于出度</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">必要性：回路经过每点的进入次数与离开次数相等。充分性：利用入出度相等构造闭合迹，再把所有剩余边形成的闭合迹逐一拼入，最终遍历全部边。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>11 / 126</div></div></section>
 <section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.4 · 有向欧拉通路充要条件" data-theme="light"><div class="chrome"><div>定理 8.1.4</div><div>12 / 126</div></div>
@@ -782,47 +797,77 @@ body.tb-focus #mk-mini{display:none!important}
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>14 / 126</div></div></section>
 <section class="slide light" data-screen-label="Algorithm" data-source="算法 8.1.1 · Fleury 算法" data-theme="light"><div class="chrome"><div>算法 8.1.1</div><div>15 / 126</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">Fleury 算法</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Fleury：优先走非割边</h2><ol class="steps" style="margin-top:clamp(.9rem,2vh,1.6rem)"><li>任选一个节点作为起点（若有奇度节点则从奇度节点起）</li><li>选一条边移动到相邻节点，优先选择非割边以保持连通</li><li>走过一条边后立即把它从图中删除</li><li>重复直到所有边被删除，得到的闭合路径即欧拉回路</li></ol></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">Fleury 算法</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Fleury：优先走非割边</h2><ol class="steps" style="margin-top:clamp(.9rem,2vh,1.6rem)"><li>在连通无向图中，若所有度数为偶则任选起点；若恰有两个奇度节点则取其中一个</li><li>选一条边移动到相邻节点，优先选择非割边以保持连通</li><li>走过一条边后立即把它从图中删除</li><li>重复至边全部用完：无奇度节点时得到欧拉回路，两个奇度节点时得到开放的欧拉通路</li></ol></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
-def is_bridge(g, u, v):
-    c0 = nx.number_connected_components(g)
-    g.remove_edge(u, v)
-    c1 = nx.number_connected_components(g)
-    g.add_edge(u, v)
-    return c1 &gt; c0
-def fleury(g):
-    u = next(iter(g.nodes))
-    for v in g.nodes:
-        if g.degree[v] % 2 != 0:
-            u = v; break
+def is_bridge(graph, u, v):     #检查边是否是割边
+    original_components = nx.number_connected_components(graph)
+    attributes = dict(graph.get_edge_data(u, v))
+    graph.remove_edge(u, v)
+    new_components = nx.number_connected_components(graph)
+    graph.add_edge(u, v, **attributes)     #恢复边及其原有属性
+    return new_components &gt; original_components
+def fleury(graph):
+    if graph.is_directed() or graph.is_multigraph():
+        raise ValueError("此实现面向无向简单图")
+    if len(graph.nodes) == 0:     #确保图非空且至少有一个节点
+        return "Empty graph."
+    active = [v for v in graph if graph.degree[v] &gt; 0]
+    if not active:
+        return [next(iter(graph))]    #零边图的平凡通路
+    odd = [v for v in active if graph.degree[v] % 2]
+    if len(odd) not in (0, 2) or not nx.is_connected(graph.subgraph(active)):
+        raise ValueError("欧拉通路要求有边顶点连通，且奇度顶点为0个或2个")
+    u = odd[0] if odd else active[0]    #忽略孤立点；开放通路从奇度顶点开始
     path = [u]
-    while g.number_of_edges() &gt; 0:
-        for v in list(g.neighbors(u)):
-            if not is_bridge(g, u, v) or g.degree[u] == 1:
+    while graph.number_of_edges() &gt; 0:
+        for v in list(graph.neighbors(u)):
+            if not is_bridge(graph, u, v) or graph.degree[u] == 1:
                 path.append(v)
-                g.remove_edge(u, v)
-                u = v; break
-    return path</code></pre></div>
+                graph.remove_edge(u, v)
+                u = v
+                break
+        else:
+            raise ValueError("无法继续通路；请检查输入图是否满足欧拉条件")
+    return path
+undirected_graph = nx.Graph()
+undirected_graph.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A'), ('A', 'C')])
+print(fleury(undirected_graph.copy()))     #测试Fleury算法</code></pre></div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>15 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Algorithm" data-source="算法 8.1.2 · Hierholzer 算法" data-theme="dark"><div class="chrome"><div>算法 8.1.2</div><div>16 / 126</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
 <div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">Hierholzer 算法</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">Hierholzer：拼接回路片段</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">从起点遍历构造一个闭合回路片段；若仍有未用边，则在含未用边的节点上构造新片段并合并。其效率高于 Fleury，是大型图求欧拉回路的首选。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>import networkx as nx
-def hierholzer(g):
-    u = next(iter(g.nodes))
-    for v in g.nodes:
-        if g.out_degree(v) &gt; 0:
-            u = v; break
-    stack = [u]; path = []
+def hierholzer(graph):      #确保图非空且至少有一个节点
+    if not graph.is_directed() or graph.is_multigraph():
+        raise ValueError("此实现面向不含重边的有向图")
+    if len(graph.nodes) == 0:
+        return "Empty graph."
+    active = [v for v in graph if graph.degree(v) &gt; 0]
+    if not active:
+        return [next(iter(graph))]
+    differences = {v: graph.out_degree(v) - graph.in_degree(v) for v in active}
+    starts = [v for v in active if differences[v] == 1]
+    ends = [v for v in active if differences[v] == -1]
+    balanced = all(d == 0 for d in differences.values())
+    open_trail = len(starts) == len(ends) == 1 and all(abs(d) &lt;= 1 for d in differences.values())
+    if not (balanced or open_trail) or not nx.is_weakly_connected(graph.subgraph(active)):
+        raise ValueError("有向欧拉通路要求有边部分弱连通，且度数差满足回路或开放通路条件")
+    u = starts[0] if starts else active[0]    #开放通路必须从出度比入度大1的顶点开始
+    stack = [u]
+    path = []
     while stack:
         u = stack[-1]
-        if g.out_degree(u) == 0:
-            path.append(u); stack.pop()
+        if graph.out_degree(u) == 0:
+            path.append(u)
+            stack.pop()
         else:
-            v = next(g.neighbors(u))
+            v = next(graph.neighbors(u))
             stack.append(v)
-            g.remove_edge(u, v)
-    return path[::-1]</code></pre></div>
+            graph.remove_edge(u, v)
+    return path[::-1]    #返回逆序路径
+directed_graph = nx.DiGraph()
+directed_graph.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A'), ('A', 'C'), ('C', 'A')])
+print(hierholzer(directed_graph.copy()))    #测试Hierholzer算法</code></pre></div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>16 / 126</div></div></section>
 <section class="slide light" data-screen-label="Application" data-source="8.1.1 应用示例 · 欧拉图" data-theme="light"><div class="chrome"><div>应用示例</div><div>17 / 126</div></div>
 <div class="slide-body">
@@ -849,7 +894,7 @@ def hierholzer(g):
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>19 / 126</div></div></section>
 <section class="slide light" data-screen-label="Example" data-source="例 8.1.4 · 哈密顿图判定" data-theme="light"><div class="chrome"><div>例 8.1.4</div><div>20 / 126</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">无向与有向哈密顿图</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">六节点环含哈密顿回路</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">六边形 <span aria-label="A→B→C→D→E→F→A" class="math-inline-source" data-tex="A\to B\to C\to D\to E\to F\to A">\(A\to B\to C\to D\to E\to F\to A\)</span> 遍历每个节点恰好一次并回到起点，是哈密顿回路，对应图为哈密顿图。若路径遍历所有节点但不闭合，则该图为半哈密顿图。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">无向与有向哈密顿图</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">六节点环含哈密顿回路</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">六边形 <span aria-label="A→B→C→D→E→F→A" class="math-inline-source" data-tex="A\to B\to C\to D\to E\to F\to A">\(A\to B\to C\to D\to E\to F\to A\)</span> 遍历每个节点恰好一次并回到起点，是哈密顿回路，对应图为哈密顿图。若图有哈密顿通路，却没有哈密顿回路，才称为半哈密顿图；仅找到一条开放通路还不足以判定。</p></div>
 <div class="anim-item"><div class="vis-center"><svg class="digraph" viewbox="0 0 340 300"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="270.5" y1="34.0" y2="92.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="270.5" x2="270.5" y1="92.0" y2="208.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="270.5" x2="170.0" y1="208.0" y2="266.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170.0" x2="69.5" y1="266.0" y2="208.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="69.5" x2="69.5" y1="208.0" y2="92.0"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="69.5" x2="170.0" y1="92.0" y2="34.0"></line><circle cx="170.0" cy="34.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="40.0">A</text><circle cx="270.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="98.0">B</text><circle cx="270.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="270.5" y="214.0">C</text><circle cx="170.0" cy="266.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170.0" y="272.0">D</text><circle cx="69.5" cy="208.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="214.0">E</text><circle cx="69.5" cy="92.0" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="69.5" y="98.0">F</text></svg></div></div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>20 / 126</div></div></section>
 <section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.5 · 哈密顿图的必要条件" data-theme="light"><div class="chrome"><div>定理 8.1.5</div><div>21 / 126</div></div>
@@ -861,13 +906,13 @@ def hierholzer(g):
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.6 · Dirac 型充分条件" data-theme="dark"><div class="chrome"><div>定理 8.1.6</div><div>22 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">充分条件 · 最小度</div><h2 class="h1-zh anim-item" style="max-width:16em">每点度数至少为 n/2 则为哈密顿图</h2><div aria-label="∀v : deg(v) ≥ n / 2  ⟹  G 含哈密顿回路" class="formula anim-item mathjax-display-source" data-tex="\forall v : \operatorname{deg}(v) \ge n / 2 \Longrightarrow G \text{含哈密顿回路}">\[\displaystyle \forall v : \operatorname{deg}(v) \ge n / 2 \Longrightarrow G \text{含哈密顿回路}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对含 n 个节点（<span aria-label="n ≥ 3" class="math-inline-source" data-tex="n \ge 3">\(n \ge 3\)</span>）的图 G，若每个节点的度数都至少为 n/2，则 G 一定是哈密顿图。这是充分而非必要条件。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">充分条件 · 最小度</div><h2 class="h1-zh anim-item" style="max-width:16em">每点度数至少为 n/2 则为哈密顿图</h2><div aria-label="∀v : deg(v) ≥ n / 2  ⟹  G 含哈密顿回路" class="formula anim-item mathjax-display-source" data-tex="\forall v : \operatorname{deg}(v) \ge n / 2 \Longrightarrow G \text{含哈密顿回路}">\[\displaystyle \forall v : \operatorname{deg}(v) \ge n / 2 \Longrightarrow G \text{含哈密顿回路}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对含 n 个节点的简单无向图（<span aria-label="n ≥ 3" class="math-inline-source" data-tex="n \ge 3">\(n \ge 3\)</span>）G，若每个节点的度数都至少为 n/2，则 G 一定是哈密顿图。这是充分而非必要条件。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>22 / 126</div></div></section>
 <section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.7 · Ore 型充分条件" data-theme="light"><div class="chrome"><div>定理 8.1.7</div><div>23 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">充分条件 · 度数之和</div><h2 class="h1-zh anim-item" style="max-width:16em">非相邻两点度数之和至少为 n 则为哈密顿图</h2><div aria-label="∀ 非相邻 u,v : deg(u) + deg(v) ≥ n  ⟹  G 含哈密顿回路" class="formula anim-item mathjax-display-source" data-tex="\forall \text{非相邻} u,v : \operatorname{deg}(u) + \operatorname{deg}(v) \ge n \Longrightarrow G \text{含哈密顿回路}">\[\displaystyle \forall \text{非相邻} u,v : \operatorname{deg}(u) + \operatorname{deg}(v) \ge n \Longrightarrow G \text{含哈密顿回路}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对含 n 个节点（<span aria-label="n ≥ 3" class="math-inline-source" data-tex="n \ge 3">\(n \ge 3\)</span>）的图 G，若每一对非相邻节点 u 与 v 的度数之和都至少为 n，则 G 是哈密顿图。该条件比定理 8.1.6 更宽松。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">充分条件 · 度数之和</div><h2 class="h1-zh anim-item" style="max-width:16em">非相邻两点度数之和至少为 n 则为哈密顿图</h2><div aria-label="∀ 非相邻 u,v : deg(u) + deg(v) ≥ n  ⟹  G 含哈密顿回路" class="formula anim-item mathjax-display-source" data-tex="\forall \text{非相邻} u,v : \operatorname{deg}(u) + \operatorname{deg}(v) \ge n \Longrightarrow G \text{含哈密顿回路}">\[\displaystyle \forall \text{非相邻} u,v : \operatorname{deg}(u) + \operatorname{deg}(v) \ge n \Longrightarrow G \text{含哈密顿回路}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对含 n 个节点的简单无向图（<span aria-label="n ≥ 3" class="math-inline-source" data-tex="n \ge 3">\(n \ge 3\)</span>）G，若每一对非相邻节点 u 与 v 的度数之和都至少为 n，则 G 是哈密顿图。该条件比定理 8.1.6 更宽松。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>23 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Example" data-source="例 8.1.5 · 应用充分条件判定" data-theme="dark"><div class="chrome"><div>例 8.1.5</div><div>24 / 126</div></div>
@@ -877,7 +922,7 @@ def hierholzer(g):
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>24 / 126</div></div></section>
 <section class="slide light" data-screen-label="Example" data-source="例 8.1.6 · 七社区道路规划" data-theme="light"><div class="chrome"><div>例 8.1.6</div><div>25 / 126</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">建模与加边建议</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">七社区：现有道路尚不满足闭环目标</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">七个社区 A 到 G 的度数为 4,4,3,4,3,2,2。需每点度数至少为 <span aria-label="7/2=3.5" class="math-inline-source" data-tex="7/2=3.5">\(7/2=3.5\)</span>，向上取整为 4；但并非所有点都达到，无法直接套用定理 8.1.6。节点 A 与 F 不相邻且度数之和为 <span aria-label="4+2=6 &lt; 7" class="math-inline-source" data-tex="4+2=6 &lt; 7">\(4+2=6 &lt; 7\)</span>，也无法直接套用定理 8.1.7。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">结论</div><p class="body-zh" style="margin-top:.6vh">建议增加边 (A,F)、(B,G)、(C,E) 等以提高相关节点度数，从而形成哈密顿回路，满足任一社区出发遍历全部并返回起点的目标。</p></div></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">建模与加边建议</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">七社区：尚不能用度数条件直接判定</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">七个社区 A 到 G 的度数为 4,4,3,4,3,2,2。需每点度数至少为 <span aria-label="7/2=3.5" class="math-inline-source" data-tex="7/2=3.5">\(7/2=3.5\)</span>，向上取整为 4；但并非所有点都达到，无法直接套用定理 8.1.6。节点 A 与 F 不相邻且度数之和为 <span aria-label="4+2=6 &lt; 7" class="math-inline-source" data-tex="4+2=6 &lt; 7">\(4+2=6 &lt; 7\)</span>，也无法直接套用定理 8.1.7。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">结论</div><p class="body-zh" style="margin-top:.6vh">未满足上述充分条件，并不表示图中没有哈密顿回路。是否需要加边、加哪些边，必须结合具体边集进一步检验。</p></div></div>
 <div class="anim-item"><div class="vis-center"></div></div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>25 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Example" data-source="例 8.1.7 · 八节点交通系统" data-theme="dark"><div class="chrome"><div>例 8.1.7</div><div>26 / 126</div></div>
@@ -959,7 +1004,7 @@ def is_hamiltonian(graph):
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.8 · 二部图与奇环" data-theme="dark"><div class="chrome"><div>定理 8.1.8</div><div>34 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">二部图的奇环性质</div><h2 class="h1-zh anim-item" style="max-width:16em">二部图中不存在奇数长度的回路</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">把一侧染蓝、另一侧染绿，则任何路径上节点颜色蓝绿交替。奇数长度的闭合路径会回到与起点同色的节点，这与二部图定义矛盾，故二部图不含奇数长度回路。这也是判定二部图的充要特征。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">二部图的奇环性质</div><h2 class="h1-zh anim-item" style="max-width:16em">二部图中不存在奇数长度的回路</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">把两侧分别染蓝、绿，沿边每走一步颜色都改变。走奇数步后颜色与起点相反，不可能回到起点，故二部图没有奇环；反之，无奇环的无向图也可二着色。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>34 / 126</div></div></section>
 <section class="slide light" data-screen-label="Concept" data-source="定义 8.1.6 · 匹配" data-theme="light"><div class="chrome"><div>匹配</div><div>35 / 126</div></div>
@@ -999,7 +1044,7 @@ def is_hamiltonian(graph):
 <section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.9 · Hall 定理" data-theme="light"><div class="chrome"><div>定理 8.1.9</div><div>41 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">完美匹配存在条件</div><h2 class="h1-zh anim-item" style="max-width:16em">Hall 条件：邻居集不小于子集本身</h2><div aria-label="∀ S ⊆ U : |N(S)| ≥ |S|" class="formula anim-item mathjax-display-source" data-tex="\forall S \subseteq U : |N(S)| \ge |S|">\[\displaystyle \forall S \subseteq U : |N(S)| \ge |S|\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">二部图 <span aria-label="G=⟨U,V,E⟩" class="math-inline-source" data-tex="G=\langle U,V,E\rangle">\(G=\langle U,V,E\rangle\)</span> 中存在从 U 到 V 的完备匹配（使 U 中每个节点都被匹配），当且仅当对所有子集 <span aria-label="S ⊆ U" class="math-inline-source" data-tex="S \subseteq U">\(S \subseteq U\)</span> 都有其邻居集合 N(S) 的大小不小于 S 的大小。若存在某个 S 使 |N(S)| &lt; <span aria-label="|S|" class="math-inline-source" data-tex="|S|">\(|S|\)</span>，则不可能完美匹配。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">饱和一侧的匹配存在条件</div><h2 class="h1-zh anim-item" style="max-width:16em">Hall 条件：邻居集不小于子集本身</h2><div aria-label="∀ S ⊆ U : |N(S)| ≥ |S|" class="formula anim-item mathjax-display-source" data-tex="\forall S \subseteq U : |N(S)| \ge |S|">\[\displaystyle \forall S \subseteq U : |N(S)| \ge |S|\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">二部图 <span aria-label="G=⟨U,V,E⟩" class="math-inline-source" data-tex="G=\langle U,V,E\rangle">\(G=\langle U,V,E\rangle\)</span> 中存在从 U 到 V 的完备匹配（使 U 中每个节点都被匹配），当且仅当对所有子集 <span aria-label="S ⊆ U" class="math-inline-source" data-tex="S \subseteq U">\(S \subseteq U\)</span> 都有其邻居集合 N(S) 的大小不小于 S 的大小。若存在某个 S 使 |N(S)| &lt; <span aria-label="|S|" class="math-inline-source" data-tex="|S|">\(|S|\)</span>，则不可能完美匹配。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>41 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Application" data-source="8.1.3 应用示例 · 二部图" data-theme="dark"><div class="chrome"><div>应用示例</div><div>42 / 126</div></div>
@@ -1033,7 +1078,7 @@ def is_hamiltonian(graph):
 <section class="slide light" data-screen-label="Concept" data-source="定义 8.1.9 与 8.1.10 · 面与次数" data-theme="light"><div class="chrome"><div>面与次数</div><div>46 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.9 / 8.1.10</div><h2 class="h1-zh anim-item" style="max-width:16em">外部面、内部面与面的次数</h2><p class="lead-zh anim-item" style="max-width:26em">平面表示把平面划分为若干面：外部面是围绕图形外侧的区域，内部面是被边界包围的内部区域。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">面的次数是围绕该面的边的数量；对内部面即其边界上的边数，对外部面为围绕外侧的边数。球面表示与平面表示可相互转换。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.9 / 8.1.10</div><h2 class="h1-zh anim-item" style="max-width:16em">外部面、内部面与面的次数</h2><p class="lead-zh anim-item" style="max-width:26em">平面表示把平面划分为若干面：外部面是围绕图形外侧的区域，内部面是被边界包围的内部区域。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">面的次数按边界上的边侧计数，重复经过的边重复计；桥的两侧属于同一面，须计两次。对任意平面嵌入，所有面次数之和为边数的两倍。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>46 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Example" data-source="例 8.1.13 · 面的次数" data-theme="dark"><div class="chrome"><div>例 8.1.13</div><div>47 / 126</div></div>
@@ -1044,19 +1089,19 @@ def is_hamiltonian(graph):
 <section class="slide light" data-screen-label="Concept" data-source="定义 8.1.11 · 对偶图" data-theme="light"><div class="chrome"><div>对偶图</div><div>48 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.11</div><h2 class="h1-zh anim-item" style="max-width:16em">每个面化作一个节点</h2><div aria-label="G* 的节点 ↔ G 的面，G* 的边 ↔ 相邻两面共享的边界" class="formula anim-item mathjax-display-source" data-tex="G* \text{的节点} \leftrightarrow G \text{的面}\text{，}G* \text{的边} \leftrightarrow \text{相邻两面共享的边界}">\[\displaystyle G* \text{的节点} \leftrightarrow G \text{的面}\text{，}G* \text{的边} \leftrightarrow \text{相邻两面共享的边界}\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对偶图 G* 由平面图 G 派生：G 的每个面对应 G* 的一个节点；G 中两个相邻面所共享的边界，对应 G* 中连接相应两节点的一条边。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.1.11</div><h2 class="h1-zh anim-item" style="max-width:16em">每个面化作一个节点</h2><div aria-label="对偶顶点对应原图面；每条对偶边对应一条原图边" class="formula anim-item mathjax-display-source" data-tex="V(G^{*})\leftrightarrow F(G),\qquad E(G^{*})\leftrightarrow E(G)">\[\displaystyle V(G^{*})\leftrightarrow F(G),\qquad E(G^{*})\leftrightarrow E(G)\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">给定 G 的平面嵌入，每个面对应一个对偶顶点，每条原边对应一条连接其两侧面的对偶边。允许平行边；桥的两侧属于同一面，对应对偶自环。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>48 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Example" data-source="例 8.1.14 · 对偶图" data-theme="dark"><div class="chrome"><div>例 8.1.14</div><div>49 / 126</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">由面建点、由邻接连边</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">从面的邻接关系构造对偶图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">四边形定义内部区域 A 与外部区域 B，二者相邻，故对偶图有两个节点并以一条边相连。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">构造</div><p class="body-zh" style="margin-top:.6vh">四节点图有内部区域 A,B 与外部区域 C：A 与 B 相邻、且都与 C 相邻，对偶图中对应节点按相邻关系连边。五节点图同理为每个内部区域建节点。</p></div></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">由面建点、由邻接连边</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">从面的邻接关系构造对偶图</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">四边形有内部面 A 和外部面 B。其四条边分别对应四条对偶边，因此对偶图是两个节点之间连接四条平行边。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">构造</div><p class="body-zh" style="margin-top:.6vh">构造时须逐条数原边：同一对面共享几条边，就保留几条对偶平行边；原图中的桥对应对偶图中的自环。</p></div></div>
 <div class="anim-item"><div class="vis-center"></div></div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>49 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.10 · 欧拉公式" data-theme="dark"><div class="chrome"><div>定理 8.1.10 · 欧拉公式</div><div>50 / 126</div></div>
 <div class="slide-body" style="align-items:center;text-align:center">
 <div class="stat-num anim-item"><span aria-label="V − E + F = 2" class="math-inline-source" data-tex="V - E + F = 2">\(V - E + F = 2\)</span></div>
 <h2 class="h2-zh anim-item" style="max-width:18em;margin-top:clamp(1rem,2vh,2rem)">连通平面图的节点数、边数、面数恒满足欧拉公式</h2>
-<p class="body-zh anim-item" style="max-width:28em;margin-top:clamp(.8rem,1.5vh,1.5rem);opacity:.62">V 为节点数、E 为边数、F 为面数（含外部区域）。可用归纳法证明：从单节点无边图出发，逐次添加边时该式始终成立。它是平面图的必要条件，不满足者必非平面图。</p>
+<p class="body-zh anim-item" style="max-width:28em;margin-top:clamp(.8rem,1.5vh,1.5rem);opacity:.62">V、E、F 分别为节点、边、面数（含外部面）。先取生成树，此时 E=V−1、F=1；再依次加入其余原边，每加一边恰增加一个面，所以 V−E+F 始终为 2。</p>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>50 / 126</div></div></section>
 <section class="slide light" data-screen-label="Example" data-source="例 8.1.15 · 用欧拉公式判定" data-theme="light"><div class="chrome"><div>例 8.1.15</div><div>51 / 126</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
@@ -1066,13 +1111,13 @@ def is_hamiltonian(graph):
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 8.1.11 · 边数上界（三角形面）" data-theme="dark"><div class="chrome"><div>定理 8.1.11</div><div>52 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">边数上界</div><h2 class="h1-zh anim-item" style="max-width:16em">简单连通平面图（V ≥ 3）满足 <span aria-label="E ≤ 3V − 6" class="math-inline-source" data-tex="E \le 3V - 6">\(E \le 3V - 6\)</span></h2><div aria-label="3F ≤ 2E ， 代入 V − E + F = 2  ⟹  E ≤ 3V − 6" class="formula anim-item mathjax-display-source" data-tex="3F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 3V - 6">\[\displaystyle 3F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 3V - 6\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">每个面至少由 3 条边围成，每条边被两个面共享计两次，故 <span aria-label="3F ≤ 2E" class="math-inline-source" data-tex="3F \le 2E">\(3F \le 2E\)</span>；结合欧拉公式即得边数上界 <span aria-label="E ≤ 3V − 6" class="math-inline-source" data-tex="E \le 3V - 6">\(E \le 3V - 6\)</span>。它常用于快速否定平面性。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">边数上界</div><h2 class="h1-zh anim-item" style="max-width:16em">简单连通平面图（V ≥ 3）满足 <span aria-label="E ≤ 3V − 6" class="math-inline-source" data-tex="E \le 3V - 6">\(E \le 3V - 6\)</span></h2><div aria-label="3F ≤ 2E ， 代入 V − E + F = 2  ⟹  E ≤ 3V − 6" class="formula anim-item mathjax-display-source" data-tex="3F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 3V - 6">\[\displaystyle 3F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 3V - 6\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">面边界按重复次数计，每个面次数至少为 3，每条边有两个边侧共计两次，故 <span aria-label="3F ≤ 2E" class="math-inline-source" data-tex="3F \le 2E">\(3F \le 2E\)</span>；结合欧拉公式即得边数上界 <span aria-label="E ≤ 3V − 6" class="math-inline-source" data-tex="E \le 3V - 6">\(E \le 3V - 6\)</span>。它常用于快速否定平面性。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>52 / 126</div></div></section>
 <section class="slide light" data-screen-label="Theorem" data-source="定理 8.1.12 · 边数上界（四边形面）" data-theme="light"><div class="chrome"><div>定理 8.1.12</div><div>53 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">边数上界</div><h2 class="h1-zh anim-item" style="max-width:16em">各面至少为四边形时满足 <span aria-label="E ≤ 2V − 4" class="math-inline-source" data-tex="E \le 2V - 4">\(E \le 2V - 4\)</span></h2><div aria-label="4F ≤ 2E ， 代入 V − E + F = 2  ⟹  E ≤ 2V − 4" class="formula anim-item mathjax-display-source" data-tex="4F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 2V - 4">\[\displaystyle 4F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 2V - 4\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">若图中任何区域至少是四边形，则每个面至少贡献 4 条边、每条边计两次，<span aria-label="4F ≤ 2E" class="math-inline-source" data-tex="4F \le 2E">\(4F \le 2E\)</span>，结合欧拉公式得 <span aria-label="E ≤ 2V − 4" class="math-inline-source" data-tex="E \le 2V - 4">\(E \le 2V - 4\)</span>。无三角形的二部平面图常用此式。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">边数上界</div><h2 class="h1-zh anim-item" style="max-width:16em">各面至少为四边形时满足 <span aria-label="E ≤ 2V − 4" class="math-inline-source" data-tex="E \le 2V - 4">\(E \le 2V - 4\)</span></h2><div aria-label="4F ≤ 2E ， 代入 V − E + F = 2  ⟹  E ≤ 2V − 4" class="formula anim-item mathjax-display-source" data-tex="4F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 2V - 4">\[\displaystyle 4F \le 2E \text{，} \text{代入} V - E + F = 2 \Longrightarrow E \le 2V - 4\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">对连通平面嵌入，若每个面的次数至少为 4，则每个面至少贡献 4 条边、每条边计两次，<span aria-label="4F ≤ 2E" class="math-inline-source" data-tex="4F \le 2E">\(4F \le 2E\)</span>，结合欧拉公式得 <span aria-label="E ≤ 2V − 4" class="math-inline-source" data-tex="E \le 2V - 4">\(E \le 2V - 4\)</span>。简单二部平面图在 V≥3 时满足此式。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>53 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Concept" data-source="定义 8.1.12 · 同胚" data-theme="dark"><div class="chrome"><div>同胚</div><div>54 / 126</div></div>
@@ -1137,19 +1182,19 @@ def is_planar(graph):
 <section class="slide dark" data-screen-label="Summary" data-source="8.1.5 小结 · 多类型的图" data-theme="dark"><div class="chrome"><div>8.1 小结</div><div>59 / 126</div></div>
 <div class="slide-body">
 <div class="w-default" style="display:flex;flex-direction:column;gap:clamp(1.5rem,3.6vh,2.8rem)">
-<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">欧拉图：连通且各点度数为偶（有向图为入度等于出度），关注边的遍历</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">哈密顿图：含遍历所有节点一次的闭合回路，判定为 NP 完全，有度数充分条件</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">二部图：节点可分两侧、同侧无边，等价于不含奇环，是匹配问题的骨架</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">平面图：可无交叉绘制，满足欧拉公式 <span aria-label="V−E+F=2" class="math-inline-source" data-tex="V-E+F=2">\(V-E+F=2\)</span>，由 K5 与 K3,3 同胚刻画</p></div>
+<div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">01</div><p class="body-zh">欧拉图关注边：无向连通图各点度数为偶；有向图须各点入出度相等且非孤立点部分强连通</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">02</div><p class="body-zh">哈密顿图：含遍历所有节点一次的闭合回路，判定为 NP 完全，有度数充分条件</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">03</div><p class="body-zh">二部图：节点可分两侧、同侧无边，等价于不含奇环，是匹配问题的骨架</p></div><div class="anim-item" style="display:grid;grid-template-columns:auto 1fr;gap:clamp(1.4rem,3vw,3rem);align-items:start"><div class="summary-num">04</div><p class="body-zh">平面图可无交叉绘制；连通时满足欧拉公式 <span aria-label="V−E+F=2" class="math-inline-source" data-tex="V-E+F=2">\(V-E+F=2\)</span>，由 K5 与 K3,3 同胚刻画</p></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>59 / 126</div></div></section>
 <section class="slide light mk-page mk-audio-page" data-screen-label="Podcast" data-source="播客音频 · 8.1 多类型的图" data-theme="light" data-mk-sec="8.1"><div class="chrome"><div>播客音频 · 8.1 多类型的图</div><div>60 / 126</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">播客音频</span><span class="mk-metaline">11:55 · 3.4 MB · 讲解音频版</span></div><div class="mk-audio-card anim-item"><button class="mk-abtn" type="button" data-mk-sec="8.1" aria-label="播放本节播客"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><div class="mk-audio-main"><h2 class="h2-zh">8.1 多类型的图</h2><p class="mk-audio-desc">本节内容的播客讲解版，适合课后复盘、通勤复习与考前串讲；点击波形任意位置可跳转收听。</p><div class="mk-wave" data-mk-sec="8.1" role="slider" aria-label="音频进度"><i style="height:30%"></i><i style="height:56%"></i><i style="height:76%"></i><i style="height:60%"></i><i style="height:60%"></i><i style="height:66%"></i><i style="height:39%"></i><i style="height:29%"></i><i style="height:51%"></i><i style="height:54%"></i><i style="height:55%"></i><i style="height:85%"></i><i style="height:91%"></i><i style="height:68%"></i><i style="height:68%"></i><i style="height:63%"></i><i style="height:33%"></i><i style="height:32%"></i><i style="height:54%"></i><i style="height:49%"></i><i style="height:54%"></i><i style="height:79%"></i><i style="height:68%"></i><i style="height:44%"></i><i style="height:49%"></i><i style="height:41%"></i><i style="height:20%"></i><i style="height:39%"></i><i style="height:64%"></i><i style="height:60%"></i><i style="height:73%"></i><i style="height:93%"></i><i style="height:71%"></i><i style="height:52%"></i><i style="height:60%"></i><i style="height:46%"></i><i style="height:34%"></i><i style="height:60%"></i><i style="height:74%"></i><i style="height:62%"></i><i style="height:73%"></i><i style="height:76%"></i><i style="height:43%"></i><i style="height:31%"></i><i style="height:41%"></i><i style="height:27%"></i><i style="height:30%"></i><i style="height:64%"></i><i style="height:71%"></i><i style="height:62%"></i><i style="height:77%"></i><i style="height:71%"></i><i style="height:41%"></i><i style="height:43%"></i><i style="height:56%"></i><i style="height:45%"></i><i style="height:58%"></i><i style="height:88%"></i><i style="height:79%"></i><i style="height:67%"></i><i style="height:74%"></i><i style="height:53%"></i><i style="height:24%"></i><i style="height:36%"></i></div><div class="mk-atime"><span data-mk-cur>0:00</span><span>11:55</span></div></div></div><ul class="mk-audio-tips anim-item"><li data-n="01">支持后台收听：翻页、查阅源码时音频不中断</li><li data-n="02">迷你播放器可调 1× / 1.25× / 1.5× / 2× 倍速</li><li data-n="03">进度自动记忆，下次从上次听到的位置继续</li></ul></div></div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>60 / 126</div></div></section>
-<section class="slide dark mk-page mk-code-page" data-screen-label="SourceCode" data-source="配套源码 · 8.1 多类型的图" data-theme="dark" data-mk-sec="8.1"><div class="chrome"><div>配套源码 · 8.1 多类型的图</div><div>61 / 126</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">配套源码</span><span class="mk-metaline">4 个文件 · 共 133 行 · 可查看 / 复制 / 下载</span></div><h2 class="h2-zh mk-title anim-item">8.1 多类型的图 · Python 配套源码</h2><div class="mk-code-grid mk-rich anim-item"><button class="mk-cc" type="button" data-mk-code="8.1.1.py"><span class="mk-cc-name">8.1.1.py</span><span class="mk-cc-meta">27 行</span><pre class="mk-cc-prev">import networkx as nx
+<section class="slide dark mk-page mk-code-page" data-screen-label="SourceCode" data-source="配套源码 · 8.1 多类型的图" data-theme="dark" data-mk-sec="8.1"><div class="chrome"><div>配套源码 · 8.1 多类型的图</div><div>61 / 126</div></div><div class="slide-body"><div class="mk-w"><div class="mk-head anim-item"><span class="mk-tag">配套源码</span><span class="mk-metaline">4 个文件 · 共 148 行 · 可查看 / 复制 / 下载</span></div><h2 class="h2-zh mk-title anim-item">8.1 多类型的图 · Python 配套源码</h2><div class="mk-code-grid mk-rich anim-item"><button class="mk-cc" type="button" data-mk-code="8.1.1.py"><span class="mk-cc-name">8.1.1.py</span><span class="mk-cc-meta">34 行</span><pre class="mk-cc-prev">import networkx as nx
 def is_bridge(graph, u, v):     #检查边是否是割边
     original_components = nx.number_connected_components(graph)
-    graph.remove_edge(u, v)
-    new_components = nx.number_connected_components(graph)</pre></button><button class="mk-cc" type="button" data-mk-code="8.1.2.py"><span class="mk-cc-name">8.1.2.py</span><span class="mk-cc-meta">24 行</span><pre class="mk-cc-prev">import networkx as nx
+    attributes = dict(graph.get_edge_data(u, v))
+    graph.remove_edge(u, v)</pre></button><button class="mk-cc" type="button" data-mk-code="8.1.2.py"><span class="mk-cc-name">8.1.2.py</span><span class="mk-cc-meta">32 行</span><pre class="mk-cc-prev">import networkx as nx
 def hierholzer(graph):      #确保图非空且至少有一个节点
-    if len(graph.nodes) == 0:
-        return &quot;Empty graph.&quot;
-    u = next(iter(graph.nodes))    #找到一个起始节点</pre></button><button class="mk-cc" type="button" data-mk-code="8.1.3.py"><span class="mk-cc-name">8.1.3.py</span><span class="mk-cc-meta">38 行</span><pre class="mk-cc-prev">def is_hamiltonian(graph):
+    if not graph.is_directed() or graph.is_multigraph():
+        raise ValueError(&quot;此实现面向不含重边的有向图&quot;)
+    if len(graph.nodes) == 0:</pre></button><button class="mk-cc" type="button" data-mk-code="8.1.3.py"><span class="mk-cc-name">8.1.3.py</span><span class="mk-cc-meta">38 行</span><pre class="mk-cc-prev">def is_hamiltonian(graph):
     n = len(graph)    #图中的节点数
     path = [-1] * n
     path[0] = 0       #从第0个节点开始，尝试所有的路径
@@ -1177,7 +1222,7 @@ def hierholzer(graph):      #确保图非空且至少有一个节点
 <section class="slide light" data-screen-label="Concept" data-source="定义 8.2.1 · 树" data-theme="light"><div class="chrome"><div>8.2.1 树的基本概念</div><div>65 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.1</div><h2 class="h1-zh anim-item" style="max-width:16em">树是无环连通图的三种等价刻画</h2><p class="lead-zh anim-item" style="max-width:26em">图 G 是树，当且仅当满足以下任一条件：</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">(1) G 无环且连通；(2) G 连通，且移除任一条边都会使其不连通；(3) G 无环，且添加任一条边都会产生环。树中任意两节点之间有且只有一条简单路径；无任何节点的树称为空树。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.1</div><h2 class="h1-zh anim-item" style="max-width:16em">树是无环连通图的三种等价刻画</h2><p class="lead-zh anim-item" style="max-width:26em">图 G 是树，当且仅当满足以下任一条件：</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">(1) G 无环且连通；(2) G 连通，且移除任一条边都会使其不连通；(3) G 无环，且添加任一条边都会产生环。树中任意两节点之间有且只有一条简单路径；通常图论中的树要求非空；空树可作为数据结构中的特殊约定。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>65 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Concept" data-source="定义 8.2.2 · 节点术语" data-theme="dark"><div class="chrome"><div>节点术语</div><div>66 / 126</div></div>
@@ -1206,7 +1251,7 @@ def hierholzer(graph):      #确保图非空且至少有一个节点
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.3rem,2.8vh,2.3rem)">
 <div class="kicker anim-item" style="color:var(--accent);opacity:1">树的基本性质</div><h2 class="h1-zh anim-item" style="max-width:18em">树的六条基本性质</h2>
-<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist twocol anim-item"><li>定理 8.2.1：树是无环图，不存在闭合路径</li><li>定理 8.2.2：树是连通的，任意两点间存在路径</li><li>定理 8.2.3：含 V 个节点的树恰好有 V−1 条边</li><li>定理 8.2.4：任意两节点间有唯一的一条简单路径</li><li>定理 8.2.5：删任一边即不连通，加任一边即生环</li><li>定理 8.2.6：树是包含所有节点的最小连通子图</li></ol></div>
+<div style="display:flex;flex-direction:column;gap:clamp(.85rem,1.9vh,1.4rem)"><ol class="biglist twocol anim-item"><li>定理 8.2.1：树不存在圈，但允许沿同一边往返的闭合通路</li><li>定理 8.2.2：树是连通的，任意两点间存在路径</li><li>定理 8.2.3：含 V 个节点的树恰好有 V−1 条边</li><li>定理 8.2.4：任意两节点间有唯一的一条简单路径</li><li>定理 8.2.5：删任一边即不连通，加任一边即生环</li><li>定理 8.2.6：树是包含所有节点的最小连通子图</li></ol></div>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>70 / 126</div></div></section>
 <section class="slide light" data-screen-label="Theorem" data-source="定理 8.2.7 至 8.2.9 · 叶子节点" data-theme="light"><div class="chrome"><div>定理 8.2.7 ~ 8.2.9</div><div>71 / 126</div></div>
@@ -1264,7 +1309,7 @@ def hierholzer(graph):      #确保图非空且至少有一个节点
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>78 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Algorithm" data-source="算法 8.2.1 · 广度优先搜索" data-theme="dark"><div class="chrome"><div>算法 8.2.1</div><div>79 / 126</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">BFS 广度优先</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">BFS：逐层访问，易找最短路径</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">从起点出发逐层访问邻居并标记已访问，适用于最短路径搜索，可能占用较多内存。注意 BFS 本身不直接构造最小生成树。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">BFS 广度优先</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">BFS：逐层访问，易找最短路径</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">从起点逐层访问邻居并标记。BFS 求无权或等权图中边数最少的路径，可能占用较多内存；一般加权图不能直接用它求最短路，它也不直接给出最小生成树。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>from collections import deque
 def bfs(graph, start, end):
     visited = {start}
@@ -1356,7 +1401,7 @@ print(MST.edges(data=True), MST.nodes())</code></pre></div>
 <section class="slide dark" data-screen-label="Concept" data-source="定义 8.2.7 与 8.2.8 · 有向树与根树" data-theme="dark"><div class="chrome"><div>8.2.3 根树</div><div>88 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.7 / 8.2.8</div><h2 class="h1-zh anim-item" style="max-width:16em">有向树与根树</h2><p class="lead-zh anim-item" style="max-width:26em">有向树是不存在有向环的有向图，从根到其余每个节点都存在唯一有向路径，所有边都有方向，除根节点外每个节点恰有一条入边。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">根树是入度为 0 的根节点加上其余节点入度均为 1 的有向树，直观表示层次关系，使层次数据的分析与遍历更系统化。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.7 / 8.2.8</div><h2 class="h1-zh anim-item" style="max-width:16em">有向树与根树</h2><p class="lead-zh anim-item" style="max-width:26em">有向树是把无向树的每条边赋予一个方向得到的有向图，其基图为树；一般有向树未必存在能到达全部节点的根。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">本章的根树取外向方向：根入度为 0，其余节点入度为 1，从根到每个节点都有唯一有向路径，用于表达层次关系。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>88 / 126</div></div></section>
 <section class="slide light" data-screen-label="Concept" data-source="根树的主要性质" data-theme="light"><div class="chrome"><div>根树性质</div><div>89 / 126</div></div>
@@ -1369,7 +1414,7 @@ print(MST.edges(data=True), MST.nodes())</code></pre></div>
 <section class="slide dark" data-screen-label="Concept" data-source="定义 8.2.9 至 8.2.13 · m 叉树家族" data-theme="dark"><div class="chrome"><div>m 叉树家族</div><div>90 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.9 ~ 8.2.13</div><h2 class="h1-zh anim-item" style="max-width:16em">m 叉树、二叉树及其完全与正则形态</h2><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 340 280"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="90" y1="45" y2="135"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="250" y1="45" y2="135"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="90" x2="50" y1="135" y2="225"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="90" x2="130" y1="135" y2="225"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="290" y1="135" y2="225"></line><circle cx="170" cy="45" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170" y="51">A</text><circle cx="90" cy="135" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="90" y="141">B</text><circle cx="250" cy="135" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="141">C</text><circle cx="50" cy="225" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="50" y="231">D</text><circle cx="130" cy="225" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="130" y="231">E</text><circle cx="290" cy="225" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="290" y="231">F</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">m 叉树每个节点最多 m 个子节点；二叉树每点最多两个子节点（左、右）；完全二叉树除最后一层外每层填满且子节点要么 0 个要么 2 个；完全 m 叉树类似但子节点 0 或 m 个；正则二叉树（满二叉树）所有叶子层次相同、每层填满。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.9 ~ 8.2.13</div><h2 class="h1-zh anim-item" style="max-width:16em">m 叉树与三类特殊二叉树</h2><div class="vis-center anim-item"><svg class="digraph" viewbox="0 0 340 280"><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="90" y1="45" y2="135"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="170" x2="250" y1="45" y2="135"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="90" x2="50" y1="135" y2="225"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="90" x2="130" y1="135" y2="225"></line><line opacity="0.7" stroke="currentColor" stroke-width="2" x1="250" x2="290" y1="135" y2="225"></line><circle cx="170" cy="45" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="170" y="51">A</text><circle cx="90" cy="135" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="90" y="141">B</text><circle cx="250" cy="135" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="250" y="141">C</text><circle cx="50" cy="225" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="50" y="231">D</text><circle cx="130" cy="225" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="130" y="231">E</text><circle cx="290" cy="225" fill="var(--paper)" r="21" stroke="currentColor" stroke-width="2"></circle><text class="gl" x="290" y="231">F</text></svg></div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">m 叉树每节点最多 m 个子节点。严格二叉树（full）每节点有 0 或 2 个子节点；严格 m 叉树为 0 或 m 个。完美二叉树（perfect，亦称满二叉树）是叶子全在同一层的严格二叉树。完全二叉树（complete）除末层外层层填满，末层从左连续填充。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>90 / 126</div></div></section>
 <section class="slide light" data-screen-label="Algorithm" data-source="算法 8.2.5 · m 叉树转二叉树" data-theme="light"><div class="chrome"><div>算法 8.2.5</div><div>91 / 126</div></div>
@@ -1389,15 +1434,15 @@ depths = [3, 4, 5, 6]
 print([max_nodes_in_binary_tree(d) for d in depths])
 # [15, 31, 63, 127]</code></pre></div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>92 / 126</div></div></section>
-<section class="slide light" data-screen-label="Theorem" data-source="定理 8.2.13 与推论 · 完全二叉树" data-theme="light"><div class="chrome"><div>定理 8.2.13</div><div>93 / 126</div></div>
+<section class="slide light" data-screen-label="Theorem" data-source="定理 8.2.13 与推论 · 严格二叉树" data-theme="light"><div class="chrome"><div>定理 8.2.13</div><div>93 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">完全二叉树 · 叶子与总数</div><h2 class="h1-zh anim-item" style="max-width:16em">完全二叉树：N 个叶子则共 2N − 1 个节点</h2><div aria-label="叶子数 N  ⟹  总节点数 = 2N − 1" class="formula anim-item mathjax-display-source" data-tex="\text{叶子数} N \Longrightarrow \text{总节点数} = 2N - 1">\[\displaystyle \text{叶子数} N \Longrightarrow \text{总节点数} = 2N - 1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">推论 8.2.1：完全二叉树有 N 个叶子时，非叶子节点为 N−1 个。推论 8.2.2：完全二叉树的节点个数必为奇数。可用归纳法证明：每新增两个叶子，原有一个叶子变为内部节点。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">严格二叉树 · 叶子与总数</div><h2 class="h1-zh anim-item" style="max-width:16em">严格二叉树：N 个叶子则共 2N − 1 个节点</h2><div aria-label="叶子数 N  ⟹  总节点数 = 2N − 1" class="formula anim-item mathjax-display-source" data-tex="\text{叶子数} N \Longrightarrow \text{总节点数} = 2N - 1">\[\displaystyle \text{叶子数} N \Longrightarrow \text{总节点数} = 2N - 1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">推论 8.2.1：严格二叉树有 N 个叶子时，非叶子节点为 N−1 个。推论 8.2.2：严格二叉树的节点个数必为奇数。证明：把一个叶子扩展为两个子叶时，叶子数加 1，节点总数加 2；从单节点树归纳即可。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>93 / 126</div></div></section>
-<section class="slide dark" data-screen-label="Example" data-source="例 8.2.6 与代码 8.2.5 · 完全二叉树计数" data-theme="dark"><div class="chrome"><div>例 8.2.6</div><div>94 / 126</div></div>
+<section class="slide dark" data-screen-label="Example" data-source="例 8.2.6 与代码 8.2.5 · 严格二叉树计数" data-theme="dark"><div class="chrome"><div>例 8.2.6</div><div>94 / 126</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:5fr 7fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">叶子、内部与总数</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">完全二叉树的计数练习</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">非叶子 10 则叶子 11、总数 21；叶子 5 则总数 9；第 3 层全满（4 个叶子）则总数 7。</p></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">叶子、内部与总数</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">严格二叉树的计数练习</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">非叶子 10 则叶子 11、总数 21；叶子 5 则总数 9；三层完美二叉树有 4 个叶子、共 7 个节点。</p></div>
 <div class="anim-item code-pane"><div class="kicker" style="opacity:.5;margin-bottom:1vh">Python 实现</div><pre class="code code-small"><code>non_leaf = 10
 leaf1 = non_leaf + 1          # 11
 total1 = 2 * leaf1 - 1        # 21
@@ -1409,13 +1454,13 @@ print(leaf1, total1, total2, leaf3, total3)</code></pre></div>
 <section class="slide light" data-screen-label="Theorem" data-source="定理 8.2.14 · 完全二叉树高度" data-theme="light"><div class="chrome"><div>定理 8.2.14</div><div>95 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">高度与节点数</div><h2 class="h1-zh anim-item" style="max-width:16em">n 个节点的完全二叉树层数 h（高度 + 1）</h2><div aria-label="2 h−1 + 1 ≤ n ≤ 2 h − 1" class="formula anim-item mathjax-display-source" data-tex="2^{h-1}+ 1 \le n \le 2^{h}- 1">\[\displaystyle 2^{h-1}+ 1 \le n \le 2^{h}- 1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">下界对应前 h−1 层填满再加最后一层至少两个节点：<span aria-label="1+2+…+2^(h−2)" class="math-inline-source" data-tex="1+2+\ldots +2^{h-2}">\(1+2+\ldots +2^{h-2}\)</span> 即 <span aria-label="2^(h−1)−1" class="math-inline-source" data-tex="2^{h-1}-1">\(2^{h-1}-1\)</span>，加 2 得 <span aria-label="2^(h−1)+1" class="math-inline-source" data-tex="2^{h-1}+1">\(2^{h-1}+1\)</span>；上界对应所有层填满：<span aria-label="1+2+…+2^(h−1) = 2^h − 1" class="math-inline-source" data-tex="1+2+\ldots +2^{h-1} = 2^{h} - 1">\(1+2+\ldots +2^{h-1} = 2^{h} - 1\)</span>。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">高度与节点数</div><h2 class="h1-zh anim-item" style="max-width:16em">n 个节点的完全二叉树层数 h（高度 + 1）</h2><div aria-label="完全二叉树 h 层：2^(h−1) ≤ n ≤ 2^h−1" class="formula anim-item mathjax-display-source" data-tex="2^{h-1}\le n\le 2^{h}-1">\[\displaystyle 2^{h-1}\le n\le 2^{h}-1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设非空完全二叉树有 h 层。前 h−1 层共有 <span aria-label="2^(h−1)−1" class="math-inline-source" data-tex="2^{h-1}-1">\(2^{h-1}-1\)</span> 个节点，末层至少有 1 个，所以 <span aria-label="n ≥ 2^(h−1)" class="math-inline-source" data-tex="n\ge 2^{h-1}">\(n\ge 2^{h-1}\)</span>；全层填满时 <span aria-label="n=2^h−1" class="math-inline-source" data-tex="n=2^{h}-1">\(n=2^{h}-1\)</span>。此式也适用于单节点树 h=1。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>95 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 8.2.15 至 8.2.17 · 三条计数定理" data-theme="dark"><div class="chrome"><div>定理 8.2.15 ~ 8.2.17</div><div>96 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">正则二叉树与 m 叉树</div><h2 class="h1-zh anim-item" style="max-width:16em">层节点数与完全 m 叉树的叶子分支关系</h2><div aria-label="正则二叉树第 i 层 2 i 个 ， m 叉树最大 1+m+…+m d ， t = (m−1)·i + 1" class="formula anim-item mathjax-display-source" data-tex="\text{正则二叉树第} i \text{层} 2^{i}\text{个} \text{，} m \text{叉树最大} 1+m+\ldots +m^{d}\text{，} t = (m-1)\cdot i + 1">\[\displaystyle \text{正则二叉树第} i \text{层} 2^{i}\text{个} \text{，} m \text{叉树最大} 1+m+\ldots +m^{d}\text{，} t = (m-1)\cdot i + 1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 8.2.15：正则二叉树第 i 层有 <span aria-label="2^i" class="math-inline-source" data-tex="2^{i}">\(2^{i}\)</span> 个节点（i 从 0 计）。定理 8.2.16：深度 d 的 m 叉树最大节点总数为 <span aria-label="1+m+m²+…+m^d" class="math-inline-source" data-tex="1+m+m^{2}+\ldots +m^{d}">\(1+m+m^{2}+\ldots +m^{d}\)</span>。定理 8.2.17：完全 m 叉树设叶子数 t、分支节点数 i，则 <span aria-label="t = (m−1)·i + 1" class="math-inline-source" data-tex="t = (m-1)\cdot i + 1">\(t = (m-1)\cdot i + 1\)</span>。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">完美二叉树与 m 叉树</div><h2 class="h1-zh anim-item" style="max-width:16em">层节点数与严格 m 叉树的叶子分支关系</h2><div aria-label="完美二叉树深度 i 有 2^i 个节点；严格 m 叉树叶数 t=(m−1)q+1" class="formula anim-item mathjax-display-source" data-tex="\text{完美二叉树深度 }i:\ 2^{i}\text{ 个节点};\qquad \text{严格 }m\text{ 叉树}:\ t=(m-1)q+1">\[\displaystyle \text{完美二叉树深度 }i:\ 2^{i}\text{ 个节点};\qquad \text{严格 }m\text{ 叉树}:\ t=(m-1)q+1\]</div><p class="body-zh anim-item" style="max-width:28em;opacity:.7">定理 8.2.15：完美二叉树深度 i 处有 <span aria-label="2^i" class="math-inline-source" data-tex="2^{i}">\(2^{i}\)</span> 个节点（0≤i≤树高）。定理 8.2.16：深度 d 的 m 叉树最大节点总数为 <span aria-label="1+m+m²+…+m^d" class="math-inline-source" data-tex="1+m+m^{2}+\ldots +m^{d}">\(1+m+m^{2}+\ldots +m^{d}\)</span>。定理 8.2.17：严格 m 叉树设叶子数 t、分支节点数 q，则 <span aria-label="t=(m−1)q+1" class="math-inline-source" data-tex="t=(m-1)q+1">\(t=(m-1)q+1\)</span>。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>96 / 126</div></div></section>
 <section class="slide light" data-screen-label="Algorithm" data-source="算法 8.2.6 · 二叉树遍历" data-theme="light"><div class="chrome"><div>算法 8.2.6</div><div>97 / 126</div></div>
@@ -1433,19 +1478,19 @@ print(leaf1, total1, total2, leaf3, total3)</code></pre></div>
 <section class="slide light" data-screen-label="Concept" data-source="定义 8.2.15 与 8.2.16 · 最优树" data-theme="light"><div class="chrome"><div>最优树</div><div>99 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.15 / 8.2.16</div><h2 class="h1-zh anim-item" style="max-width:16em">最优二叉树即哈夫曼树</h2><p class="lead-zh anim-item" style="max-width:26em">给定一组权重，若加权二叉树 T0 的权 w(T0) 不大于任意同权加权二叉树的权，则 T0 是最优二叉树，又称哈夫曼树。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">最优 m 叉树是其推广：在给定节点权重下最小化加权路径长度，每个节点最多 m 个子节点。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">定义 8.2.15 / 8.2.16</div><h2 class="h1-zh anim-item" style="max-width:16em">最优二叉树即哈夫曼树</h2><p class="lead-zh anim-item" style="max-width:26em">给定一组非负叶子权，若加权二叉树 T0 的权 w(T0) 不大于任意同权加权二叉树的权，则 T0 是最优二叉树，又称哈夫曼树。</p><p class="body-zh anim-item" style="max-width:28em;opacity:.7">最优 m 叉树是其推广：在给定非负叶子权下最小化加权路径长度，每个节点最多 m 个子节点。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>99 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Theorem" data-source="定理 8.2.18 · 最优树的结构" data-theme="dark"><div class="chrome"><div>定理 8.2.18</div><div>100 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">最小权叶子是兄弟</div><h2 class="h1-zh anim-item" style="max-width:16em">两个最小权叶子互为最深兄弟</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设 T 为带权 <span aria-label="w1 ≤ w2 ≤ … ≤ wn" class="math-inline-source" data-tex="w1 \le w2 \le \ldots \le wn">\(w1 \le w2 \le \ldots \le wn\)</span> ，则存在一棵最优树 T，其中权值最小的两个叶子 vw1 与 vw2 互为兄弟，且其父节点是哈夫曼构造中最早生成的内部节点，处于所有分支节点中最深的层级。可用对调反证法证明。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">最小权叶子是兄弟</div><h2 class="h1-zh anim-item" style="max-width:16em">存在最小两权互为最深兄弟的最优树</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">给定 n≥2 个非负叶子权 <span aria-label="0≤w₁≤w₂≤…≤wₙ" class="math-inline-source" data-tex="0\le w_{1}\le w_{2}\le\cdots\le w_{n}">\(0\le w_{1}\le w_{2}\le\cdots\le w_{n}\)</span>，存在一棵最优二叉树，使权最小的两个叶子互为兄弟且处于最深层。可先把它们合并为一个新叶子；权值相同时，最优树可能不唯一。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>100 / 126</div></div></section>
 <section class="slide light" data-screen-label="Theorem" data-source="定理 8.2.19 · 合并保持最优" data-theme="light"><div class="chrome"><div>定理 8.2.19</div><div>101 / 126</div></div>
 <div class="slide-body">
 <div class="w-note" style="display:flex;flex-direction:column;gap:clamp(1.1rem,2.6vh,2.1rem)">
-<div class="kicker anim-item" style="color:var(--accent);opacity:1">归并不破坏最优性</div><h2 class="h1-zh anim-item" style="max-width:16em">合并最小两权为新叶子后仍最优</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">设 T 为带权 <span aria-label="w1 ≤ w2 ≤ … ≤ wn" class="math-inline-source" data-tex="w1 \le w2 \le \ldots \le wn">\(w1 \le w2 \le \ldots \le wn\)</span> 的最优树，将权 w1 与 w2 叶子的父节点改为权 <span aria-label="w1+w2" class="math-inline-source" data-tex="w1+w2">\(w1+w2\)</span> 的叶子，得到的新树 T′ 仍是最优树。这正是哈夫曼算法自底向上合并的理论依据。</p>
+<div class="kicker anim-item" style="color:var(--accent);opacity:1">归并不破坏最优性</div><h2 class="h1-zh anim-item" style="max-width:16em">合并最小两权为新叶子后仍最优</h2><p class="body-zh anim-item" style="max-width:28em;opacity:.7">在最小两权叶子互为兄弟的最优树 T 中，把这对叶子及其父节点收缩为权 <span aria-label="w₁+w₂" class="math-inline-source" data-tex="w_{1}+w_{2}">\(w_{1}+w_{2}\)</span> 的新叶子，所得 T′ 对合并后的权集仍最优。若 T′ 可进一步改进，展开这对叶子便会改进 T，产生矛盾。</p>
 </div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>101 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Algorithm" data-source="算法 8.2.7 · 哈夫曼算法" data-theme="dark"><div class="chrome"><div>算法 8.2.7</div><div>102 / 126</div></div>
@@ -1477,7 +1522,7 @@ def build_huffman(elements):
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>103 / 126</div></div></section>
 <section class="slide dark" data-screen-label="Example" data-source="例 8.2.8 · 最优前缀码" data-theme="dark"><div class="chrome"><div>例 8.2.8</div><div>104 / 126</div></div>
 <div class="grid-2-7-5" style="align-items:center;grid-template-columns:6fr 6fr">
-<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">哈夫曼编码节省比特</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">按频率构造最优前缀码</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">字母 a 到 h 频率为 20,5,7,11,30,7,5,15（百分比）。以频率为权用哈夫曼算法构造最优二叉树，得变长前缀码。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">效果</div><p class="body-zh" style="margin-top:.6vh">若 10000 个字母用定长 3 位码需 30000 比特；用最优前缀码仅需 27400 比特，节省 2600 比特。频率越高的字母编码越短。</p></div></div>
+<div class="anim-item"><div class="kicker" style="color:var(--accent);opacity:1">哈夫曼编码节省比特</div><h2 class="h2-zh" style="max-width:14em;margin-top:1vh">按频率构造最优前缀码</h2><p class="body-zh" style="max-width:23em;margin-top:clamp(.9rem,2vh,1.6rem)">字母 a 到 h 频率为 20,5,7,11,30,7,5,15（百分比）。以频率为权用哈夫曼算法构造最优二叉树，得变长前缀码。</p><div class="example" style="margin-top:clamp(.9rem,2vh,1.6rem)"><div class="meta" style="color:var(--accent);opacity:1">效果</div><p class="body-zh" style="margin-top:.6vh">若 10000 个字母用定长 3 位码需 30000 比特；用最优前缀码仅需 27400 比特，节省 2600 比特。高频字母不会分配更长的码字，但不同频率的字母也可能等长。</p></div></div>
 <div class="anim-item"><div class="vis-center"></div></div>
 </div><div class="foot"><div>离散数学 · 基于 Python 语言的实现</div><div>104 / 126</div></div></section>
 <section class="slide light" data-screen-label="Summary" data-source="8.2.4 小结 · 多类型的树" data-theme="light"><div class="chrome"><div>8.2 小结</div><div>105 / 126</div></div>
@@ -1774,12 +1819,15 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
   }
   window.__deckGoTo=goTo;
   document.addEventListener('keydown',e=>{
+    if(e.defaultPrevented||e.ctrlKey||e.metaKey||e.altKey||(e.target.closest&&e.target.closest('input,textarea,select,button,a,video,audio,.tb-overlay,[contenteditable="true"],[role="button"],[role="slider"],pre,[data-book-scroll]')))return;
+    if(document.documentElement.classList.contains('reader-mode')&&['ArrowUp','ArrowDown',' ','PageUp','PageDown','Home','End'].includes(e.key))return;
     if(e.key==='ArrowRight'||e.key==='ArrowDown'||e.key===' '||e.key==='PageDown'){e.preventDefault();goTo(current+1);}
     if(e.key==='ArrowLeft'||e.key==='ArrowUp'||e.key==='PageUp'){e.preventDefault();goTo(current-1);}
     if(e.key==='Home'){e.preventDefault();goTo(0);}
     if(e.key==='End'){e.preventDefault();goTo(total-1);}});
   let acc=0,lastNav=0,lastDir=0;
   document.addEventListener('wheel',e=>{
+    if(e.ctrlKey||document.documentElement.classList.contains('reader-mode')||e.target.closest('pre,[data-book-scroll],.tb-overlay,video,audio'))return;
     const now=performance.now();
     const d=e.deltaY;
     if(now-lastNav<420){acc=0;return;}
@@ -1791,6 +1839,7 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
   let tx=0,ty=0;
   document.addEventListener('touchstart',e=>{tx=e.touches[0].clientX;ty=e.touches[0].clientY;},{passive:true});
   document.addEventListener('touchend',e=>{
+    if(e.target.closest('pre,[data-book-scroll],.tb-overlay,video,audio,.mk-wave,input,button,a'))return;
     const dx=tx-e.changedTouches[0].clientX,dy=ty-e.changedTouches[0].clientY;
     if(Math.abs(dx)<50||Math.abs(dx)<Math.abs(dy))return;
     if(dx>0)goTo(current+1);else goTo(current-1);},{passive:true});
@@ -1830,7 +1879,7 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
 
   /* ---------- 持久化：已读 / 书签 ---------- */
   var RKEY='discrete-ch'+pad(CH)+'-read', BKEY='discrete-ch'+pad(CH)+'-marks';
-  function loadSet(k){try{var v=JSON.parse(localStorage.getItem(k));return v&&typeof v==='object'?v:{};}catch(e){return {};}}
+  function loadSet(k){var clean={};try{var v=JSON.parse(localStorage.getItem(k));if(v&&typeof v==='object'&&!Array.isArray(v))Object.keys(v).forEach(function(key){if(/^\d+$/.test(key)&&Number(key)<total&&(v[key]===1||v[key]===true))clean[key]=1;});}catch(e){}return clean;}
   function saveSet(k,o){try{localStorage.setItem(k,JSON.stringify(o));}catch(e){}}
   var readSet=loadSet(RKEY), markSet=loadSet(BKEY);
   function readCount(){var n=0;for(var k in readSet)if(readSet[k])n++;return n;}
@@ -1919,7 +1968,7 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
     sres.innerHTML=out||'<div class="tb-snone">未找到「'+esc(q)+'」。</div>';
   }
   sin.addEventListener('input',doSearch);
-  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
+  sin.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape')closeAll();if(e.key==='Enter'){e.preventDefault();var f=sres.querySelector('.tb-sr');if(f)jump(+f.getAttribute('data-j'));}});
   sres.addEventListener('click',function(e){var r=e.target.closest('.tb-sr');if(r)jump(+r.getAttribute('data-j'));});
 
   /* ---------- 习题自测：隐藏答案 ---------- */
@@ -1936,7 +1985,11 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
           var token='@@TBMATH'+mathKeep.length+'@@'; mathKeep.push(m); return token;
         });
         if(/[（(]/.test(html)){
-          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner){
+          html=html.replace(/[（(]([^（）()]{1,80})[)）]/g,function(m,inner,offset){
+            var explicit=/^(?:答案|答\s*[:：])/.test(inner.trim());
+            var trailing=/^[\s。．.；;，,]*$/.test(html.slice(offset+m.length));
+            var result=/^(?:[A-D]|[-+]?\d+(?:\.\d+)?)(?:\s*[:：].*)?$/.test(inner.trim());
+            if(!explicit&&(!trailing||!result||/[A-Za-z0-9_]$/.test(html.slice(0,offset))))return m;
             return '<span class="tb-ans" title="点击查看答案">（<span class="tb-ans-x">'+inner+'</span>）</span>';
           });
           html=html.replace(/@@TBMATH(\d+)@@/g,function(m,i){return mathKeep[+i];});
@@ -1953,7 +2006,7 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
   /* ---------- 代码一键复制 ---------- */
   (function copyButtons(){
     var COPY='<svg viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>';
-    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();document.execCommand('copy');document.body.removeChild(ta);return true;}catch(e){return false;}}
+    function fallbackCopy(text){try{var ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.top='-1000px';ta.style.opacity='0';document.body.appendChild(ta);ta.focus();ta.select();var ok=document.execCommand('copy');document.body.removeChild(ta);return ok;}catch(e){return false;}}
     Array.prototype.forEach.call(document.querySelectorAll('pre.code'),function(pre){
       if(pre.__tbCopy)return; pre.__tbCopy=1;
       var wrap=document.createElement('div'); wrap.className='tb-codewrap';
@@ -1965,8 +2018,8 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
         e.stopPropagation();
         var code=pre.querySelector('code'); var text=(code?code.innerText:pre.innerText).replace(/\u00a0/g,' ');
         function done(){btn.classList.add('tb-copied');label.textContent='已复制';toast('代码已复制到剪贴板');clearTimeout(btn.__t);btn.__t=setTimeout(function(){btn.classList.remove('tb-copied');label.textContent='复制';},1600);}
-        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){fallbackCopy(text);done();});}
-        else{fallbackCopy(text);done();}
+        if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,function(){if(fallbackCopy(text))done();else toast('复制失败，请选中代码后复制');});}
+        else{if(fallbackCopy(text))done();else toast('复制失败，请选中代码后复制');}
       });
       wrap.appendChild(btn);
     });
@@ -1974,7 +2027,7 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
 
   /* ---------- 字号 ---------- */
   var fonts=['100%','112%','124%','90%'],fi=0;
-  try{var fs=+localStorage.getItem('tb-font');if(fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
+  try{var fs=+localStorage.getItem('tb-font');if(Number.isInteger(fs)&&fs>=0&&fs<fonts.length){fi=fs;applyFont();}}catch(e){}
   function applyFont(){document.documentElement.style.fontSize=fonts[fi];}
   function cycleFont(){fi=(fi+1)%fonts.length;applyFont();try{localStorage.setItem('tb-font',fi);}catch(e){}toast('字号：<b>'+fonts[fi]+'</b>');}
 
@@ -1991,7 +2044,7 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
   function toggleHelp(){toggleO(helpEl);}
 
   /* ---------- 书签 ---------- */
-  function toggleMark(){var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
+  function toggleMark(){markSet=loadSet(BKEY);var i=curIdx();markSet[i]=!markSet[i];if(!markSet[i])delete markSet[i];saveSet(BKEY,markSet);updateMarkUI(i);toast(markSet[i]?'已收藏本页 &#9733;':'已取消收藏');}
   function updateMarkUI(i){bmBtn.classList.toggle('tb-on',!!markSet[i]);var it=tocEl.querySelector('.tb-item[data-j="'+i+'"]');if(it)it.classList.toggle('tb-mark',!!markSet[i]);}
 
   /* ---------- 状态同步 ---------- */
@@ -2017,10 +2070,16 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
   function updateBar(i){var b=document.getElementById('tb-bar');if(b)b.style.width=((i+1)/total*100)+'%';}
   function updateTheme(i){document.body.setAttribute('data-tb-theme',slides[i].getAttribute('data-theme')||'dark');}
 
-  var raf=null;
+  var raf=null, observedPage=curIdx();
+  window.__bookSyncLearning=function(key,cleared){
+    if(key&&key!==RKEY&&key!==BKEY)return;
+    if(cleared){if(raf){cancelAnimationFrame(raf);raf=null;}observedPage=curIdx();}
+    readSet=loadSet(RKEY);markSet=loadSet(BKEY);var i=curIdx();
+    updateMarkUI(i);updateTOCcur(i);updateGridCur(i);
+  };
   function onChange(){if(raf)return;raf=requestAnimationFrame(function(){raf=null;
     var i=curIdx();
-    if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}
+    if(i!==observedPage){readSet=loadSet(RKEY);if(!readSet[i]){readSet[i]=1;saveSet(RKEY,readSet);}observedPage=i;}
     updateBar(i);updateTheme(i);updateMarkUI(i);
     if(tocEl.classList.contains('tb-show'))updateTOCcur(i);
     if(gridEl.classList.contains('tb-show'))updateGridCur(i);
@@ -2038,11 +2097,12 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
     if((e.metaKey||e.ctrlKey)&&(e.key==='k'||e.key==='K')){if(!searchEl.classList.contains('tb-show'))openSearch();e.preventDefault();e.stopPropagation();return;}
     if(anyOpen()){
       if(e.key==='Escape'){closeAll();e.stopPropagation();e.preventDefault();return;}
-      if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown',' '].indexOf(e.key)>-1){e.stopPropagation();}
+
       return;
     }
     var tn=(e.target.tagName||'');
-    if(tn==='INPUT'||tn==='TEXTAREA')return;
+    if(tn==='INPUT'||tn==='TEXTAREA'||tn==='SELECT'||e.target.isContentEditable)return;
+    if(e.ctrlKey||e.metaKey||e.altKey)return;
     var k=e.key;
     if(k==='m'||k==='M'){toggleTOC();e.stopPropagation();}
     else if(k==='g'||k==='G'){toggleGrid();e.stopPropagation();}
@@ -2067,7 +2127,7 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
 <!--MK-ASSETS-V1-->
 <audio id="mk-audio" preload="none"></audio>
 <div id="mk-mini" aria-label="播客迷你播放器"><button class="mk-m-play" type="button" aria-label="播放 / 暂停"><svg class="mk-i-play" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg><svg class="mk-i-pause" viewBox="0 0 24 24"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg></button><span class="mk-m-info"><span class="mk-m-t"></span><span class="mk-m-bar"><span class="mk-m-fill"></span></span></span><span class="mk-m-time">0:00 / 0:00</span><button class="mk-m-rate" type="button" aria-label="倍速">1×</button><button class="mk-m-x" type="button" aria-label="关闭播放器">&times;</button></div>
-<script type="application/json" id="mk-data">{"ch":8,"sections":[{"k":"8.1","title":"多类型的图","full":"8.1 多类型的图","start":5,"v":{"path":"assets/micro-lectures/8.1-graph-types.mp4","sec":723.6,"mb":23,"slide":5},"a":{"path":"assets/podcasts/8.1-graph-types.mp3","sec":714.7,"mb":3.4,"slide":59},"c":{"slide":60,"files":["8.1.1.py","8.1.2.py","8.1.3.py","8.1.4.py"]}},{"k":"8.2","title":"多类型的树","full":"8.2 多类型的树","start":63,"v":{"path":"assets/micro-lectures/8.2-tree-types.mp4","sec":441.2,"mb":14.1,"slide":63},"a":{"path":"assets/podcasts/8.2-tree-types.mp3","sec":584.8,"mb":2.8,"slide":105},"c":{"slide":106,"files":["8.2.1.py","8.2.2.py","8.2.3.py","8.2.4.py","8.2.5.py","8.2.6.py"]}},{"k":"8.3","title":"应用案例和 Python 实现","full":"8.3 应用案例和 Python 实现","start":109,"v":{"path":"assets/micro-lectures/8.3-applications.mp4","sec":488.8,"mb":15.8,"slide":109},"a":{"path":"assets/podcasts/8.3-applications.mp3","sec":585.7,"mb":2.8,"slide":123},"c":{"slide":124,"files":["8.3.1.py","8.3.2.py","8.3.3.py","8.3.4.py","8.3.5.py","8.3.6.py"]}}],"files":{"8.1.1.py":{"lines":27,"dir":"CH8","sec":"8.1","src":"import networkx as nx\ndef is_bridge(graph, u, v):     #检查边是否是割边\n    original_components = nx.number_connected_components(graph)\n    graph.remove_edge(u, v)\n    new_components = nx.number_connected_components(graph)\n    graph.add_edge(u, v)     #恢复边\n    return new_components > original_components\ndef fleury(graph):\n    if len(graph.nodes) == 0:     #确保图非空且至少有一个节点\n        return \"Empty graph.\"\n    u = next(iter(graph.nodes))     #找到一个起始节点\n    for v in graph.nodes:\n        if graph.degree[v] % 2 != 0:\n            u = v\n            break\n    path = [u]\n    while graph.number_of_edges() > 0:\n        for v in list(graph.neighbors(u)):\n            if not is_bridge(graph, u, v) or graph.degree[u] == 1:\n                path.append(v)\n                graph.remove_edge(u, v)\n                u = v\n                break\n    return path\nundirected_graph = nx.Graph()\nundirected_graph.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A'), ('A', 'C')])\nprint(fleury(undirected_graph.copy()))     #测试Fleury算法"},"8.1.2.py":{"lines":24,"dir":"CH8","sec":"8.1","src":"import networkx as nx\ndef hierholzer(graph):      #确保图非空且至少有一个节点\n    if len(graph.nodes) == 0:\n        return \"Empty graph.\"\n    u = next(iter(graph.nodes))    #找到一个起始节点\n    for v in graph.nodes:\n        if graph.out_degree(v) > 0:\n            u = v\n            break\n    stack = [u]\n    path = []\n    while stack:\n        u = stack[-1]\n        if graph.out_degree(u) == 0:\n            path.append(u)\n            stack.pop()\n        else:\n            v = next(graph.neighbors(u))\n            stack.append(v)\n            graph.remove_edge(u, v)\n    return path[::-1]    #返回逆序路径\ndirected_graph = nx.DiGraph()\ndirected_graph.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A'), ('A', 'C'), ('C', 'A')])\nprint(hierholzer(directed_graph.copy()))    #测试Hierholzer算法"},"8.1.3.py":{"lines":38,"dir":"CH8","sec":"8.1","src":"def is_hamiltonian(graph):\n    n = len(graph)    #图中的节点数\n    path = [-1] * n\n    path[0] = 0       #从第0个节点开始，尝试所有的路径\n    if not hamiltonian_cycle_util(graph, path, 1):    #找不到哈密顿回路，则返回False\n        print(\"No Hamiltonian cycle found\")\n        return False\n    else:\n        print(\"Hamiltonian cycle found:\", path)\n        return True\ndef hamiltonian_cycle_util(graph, path, pos):\n    #若所有节点都在路径中，只需要检查最后一个节点是否与第一个节点相连\n    if pos == len(graph):\n        if graph[path[pos - 1]][path[0]] == 1:\n            return True\n        else:\n            return False\n    for v in range(1, len(graph)):      #尝试不同的节点作为路径的下一个节点\n        if is_safe(v, graph, path, pos):\n            path[pos] = v\n            if hamiltonian_cycle_util(graph, path, pos + 1):\n                return True\n            path[pos] = -1          #若添加v到路径中不构成解，则删除它（回溯）\n    return False\ndef is_safe(v, graph, path, pos):\n    if graph[path[pos - 1]][v] == 0:    #检查这个节点是否与前一个节点相邻\n        return False\n    for vertex in path:               #检查节点是否已经在路径中\n        if vertex == v:\n            return False\n    return True\ngraph = [[0, 1, 1, 1, 0, 0],             #图的邻接矩阵表示\n         [1, 0, 1, 0, 1, 0],\n         [1, 1, 0, 1, 1, 0],\n         [1, 0, 1, 0, 1, 1],\n         [0, 1, 1, 1, 0, 1],\n         [0, 0, 0, 1, 1, 0]]\nis_hamiltonian(graph)"},"8.1.4.py":{"lines":44,"dir":"CH8","sec":"8.1","src":"from itertools import combinations\ndef has_subgraph_k5(graph):       #是否形成K5\n    nodes = list(graph.keys())\n    n = len(nodes)\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(j + 1, n):\n                for l in range(k + 1, n):\n                    for m in range(l + 1, n):\n                        #检查是否每个节点都与其他节点相连\n                        if all(other in graph[node] for node in (nodes[i], nodes[j], nodes[k], nodes[l], nodes[m])\n                               for other in (nodes[i], nodes[j], nodes[k], nodes[l], nodes[m]) if node != other):\n                            return True\n    return False\n\ndef has_subgraph_k33(graph):        #是否含K3,3子图（只查子图本身，不查与K3,3同胚的细分图）\n    nodes = list(graph.keys())\n    n = len(nodes)\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(j + 1, n):\n                for l in range(k + 1, n):\n                    for m in range(l + 1, n):\n                        for o in range(m + 1, n):\n                            six = (nodes[i], nodes[j], nodes[k], nodes[l], nodes[m], nodes[o])\n                            for p1 in combinations(six, 3):    #遍历全部C(6,3)种3+3划分\n                                #检查是否每个节点都与其他分区的节点相连\n                                partition1 = set(p1)\n                                partition2 = set(six) - partition1\n                                if all((node in graph[other]) or (other in graph[node])\n                                       for node in partition1 for other in partition2):\n                                    return True\n    return False\ndef is_planar(graph):    #注意：只检测是否含K5/K3,3子图（必要条件），不检测同胚子图，严格判定可用nx.check_planarity\n    return not (has_subgraph_k5(graph) or has_subgraph_k33(graph))\ngraph_example_2 = {    #示例图\n    'A': ['B', 'C', 'D', 'E'],\n    'B': ['A', 'C', 'D', 'E'],\n    'C': ['A', 'B', 'D', 'E'],\n    'D': ['A', 'B', 'C', 'E'],\n    'E': ['A', 'B', 'C', 'D'],\n    'F': ['A', 'B']}\nis_planar_result_k5 = is_planar(graph_example_2)\nprint(is_planar_result_k5)"},"8.2.1.py":{"lines":24,"dir":"CH8","sec":"8.2","src":"from collections import deque\ndef bfs(graph, start, end):\n    visited = set()                      #用于记录访问过的节点\n    queue = deque([(start, [start])])        #使用队列存储（当前节点，路径）\n    while queue:\n        current, path = queue.popleft()     #获取当前节点及路径\n        if current == end:               #找到目标\n            return path\n        for neighbor in graph[current]:\n            if neighbor not in visited:     #若邻居节点未被访问\n                visited.add(neighbor)    #标记为已访问\n                queue.append((neighbor, path + [neighbor]))\n    return None                        #若无法到达，返回None\ngraph = {                              #示例图（邻接表表示）\n    'A': ['B', 'C'],\n    'B': ['D', 'E'],\n    'C': ['F'],\n    'D': [],\n    'E': ['F'],\n    'F': []}\nstart_node = 'A'\nend_node = 'F'\npath = bfs(graph, start_node, end_node)\nprint(f\"Path from {start_node} to {end_node}: {path}\")"},"8.2.2.py":{"lines":25,"dir":"CH8","sec":"8.2","src":"def dfs(graph, current, end, path=None, visited=None):\n    if path is None: path = []\n    if visited is None: visited = set()\n    path.append(current)             #添加当前节点到路径中\n    if current == end:                #若当前节点是目标节点\n        return path                 #返回路径\n    visited.add(current)              #标记当前节点为已访问\n    for neighbor in graph[current]:     #遍历当前节点的所有邻居\n        if neighbor not in visited:     #若邻居未被访问\n            result = dfs(graph, neighbor, end, path, visited)    #递归访问邻居\n            if result:               #若找到目标节点\n                return result        #返回路径\n    path.pop()                      #若当前分支未找到目标，回溯\n    return None                     #若整个图遍历完未找到目标节点，返回None\ngraph = {                           #示例图（邻接表表示）\n    'A': ['B', 'C'],\n    'B': ['D', 'E'],\n    'C': ['F'],\n    'D': [],\n    'E': ['F'],\n    'F': []}\nstart_node = 'A'\nend_node = 'F'\npath = dfs(graph, start_node, end_node)\nprint(f\"Path from {start_node} to {end_node}: {path}\")"},"8.2.3.py":{"lines":14,"dir":"CH8","sec":"8.2","src":"import networkx as nx\ndef get_mst_edges_and_nodes():\n    G = nx.Graph()\n    G.add_weighted_edges_from([\n        (\"A\", \"B\", 2), (\"A\", \"C\", 3), (\"A\", \"G\", 2),\n        (\"B\", \"C\", 4), (\"B\", \"D\", 2), (\"C\", \"D\", 1),\n        (\"C\", \"E\", 3), (\"D\", \"E\", 4), (\"D\", \"F\", 5),\n        (\"E\", \"F\", 2), (\"E\", \"G\", 3), (\"F\", \"G\", 4)])\n    MST = nx.minimum_spanning_tree(G, algorithm='prim')\n    mst_edges = MST.edges(data=True)    #获取最小生成树的边和节点\n    mst_nodes = MST.nodes()\n    return mst_edges, mst_nodes\nmst_edges, mst_nodes = get_mst_edges_and_nodes()\nprint(mst_edges, mst_nodes)"},"8.2.4.py":{"lines":5,"dir":"CH8","sec":"8.2","src":"def max_nodes_in_binary_tree(depth):\n    return 2 ** (depth + 1) - 1\ndepths = [3, 4, 5, 6]          #不同的树深度\nresults = [max_nodes_in_binary_tree(depth) for depth in depths]\nprint(results)"},"8.2.5.py":{"lines":13,"dir":"CH8","sec":"8.2","src":"non_leaf_nodes_1 = 10\nleaf_nodes_1 = non_leaf_nodes_1 + 1\ntotal_nodes_1 = 2 * leaf_nodes_1 - 1\nleaf_nodes_2 = 5\ntotal_nodes_2 = 2 * leaf_nodes_2 - 1\nleaf_nodes_3 = 2 ** 2\ntotal_nodes_3 = 2 * leaf_nodes_3 - 1\nanswers = {\n    \"1\": {\"Leaf Nodes\": leaf_nodes_1, \"Total Nodes\": total_nodes_1},\n    \"2\": {\"Total Nodes\": total_nodes_2},\n    \"3\": {\"Leaf Nodes\": leaf_nodes_3, \"Total Nodes\": total_nodes_3}\n}\nprint(answers)"},"8.2.6.py":{"lines":30,"dir":"CH8","sec":"8.2","src":"import heapq\nclass Node:\n    def __init__(self, value, weight):\n        self.value = value\n        self.weight = weight\n        self.left = None\n        self.right = None\n    def __lt__(self, other):\n        return self.weight < other.weight\ndef build_huffman_tree(elements):\n    priority_queue = [Node(value, weight) for value, weight in elements]\n    heapq.heapify(priority_queue)\n    while len(priority_queue) > 1:\n        left = heapq.heappop(priority_queue)\n        right = heapq.heappop(priority_queue)\n        #合并两个节点为一个新节点，其权重为两个节点权重之和\n        merged = Node(None, left.weight + right.weight)\n        merged.left = left\n        merged.right = right\n        heapq.heappush(priority_queue, merged)\n    return priority_queue[0]\ndef print_huffman_tree(node, prefix=''):\n    if node is not None:\n        if node.value is not None:\n            print(f\"Value: {node.value}, Weight: {node.weight}, Code: {prefix}\")\n        print_huffman_tree(node.left, prefix + '0')\n        print_huffman_tree(node.right, prefix + '1')\nelements = [(2, 2), (2, 2), (2, 2), (3, 3), (4, 4), (6, 6), (6, 6), (7, 7), (9, 9), (12, 12), (13, 13)]\nroot = build_huffman_tree(elements)        #构建哈夫曼树\nprint_huffman_tree(root)"},"8.3.1.py":{"lines":13,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nG = nx.Graph()   #创建图\nG.add_edges_from([       #假设添加的边代表古城中修复工作需要经过的路径\n    ('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A'),\n    ('A', 'E'), ('B', 'F'), ('C', 'G'), ('D', 'H'),\n    ('E', 'F'), ('F', 'G'), ('G', 'H'), ('H', 'E')\n])\nif nx.is_eulerian(G):       #判断图G是否是欧拉图并找到欧拉回路\n    print(\"该图是欧拉图。\")\n    print(\"一个可能的欧拉回路是：\")\n    print(list(nx.eulerian_circuit(G)))\nelse:\n    print(\"该图不是欧拉图，需要重新规划修复路径。\")"},"8.3.2.py":{"lines":14,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nB = nx.Graph()                                  #创建二部图\nvolunteers = ['v1', 'v2', 'v3', 'v4']                     #添加志愿者\nprojects = ['p1', 'p2', 'p3']    #添加项目\nB.add_nodes_from(volunteers, bipartite=0)           #将志愿者加入图的一边\nB.add_nodes_from(projects, bipartite=1)             #将项目加入图的另一边\nedges = [('v1', 'p1'), ('v1', 'p2'), ('v2', 'p2'),            #添加潜在的匹配边\n         ('v3', 'p1'), ('v3', 'p3'), ('v4', 'p3')]\nB.add_edges_from(edges)\nmax_match = nx.bipartite.maximum_matching(B)     #计算最大匹配\nprint(\"最大匹配是：\")\nfor key, value in max_match.items():\n    if key in volunteers:\n        print(f\"{key} −> {value}\")"},"8.3.3.py":{"lines":14,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nimport matplotlib.pyplot as plt\nG = nx.Graph()                             #创建一个空图\nnodes = [\"A\", \"B\", \"C\", \"D\", \"E\"]              #添加节点\nG.add_nodes_from(nodes)\n#添加边，避免产生K5或K3,3的非平面结构\nedges = [(\"A\", \"B\"), (\"A\", \"C\"), (\"A\", \"D\"), (\"B\", \"C\"), (\"C\", \"D\"), (\"D\", \"E\")]\nG.add_edges_from(edges)\nis_planar, embedding = nx.check_planarity(G)    #检查图是否为平面图\nprint(f\"该图是平面图: {is_planar}\")\npos = nx.spring_layout(G)                    #使用Spring布局\nnx.draw(G, pos, with_labels=True, node_size=700, node_color=\"lightblue\", edge_color=\"gray\")\nplt.title(\"智慧城市交通网络示意图\")\nplt.show()"},"8.3.4.py":{"lines":35,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nimport matplotlib.pyplot as plt\n\n# 设置字体以支持中文显示\nplt.rcParams['font.sans-serif'] = ['SimHei']\nplt.rcParams['axes.unicode_minus'] = False\n\n# 创建加权连通图\nG = nx.Graph()\nnodes = ['岳麓书院', '湖南省博物馆', '韶山', '凤凰古城', '张家界']\nG.add_nodes_from(nodes)\n\n# 添加加权边\nedges = [('岳麓书院', '湖南省博物馆', 10),\n         ('岳麓书院', '韶山', 30),\n         ('湖南省博物馆', '凤凰古城', 20),\n         ('韶山', '凤凰古城', 25),\n         ('凤凰古城', '张家界', 15),\n         ('韶山', '张家界', 40)]\nG.add_weighted_edges_from(edges)\n\n# 使用普里姆算法生成最小生成树\nmst = nx.minimum_spanning_tree(G, algorithm='prim')\n\n# 绘制最小生成树\npos = nx.spring_layout(mst)\nplt.figure(figsize=(10, 7))\nnx.draw(mst, pos, with_labels=True, node_size=2000, node_color='lightblue', font_weight='bold', font_size=12)\n\n# 添加边的权重标签\nedges = nx.get_edge_attributes(mst, 'weight')\nnx.draw_networkx_edge_labels(mst, pos, edge_labels=edges)\n\nplt.title(\"湖南省文化遗产数字化连接项目的最小生成树\")\nplt.show()\n"},"8.3.5.py":{"lines":37,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nimport matplotlib.pyplot as plt\n\n# 设置字体以支持中文显示\nplt.rcParams['font.sans-serif'] = ['SimHei']\nplt.rcParams['axes.unicode_minus'] = False\n\n# 创建加权无向图\nG = nx.Graph()\nnodes = ['地面基站1', '地面基站2', '卫星1', '空间站', '卫星2']\nG.add_nodes_from(nodes)\n\n# 添加边及其权重\nedges = [\n    ('地面基站1', '卫星1', 5),\n    ('地面基站1', '空间站', 9),\n    ('地面基站2', '卫星2', 6),\n    ('卫星1', '空间站', 7),\n    ('卫星1', '卫星2', 8),\n    ('空间站', '卫星2', 4)\n]\nG.add_weighted_edges_from(edges)\n\n# 使用Kruskal算法生成最小生成树\nmst = nx.minimum_spanning_tree(G, algorithm='kruskal')\n\n# 绘制最小生成树\npos = nx.spring_layout(mst)\nplt.figure(figsize=(10, 7))\nnx.draw(mst, pos, with_labels=True, node_size=2000, node_color='skyblue', edge_color='black')\n\n# 添加边的权重标签\nedges = nx.get_edge_attributes(mst, 'weight')\nnx.draw_networkx_edge_labels(mst, pos, edge_labels=edges)\n\nplt.title(\"航天通信网络的最小生成树\")\nplt.show()\n"},"8.3.6.py":{"lines":41,"dir":"CH8","sec":"8.3","src":"class TreeNode:\n    def __init__(self, name, data=None):\n        self.name = name\n        self.data = data\n        self.children = []\n    def add_child(self, child):\n        self.children.append(child)\ndef dfs(node, depth=0):\n    print(\"  \" * depth + f\"访问 {node.name}: 数据 {node.data}\")\n    for child in node.children:\n        dfs(child, depth + 1)\ndef bfs(root):\n    queue = [(root, 0)]\n    while queue:\n        node, depth = queue.pop(0)\n        print(\"  \" * depth + f\"访问 {node.name}: 数据 {node.data}\")\n        for child in node.children:\n            queue.append((child, depth + 1))\nroot = TreeNode(\"智能农业监测系统\")\nmain_area = TreeNode(\"主要农业区\")\nsub_area1 = TreeNode(\"子区域1\")\nsub_area2 = TreeNode(\"子区域2\")\nsubsub_area1 = TreeNode(\"子子区域1\")\nsensor1 = TreeNode(\"传感器1\", {\"温度\": \"22°C\"})\nsensor2 = TreeNode(\"传感器2\", {\"湿度\": \"45%\"})\nsensor3 = TreeNode(\"传感器3\", {\"光照\": \"300lux\"})\nsensor4 = TreeNode(\"传感器4\", {\"土壤湿度\": \"25%\"})\nsensor5 = TreeNode(\"传感器5\", {\"PH值\": \"6.5\"})\nroot.add_child(main_area)\nmain_area.add_child(sub_area1)\nmain_area.add_child(sub_area2)\nsub_area1.add_child(subsub_area1)\nsub_area1.add_child(sensor1)\nsub_area2.add_child(sensor2)\nsubsub_area1.add_child(sensor3)\nsubsub_area1.add_child(sensor4)\nsub_area2.add_child(sensor5)\nprint(\"执行深度优先遍历 (DFS):\")        #执行深度优先遍历\ndfs(root)\nprint(\"\\n执行广度优先遍历 (BFS):\")      #执行广度优先遍历\nbfs(root)"}},"nv":3,"na":3,"nc":16}</script>
+<script type="application/json" id="mk-data">{"ch":8,"sections":[{"k":"8.1","title":"多类型的图","full":"8.1 多类型的图","start":5,"v":{"path":"assets/micro-lectures/8.1-graph-types.mp4","sec":723.6,"mb":23,"slide":5},"a":{"path":"assets/podcasts/8.1-graph-types.mp3","sec":714.7,"mb":3.4,"slide":59},"c":{"slide":60,"files":["8.1.1.py","8.1.2.py","8.1.3.py","8.1.4.py"]}},{"k":"8.2","title":"多类型的树","full":"8.2 多类型的树","start":63,"v":{"path":"assets/micro-lectures/8.2-tree-types.mp4","sec":441.2,"mb":14.1,"slide":63},"a":{"path":"assets/podcasts/8.2-tree-types.mp3","sec":584.8,"mb":2.8,"slide":105},"c":{"slide":106,"files":["8.2.1.py","8.2.2.py","8.2.3.py","8.2.4.py","8.2.5.py","8.2.6.py"]}},{"k":"8.3","title":"应用案例和 Python 实现","full":"8.3 应用案例和 Python 实现","start":109,"v":{"path":"assets/micro-lectures/8.3-applications.mp4","sec":488.8,"mb":15.8,"slide":109},"a":{"path":"assets/podcasts/8.3-applications.mp3","sec":585.7,"mb":2.8,"slide":123},"c":{"slide":124,"files":["8.3.1.py","8.3.2.py","8.3.3.py","8.3.4.py","8.3.5.py","8.3.6.py"]}}],"files":{"8.1.1.py":{"lines":34,"dir":"CH8","sec":"8.1","src":"import networkx as nx\ndef is_bridge(graph, u, v):     #检查边是否是割边\n    original_components = nx.number_connected_components(graph)\n    attributes = dict(graph.get_edge_data(u, v))\n    graph.remove_edge(u, v)\n    new_components = nx.number_connected_components(graph)\n    graph.add_edge(u, v, **attributes)     #恢复边及其原有属性\n    return new_components > original_components\ndef fleury(graph):\n    if graph.is_directed() or graph.is_multigraph():\n        raise ValueError(\"此实现面向无向简单图\")\n    if len(graph.nodes) == 0:     #确保图非空且至少有一个节点\n        return \"Empty graph.\"\n    active = [v for v in graph if graph.degree[v] > 0]\n    if not active:\n        return [next(iter(graph))]    #零边图的平凡通路\n    odd = [v for v in active if graph.degree[v] % 2]\n    if len(odd) not in (0, 2) or not nx.is_connected(graph.subgraph(active)):\n        raise ValueError(\"欧拉通路要求有边顶点连通，且奇度顶点为0个或2个\")\n    u = odd[0] if odd else active[0]    #忽略孤立点；开放通路从奇度顶点开始\n    path = [u]\n    while graph.number_of_edges() > 0:\n        for v in list(graph.neighbors(u)):\n            if not is_bridge(graph, u, v) or graph.degree[u] == 1:\n                path.append(v)\n                graph.remove_edge(u, v)\n                u = v\n                break\n        else:\n            raise ValueError(\"无法继续通路；请检查输入图是否满足欧拉条件\")\n    return path\nundirected_graph = nx.Graph()\nundirected_graph.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A'), ('A', 'C')])\nprint(fleury(undirected_graph.copy()))     #测试Fleury算法"},"8.1.2.py":{"lines":32,"dir":"CH8","sec":"8.1","src":"import networkx as nx\ndef hierholzer(graph):      #确保图非空且至少有一个节点\n    if not graph.is_directed() or graph.is_multigraph():\n        raise ValueError(\"此实现面向不含重边的有向图\")\n    if len(graph.nodes) == 0:\n        return \"Empty graph.\"\n    active = [v for v in graph if graph.degree(v) > 0]\n    if not active:\n        return [next(iter(graph))]\n    differences = {v: graph.out_degree(v) - graph.in_degree(v) for v in active}\n    starts = [v for v in active if differences[v] == 1]\n    ends = [v for v in active if differences[v] == -1]\n    balanced = all(d == 0 for d in differences.values())\n    open_trail = len(starts) == len(ends) == 1 and all(abs(d) <= 1 for d in differences.values())\n    if not (balanced or open_trail) or not nx.is_weakly_connected(graph.subgraph(active)):\n        raise ValueError(\"有向欧拉通路要求有边部分弱连通，且度数差满足回路或开放通路条件\")\n    u = starts[0] if starts else active[0]    #开放通路必须从出度比入度大1的顶点开始\n    stack = [u]\n    path = []\n    while stack:\n        u = stack[-1]\n        if graph.out_degree(u) == 0:\n            path.append(u)\n            stack.pop()\n        else:\n            v = next(graph.neighbors(u))\n            stack.append(v)\n            graph.remove_edge(u, v)\n    return path[::-1]    #返回逆序路径\ndirected_graph = nx.DiGraph()\ndirected_graph.add_edges_from([('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A'), ('A', 'C'), ('C', 'A')])\nprint(hierholzer(directed_graph.copy()))    #测试Hierholzer算法"},"8.1.3.py":{"lines":38,"dir":"CH8","sec":"8.1","src":"def is_hamiltonian(graph):\n    n = len(graph)    #图中的节点数\n    path = [-1] * n\n    path[0] = 0       #从第0个节点开始，尝试所有的路径\n    if not hamiltonian_cycle_util(graph, path, 1):    #找不到哈密顿回路，则返回False\n        print(\"No Hamiltonian cycle found\")\n        return False\n    else:\n        print(\"Hamiltonian cycle found:\", path)\n        return True\ndef hamiltonian_cycle_util(graph, path, pos):\n    #若所有节点都在路径中，只需要检查最后一个节点是否与第一个节点相连\n    if pos == len(graph):\n        if graph[path[pos - 1]][path[0]] == 1:\n            return True\n        else:\n            return False\n    for v in range(1, len(graph)):      #尝试不同的节点作为路径的下一个节点\n        if is_safe(v, graph, path, pos):\n            path[pos] = v\n            if hamiltonian_cycle_util(graph, path, pos + 1):\n                return True\n            path[pos] = -1          #若添加v到路径中不构成解，则删除它（回溯）\n    return False\ndef is_safe(v, graph, path, pos):\n    if graph[path[pos - 1]][v] == 0:    #检查这个节点是否与前一个节点相邻\n        return False\n    for vertex in path:               #检查节点是否已经在路径中\n        if vertex == v:\n            return False\n    return True\ngraph = [[0, 1, 1, 1, 0, 0],             #图的邻接矩阵表示\n         [1, 0, 1, 0, 1, 0],\n         [1, 1, 0, 1, 1, 0],\n         [1, 0, 1, 0, 1, 1],\n         [0, 1, 1, 1, 0, 1],\n         [0, 0, 0, 1, 1, 0]]\nis_hamiltonian(graph)"},"8.1.4.py":{"lines":44,"dir":"CH8","sec":"8.1","src":"from itertools import combinations\ndef has_subgraph_k5(graph):       #是否形成K5\n    nodes = list(graph.keys())\n    n = len(nodes)\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(j + 1, n):\n                for l in range(k + 1, n):\n                    for m in range(l + 1, n):\n                        #检查是否每个节点都与其他节点相连\n                        if all(other in graph[node] for node in (nodes[i], nodes[j], nodes[k], nodes[l], nodes[m])\n                               for other in (nodes[i], nodes[j], nodes[k], nodes[l], nodes[m]) if node != other):\n                            return True\n    return False\n\ndef has_subgraph_k33(graph):        #是否含K3,3子图（只查子图本身，不查与K3,3同胚的细分图）\n    nodes = list(graph.keys())\n    n = len(nodes)\n    for i in range(n):\n        for j in range(i + 1, n):\n            for k in range(j + 1, n):\n                for l in range(k + 1, n):\n                    for m in range(l + 1, n):\n                        for o in range(m + 1, n):\n                            six = (nodes[i], nodes[j], nodes[k], nodes[l], nodes[m], nodes[o])\n                            for p1 in combinations(six, 3):    #遍历全部C(6,3)种3+3划分\n                                #检查是否每个节点都与其他分区的节点相连\n                                partition1 = set(p1)\n                                partition2 = set(six) - partition1\n                                if all((node in graph[other]) or (other in graph[node])\n                                       for node in partition1 for other in partition2):\n                                    return True\n    return False\ndef is_planar(graph):    #注意：只检测是否含K5/K3,3子图（必要条件），不检测同胚子图，严格判定可用nx.check_planarity\n    return not (has_subgraph_k5(graph) or has_subgraph_k33(graph))\ngraph_example_2 = {    #示例图\n    'A': ['B', 'C', 'D', 'E'],\n    'B': ['A', 'C', 'D', 'E'],\n    'C': ['A', 'B', 'D', 'E'],\n    'D': ['A', 'B', 'C', 'E'],\n    'E': ['A', 'B', 'C', 'D'],\n    'F': ['A', 'B']}\nis_planar_result_k5 = is_planar(graph_example_2)\nprint(is_planar_result_k5)"},"8.2.1.py":{"lines":24,"dir":"CH8","sec":"8.2","src":"from collections import deque\ndef bfs(graph, start, end):\n    visited = set()                      #用于记录访问过的节点\n    queue = deque([(start, [start])])        #使用队列存储（当前节点，路径）\n    while queue:\n        current, path = queue.popleft()     #获取当前节点及路径\n        if current == end:               #找到目标\n            return path\n        for neighbor in graph[current]:\n            if neighbor not in visited:     #若邻居节点未被访问\n                visited.add(neighbor)    #标记为已访问\n                queue.append((neighbor, path + [neighbor]))\n    return None                        #若无法到达，返回None\ngraph = {                              #示例图（邻接表表示）\n    'A': ['B', 'C'],\n    'B': ['D', 'E'],\n    'C': ['F'],\n    'D': [],\n    'E': ['F'],\n    'F': []}\nstart_node = 'A'\nend_node = 'F'\npath = bfs(graph, start_node, end_node)\nprint(f\"Path from {start_node} to {end_node}: {path}\")"},"8.2.2.py":{"lines":25,"dir":"CH8","sec":"8.2","src":"def dfs(graph, current, end, path=None, visited=None):\n    if path is None: path = []\n    if visited is None: visited = set()\n    path.append(current)             #添加当前节点到路径中\n    if current == end:                #若当前节点是目标节点\n        return path                 #返回路径\n    visited.add(current)              #标记当前节点为已访问\n    for neighbor in graph[current]:     #遍历当前节点的所有邻居\n        if neighbor not in visited:     #若邻居未被访问\n            result = dfs(graph, neighbor, end, path, visited)    #递归访问邻居\n            if result:               #若找到目标节点\n                return result        #返回路径\n    path.pop()                      #若当前分支未找到目标，回溯\n    return None                     #若整个图遍历完未找到目标节点，返回None\ngraph = {                           #示例图（邻接表表示）\n    'A': ['B', 'C'],\n    'B': ['D', 'E'],\n    'C': ['F'],\n    'D': [],\n    'E': ['F'],\n    'F': []}\nstart_node = 'A'\nend_node = 'F'\npath = dfs(graph, start_node, end_node)\nprint(f\"Path from {start_node} to {end_node}: {path}\")"},"8.2.3.py":{"lines":14,"dir":"CH8","sec":"8.2","src":"import networkx as nx\ndef get_mst_edges_and_nodes():\n    G = nx.Graph()\n    G.add_weighted_edges_from([\n        (\"A\", \"B\", 2), (\"A\", \"C\", 3), (\"A\", \"G\", 2),\n        (\"B\", \"C\", 4), (\"B\", \"D\", 2), (\"C\", \"D\", 1),\n        (\"C\", \"E\", 3), (\"D\", \"E\", 4), (\"D\", \"F\", 5),\n        (\"E\", \"F\", 2), (\"E\", \"G\", 3), (\"F\", \"G\", 4)])\n    MST = nx.minimum_spanning_tree(G, algorithm='prim')\n    mst_edges = MST.edges(data=True)    #获取最小生成树的边和节点\n    mst_nodes = MST.nodes()\n    return mst_edges, mst_nodes\nmst_edges, mst_nodes = get_mst_edges_and_nodes()\nprint(mst_edges, mst_nodes)"},"8.2.4.py":{"lines":5,"dir":"CH8","sec":"8.2","src":"def max_nodes_in_binary_tree(depth):\n    return 2 ** (depth + 1) - 1\ndepths = [3, 4, 5, 6]          #不同的树深度\nresults = [max_nodes_in_binary_tree(depth) for depth in depths]\nprint(results)"},"8.2.5.py":{"lines":13,"dir":"CH8","sec":"8.2","src":"non_leaf_nodes_1 = 10\nleaf_nodes_1 = non_leaf_nodes_1 + 1\ntotal_nodes_1 = 2 * leaf_nodes_1 - 1\nleaf_nodes_2 = 5\ntotal_nodes_2 = 2 * leaf_nodes_2 - 1\nleaf_nodes_3 = 2 ** 2\ntotal_nodes_3 = 2 * leaf_nodes_3 - 1\nanswers = {\n    \"1\": {\"Leaf Nodes\": leaf_nodes_1, \"Total Nodes\": total_nodes_1},\n    \"2\": {\"Total Nodes\": total_nodes_2},\n    \"3\": {\"Leaf Nodes\": leaf_nodes_3, \"Total Nodes\": total_nodes_3}\n}\nprint(answers)"},"8.2.6.py":{"lines":30,"dir":"CH8","sec":"8.2","src":"import heapq\nclass Node:\n    def __init__(self, value, weight):\n        self.value = value\n        self.weight = weight\n        self.left = None\n        self.right = None\n    def __lt__(self, other):\n        return self.weight < other.weight\ndef build_huffman_tree(elements):\n    priority_queue = [Node(value, weight) for value, weight in elements]\n    heapq.heapify(priority_queue)\n    while len(priority_queue) > 1:\n        left = heapq.heappop(priority_queue)\n        right = heapq.heappop(priority_queue)\n        #合并两个节点为一个新节点，其权重为两个节点权重之和\n        merged = Node(None, left.weight + right.weight)\n        merged.left = left\n        merged.right = right\n        heapq.heappush(priority_queue, merged)\n    return priority_queue[0]\ndef print_huffman_tree(node, prefix=''):\n    if node is not None:\n        if node.value is not None:\n            print(f\"Value: {node.value}, Weight: {node.weight}, Code: {prefix}\")\n        print_huffman_tree(node.left, prefix + '0')\n        print_huffman_tree(node.right, prefix + '1')\nelements = [(2, 2), (2, 2), (2, 2), (3, 3), (4, 4), (6, 6), (6, 6), (7, 7), (9, 9), (12, 12), (13, 13)]\nroot = build_huffman_tree(elements)        #构建哈夫曼树\nprint_huffman_tree(root)"},"8.3.1.py":{"lines":13,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nG = nx.Graph()   #创建图\nG.add_edges_from([       #假设添加的边代表古城中修复工作需要经过的路径\n    ('A', 'B'), ('B', 'C'), ('C', 'D'), ('D', 'A'),\n    ('A', 'E'), ('B', 'F'), ('C', 'G'), ('D', 'H'),\n    ('E', 'F'), ('F', 'G'), ('G', 'H'), ('H', 'E')\n])\nif nx.is_eulerian(G):       #判断图G是否是欧拉图并找到欧拉回路\n    print(\"该图是欧拉图。\")\n    print(\"一个可能的欧拉回路是：\")\n    print(list(nx.eulerian_circuit(G)))\nelse:\n    print(\"该图不是欧拉图，需要重新规划修复路径。\")"},"8.3.2.py":{"lines":14,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nB = nx.Graph()                                  #创建二部图\nvolunteers = ['v1', 'v2', 'v3', 'v4']                     #添加志愿者\nprojects = ['p1', 'p2', 'p3']    #添加项目\nB.add_nodes_from(volunteers, bipartite=0)           #将志愿者加入图的一边\nB.add_nodes_from(projects, bipartite=1)             #将项目加入图的另一边\nedges = [('v1', 'p1'), ('v1', 'p2'), ('v2', 'p2'),            #添加潜在的匹配边\n         ('v3', 'p1'), ('v3', 'p3'), ('v4', 'p3')]\nB.add_edges_from(edges)\nmax_match = nx.bipartite.maximum_matching(B)     #计算最大匹配\nprint(\"最大匹配是：\")\nfor key, value in max_match.items():\n    if key in volunteers:\n        print(f\"{key} −> {value}\")"},"8.3.3.py":{"lines":14,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nimport matplotlib.pyplot as plt\nG = nx.Graph()                             #创建一个空图\nnodes = [\"A\", \"B\", \"C\", \"D\", \"E\"]              #添加节点\nG.add_nodes_from(nodes)\n#添加边，避免产生K5或K3,3的非平面结构\nedges = [(\"A\", \"B\"), (\"A\", \"C\"), (\"A\", \"D\"), (\"B\", \"C\"), (\"C\", \"D\"), (\"D\", \"E\")]\nG.add_edges_from(edges)\nis_planar, embedding = nx.check_planarity(G)    #检查图是否为平面图\nprint(f\"该图是平面图: {is_planar}\")\npos = nx.spring_layout(G)                    #使用Spring布局\nnx.draw(G, pos, with_labels=True, node_size=700, node_color=\"lightblue\", edge_color=\"gray\")\nplt.title(\"智慧城市交通网络示意图\")\nplt.show()"},"8.3.4.py":{"lines":35,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nimport matplotlib.pyplot as plt\n\n# 设置字体以支持中文显示\nplt.rcParams['font.sans-serif'] = ['SimHei']\nplt.rcParams['axes.unicode_minus'] = False\n\n# 创建加权连通图\nG = nx.Graph()\nnodes = ['岳麓书院', '湖南省博物馆', '韶山', '凤凰古城', '张家界']\nG.add_nodes_from(nodes)\n\n# 添加加权边\nedges = [('岳麓书院', '湖南省博物馆', 10),\n         ('岳麓书院', '韶山', 30),\n         ('湖南省博物馆', '凤凰古城', 20),\n         ('韶山', '凤凰古城', 25),\n         ('凤凰古城', '张家界', 15),\n         ('韶山', '张家界', 40)]\nG.add_weighted_edges_from(edges)\n\n# 使用普里姆算法生成最小生成树\nmst = nx.minimum_spanning_tree(G, algorithm='prim')\n\n# 绘制最小生成树\npos = nx.spring_layout(mst)\nplt.figure(figsize=(10, 7))\nnx.draw(mst, pos, with_labels=True, node_size=2000, node_color='lightblue', font_weight='bold', font_size=12)\n\n# 添加边的权重标签\nedges = nx.get_edge_attributes(mst, 'weight')\nnx.draw_networkx_edge_labels(mst, pos, edge_labels=edges)\n\nplt.title(\"湖南省文化遗产数字化连接项目的最小生成树\")\nplt.show()\n"},"8.3.5.py":{"lines":37,"dir":"CH8","sec":"8.3","src":"import networkx as nx\nimport matplotlib.pyplot as plt\n\n# 设置字体以支持中文显示\nplt.rcParams['font.sans-serif'] = ['SimHei']\nplt.rcParams['axes.unicode_minus'] = False\n\n# 创建加权无向图\nG = nx.Graph()\nnodes = ['地面基站1', '地面基站2', '卫星1', '空间站', '卫星2']\nG.add_nodes_from(nodes)\n\n# 添加边及其权重\nedges = [\n    ('地面基站1', '卫星1', 5),\n    ('地面基站1', '空间站', 9),\n    ('地面基站2', '卫星2', 6),\n    ('卫星1', '空间站', 7),\n    ('卫星1', '卫星2', 8),\n    ('空间站', '卫星2', 4)\n]\nG.add_weighted_edges_from(edges)\n\n# 使用Kruskal算法生成最小生成树\nmst = nx.minimum_spanning_tree(G, algorithm='kruskal')\n\n# 绘制最小生成树\npos = nx.spring_layout(mst)\nplt.figure(figsize=(10, 7))\nnx.draw(mst, pos, with_labels=True, node_size=2000, node_color='skyblue', edge_color='black')\n\n# 添加边的权重标签\nedges = nx.get_edge_attributes(mst, 'weight')\nnx.draw_networkx_edge_labels(mst, pos, edge_labels=edges)\n\nplt.title(\"航天通信网络的最小生成树\")\nplt.show()\n"},"8.3.6.py":{"lines":41,"dir":"CH8","sec":"8.3","src":"class TreeNode:\n    def __init__(self, name, data=None):\n        self.name = name\n        self.data = data\n        self.children = []\n    def add_child(self, child):\n        self.children.append(child)\ndef dfs(node, depth=0):\n    print(\"  \" * depth + f\"访问 {node.name}: 数据 {node.data}\")\n    for child in node.children:\n        dfs(child, depth + 1)\ndef bfs(root):\n    queue = [(root, 0)]\n    while queue:\n        node, depth = queue.pop(0)\n        print(\"  \" * depth + f\"访问 {node.name}: 数据 {node.data}\")\n        for child in node.children:\n            queue.append((child, depth + 1))\nroot = TreeNode(\"智能农业监测系统\")\nmain_area = TreeNode(\"主要农业区\")\nsub_area1 = TreeNode(\"子区域1\")\nsub_area2 = TreeNode(\"子区域2\")\nsubsub_area1 = TreeNode(\"子子区域1\")\nsensor1 = TreeNode(\"传感器1\", {\"温度\": \"22°C\"})\nsensor2 = TreeNode(\"传感器2\", {\"湿度\": \"45%\"})\nsensor3 = TreeNode(\"传感器3\", {\"光照\": \"300lux\"})\nsensor4 = TreeNode(\"传感器4\", {\"土壤湿度\": \"25%\"})\nsensor5 = TreeNode(\"传感器5\", {\"PH值\": \"6.5\"})\nroot.add_child(main_area)\nmain_area.add_child(sub_area1)\nmain_area.add_child(sub_area2)\nsub_area1.add_child(subsub_area1)\nsub_area1.add_child(sensor1)\nsub_area2.add_child(sensor2)\nsubsub_area1.add_child(sensor3)\nsubsub_area1.add_child(sensor4)\nsub_area2.add_child(sensor5)\nprint(\"执行深度优先遍历 (DFS):\")        #执行深度优先遍历\ndfs(root)\nprint(\"\\n执行广度优先遍历 (BFS):\")      #执行广度优先遍历\nbfs(root)"}},"nv":3,"na":3,"nc":16}</script>
 <script id="mk-runtime">
 (function(){
   if(window.__mkInit) return; window.__mkInit=true;
@@ -2112,10 +2172,10 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
   /* ============ 播客音频：全局单例播放器 ============ */
   var AU=document.getElementById('mk-audio');
   var mini=document.getElementById('mk-mini');
-  var curKey=null, RATES=[1,1.25,1.5,2], ri=0;
+  var curKey=null, RATES=[1,1.25,1.5,2], ri=0, positionEpoch=0, resettingPosition=false;
 
   function posKey(k){return 'mk-pos-ch'+D.ch+'-'+k;}
-  function savePos(){if(!curKey||!AU.duration)return;try{
+  function savePos(){if(resettingPosition||!curKey||!AU.duration)return;try{
     if(AU.currentTime>3&&AU.currentTime<AU.duration-3)localStorage.setItem(posKey(curKey),String(Math.floor(AU.currentTime)));
     else localStorage.removeItem(posKey(curKey));
   }catch(e){}}
@@ -2126,7 +2186,7 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
       savePos(); curKey=k;
       AU.src=abs(s.a.path); AU.playbackRate=RATES[ri];
       var p=0; try{p=parseInt(localStorage.getItem(posKey(k))||'0',10)||0;}catch(e){}
-      if(p>0){AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);try{AU.currentTime=p;}catch(e){}});}
+      if(p>0){var epoch=positionEpoch;AU.addEventListener('loadedmetadata',function once(){AU.removeEventListener('loadedmetadata',once);if(epoch!==positionEpoch)return;try{AU.currentTime=p;}catch(e){}});}
       $('.mk-m-t',mini).textContent=s.full;
       mini.classList.add('mk-show');
     }
@@ -2142,6 +2202,12 @@ plt.rcParams[&#x27;font.sans-serif&#x27;] = [&#x27;SimHei&#x27;]</pre></button><
     if(curKey===k&&!AU.paused){AU.pause();}else{playSec(k);}
   }
   window.__mkPlaySection=playSec;
+  window.__bookSyncAudioPosition=function(key){
+    if(!curKey||(key&&key!==posKey(curKey)))return;
+    try{if(localStorage.getItem(posKey(curKey))!==null)return;}catch(e){return;}
+    positionEpoch++;resettingPosition=true;
+    try{AU.pause();AU.currentTime=0;AU.__sv=Date.now();syncUI();}finally{resettingPosition=false;}
+  };
 
   AU.addEventListener('play',syncUI);
   AU.addEventListener('pause',function(){savePos();syncUI();});
